@@ -1,6 +1,6 @@
 # ADR-0001: Git-backed structured lessons without an application database
 
-Status: Accepted
+Status: Proposed
 Date: 2026-10-02
 
 ## Context

@@ -1,6 +1,6 @@
 # ADR-0003: Compact replaceable client-side search
 
-Status: Accepted for initial implementation
+Status: Proposed
 Date: 2026-10-02
 
 ## Context
