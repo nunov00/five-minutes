@@ -1,11 +1,3 @@
 ---
-import { getCollection, render } from 'astro:content';
-
-const { slug } = Astro.params;
-const lessons = await getCollection('lessons');
-const lesson = lessons.find((entry) => entry.id === slug);
-if (!lesson) return new Response('Not found', { status: 404 });
-const { Content } = await render(lesson);
+export function getStaticPaths(){return []}
 ---
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>{lesson.data.title}</title></head>
-<body><main><p>{lesson.data.topic} / {lesson.data.subtopic}</p><Content /></main></body></html>
