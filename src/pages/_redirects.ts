@@ -1,4 +1,3 @@
----
 import { join } from 'node:path';
 import routeOwnership from '../content/route-ownership.json';
 import { loadPublishedLessons } from '../lib/content/loader';
@@ -11,4 +10,3 @@ export async function GET() {
   const body = outputs.redirects.map(({ from, to }) => `${from} ${to} 301`).join('\n') + '\n';
   return new Response(body, { headers: { 'content-type': 'text/plain; charset=utf-8' } });
 }
----
