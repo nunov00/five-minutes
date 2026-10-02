@@ -1,0 +1,5 @@
+import {readdir,readFile,mkdir,copyFile} from 'node:fs/promises';import {join,relative,dirname} from 'node:path';
+async function walk(p){let f=[];for(const e of await readdir(p,{withFileTypes:true})){const q=join(p,e.name);f.push(...(e.isDirectory()?await walk(q):[q]))}return f}
+await mkdir('assembled',{recursive:true});const roots=(await readdir('incoming',{withFileTypes:true})).filter(e=>e.isDirectory()).map(e=>join('incoming',e.name)).sort();const seen=new Map();
+for(const root of roots)for(const src of await walk(root)){const rel=relative(root,src);if(seen.has(rel)){const a=await readFile(seen.get(rel)),b=await readFile(src);if(!a.equals(b))throw new Error('Conflicting shard output: '+rel);continue}seen.set(rel,src);const dst=join('assembled',rel);await mkdir(dirname(dst),{recursive:true});await copyFile(src,dst)}
+const html=[...seen.keys()].filter(x=>x.endsWith('.html'));if(html.length!==20000)throw new Error('Expected 20000 unique HTML pages, got '+html.length);console.log(JSON.stringify({shards:roots.length,uniqueFiles:seen.size,htmlFiles:html.length},null,2));
