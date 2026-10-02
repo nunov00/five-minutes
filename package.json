@@ -1,1 +1,19 @@
-{"name":"five-minutes-10k-spike","private":true,"type":"module","scripts":{"generate":"node benchmark/generate.mjs","build":"astro build","index":"node benchmark/index-minisearch.mjs","measure":"node benchmark/measure.mjs"},"dependencies":{"astro":"5.14.1","minisearch":"7.2.0"}}
+{
+  "name": "five-minutes",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "astro": "7.3.5"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.4",
+    "typescript": "5.9.2"
+  }
+}
