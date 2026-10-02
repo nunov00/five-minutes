@@ -123,3 +123,28 @@ Do not prefer B merely to reduce file count; use it only if later evidence ident
 ## Source authoring recommendation independent of A/C
 
 Keep lessons individually addressable in the repository for review/history/AI-worker ergonomics, but allow the build/content layer to compile/index/bundle them as needed. Source representation and deployment representation should not be coupled.
+
+
+## Benchmark A result — full prerender
+
+Measured in GitHub Actions on 2 October 2026 with Node 22, Astro 5.14.1 and Pagefind 1.4.0:
+
+- synthetic lessons: 10,000;
+- Astro build wall time: 1m 33.28s;
+- Astro peak resident memory: 2,360,864 kB (~2.25 GiB);
+- Pagefind indexing wall time: 20.62s;
+- Pagefind peak resident memory: 678,252 kB (~0.65 GiB);
+- Pagefind indexed pages: 10,000;
+- total dist output: 20,064 files / 48.74 MiB;
+- Pagefind output: 10,064 files / 6.77 MiB.
+
+Interpretation:
+
+- Astro full prerender performance is comfortably inside the 20-minute build-time constraint at 10,000 synthetic lessons.
+- Build duration is therefore not the limiting factor in this test.
+- The generated file count is the material constraint: the complete output is already slightly above the 20,000-file Cloudflare Pages Free limit used for this architecture evaluation.
+- Pagefind contributes roughly half the deployed file count, so search representation matters as much as lesson HTML representation.
+- This benchmark does not by itself justify client rendering or a database.
+- Candidate C must be measured before the rendering architecture is selected.
+
+The benchmark workflow is intentionally reproducible; synthetic lesson fixtures are generated inside CI and are not committed to Git.
