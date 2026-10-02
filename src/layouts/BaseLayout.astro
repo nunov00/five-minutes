@@ -1,0 +1,16 @@
+---
+interface Props { title?: string; description?: string; }
+const { title = 'Five Minutes', description = 'One worthwhile idea, made easy to discover, understand and explore.' } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <main><slot /></main>
+  </body>
+</html>
