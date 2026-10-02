@@ -48,7 +48,7 @@ If no new lesson is published on a calendar day, Today continues to show the new
 
 For display/grouping purposes, publication dates use the site's configured editorial timezone. The initial editorial timezone is Europe/Zurich; timestamps remain stored in an unambiguous offset/UTC form.
 
-Adult and Teen presentations share the same publication identity and `publishedAt`. The product behaviour for a Teen reader when the newest/related lesson has no Teen presentation is an explicit Owner decision to resolve before Core Reading UX (milestone 4); no implementation may silently invent a fallback.
+Adult and Teen presentations share the same publication identity and `publishedAt`. A lesson is not publication-eligible unless both presentations exist and pass their required gates. Consequently Today, Related, Topics and Search never need an Adult fallback for a published lesson.
 
 ### Review gate
 
@@ -58,7 +58,8 @@ A lesson may not become `published` until:
 2. links/source metadata pass automated checks;
 3. factual/source review has completed;
 4. editorial quality review has completed;
-5. required CI/build tests pass.
+5. both Adult and Teen presentations exist and pass their applicable validation/review gates;
+6. required CI/build tests pass.
 
 Factual/editorial review may be performed by an independent AI reviewer. The Owner has approved independent AI review as sufficient authorization for routine lesson publication once all required automated validation and CI gates pass.
 

@@ -32,7 +32,7 @@ Canonical lessons are individual structured files in Git, validated against a sc
 
 Shared lesson metadata includes the immutable ID, mutable slug/aliases, publication status/time, topic/subtopic/concepts, relationships, provenance/sources and generation/review metadata defined by ADR-0006.
 
-Adult Markdown is required and Teen Markdown is optional. Audience-specific title/description/body/examples/takeaway/retrieval question may differ while sharing the same lesson identity.
+Adult and Teen Markdown are both required for publication. Draft generation may temporarily contain only one presentation, but incomplete lessons cannot be published. Audience-specific title/description/body/examples/takeaway/retrieval question may differ while sharing the same lesson identity.
 
 ### Web framework
 
