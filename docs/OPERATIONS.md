@@ -83,11 +83,11 @@ Provider configuration that cannot live safely in Git must be documented and rep
 
 ## AI contributor context
 
-`AGENTS.md` is the concise entry point for AI workers/reviewers. It points to governance, architecture and ADRs. Schema/validation commands will be added there when the implementation creates them. Repository documentation remains authoritative; prompts should not duplicate architecture rules that can drift.
+`AGENTS.md` is the concise entry point for AI workers/reviewers. It points to governance, architecture and ADRs. Canonical lesson validation runs through the shared loader during `npm test` and `npm run build`; pull-request CI also compares route ownership with the base commit so historical route entries cannot be removed or reassigned. Repository documentation remains authoritative; prompts should not duplicate architecture rules that can drift.
 
 ## Testing
 
-Required gates evolve with implementation but include schema/security validation, unit/integration tests, a clean production build, URL-manifest/completeness/internal-link checks and Playwright critical journeys. If build sharding is activated later, deterministic partition and assembly validation become additional gates. Critical E2E coverage should include Today, explicit Adult/Teen URLs, Library/search discovery, Saved/Read local state, related navigation, mobile viewport behaviour, manifest/installability metadata and standalone-safe navigation.
+Required gates evolve with implementation but include schema/security validation, unit/integration tests, a clean production build, URL-manifest/completeness/internal-link checks and Playwright critical journeys. The M2 canonical loader fails closed on an empty lesson set, parses YAML/Markdown only through the safe-content pipeline, requires both Adult and Teen presentations for production, validates references/routes, and requires every active slug/alias to be present in the durable route-ownership registry. Pull-request CI checks that registry against the PR base commit. If build sharding is activated later, deterministic partition and assembly validation become additional gates. Critical E2E coverage should include Today, explicit Adult/Teen URLs, Library/search discovery, Saved/Read local state, related navigation, mobile viewport behaviour, manifest/installability metadata and standalone-safe navigation.
 
 Accessibility and broken-link checks are CI concerns. Performance/mobile search budgets are set from representative evidence rather than invented upfront.
 

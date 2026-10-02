@@ -1,0 +1,25 @@
+schemaVersion: 1
+id: 018f47a2-5d7b-7c31-8d4f-0d9a8b6c2e11
+slug: why-gps-needs-einstein
+aliases:
+  - gps-and-relativity
+publishedAt: 2026-09-21T07:00:00+02:00
+topic: science
+subtopic: physics
+concepts:
+  - gps
+  - relativity
+  - time-dilation
+related:
+  manual: []
+  exclude: []
+sources:
+  - title: GPS and relativity
+    url: https://www.gps.gov/systems/gps/performance/accuracy/
+    publisher: GPS.gov
+    accessedAt: 2026-10-02
+provenance:
+  createdAt: 2026-10-02T18:00:00+02:00
+  createdBy:
+    type: human
+  reviews: []
