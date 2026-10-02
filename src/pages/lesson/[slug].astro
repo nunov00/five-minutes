@@ -1,0 +1,11 @@
+---
+import { getCollection, render } from 'astro:content';
+export async function getStaticPaths(){
+ const lessons=await getCollection('lessons');
+ return lessons.map(lesson=>({params:{slug:lesson.id},props:{lesson}}));
+}
+const {lesson}=Astro.props;
+const {Content}=await render(lesson);
+---
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>{lesson.data.title}</title></head>
+<body><main data-pagefind-body><p>{lesson.data.topic} / {lesson.data.subtopic}</p><Content /></main></body></html>
