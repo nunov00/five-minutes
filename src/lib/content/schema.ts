@@ -68,7 +68,7 @@ export interface ValidationResult {
 }
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
-const RFC3339_TIMESTAMP = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2})(?:\\.(\d+))?)?(Z|[+-]\d{2}:\d{2})$/;
+const RFC3339_TIMESTAMP = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2})(?:\.(\d+))?)?(Z|[+-]\d{2}:\d{2})$/;
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
 const TOKEN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -238,5 +238,28 @@ export function validateLessonCollection(bundles: readonly unknown[]): Validatio
     }
   });
 
+  return { valid: issues.length === 0, issues };
+}
+
+/** Publication validation is stricter than draft/schema validation. */
+export function validatePublicationEligibility(bundle: unknown): ValidationResult {
+  const result = validateLessonBundle(bundle);
+  const issues = [...result.issues];
+  if (!isObject(bundle)) return { valid: false, issues };
+  if (bundle.adult === undefined) issue(issues, 'adult', 'publication-presentation', 'Adult presentation is required for publication.');
+  if (bundle.teen === undefined) issue(issues, 'teen', 'publication-presentation', 'Teen presentation is required for publication.');
+  return { valid: issues.length === 0, issues };
+}
+
+/** Fail-closed validation for the complete production content set. */
+export function validatePublicationCollection(bundles: readonly unknown[]): ValidationResult {
+  const issues = [...validateLessonCollection(bundles).issues];
+  bundles.forEach((bundle, index) => {
+    for (const entry of validatePublicationEligibility(bundle).issues) {
+      if (entry.code === 'publication-presentation') {
+        issues.push({ ...entry, path: `lessons[${index}].${entry.path}` });
+      }
+    }
+  });
   return { valid: issues.length === 0, issues };
 }
