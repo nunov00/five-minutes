@@ -96,8 +96,8 @@ Nothing below changes DNS, billing or the existing public Five Minutes site.
    - Deploy command (production branch `main`): `npm run cf:deploy`
    - Enable **preview builds** for non-production branches, with Preview command `npm run cf:preview` (Cloudflare's default is `npx wrangler preview`; the project script adds the file count and uses the pinned Wrangler)
    - Build variable `NODE_VERSION=22`, if the build image does not pick up `.nvmrc`
-4. Leave **Domains & Routes** without a custom domain. The site is then reachable only at `five-minutes-v2.<account-subdomain>.workers.dev` and on Worker Preview URLs.
-5. Open or update a pull request. Confirm that Cloudflare's PR comment shows a Worker Preview URL, then open it.
+4. Leave **Custom Domains and Routes** empty. Under **Worker URL**, keep the Production URL disabled until production activation is intentionally required, and enable the **Preview** URL. This allows branch previews at `*-five-minutes-v2.<account-subdomain>.workers.dev` without attaching a custom domain.
+5. Open or update a pull request. Confirm the Workers Build succeeds; the active Preview URL is printed by `wrangler preview` in the build log. Open the stable branch Preview URL and verify the site.
 
 > Integration note: the first preview build was intentionally triggered after connecting Workers Builds, so the Git integration could be verified against an already-open pull request.
 > The first live setup also confirmed that Preview URLs must be enabled for the Worker before `wrangler preview` receives an active `workers.dev` URL.
