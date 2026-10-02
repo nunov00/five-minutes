@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { validateLessonBundle, validateLessonCollection } from '../../src/lib/content/schema';
+import { validateLessonBundle, validateLessonCollection, validatePublicationCollection, validatePublicationEligibility } from '../../src/lib/content/schema';
 import { validLesson } from '../fixtures/lesson-fixtures';
 
 describe('lesson schema v1', () => {
@@ -121,4 +121,70 @@ describe('lesson schema v1', () => {
     const paths = validateLessonCollection([first]).issues.map((x) => x.path);
     expect(paths).toEqual(['lessons[0].metadata.aliases[1]']);
   });
+  it('keeps incomplete drafts valid but blocks them from publication', () => {
+    const missingAdult = validLesson();
+    delete missingAdult.adult;
+    expect(validateLessonBundle(missingAdult).valid).toBe(true);
+    expect(validatePublicationEligibility(missingAdult).issues).toContainEqual(expect.objectContaining({ path: 'adult', code: 'publication-presentation' }));
+
+    const missingTeen = validLesson();
+    delete missingTeen.teen;
+    expect(validateLessonBundle(missingTeen).valid).toBe(true);
+    expect(validatePublicationEligibility(missingTeen).issues).toContainEqual(expect.objectContaining({ path: 'teen', code: 'publication-presentation' }));
+  });
+
+  it('requires both presentations for publication', () => {
+    const lesson = validLesson();
+    delete lesson.adult;
+    delete lesson.teen;
+    expect(validatePublicationEligibility(lesson).issues.filter((x) => x.code === 'publication-presentation')).toHaveLength(2);
+  });
+
+  it('blocks publication when publishedAt is missing or invalid', () => {
+    const missing = validLesson();
+    delete (missing.metadata as Partial<typeof missing.metadata>).publishedAt;
+    expect(validatePublicationEligibility(missing).issues).toContainEqual(expect.objectContaining({ path: 'metadata.publishedAt', code: 'timestamp' }));
+    const invalid = validLesson();
+    invalid.metadata.publishedAt = '2026-10-03T00:00:00';
+    expect(validatePublicationEligibility(invalid).issues).toContainEqual(expect.objectContaining({ path: 'metadata.publishedAt', code: 'timestamp' }));
+  });
+
+  it('accepts canonical publication timestamps including fractional seconds', () => {
+    const lesson = validLesson();
+    lesson.metadata.publishedAt = '2026-10-03T00:00:00.000Z';
+    expect(validatePublicationEligibility(lesson)).toEqual({ valid: true, issues: [] });
+    lesson.metadata.publishedAt = '2026-10-03T02:00:00+02:00';
+    expect(validatePublicationEligibility(lesson)).toEqual({ valid: true, issues: [] });
+  });
+
+  it.each(['adult', 'teen'] as const)('blocks publication when %s is null', (edition) => {
+    const lesson = validLesson();
+    lesson[edition] = null as never;
+    expect(validatePublicationEligibility(lesson).valid).toBe(false);
+  });
+
+  it('rejects a non-object publication candidate', () => {
+    expect(validatePublicationEligibility(null).valid).toBe(false);
+  });
+
+  it('fails the production collection when any lesson is incomplete', () => {
+    const complete = validLesson();
+    const incomplete = validLesson();
+    incomplete.metadata.id = '018f47a2-5d7b-7c31-9d4f-0d9a8b6c2e12';
+    incomplete.metadata.slug = 'incomplete-lesson';
+    delete incomplete.teen;
+    expect(validatePublicationCollection([complete, incomplete]).issues).toContainEqual(expect.objectContaining({
+      path: 'lessons[1].teen', code: 'publication-presentation',
+    }));
+  });
+
+  it('fails the production collection on duplicate identities and routes', () => {
+    const result = validatePublicationCollection([validLesson(), validLesson()]);
+    expect(result.valid).toBe(false);
+    expect(result.issues).toEqual(expect.arrayContaining([
+      expect.objectContaining({ path: 'lessons[1].metadata.id', code: 'duplicate-id' }),
+      expect.objectContaining({ path: 'lessons[1].metadata.slug', code: 'route-collision' }),
+    ]));
+  });
+
 });
