@@ -1,5 +1,12 @@
 ---
+import { join } from 'node:path';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import routeOwnership from '../content/route-ownership.json';
+import { loadPublishedLessons } from '../lib/content/loader';
+
+// Production builds deliberately load the canonical set through the same
+// fail-closed safe-content and publication-validation pipeline used by tests.
+await loadPublishedLessons(join(process.cwd(), 'src/content/lessons'), routeOwnership);
 ---
 <BaseLayout>
   <h1>Five Minutes</h1>

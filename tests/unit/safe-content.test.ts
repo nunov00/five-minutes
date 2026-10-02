@@ -51,4 +51,16 @@ describe('safe lesson content pipeline', () => {
     expect(json).not.toContain('</script>');
     expect(json).toContain('\\u003c/script\\u003e');
   });
+  it('renders query strings, balanced URL parentheses and fenced code without double escaping', () => {
+    const html = renderSafeMarkdown('[query](https://example.com/?a=1&b=2) [paren](https://example.com/a_(b))\n\n\`\`\`js\nconst x = "<script>";\n\`\`\`');
+    expect(html).toContain('href="https://example.com/?a=1&amp;b=2"');
+    expect(html).not.toContain('&amp;amp;');
+    expect(html).toContain('href="https://example.com/a_(b)"');
+    expect(html).toContain('<pre><code>const x = &quot;&lt;script&gt;&quot;;</code></pre>');
+  });
+
+  it('rejects NUL characters so internal placeholder tokens cannot be spoofed', () => {
+    expect(() => renderSafeMarkdown('[safe](https://example.com) \u00000\u0000')).toThrow(ContentSecurityError);
+  });
+
 });

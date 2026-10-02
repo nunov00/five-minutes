@@ -1,7 +1,5 @@
 # Canonical lesson contract
 
-M2.1 implements the in-memory schemaVersion 1 contract from ADR-0006.
-
 Canonical source layout is:
 
 ```text
@@ -11,8 +9,12 @@ src/content/lessons/<year>/<organisational-name>/
   teen.md
 ```
 
-`lesson.yaml` supplies the shared `LessonMetadata`. Adult and Teen Markdown front matter supplies `PresentationMetadata`. The directory name is not identity or routing data.
+`lesson.yaml` supplies shared `LessonMetadata`. Adult and Teen Markdown front matter supplies `PresentationMetadata`. The directory name is organisational only: immutable identity is the UUID and routing comes from the slug/alias contract.
 
-This slice deliberately validates the parsed data contract rather than parsing YAML/Markdown itself. Safe YAML parsing, front-matter extraction, raw-HTML handling and sanitisation are M2.3 concerns. Publication eligibility (including requiring both presentations) is M2.2. Cross-lesson target existence and redirect-manifest generation are M2.4.
+All canonical files are parsed through `src/lib/content/loader.ts` and the safe YAML/Markdown pipeline. Production validation fails closed if the canonical set is unexpectedly empty, if either Adult or Teen is missing, if schema/reference/security checks fail, or if a current route is absent from `src/content/route-ownership.json`.
 
-Draft bundles may therefore temporarily omit Adult or Teen metadata here. The production/publish validator added in M2.2 will fail closed unless both presentations exist.
+The route-ownership registry is durable history, not a generated cache. New slugs/aliases must be registered to their lesson UUID. Existing entries may be added to but never removed or reassigned. Pull-request CI compares the registry with the PR base commit using `validateRouteOwnershipHistory`.
+
+Raw HTML is not executable lesson content, remote Markdown images are forbidden, and links are restricted by the safe-content pipeline. The build imports the canonical loader so a normal production build cannot bypass these gates.
+
+Draft generation may temporarily be incomplete on a working branch, but incomplete content is not publication-eligible and must not reach production `main`.
