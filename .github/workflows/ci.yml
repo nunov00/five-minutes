@@ -1,0 +1,49 @@
+name: CI
+
+# Baseline production quality gates for every pull request and for main.
+# The 10k architecture benchmarks (benchmark-*.yml) are manual-only and are
+# intentionally not part of this workflow.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Read-only token; this workflow uses no repository secrets.
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  baseline:
+    # Stable check name for branch protection and publication automation.
+    name: baseline
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js (from .nvmrc)
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies (npm ci)
+        run: npm ci --no-audit --no-fund
+
+      - name: Astro/TypeScript check (npm run check)
+        run: npm run check
+
+      - name: Unit/integration tests (npm test)
+        run: npm test
+
+      - name: Production static build (npm run build)
+        run: npm run build
