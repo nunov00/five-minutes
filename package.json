@@ -1,0 +1,16 @@
+{
+  "name": "five-minutes-10k-spike",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate": "node benchmark/generate.mjs",
+    "build": "astro build",
+    "index": "pagefind --site dist",
+    "measure": "node benchmark/measure.mjs",
+    "benchmark": "npm run generate && /usr/bin/time -v npm run build && /usr/bin/time -v npm run index && npm run measure"
+  },
+  "dependencies": {
+    "astro": "5.14.1",
+    "pagefind": "1.4.0"
+  }
+}
