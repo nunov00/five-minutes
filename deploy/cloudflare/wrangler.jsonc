@@ -1,0 +1,28 @@
+// Cloudflare deployment adapter for Five Minutes.
+//
+// Deploys the provider-neutral static build (`npm run build` -> dist/) with
+// Workers Static Assets. There is no Worker script (`main`): Cloudflare serves
+// dist/ as static files only, with no server-side runtime. Nothing in src/
+// depends on this file. See deploy/cloudflare/README.md.
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  // Deliberately distinct from any existing Five Minutes Worker/Pages project so
+  // a deploy can never replace the current public site. Renaming is an Owner
+  // decision.
+  "name": "five-minutes-v2",
+  "compatibility_date": "2026-10-02",
+  "assets": {
+    // Relative to this file.
+    "directory": "../../dist"
+  },
+  // Serve on <name>.<account-subdomain>.workers.dev. No custom domain or
+  // route is attached here. Branch/PR testing uses Worker Previews (below).
+  "workers_dev": true,
+  // Expose Worker Previews on workers.dev URLs. Wrangler 4.147.0 requires
+  // this for `wrangler preview` deployments to have an active URL.
+  "preview_urls": true,
+  // Worker Previews (`wrangler preview`, used by `npm run cf:preview` for
+  // branch/PR testing). A static-assets-only site needs no preview-specific
+  // bindings, vars or secrets, so this block is intentionally empty.
+  "previews": {}
+}

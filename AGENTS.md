@@ -13,7 +13,7 @@ Five Minutes is a Git-backed, static learning publication. Read these before sub
 - Significant work uses an issue/task, branch, PR, checks and review.
 - Preserve one immutable lesson identity across Adult/Teen presentations. Both Adult and Teen presentations are mandatory for publication, though a draft may be temporarily incomplete.
 - Canonical content is validated plain Markdown plus structured metadata; do not introduce MDX/raw executable lesson content.
-- Keep core logic provider-neutral. Cloudflare, search engines and AI providers are adapters/configuration choices.
+- Keep core logic provider-neutral. Cloudflare, search engines and AI providers are adapters/configuration choices. Cloudflare configuration lives only in `deploy/cloudflare/`; nothing in `src/` may import Cloudflare APIs.
 - Do not add a database, SSR lesson runtime, account system or new service without evidence and the required Owner approval.
 - Lesson pages are static. Use a normal static build initially; build sharding is a measured scale-up mechanism, not a day-one requirement. If activated, shard boundaries must never affect public identity/URLs.
 - Generate the compact catalogue/URL manifest before rendering; all routes and discovery artifacts use the shared URL generator rather than reconstructing lesson URLs.
@@ -22,6 +22,7 @@ Five Minutes is a Git-backed, static learning publication. Read these before sub
 - AI workers may author changes but do not push directly to `main`.
 - Routine lesson publication may be authorized by an independent AI reviewer after required validation; failed, uncertain or exceptional review must escalate rather than silently publish.
 - Prefer small, testable changes and update documentation/ADRs when architectural behaviour changes.
+- Keep commits atomic at the logical-change level where practical: prepare related code/configuration and documentation together before pushing. Avoid unnecessary sequential commits on CI/CD-connected branches because each push may trigger a full test, preview build or deployment.
 
 ## Commands
 
@@ -32,8 +33,10 @@ Use Node.js 22 (see `.nvmrc`) and the committed lockfile:
 - `npm test` — unit/integration tests (Vitest, `tests/**/*.test.ts`);
 - `npm run build` — production static build into `dist/`;
 - `npm run test:e2e` — Playwright browser journeys (`tests/e2e/**/*.spec.ts`) against the built site via `astro preview`; run `npm run build` first and install Chromium once with `npx playwright install chromium`. Agents: Astro backgrounds `astro preview` for AI agents, so start `npm run preview` first (Playwright reuses it) and stop it afterwards with `npx astro preview stop`;
-- `npm run dev` / `npm run preview` — local development server / preview of the built site.
+- `npm run dist:count` — number of deployable files in `dist/` (run after `npm run build`);
+- `npm run dev` / `npm run preview` — local development server / preview of the built site;
+- `npm run cf:preview` / `npm run cf:deploy` — Cloudflare commands for Workers Builds, which holds the credentials: `cf:preview` creates a Worker Preview (`wrangler preview`) for branch/PR testing, and `cf:deploy` deploys production (`wrangler deploy`). Both use the pinned project Wrangler. See `deploy/cloudflare/README.md`. Do not run them from CI or with committed credentials, and do not use `wrangler versions upload` (Version URLs) for branch/PR testing.
 
-CI (`.github/workflows/ci.yml`) runs on every pull request and on `main`: check `baseline` runs `npm ci`, `npm run check`, `npm test` and `npm run build` in that order; check `e2e` then runs `npm run build` and `npm run test:e2e` (desktop Chromium and iPhone-class mobile projects). Run the same sequence locally before opening a PR. The `benchmark-*.yml` workflows are manual-only architecture evidence and are not part of CI.
+CI (`.github/workflows/ci.yml`) runs on every pull request and on `main`: check `baseline` runs `npm ci`, `npm run check`, `npm test`, `npm run build` and `npm run dist:count` in that order; check `e2e` then runs `npm run build` and `npm run test:e2e` (desktop Chromium and iPhone-class mobile projects). Run the same sequence locally before opening a PR. The `benchmark-*.yml` workflows are manual-only architecture evidence and are not part of CI.
 
 Schema/content validation commands will be added here when the implementation creates them.
