@@ -21,9 +21,8 @@ The exact final URL syntax remains a later routing detail, but the semantic cont
 - an explicit Adult URL renders the Adult presentation;
 - an explicit Teen URL renders the Teen presentation;
 - browser-local edition preference may improve navigation but never changes the meaning of an explicit URL;
-- Adult content is required;
-- Teen content is optional, so a lesson may be Adult-only;
-- when a Teen presentation does not exist, no Teen presentation URL is generated;
+- both Adult and Teen presentations are required for publication;
+- drafts on branches may be temporarily incomplete while generation is in progress, but incomplete lessons are not publication-eligible and generate no production routes;
 - Adult and Teen presentations share lesson identity, publication metadata, taxonomy, provenance and relationships;
 - search/catalogue representations are edition-aware;
 - Saved/Read state is keyed by immutable lesson identity, not slug or presentation URL, so editions do not become separate saved lessons.

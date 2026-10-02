@@ -37,7 +37,7 @@ Full-text article search is a future feature requiring its own evidence and arch
 Do not make the search index a dependency of every discovery screen.
 
 - **Static discovery pages:** Today, Library and Topics are rendered as static HTML (with pagination where needed) and work without downloading the client search index.
-- **Compact browser catalogue:** a deliberately small representation contains immutable ID, URL/slug, edition availability, publication date, topic/subtopic and edition titles. It supports Saved/Read joins, lightweight filtering and Surprise Me.
+- **Compact browser catalogue:** a deliberately small representation contains immutable ID, URL/slug, publication date, topic/subtopic and Adult/Teen titles. It supports Saved/Read joins, lightweight filtering and Surprise Me.
 - **Search indexes:** richer edition-specific discovery fields (description/deck, concepts/tags, curated synonyms/search terms and takeaway in addition to the compact fields) live in search-only payloads loaded when search is used.
 
 Generated browser artifacts should use content-hashed filenames where practical so cached clients do not silently retain stale catalogue/search data.
@@ -58,7 +58,7 @@ Adult search ranks/matches Adult discovery text. Teen search ranks/matches Teen 
 
 Shared taxonomy/concepts may be reused, but one edition's prose must not cause surprising matches in the other edition.
 
-Lessons without a Teen presentation are absent from Teen search results unless a later product decision explicitly introduces a cross-edition fallback.
+Every published lesson has both presentations, so published Adult and Teen search corpora contain the same lesson identities while indexing their respective edition-specific discovery text.
 
 ### Performance evidence and remaining mobile gate
 
@@ -71,7 +71,7 @@ This establishes the build-side feasibility of compact discovery search but is n
 If a single compact client-side catalogue/search index stops meeting the agreed mobile budgets, escalation order is:
 
 1. reduce/index only necessary fields;
-2. split catalogue/search by edition and/or coarse topic where useful;
+2. split the already edition-specific indexes further by coarse topic where useful;
 3. shard/lazy-load indexes;
 4. only then evaluate a remote search service.
 

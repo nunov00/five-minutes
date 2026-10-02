@@ -30,7 +30,7 @@ Open -> Today's idea -> Read -> Understand -> Test yourself -> Explore another i
 
 Canonical lessons are individual structured files in Git, validated against a schema.
 
-Shared lesson metadata includes the immutable ID, mutable slug/aliases, publication status/time, topic/subtopic/concepts, relationships, provenance/sources and generation/review metadata defined by ADR-0006.
+Shared lesson metadata includes the immutable ID, mutable slug/aliases, publication time, topic/subtopic/concepts, relationships, provenance/sources and generation/review metadata defined by ADR-0006.
 
 Adult and Teen Markdown are both required for publication. Draft generation may temporarily contain only one presentation, but incomplete lessons cannot be published. Audience-specific title/description/body/examples/takeaway/retrieval question may differ while sharing the same lesson identity.
 
@@ -63,7 +63,7 @@ A small storage abstraction owns Saved, Read/Unread, recent lessons, selected ed
 
 Cloudflare is the initial deployment target, not an application dependency.
 
-The initial site is a static deployment artifact: assembled lesson HTML, stable application assets and compact discovery data. No lesson-rendering runtime or application database is required initially. Provider-specific build/deployment configuration remains at the boundary so another static host can replace Cloudflare.
+The initial site is a static deployment artifact: generated lesson HTML, stable application assets and compact discovery data. No lesson-rendering runtime or application database is required initially. Provider-specific build/deployment configuration remains at the boundary so another static host can replace Cloudflare.
 
 ### Installable app / PWA
 

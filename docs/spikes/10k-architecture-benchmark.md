@@ -223,4 +223,6 @@ A sharded static experiment split the target into four independent 2,500-identit
 - one final search artifact;
 - 20,001 final files / 145.25 MiB synthetic assembled size.
 
-This supersedes the earlier spike conclusion. The evidence now supports **sharded static generation + compact discovery search** as the initial rendering architecture. The earlier hybrid/on-demand implementation is not accepted as the target architecture.
+This supersedes the earlier spike conclusion. The evidence now supports **sharded static generation + compact discovery search** as the initial rendering architecture.
+
+> **Superseded architecture conclusion (2026-10-02):** ADR-0002 now selects ordinary static generation initially. Sharding remains a demonstrated scale-up mechanism activated only when measured build pressure justifies it; this spike is retained as evidence. The earlier hybrid/on-demand implementation is not accepted as the target architecture.
