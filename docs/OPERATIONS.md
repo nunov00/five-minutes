@@ -93,8 +93,8 @@ Accessibility and broken-link checks are CI concerns. Performance/mobile search 
 
 ## Implementation milestones
 
-1. Foundation: production repo layout, lockfile, Astro shell, schema/validation, CI and preview deployment.
-2. Content pipeline: canonical lesson model, safe Markdown, lifecycle/provenance and deterministic publication eligibility.
+1. Foundation: production repo layout, lockfile, Astro shell, baseline CI, Playwright smoke-test foundation and provider-neutral preview deployment boundary.
+2. Content contract and validation: canonical lesson model, schema/validation, safe Markdown, lifecycle/provenance and deterministic publication eligibility.
 3. Static delivery: catalogue/URL manifest, shared route generation, normal static build, exact completeness/internal-link validation and clean deployment artifact. Add deterministic sharding only when measured build pressure justifies it.
 4. Core reading UX: Today, Adult/Teen lesson URLs, responsive reader, takeaway, Test Yourself and installable PWA shell/manifest/icons.
 5. Discovery: compact catalogue, Library, Topics, Search, Related and Surprise Me.
