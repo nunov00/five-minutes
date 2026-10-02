@@ -65,7 +65,9 @@ Cloudflare is the initial target. Deployment configuration is replaceable and mu
 
 ## Backup and recovery
 
-GitHub is the canonical backup for code, lesson sources, metadata, provenance and architecture history. Production hosting is reproducible output, not the sole copy.
+GitHub is the canonical source for code, lesson sources, metadata, provenance and architecture history. Production hosting is reproducible output, not the sole copy.
+
+Before production hardening completes, add a scheduled read-only Git mirror to a second storage/location to reduce account-loss or repository-compromise risk. The mirror is recovery insurance, not a second writable source of truth.
 
 Recovery is:
 1. restore/clone the repository at a known-good commit;
@@ -80,7 +82,7 @@ Provider configuration that cannot live safely in Git must be documented and rep
 
 ## AI contributor context
 
-`AGENTS.md` is the concise entry point for AI workers/reviewers. It points to governance, architecture, ADRs, schema and validation commands. Repository documentation remains authoritative; prompts should not duplicate architecture rules that can drift.
+`AGENTS.md` is the concise entry point for AI workers/reviewers. It points to governance, architecture and ADRs. Schema/validation commands will be added there when the implementation creates them. Repository documentation remains authoritative; prompts should not duplicate architecture rules that can drift.
 
 ## Testing
 

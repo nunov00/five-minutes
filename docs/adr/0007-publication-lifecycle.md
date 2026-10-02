@@ -14,15 +14,13 @@ The product should support scheduled daily publication while keeping Git as the 
 
 ### Lifecycle
 
-Lessons move through:
+Workflow state is represented by Git/PR state rather than a mutable `draft -> reviewed -> published` field inside lesson metadata:
 
-`draft -> reviewed -> published`
+- **draft**: content exists on a branch/PR and may be previewed.
+- **reviewed**: the PR has passed required validation plus the independent review gate. This is repository/check state, not canonical lesson metadata.
+- **published**: the reviewed change has been merged to `main` at or after its intended `publishedAt`.
 
-- **draft**: content exists in a branch/PR and may be previewed, but is not eligible for production discovery.
-- **reviewed**: required content/factual/technical checks have passed, but the lesson is not yet production content.
-- **published**: the lesson is eligible for production pages, catalogue, search, sitemap, related-content links and Today.
-
-Production generators must fail closed: draft/reviewed content must not leak into public production outputs.
+Production is built from `main`. Draft/reviewed branch content therefore cannot enter production discovery merely because of a metadata flag.
 
 ### Repository boundary
 
@@ -34,9 +32,9 @@ Merging an eligible lesson PR is the repository publication authorization. A sch
 
 ### Publication time
 
-`publishedAt` is the effective publication timestamp and is recorded in the lesson metadata when the lesson becomes published.
+`publishedAt` is the intended/effective publication timestamp and is written in the lesson PR **before** independent review. The scheduled merge occurs at or after that timestamp, so the reviewed content and reviewed metadata are the content that reaches `main`.
 
-Initial scheduling should be implemented by timing the authorized merge/deployment rather than keeping future-published content on `main` and relying on runtime clocks. This keeps static builds deterministic and avoids hidden future content entering catalogue/search artifacts.
+Initial scheduling is implemented by timing the authorized merge/deployment rather than merging future content early and relying on viewer/runtime clocks. This keeps static builds deterministic and avoids a merge-time bot rewriting reviewed lesson content.
 
 If future-dated content on `main` becomes useful later, that is a deliberate extension and all production outputs must apply the same eligibility rule.
 
@@ -50,7 +48,7 @@ If no new lesson is published on a calendar day, Today continues to show the new
 
 For display/grouping purposes, publication dates use the site's configured editorial timezone. The initial editorial timezone is Europe/Zurich; timestamps remain stored in an unambiguous offset/UTC form.
 
-Adult and Teen presentations share the same publication identity and `publishedAt`. If a Teen presentation does not exist, the Teen experience must handle that explicitly rather than inventing a separate Teen publication date.
+Adult and Teen presentations share the same publication identity and `publishedAt`. The product behaviour for a Teen reader when the newest/related lesson has no Teen presentation is an explicit Owner decision to resolve before Core Reading UX (milestone 4); no implementation may silently invent a fallback.
 
 ### Review gate
 
@@ -64,7 +62,7 @@ A lesson may not become `published` until:
 
 Factual/editorial review may be performed by an independent AI reviewer. The Owner has approved independent AI review as sufficient authorization for routine lesson publication once all required automated validation and CI gates pass.
 
-The reviewer must be independent of the generation step for that lesson. Review failure, material uncertainty, unsupported claims, safety/policy concerns, schema/security failures or other defined exceptional conditions must fail closed and escalate rather than publish automatically. Human review remains available but is not mandatory for every routine lesson.
+The reviewer must be independent of the generation step for that lesson. The independent review is represented by a required status/check from a separate review identity/workflow rather than by allowing the reviewer to mutate the content. Generation credentials do not have merge permission; review credentials do not have permission to alter the lesson they review. Review failure, material uncertainty, unsupported claims, safety/policy concerns, schema/security failures or other defined exceptional conditions must fail closed and escalate rather than publish automatically. Human review remains available but is not mandatory for every routine lesson.
 
 ### Corrections
 
