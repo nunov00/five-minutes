@@ -1,0 +1,47 @@
+name: Astro sharded static benchmark
+on:
+  pull_request:
+    paths:
+      - 'benchmark/**'
+      - 'src/pages/**'
+      - 'src/content.config.ts'
+      - 'astro.config.mjs'
+      - 'package.json'
+      - '.github/workflows/benchmark-sharded.yml'
+  workflow_dispatch:
+jobs:
+  shard:
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3]
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      LESSON_COUNT: 10000
+      SHARD_COUNT: 4
+      SHARD_INDEX: ${{ matrix.shard }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-audit --no-fund
+      - name: Generate one deterministic shard
+        run: node benchmark/generate-shard.mjs
+      - name: Prerender shard
+        shell: bash
+        run: |
+          set -o pipefail
+          /usr/bin/time -v npm run build 2>&1 | tee shard-${SHARD_INDEX}-build.log
+      - name: Measure shard
+        run: node benchmark/measure-shard.mjs | tee shard-${SHARD_INDEX}-measure.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: astro-static-shard-${{ matrix.shard }}
+          if-no-files-found: warn
+          path: |
+            shard-*.json
+            shard-*-build.log
+            shard-*-measure.log
