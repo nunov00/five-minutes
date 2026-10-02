@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { validateLessonBundle, validateLessonCollection } from '../../src/lib/content/schema';
-import { validLesson } from './fixtures/lesson-fixtures';
+import { validLesson } from '../fixtures/lesson-fixtures';
 
 describe('lesson schema v1', () => {
   it('accepts a complete canonical lesson', () => {
