@@ -12,7 +12,7 @@ src/ (Astro, provider-neutral) --npm run build--> dist/ (plain static files)
 ```
 
 - `npm run build` produces ordinary static HTML/assets in `dist/`. Nothing in `src/` imports Cloudflare APIs, and the build does not use a Cloudflare adapter.
-- `wrangler.jsonc` deploys `dist/` as **Workers Static Assets** with no Worker script (`main`), so there is no server-side runtime.
+- `wrangler.jsonc` deploys `dist/` as **Workers Static Assets** with no Worker script (`main`), so there is no server-side runtime. `preview_urls` is enabled only at this Cloudflare boundary so Worker Preview deployments receive testable `workers.dev` URLs.
 - Replacing Cloudflare means deploying the same `dist/` elsewhere and deleting this directory plus the `cf:*` npm scripts.
 
 ## Why Workers Static Assets
@@ -71,7 +71,7 @@ Both `cf:*` scripts run the project's pinned Wrangler from `node_modules/.bin`, 
 
 **Terminology:**
 - **Worker Previews** (`wrangler preview`) are Cloudflare's recommended mechanism for branch/PR testing. Each branch gets its own Preview, and Workers Builds posts the Preview URL on the GitHub PR. This adapter uses them.
-- **Version URLs** (`wrangler versions upload`, formerly called "preview URLs", format `<version>-<worker>.<subdomain>.workers.dev`) are the older per-version mechanism. Cloudflare does not recommend them for branch/PR testing, so this adapter does not use or configure them.
+- **Version URLs** (`wrangler versions upload`) are the older per-version deployment mechanism and are not used for branch/PR testing here. The `preview_urls` Wrangler setting is nevertheless enabled because Wrangler 4.147.0 requires it to expose Worker Preview deployments on `workers.dev` URLs.
 
 ## Preview path: Worker Previews for pull requests and branches
 
