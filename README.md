@@ -16,13 +16,20 @@ npm ci
 npm run dev
 ```
 
-## Production build
+## Quality checks and production build
+
+CI runs the same commands, in this order, as the `baseline` check on every pull request and on `main`:
 
 ```sh
-npm run check
-npm run build
-npm run preview
+npm ci
+npm run check   # Astro/TypeScript diagnostics
+npm test        # unit/integration tests (Vitest)
+npm run build   # production static build into dist/
 ```
+
+Preview the built site locally with `npm run preview`.
+
+Unit/integration tests live in `tests/` as `*.test.ts`. Playwright end-to-end tests will live in `tests/e2e/` and are not run by `npm test`.
 
 The application produces standard static output in `dist/`. Hosting-provider configuration belongs at the deployment boundary and must not leak into application/domain logic.
 
