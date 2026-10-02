@@ -241,6 +241,126 @@ export function validateLessonCollection(bundles: readonly unknown[]): Validatio
   return { valid: issues.length === 0, issues };
 }
 
+
+export type RouteOwnershipRegistry = Readonly<Record<string, LessonId>>;
+
+export interface RedirectEntry {
+  from: string;
+  to: string;
+  lessonId: LessonId;
+}
+
+function isSafeSourceUrl(value: unknown): value is string {
+  if (typeof value !== 'string') return false;
+  try {
+    const url = new URL(value);
+    return url.protocol === 'https:' || url.protocol === 'http:';
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Validates current lesson references and durable route ownership.
+ * The registry is append-only in normal operation: route names remain owned by
+ * their original immutable lesson ID even after they stop being active aliases.
+ */
+export function validateLessonReferences(
+  bundles: readonly unknown[],
+  routeOwnership: RouteOwnershipRegistry,
+): ValidationResult {
+  const issues = [...validateLessonCollection(bundles).issues];
+  const ids = new Set<string>();
+
+  bundles.forEach((bundle) => {
+    if (isObject(bundle) && isObject(bundle.metadata) && typeof bundle.metadata.id === 'string' && UUID.test(bundle.metadata.id)) {
+      ids.add(bundle.metadata.id);
+    }
+  });
+
+  bundles.forEach((bundle, index) => {
+    if (!isObject(bundle) || !isObject(bundle.metadata)) return;
+    const metadata = bundle.metadata;
+    const id = typeof metadata.id === 'string' ? metadata.id : undefined;
+
+    const routes = [
+      { value: metadata.slug, path: 'slug' },
+      ...(Array.isArray(metadata.aliases)
+        ? metadata.aliases.map((value, aliasIndex) => ({ value, path: `aliases[${aliasIndex}]` }))
+        : []),
+    ];
+    if (id && UUID.test(id)) {
+      for (const route of routes) {
+        if (typeof route.value !== 'string' || !SLUG.test(route.value)) continue;
+        const owner = routeOwnership[route.value];
+        if (owner !== undefined && owner !== id) {
+          issue(issues, `lessons[${index}].metadata.${route.path}`, 'historical-route-owner',
+            `Route name "${route.value}" is permanently owned by lesson ${owner}.`);
+        }
+      }
+    }
+
+    if (isObject(metadata.related)) {
+      const relationshipIds = [
+        ...(Array.isArray(metadata.related.manual)
+          ? metadata.related.manual.flatMap((rel) => isObject(rel) && typeof rel.id === 'string' ? [rel.id] : [])
+          : []),
+        ...(Array.isArray(metadata.related.exclude)
+          ? metadata.related.exclude.filter((rel): rel is string => typeof rel === 'string')
+          : []),
+      ];
+      for (const relatedId of relationshipIds) {
+        if (UUID.test(relatedId) && !ids.has(relatedId)) {
+          issue(issues, `lessons[${index}].metadata.related`, 'unknown-relationship',
+            `Relationship references unknown lesson ID ${relatedId}.`);
+        }
+      }
+    }
+
+    if (Array.isArray(metadata.sources)) metadata.sources.forEach((source, sourceIndex) => {
+      if (isObject(source) && !isSafeSourceUrl(source.url)) {
+        issue(issues, `lessons[${index}].metadata.sources[${sourceIndex}].url`, 'source-url',
+          'Source URL must be an absolute HTTP(S) URL.');
+      }
+    });
+  });
+
+  return { valid: issues.length === 0, issues };
+}
+
+export function updateRouteOwnershipRegistry(
+  bundles: readonly LessonBundle[],
+  existing: RouteOwnershipRegistry,
+): RouteOwnershipRegistry {
+  const next: Record<string, LessonId> = { ...existing };
+  for (const bundle of bundles) {
+    for (const route of [bundle.metadata.slug, ...bundle.metadata.aliases]) {
+      const owner = next[route];
+      if (owner !== undefined && owner !== bundle.metadata.id) {
+        throw new Error(`Route name "${route}" is already owned by lesson ${owner}.`);
+      }
+      next[route] = bundle.metadata.id;
+    }
+  }
+  return Object.fromEntries(Object.entries(next).sort(([a], [b]) => a.localeCompare(b)));
+}
+
+export function buildRedirectManifest(bundles: readonly LessonBundle[]): RedirectEntry[] {
+  const redirects: RedirectEntry[] = [];
+  for (const bundle of bundles) {
+    for (const alias of bundle.metadata.aliases) {
+      for (const edition of ['adult', 'teen'] as const) {
+        redirects.push({
+          from: `/${edition}/${alias}`,
+          to: `/${edition}/${bundle.metadata.slug}`,
+          lessonId: bundle.metadata.id,
+        });
+      }
+    }
+  }
+  return redirects.sort((a, b) => a.from.localeCompare(b.from));
+}
+
 /** Publication validation is stricter than draft/schema validation. */
 export function validatePublicationEligibility(bundle: unknown): ValidationResult {
   const result = validateLessonBundle(bundle);

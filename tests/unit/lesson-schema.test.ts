@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { validateLessonBundle, validateLessonCollection, validatePublicationCollection, validatePublicationEligibility } from '../../src/lib/content/schema';
+import { buildRedirectManifest, updateRouteOwnershipRegistry, validateLessonBundle, validateLessonCollection, validateLessonReferences, validatePublicationCollection, validatePublicationEligibility } from '../../src/lib/content/schema';
 import { validLesson } from '../fixtures/lesson-fixtures';
 
 describe('lesson schema v1', () => {
@@ -185,6 +185,63 @@ describe('lesson schema v1', () => {
       expect.objectContaining({ path: 'lessons[1].metadata.id', code: 'duplicate-id' }),
       expect.objectContaining({ path: 'lessons[1].metadata.slug', code: 'route-collision' }),
     ]));
+  });
+
+  it('prevents reassignment of a historically owned route', () => {
+    const lesson = validLesson();
+    const result = validateLessonReferences([lesson], {
+      [lesson.metadata.slug]: '018f47a2-5d7b-7c31-9d4f-0d9a8b6c2e12',
+    });
+    expect(result.issues).toContainEqual(expect.objectContaining({
+      path: 'lessons[0].metadata.slug', code: 'historical-route-owner',
+    }));
+  });
+
+  it('keeps retired route ownership when updating the registry', () => {
+    const lesson = validLesson();
+    const registry = updateRouteOwnershipRegistry([lesson], {
+      'retired-name': lesson.metadata.id,
+    });
+    expect(registry['retired-name']).toBe(lesson.metadata.id);
+    expect(registry[lesson.metadata.slug]).toBe(lesson.metadata.id);
+    expect(Object.keys(registry)).toEqual([...Object.keys(registry)].sort());
+  });
+
+  it('rejects relationships to unknown lesson IDs', () => {
+    const lesson = validLesson();
+    lesson.metadata.related.manual = [{
+      id: '018f47a2-5d7b-7c31-9d4f-0d9a8b6c2e12',
+      reason: 'Missing target',
+    }];
+    expect(validateLessonReferences([lesson], {} as const).issues).toContainEqual(expect.objectContaining({
+      code: 'unknown-relationship',
+    }));
+  });
+
+  it('accepts relationships to another lesson in the collection', () => {
+    const first = validLesson();
+    const second = validLesson();
+    second.metadata.id = '018f47a2-5d7b-7c31-9d4f-0d9a8b6c2e12';
+    second.metadata.slug = 'second-lesson';
+    second.metadata.aliases = [];
+    first.metadata.related.manual = [{ id: second.metadata.id, reason: 'Continue learning' }];
+    expect(validateLessonReferences([first, second], {}).issues.filter((x) => x.code === 'unknown-relationship')).toEqual([]);
+  });
+
+  it('requires absolute HTTP(S) source URLs', () => {
+    const lesson = validLesson();
+    lesson.metadata.sources[0].url = 'javascript:alert(1)';
+    expect(validateLessonReferences([lesson], {}).issues).toContainEqual(expect.objectContaining({
+      path: 'lessons[0].metadata.sources[0].url', code: 'source-url',
+    }));
+  });
+
+  it('builds a deterministic edition-aware redirect manifest', () => {
+    const lesson = validLesson();
+    expect(buildRedirectManifest([lesson])).toEqual([
+      { from: '/adult/gps-and-relativity', to: '/adult/why-gps-needs-einstein', lessonId: lesson.metadata.id },
+      { from: '/teen/gps-and-relativity', to: '/teen/why-gps-needs-einstein', lessonId: lesson.metadata.id },
+    ]);
   });
 
 });
