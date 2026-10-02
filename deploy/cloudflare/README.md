@@ -20,7 +20,7 @@ src/ (Astro, provider-neutral) --npm run build--> dist/ (plain static files)
 As of October 2026, Cloudflare recommends **Workers Static Assets** for new static sites. Pages continues to work, but new features go to Workers. Workers covers everything this project needs:
 
 - production deploys from `main` through Workers Builds (Git integration);
-- per-branch/PR preview URLs posted on pull requests;
+- per-branch/PR **Worker Previews**, with the Preview URL posted on pull requests;
 - custom domains later;
 - free, unlimited static-asset requests.
 
@@ -37,7 +37,9 @@ Official documentation:
 - Workers Builds: https://developers.cloudflare.com/workers/ci-cd/builds/
 - Workers Builds GitHub integration: https://developers.cloudflare.com/workers/ci-cd/builds/git-integration/github-integration/
 - Build branches: https://developers.cloudflare.com/workers/ci-cd/builds/build-branches/
-- Version / preview URLs: https://developers.cloudflare.com/workers/versions-and-deployments/version-urls/
+- Worker Previews (22 September 2026): https://developers.cloudflare.com/changelog/post/2026-09-22-worker-previews/
+- Wrangler configuration (`previews`): https://developers.cloudflare.com/workers/wrangler/configuration/#previews
+- Version URLs (older per-version mechanism, not used here): https://developers.cloudflare.com/workers/versions-and-deployments/version-urls/
 - GitHub Actions alternative: https://developers.cloudflare.com/workers/ci-cd/external-cicd/github-actions/
 
 ## Relevant limits (check before relying on them; Cloudflare can change them)
@@ -48,7 +50,7 @@ Official documentation:
 | Maximum size of one file | 25 MiB | 25 MiB |
 | Requests to static assets | free, unlimited | free, unlimited |
 
-The 100,000-file limit requires Wrangler 4.34.0 or later. This adapter pins Wrangler 4.147.0.
+The 100,000-file limit requires Wrangler 4.34.0 or later, and Worker Previews require Wrangler 4.135.0 or later. Wrangler is pinned at **4.147.0** as a project `devDependency` (exact version, recorded in `package-lock.json`).
 
 ## File-count observability
 
@@ -62,18 +64,22 @@ The 100,000-file limit requires Wrangler 4.34.0 or later. This adapter pins Wran
 |---|---|
 | `npm run build` | provider-neutral static build into `dist/` |
 | `npm run dist:count` | report deployable files |
-| `npm run cf:preview` | count files, then `wrangler versions upload`: uploads a preview version without changing production |
+| `npm run cf:preview` | count files, then `wrangler preview`: creates or updates a **Worker Preview** for the current branch without touching production |
 | `npm run cf:deploy` | count files, then `wrangler deploy`: deploys the production version of the Worker |
 
-Wrangler is run with `npx` at a pinned version rather than added to `devDependencies`. That keeps every `npm ci` (local, `CI / baseline`, `CI / e2e`) free of Wrangler's large runtime download. Both `cf:*` commands need Cloudflare authentication and are meant to run inside Workers Builds.
+Both `cf:*` scripts run the project's pinned Wrangler from `node_modules/.bin`, not a global or `npx`-downloaded copy. Cloudflare's Preview documentation recommends updating the project dependency because project commands do not use a newer global installation. Both commands need Cloudflare authentication and are meant to run inside Workers Builds.
 
-## Preview path (pull requests and branches)
+**Terminology:**
+- **Worker Previews** (`wrangler preview`) are Cloudflare's recommended mechanism for branch/PR testing. Each branch gets its own Preview, and Workers Builds posts the Preview URL on the GitHub PR. This adapter uses them.
+- **Version URLs** (`wrangler versions upload`, formerly called "preview URLs", format `<version>-<worker>.<subdomain>.workers.dev`) are the older per-version mechanism. Cloudflare does not recommend them for branch/PR testing, so this adapter does not use or configure them.
+
+## Preview path: Worker Previews for pull requests and branches
 
 Use **Workers Builds** (Cloudflare's GitHub integration) rather than a GitHub Actions deploy job:
 
 - No Cloudflare API token is stored in GitHub. Builds run on Cloudflare and use no GitHub Actions minutes.
 - Per Cloudflare's docs, only the final deploy step receives secrets, so preview builds also work safely for fork PRs.
-- Cloudflare posts the preview URL as a PR comment and a check run.
+- Cloudflare creates a Worker Preview per branch and posts the Preview URL as a PR comment and a check run.
 
 ### One-time Owner setup
 
@@ -88,12 +94,10 @@ Nothing below changes DNS, billing or the existing public Five Minutes site.
    - Root directory: `/`
    - Build command: `npm run build`
    - Deploy command (production branch `main`): `npm run cf:deploy`
-   - Enable **non-production branch builds**, with preview/non-production command `npm run cf:preview`
+   - Enable **preview builds** for non-production branches, with Preview command `npm run cf:preview` (Cloudflare's default is `npx wrangler preview`; the project script adds the file count and uses the pinned Wrangler)
    - Build variable `NODE_VERSION=22`, if the build image does not pick up `.nvmrc`
-4. Leave **Domains & Routes** without a custom domain. The site is then reachable only at `five-minutes-v2.<account-subdomain>.workers.dev` and on preview URLs.
-5. Open or update a pull request. Confirm that Cloudflare's PR comment shows a preview URL, then open it.
-
-Cloudflare's newest Workers Builds default preview command is `npx wrangler preview` ("Worker Previews", open beta). `npm run cf:preview` uses the generally available `wrangler versions upload` instead. Either works for a static site. Switch to `wrangler preview` once it is GA if per-PR isolation matters.
+4. Leave **Domains & Routes** without a custom domain. The site is then reachable only at `five-minutes-v2.<account-subdomain>.workers.dev` and on Worker Preview URLs.
+5. Open or update a pull request. Confirm that Cloudflare's PR comment shows a Worker Preview URL, then open it.
 
 ### Alternative: GitHub Actions deploy (not chosen)
 
