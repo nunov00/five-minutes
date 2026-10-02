@@ -67,7 +67,8 @@ export interface ValidationResult {
   issues: ValidationIssue[];
 }
 
-const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
+const RFC3339_TIMESTAMP = /^(\\d{4})-(\\d{2})-(\\d{2})T(\\d{2}):(\\d{2})(?::(\\d{2})(?:\\.(\\d+))?)?(Z|[+-]\\d{2}:\\d{2})$/;
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
 const TOKEN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -87,6 +88,23 @@ function isObject(value: unknown): value is Record<string, unknown> {
 
 function nonEmpty(value: unknown): value is string {
   return typeof value === 'string' && value.trim().length > 0;
+}
+
+function isValidTimestamp(value: unknown): value is string {
+  if (typeof value !== 'string') return false;
+  const match = RFC3339_TIMESTAMP.exec(value);
+  if (!match) return false;
+  const [, year, month, day, hour, minute, second = '0', , offset] = match;
+  const y = Number(year), mo = Number(month), d = Number(day);
+  const h = Number(hour), mi = Number(minute), sec = Number(second);
+  if (mo < 1 || mo > 12 || h > 23 || mi > 59 || sec > 59) return false;
+  const daysInMonth = new Date(Date.UTC(y, mo, 0)).getUTCDate();
+  if (d < 1 || d > daysInMonth) return false;
+  if (offset !== 'Z') {
+    const [oh, om] = offset.slice(1).split(':').map(Number);
+    if (oh > 23 || om > 59) return false;
+  }
+  return !Number.isNaN(Date.parse(value));
 }
 
 function validateExactKeys(
@@ -140,7 +158,7 @@ export function validateLessonMetadata(value: unknown, path = 'metadata'): Valid
   if (!nonEmpty(value.slug) || !SLUG.test(value.slug)) issue(issues, `${path}.slug`, 'slug', 'Expected a lowercase kebab-case slug.');
   validateStringArray(value.aliases, `${path}.aliases`, issues, SLUG);
 
-  if (!nonEmpty(value.publishedAt) || Number.isNaN(Date.parse(value.publishedAt))) {
+  if (!isValidTimestamp(value.publishedAt)) {
     issue(issues, `${path}.publishedAt`, 'timestamp', 'Expected an unambiguous ISO publication timestamp.');
   }
   for (const key of ['topic', 'subtopic'] as const) {
@@ -170,7 +188,7 @@ export function validateLessonMetadata(value: unknown, path = 'metadata'): Valid
     }
   });
 
-  if (!isObject(value.provenance) || !nonEmpty(value.provenance.createdAt) || Number.isNaN(Date.parse(String(value.provenance.createdAt))) || !isObject(value.provenance.createdBy) || !['ai', 'human'].includes(String(value.provenance.createdBy.type)) || !Array.isArray(value.provenance.reviews)) {
+  if (!isObject(value.provenance) || !isValidTimestamp(value.provenance.createdAt) || !isObject(value.provenance.createdBy) || !['ai', 'human'].includes(String(value.provenance.createdBy.type)) || !Array.isArray(value.provenance.reviews)) {
     issue(issues, `${path}.provenance`, 'provenance', 'Expected createdAt, createdBy and reviews.');
   }
 
