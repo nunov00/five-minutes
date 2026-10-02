@@ -25,43 +25,77 @@ function safeHref(raw: string): string {
   return escapeHtml(href);
 }
 
+function findClosingParen(source: string, start: number): number {
+  let depth = 0;
+  for (let i = start; i < source.length; i += 1) {
+    if (source[i] === '(') depth += 1;
+    else if (source[i] === ')') {
+      if (depth === 0) return i;
+      depth -= 1;
+    }
+  }
+  return -1;
+}
+
 function inline(source: string): string {
-  if (/!\[[^\]]*\]\([^)]*\)/.test(source)) throw new ContentSecurityError('Markdown images are not allowed.');
-  let out = escapeHtml(source);
-  out = out.replace(/\[([^\]]+)\]\(([^\s)]+)\)/g, (_m, label, href) =>
-    `<a href="${safeHref(href)}" rel="noopener noreferrer">${label}</a>`);
-  out = out.replace(/\`([^\`]+)\`/g, '<code>$1</code>');
+  if (/!\[[^\]]*\]\(/.test(source)) throw new ContentSecurityError('Markdown images are not allowed.');
+
+  const tokens: string[] = [];
+  let staged = '';
+  for (let i = 0; i < source.length;) {
+    if (source[i] === '`') {
+      const end = source.indexOf('`', i + 1);
+      if (end > i + 1) {
+        const token = `\u0000${tokens.length}\u0000`;
+        tokens.push(`<code>${escapeHtml(source.slice(i + 1, end))}</code>`);
+        staged += token;
+        i = end + 1;
+        continue;
+      }
+    }
+    if (source[i] === '[') {
+      const labelEnd = source.indexOf('](', i + 1);
+      if (labelEnd !== -1) {
+        const hrefEnd = findClosingParen(source, labelEnd + 2);
+        if (hrefEnd !== -1) {
+          const label = source.slice(i + 1, labelEnd);
+          const href = source.slice(labelEnd + 2, hrefEnd);
+          const token = `\u0000${tokens.length}\u0000`;
+          tokens.push(`<a href="${safeHref(href)}" rel="noopener noreferrer">${escapeHtml(label)}</a>`);
+          staged += token;
+          i = hrefEnd + 1;
+          continue;
+        }
+      }
+    }
+    staged += source[i];
+    i += 1;
+  }
+
+  let out = escapeHtml(staged);
   out = out.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
   out = out.replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, '<em>$1</em>');
-  return out;
+  return out.replace(/\u0000(\d+)\u0000/g, (_m, index) => tokens[Number(index)]);
 }
 
 export function sanitizeRenderedHtml(html: string): string {
   const completeTag = /<\/?([a-z0-9]+)([^>]*)>/gi;
   const output: string[] = [];
   let cursor = 0;
-
   for (const match of html.matchAll(completeTag)) {
     const index = match.index ?? 0;
     output.push(escapeSanitizerText(html.slice(cursor, index)));
-
     const tag = match[0];
     const name = match[1].toLowerCase();
     const attrs = match[2];
-
-    if (!TAGS.has(name)) {
-      output.push(escapeHtml(tag));
-    } else if (tag.startsWith('</') || name !== 'a') {
-      output.push(`<${tag.startsWith('</') ? '/' : ''}${name}>`);
-    } else {
+    if (!TAGS.has(name)) output.push(escapeHtml(tag));
+    else if (tag.startsWith('</') || name !== 'a') output.push(`<${tag.startsWith('</') ? '/' : ''}${name}>`);
+    else {
       const href = /href="([^"]*)"/.exec(attrs)?.[1];
-      output.push(href && SAFE_LINK.test(href)
-        ? `<a href="${href}" rel="noopener noreferrer">`
-        : escapeHtml(tag));
+      output.push(href && SAFE_LINK.test(href) ? `<a href="${href}" rel="noopener noreferrer">` : escapeHtml(tag));
     }
     cursor = index + tag.length;
   }
-
   output.push(escapeSanitizerText(html.slice(cursor)));
   return output.join('');
 }
@@ -70,9 +104,17 @@ export function renderSafeMarkdown(markdown: string): string {
   const lines = markdown.replace(/\r\n?/g, '\n').split('\n');
   const rendered: string[] = [];
   let list: 'ul' | 'ol' | null = null;
+  let fence: string[] | null = null;
   const closeList = () => { if (list) { rendered.push(`</${list}>`); list = null; } };
 
   for (const line of lines) {
+    if (/^```/.test(line)) {
+      closeList();
+      if (fence === null) fence = [];
+      else { rendered.push(`<pre><code>${escapeHtml(fence.join('\n'))}</code></pre>`); fence = null; }
+      continue;
+    }
+    if (fence !== null) { fence.push(line); continue; }
     if (!line.trim()) { closeList(); continue; }
     const heading = /^(#{1,3})\s+(.+)$/.exec(line);
     if (heading) { closeList(); rendered.push(`<h${heading[1].length}>${inline(heading[2])}</h${heading[1].length}>`); continue; }
@@ -87,6 +129,7 @@ export function renderSafeMarkdown(markdown: string): string {
     if (quote) { closeList(); rendered.push(`<blockquote>${inline(quote[1])}</blockquote>`); continue; }
     closeList(); rendered.push(`<p>${inline(line)}</p>`);
   }
+  if (fence !== null) throw new ContentSecurityError('Unclosed fenced code block.');
   closeList();
   return sanitizeRenderedHtml(rendered.join('\n'));
 }
