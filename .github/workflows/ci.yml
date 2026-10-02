@@ -1,5 +1,9 @@
 name: CI
 
+# Production quality gates for every pull request and for main:
+# `baseline` (install, check, unit tests, build) then `e2e` (Playwright).
+# Architecture-scale benchmark workflows remain manual and separate from this gate.
+
 on:
   pull_request:
   push:
@@ -15,11 +19,12 @@ concurrency:
 
 jobs:
   baseline:
+    # Stable check name used by branch protection/publication automation.
     name: baseline
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
-      CONTENT_BASE_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || (github.event_name == 'push' && github.event.before || '') }}
+      CONTENT_BASE_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || (github.event_name == 'push' && github.event.before || github.sha) }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -43,6 +48,7 @@ jobs:
         run: npm run dist:count
 
   e2e:
+    # Stable check name used by branch protection/publication automation.
     name: e2e
     needs: baseline
     runs-on: ubuntu-latest
