@@ -13,7 +13,8 @@
   "compatibility_date": "2026-10-02",
   "assets": {
     // Relative to this file.
-    "directory": "../../dist"
+    "directory": "../../dist",
+    "not_found_handling": "404-page"
   },
   // Serve on <name>.<account-subdomain>.workers.dev. No custom domain or
   // route is attached here. Branch/PR testing uses Worker Previews (below).
