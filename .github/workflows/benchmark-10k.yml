@@ -1,4 +1,4 @@
-name: 10k architecture benchmark
+name: 10k hybrid architecture benchmark
 on:
   pull_request:
     paths:
