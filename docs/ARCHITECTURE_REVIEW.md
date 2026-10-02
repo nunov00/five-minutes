@@ -1,3 +1,7 @@
+# Architecture review record
+
+> This document records the inputs and questions used for the second independent architecture review. It is historical review material, not the current architecture decision. Current decisions live in `docs/ARCHITECTURE.md` and the ADRs; in particular ADR-0002 supersedes the mandatory-sharding design reviewed here.
+
 # Architecture Review Checklist
 
 Use this for the second independent architecture review. Review the repository as a proposed design, not as production implementation.
