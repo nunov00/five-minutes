@@ -29,7 +29,10 @@ Use Node.js 22 (see `.nvmrc`) and the committed lockfile:
 
 - `npm ci` — reproducible install;
 - `npm run check` — Astro/TypeScript diagnostics;
+- `npm test` — unit/integration tests (Vitest, `tests/**/*.test.ts`; Playwright E2E will live separately in `tests/e2e/`);
 - `npm run build` — production static build into `dist/`;
 - `npm run dev` / `npm run preview` — local development server / preview of the built site.
 
-Schema/content validation and test commands will be added here when the implementation creates them.
+CI (`.github/workflows/ci.yml`, check name `baseline`) runs `npm ci`, `npm run check`, `npm test` and `npm run build` in that order on every pull request and on `main`. Run the same sequence locally before opening a PR. The `benchmark-*.yml` workflows are manual-only architecture evidence and are not part of CI.
+
+Schema/content validation commands will be added here when the implementation creates them.
