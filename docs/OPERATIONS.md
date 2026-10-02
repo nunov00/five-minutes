@@ -10,6 +10,7 @@ src/pages/               Astro routes and discovery surfaces
 src/components/          reusable presentation components
 src/lib/                 provider-neutral domain/search/state/build logic
 scripts/                 validation, catalogue, sharding and publication tools
+deploy/                  hosting-provider adapters (deploy/cloudflare/), outside application code
 tests/                   unit/integration tests
 tests/e2e/               Playwright critical journeys
 public/                  stable public assets
