@@ -1,3 +1,5 @@
+import { lessonPath } from '../urls';
+
 export const LESSON_SCHEMA_VERSION = 1 as const;
 
 export type LessonId = string;
@@ -239,6 +241,173 @@ export function validateLessonCollection(bundles: readonly unknown[]): Validatio
   });
 
   return { valid: issues.length === 0, issues };
+}
+
+
+export type RouteOwnershipRegistry = Readonly<Record<string, LessonId>>;
+
+export interface RedirectEntry {
+  from: string;
+  to: string;
+  lessonId: LessonId;
+}
+
+function compareCanonical(a: string, b: string): number {
+  return a < b ? -1 : a > b ? 1 : 0;
+}
+
+function registryOwner(registry: RouteOwnershipRegistry, route: string): LessonId | undefined {
+  return Object.hasOwn(registry, route) ? registry[route] : undefined;
+}
+
+export function validateRouteOwnershipRegistry(
+  registry: RouteOwnershipRegistry,
+  path = 'routeOwnership',
+): ValidationResult {
+  const issues: ValidationIssue[] = [];
+  for (const [route, owner] of Object.entries(registry).sort(([a], [b]) => compareCanonical(a, b))) {
+    if (!SLUG.test(route)) issue(issues, `${path}.${route}`, 'registry-route', 'Registry key must be a canonical slug.');
+    if (!UUID.test(owner)) issue(issues, `${path}.${route}`, 'registry-owner', 'Registry owner must be a canonical lowercase UUID.');
+  }
+  return { valid: issues.length === 0, issues };
+}
+
+/** Existing ownership may only be extended; entries can never be removed or reassigned. */
+export function validateRouteOwnershipHistory(
+  previous: RouteOwnershipRegistry,
+  next: RouteOwnershipRegistry,
+): ValidationResult {
+  const issues = [
+    ...validateRouteOwnershipRegistry(previous, 'previousRouteOwnership').issues,
+    ...validateRouteOwnershipRegistry(next, 'routeOwnership').issues,
+  ];
+  for (const [route, owner] of Object.entries(previous).sort(([a], [b]) => compareCanonical(a, b))) {
+    const nextOwner = registryOwner(next, route);
+    if (nextOwner === undefined) {
+      issue(issues, `routeOwnership.${route}`, 'registry-entry-removed', 'Historical route ownership cannot be removed.');
+    } else if (nextOwner !== owner) {
+      issue(issues, `routeOwnership.${route}`, 'registry-owner-changed', `Historical route remains owned by lesson ${owner}.`);
+    }
+  }
+  return { valid: issues.length === 0, issues };
+}
+
+function isSafeSourceUrl(value: unknown): value is string {
+  if (typeof value !== 'string') return false;
+  try {
+    const url = new URL(value);
+    return (url.protocol === 'https:' || url.protocol === 'http:') && !url.username && !url.password;
+  } catch {
+    return false;
+  }
+}
+
+export function validateLessonReferences(
+  bundles: readonly unknown[],
+  routeOwnership: RouteOwnershipRegistry,
+): ValidationResult {
+  const issues = [
+    ...validateLessonCollection(bundles).issues,
+    ...validateRouteOwnershipRegistry(routeOwnership).issues,
+  ];
+  const ids = new Set<string>();
+
+  bundles.forEach((bundle) => {
+    if (isObject(bundle) && isObject(bundle.metadata) && typeof bundle.metadata.id === 'string' && UUID.test(bundle.metadata.id)) {
+      ids.add(bundle.metadata.id);
+    }
+  });
+
+  bundles.forEach((bundle, index) => {
+    if (!isObject(bundle) || !isObject(bundle.metadata)) return;
+    const metadata = bundle.metadata;
+    const id = typeof metadata.id === 'string' ? metadata.id : undefined;
+
+    const routes = [
+      { value: metadata.slug, path: 'slug' },
+      ...(Array.isArray(metadata.aliases)
+        ? metadata.aliases.map((value, aliasIndex) => ({ value, path: `aliases[${aliasIndex}]` }))
+        : []),
+    ];
+    if (id && UUID.test(id)) {
+      for (const route of routes) {
+        if (typeof route.value !== 'string' || !SLUG.test(route.value)) continue;
+        const owner = registryOwner(routeOwnership, route.value);
+        if (owner === undefined) {
+          issue(issues, `lessons[${index}].metadata.${route.path}`, 'unregistered-route',
+            `Route name "${route.value}" must be registered to lesson ${id}.`);
+        } else if (owner !== id) {
+          issue(issues, `lessons[${index}].metadata.${route.path}`, 'historical-route-owner',
+            `Route name "${route.value}" is permanently owned by lesson ${owner}.`);
+        }
+      }
+    }
+
+    if (isObject(metadata.related)) {
+      if (Array.isArray(metadata.related.manual)) metadata.related.manual.forEach((rel, relIndex) => {
+        if (!isObject(rel) || typeof rel.id !== 'string' || !UUID.test(rel.id)) return;
+        if (rel.id === id) {
+          issue(issues, `lessons[${index}].metadata.related.manual[${relIndex}].id`, 'self-relationship', 'A lesson cannot manually relate to itself.');
+        } else if (!ids.has(rel.id)) {
+          issue(issues, `lessons[${index}].metadata.related.manual[${relIndex}].id`, 'unknown-relationship',
+            `Relationship references unknown lesson ID ${rel.id}.`);
+        }
+      });
+      if (Array.isArray(metadata.related.exclude)) metadata.related.exclude.forEach((relatedId, relIndex) => {
+        if (typeof relatedId === 'string' && UUID.test(relatedId) && !ids.has(relatedId)) {
+          issue(issues, `lessons[${index}].metadata.related.exclude[${relIndex}]`, 'unknown-relationship',
+            `Relationship references unknown lesson ID ${relatedId}.`);
+        }
+      });
+    }
+
+    if (Array.isArray(metadata.sources)) metadata.sources.forEach((source, sourceIndex) => {
+      if (isObject(source) && !isSafeSourceUrl(source.url)) {
+        issue(issues, `lessons[${index}].metadata.sources[${sourceIndex}].url`, 'source-url',
+          'Source URL must be an absolute HTTP(S) URL without embedded credentials.');
+      }
+    });
+  });
+
+  return { valid: issues.length === 0, issues };
+}
+
+export function updateRouteOwnershipRegistry(
+  bundles: readonly LessonBundle[],
+  existing: RouteOwnershipRegistry,
+): RouteOwnershipRegistry {
+  const next: Record<string, LessonId> = { ...existing };
+  for (const bundle of bundles) {
+    for (const route of [bundle.metadata.slug, ...bundle.metadata.aliases]) {
+      const owner = registryOwner(next, route);
+      if (owner !== undefined && owner !== bundle.metadata.id) {
+        throw new Error(`Route name "${route}" is already owned by lesson ${owner}.`);
+      }
+      next[route] = bundle.metadata.id;
+    }
+  }
+  return Object.fromEntries(Object.entries(next).sort(([a], [b]) => compareCanonical(a, b)));
+}
+
+export function buildRedirectManifest(bundles: readonly LessonBundle[]): RedirectEntry[] {
+  const redirects: RedirectEntry[] = [];
+  const seen = new Set<string>();
+  for (const bundle of bundles) {
+    if (!bundle.adult || !bundle.teen) throw new Error(`Cannot build redirects for incomplete lesson ${bundle.metadata.id}.`);
+    for (const alias of bundle.metadata.aliases) {
+      for (const edition of ['adult', 'teen'] as const) {
+        const from = lessonPath(edition, alias);
+        if (seen.has(from)) throw new Error(`Duplicate redirect source "${from}".`);
+        seen.add(from);
+        redirects.push({
+          from,
+          to: lessonPath(edition, bundle.metadata.slug),
+          lessonId: bundle.metadata.id,
+        });
+      }
+    }
+  }
+  return redirects.sort((a, b) => compareCanonical(a.from, b.from));
 }
 
 /** Publication validation is stricter than draft/schema validation. */
