@@ -99,6 +99,8 @@ Nothing below changes DNS, billing or the existing public Five Minutes site.
 4. Leave **Domains & Routes** without a custom domain. The site is then reachable only at `five-minutes-v2.<account-subdomain>.workers.dev` and on Worker Preview URLs.
 5. Open or update a pull request. Confirm that Cloudflare's PR comment shows a Worker Preview URL, then open it.
 
+> Integration note: the first preview build was intentionally triggered after connecting Workers Builds, so the Git integration could be verified against an already-open pull request.
+
 ### Alternative: GitHub Actions deploy (not chosen)
 
 Use this only if Workers Builds is unsuitable. It needs:
