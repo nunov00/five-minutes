@@ -240,3 +240,18 @@ export function validateLessonCollection(bundles: readonly unknown[]): Validatio
 
   return { valid: issues.length === 0, issues };
 }
+
+
+/** Publication validation is stricter than draft/schema validation. */
+export function validatePublicationEligibility(bundle: unknown): ValidationResult {
+  const result = validateLessonBundle(bundle);
+  const issues = [...result.issues];
+  if (!isObject(bundle)) return { valid: false, issues };
+  if (bundle.adult === undefined) issue(issues, 'adult', 'publication-presentation', 'Adult presentation is required for publication.');
+  if (bundle.teen === undefined) issue(issues, 'teen', 'publication-presentation', 'Teen presentation is required for publication.');
+  return { valid: issues.length === 0, issues };
+}
+
+export function publicationEligibleLessons(bundles: readonly unknown[]): unknown[] {
+  return bundles.filter((bundle) => validatePublicationEligibility(bundle).valid);
+}
