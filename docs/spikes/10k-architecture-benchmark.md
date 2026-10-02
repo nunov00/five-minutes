@@ -148,3 +148,53 @@ Interpretation:
 - Candidate C must be measured before the rendering architecture is selected.
 
 The benchmark workflow is intentionally reproducible; synthetic lesson fixtures are generated inside CI and are not committed to Git.
+
+
+## Benchmark C result — hybrid/on-demand + Pagefind
+
+Measured in GitHub Actions on 2 October 2026:
+
+- synthetic lessons: 10,000;
+- Astro build wall time: 1m 33.39s;
+- Astro peak resident memory: 2,552,440 kB;
+- Pagefind custom-record indexing wall time: 22.29s;
+- Pagefind peak resident memory: 66,496 kB;
+- total dist output: 10,083 files / 90.65 MiB;
+- Pagefind output: 10,060 files / 6.04 MiB.
+
+Interpretation: on-demand lesson rendering removed the ~10,000 physical lesson HTML files, but Pagefind remained a roughly one-file-per-lesson deployment constraint.
+
+## Compact search benchmark — hybrid/on-demand + MiniSearch
+
+Measured in GitHub Actions on 2 October 2026:
+
+- synthetic lessons: 10,000;
+- Astro hybrid build wall time: 1m 29.26s;
+- Astro peak resident memory: 2,475,772 kB;
+- MiniSearch benchmark process wall time: 5.32s;
+- MiniSearch peak resident memory: 349,560 kB;
+- index construction: 2.109s;
+- serialized index: 7.06 MiB;
+- gzip index: 1.46 MiB;
+- index load: 161.9ms on the CI runner;
+- representative synthetic queries: 43.5–66.7ms;
+- total dist output: 25 files / 93.13 MiB;
+- benchmark search output: 2 files.
+
+The dist-size comparison is not a network-transfer comparison: the hybrid adapter/runtime representation contributes substantial uncompressed output, and the benchmark intentionally wrote both raw and gzip search files. The decisive scale result is the deployed-file count, while browser transfer/memory must be validated with realistic content and mobile testing.
+
+## Spike conclusion
+
+The benchmark supports candidate C: hybrid/on-demand lesson rendering. Astro build time was not the scale problem; deployment file count was.
+
+Pagefind works functionally at 10k but its fragmented output becomes a deployment-file constraint. A compact MiniSearch index removes that constraint in the synthetic test and remains service-free and replaceable.
+
+Initial architecture direction:
+- individual canonical lesson sources in Git;
+- Astro content layer;
+- on-demand server-rendered lesson routes with caching;
+- compact lazy-loaded client-side search behind an application-owned interface;
+- no application database;
+- no client-rendered lesson-body architecture.
+
+This spike is evidence, not production code. Realistic mobile search performance remains a quality gate.
