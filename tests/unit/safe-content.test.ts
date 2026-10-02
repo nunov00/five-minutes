@@ -24,7 +24,9 @@ describe('safe lesson content pipeline', () => {
   });
 
   it('sanitizes unexpected rendered tags and attributes', () => {
-    expect(sanitizeRenderedHtml('<img src=x onerror=alert(1)><p onclick="x">safe</p>')).toBe('<p>safe</p>');
+    expect(sanitizeRenderedHtml('<img src=x onerror=alert(1)><p onclick="x">safe</p>')).toBe('&lt;img src=x onerror=alert(1)&gt;<p>safe</p>');
+    expect(sanitizeRenderedHtml('<<b>script>alert(1)<</b>/script>')).not.toContain('<script>');
+    expect(sanitizeRenderedHtml('<<b>img src=x onerror=alert(1)>')).not.toContain('<img');
   });
 
   it('parses front matter and plain Markdown without MDX execution', () => {
