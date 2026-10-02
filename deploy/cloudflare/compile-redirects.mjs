@@ -1,7 +1,7 @@
 import { readFile, writeFile } from 'node:fs/promises';
 
-const source = new URL('../dist/redirects.json', import.meta.url);
-const destination = new URL('../dist/_redirects', import.meta.url);
+const source = new URL('../../dist/redirects.json', import.meta.url);
+const destination = new URL('../../dist/_redirects', import.meta.url);
 const manifest = JSON.parse(await readFile(source, 'utf8'));
 if (manifest.version !== 1 || !Array.isArray(manifest.redirects)) {
   throw new Error('Unsupported or invalid redirect manifest.');
