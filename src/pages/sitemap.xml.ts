@@ -4,7 +4,8 @@ import { loadPublishedLessons } from '../lib/content/loader';
 import { buildGlobalDeliveryOutputs } from '../lib/global-delivery';
 
 export async function GET({ site }: { site: URL | undefined }) {
-  if (!site) throw new Error('Astro site URL is required to generate sitemap.xml.');
+  // Until the Owner selects the production origin, emit a valid empty sitemap rather than fake canonical URLs.
+  if (!site) return new Response('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"></urlset>\n', { headers: { 'content-type': 'application/xml; charset=utf-8' } });
   const loaded = await loadPublishedLessons(join(process.cwd(), 'src/content/lessons'), routeOwnership);
   const lessons = loaded.map(({ metadata, adult, teen }) => ({ metadata, adult, teen }));
   const outputs = buildGlobalDeliveryOutputs(lessons, routeOwnership);
