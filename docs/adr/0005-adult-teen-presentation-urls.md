@@ -1,8 +1,8 @@
 # ADR-0005: Separate Adult and Teen presentation URLs
 
-Status: Proposed
+Status: Accepted
 Date: 2026-10-02
-Owner direction: approved for incorporation into the proposed architecture; final architecture approval remains pending.
+Owner approval: approved 2026-10-02.
 
 ## Context
 
