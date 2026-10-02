@@ -1,6 +1,6 @@
 # ADR-0002: Hybrid on-demand lesson rendering
 
-Status: Accepted
+Status: Proposed
 Date: 2026-10-02
 
 ## Context
