@@ -6,8 +6,8 @@ The accepted architecture lives in `docs/ARCHITECTURE.md` and `docs/adr/`. Gover
 
 ## Requirements
 
-- Node.js 22 LTS
-- npm
+- Node.js 22 LTS, version 22.12 or later (Astro 7 requirement; see `.nvmrc`)
+- npm (use the committed `package-lock.json` via `npm ci`)
 
 ## Local development
 
@@ -30,7 +30,6 @@ The application produces standard static output in `dist/`. Hosting-provider con
 
 - `src/` — production application code
 - `docs/` — architecture, governance, ADRs and operations
-- `benchmark/` — retained architecture-spike evidence/tools; not production application code
-- `.github/workflows/benchmark-*.yml` — manual-only architecture benchmarks
+- `benchmark/` and `.github/workflows/benchmark-*.yml` — retained architecture-spike evidence; not production application code. These tools were written for the spike's Astro 5 package setup and are not runnable against the current production `package.json`. To reproduce the published benchmark results, check out commit `c098907` (the merged architecture spike) and follow `docs/spikes/10k-architecture-benchmark.md`.
 
 Implementation work is tracked from GitHub issue #4.
