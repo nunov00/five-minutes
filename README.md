@@ -49,10 +49,18 @@ Write journeys with `test`/`expect` imported from `tests/e2e/support/fixtures.ts
 
 The application produces standard static output in `dist/`. Hosting-provider configuration belongs at the deployment boundary and must not leak into application/domain logic.
 
+`npm run dist:count` reports how many deployable files `dist/` contains (CI prints this after every build), because hosting providers limit files per deployment.
+
+## Deployment
+
+Cloudflare is the initial host. Its configuration lives only in `deploy/cloudflare/`. That directory deploys the unchanged `dist/` as Workers Static Assets, with production from `main` and preview URLs for pull requests through Cloudflare Workers Builds. See [`deploy/cloudflare/README.md`](deploy/cloudflare/README.md) for the setup, limits and commands (`npm run cf:preview`, `npm run cf:deploy`). Any other static host can serve the same `dist/`.
+
 ## Repository areas
 
 - `src/` — production application code
 - `docs/` — architecture, governance, ADRs and operations
+- `deploy/` — hosting-provider adapters (currently `deploy/cloudflare/`); not application code
+- `scripts/` — build/deployment tooling such as `count-dist-files.mjs`
 - `benchmark/` and `.github/workflows/benchmark-*.yml` — retained architecture-spike evidence; not production application code. These tools were written for the spike's Astro 5 package setup and are not runnable against the current production `package.json`. To reproduce the published benchmark results, check out commit `c098907` (the merged architecture spike) and follow `docs/spikes/10k-architecture-benchmark.md`.
 
 Implementation work is tracked from GitHub issue #4.

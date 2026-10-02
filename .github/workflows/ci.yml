@@ -49,6 +49,9 @@ jobs:
       - name: Production static build (npm run build)
         run: npm run build
 
+      - name: Deployable file count (npm run dist:count)
+        run: npm run dist:count
+
   e2e:
     # Stable check name for branch protection and publication automation.
     name: e2e
