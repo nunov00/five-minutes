@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process';
-import { mkdtemp, mkdir, writeFile } from 'node:fs/promises';
+import { mkdtemp, mkdir, symlink, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
@@ -54,9 +54,40 @@ searchTerms: [safe]
     expect(lessons[0].teenHtml).not.toContain('&amp;amp;');
   });
 
+  it('rejects misplaced content and stray files instead of silently ignoring them', async () => {
+    const root = await mkdtemp(join(tmpdir(), 'five-minutes-layout-'));
+    await mkdir(join(root, 'misplaced'), { recursive: true });
+    await expect(loadPublishedLessons(root, {})).rejects.toThrow(/Unexpected entry/);
+  });
+
+  it('rejects missing or extra canonical lesson files', async () => {
+    const root = await mkdtemp(join(tmpdir(), 'five-minutes-files-'));
+    const dir = join(root, '2026', 'broken');
+    await mkdir(dir, { recursive: true });
+    await writeFile(join(dir, 'lesson.yaml'), 'x: 1');
+    await writeFile(join(dir, 'adult.md'), '---\ntitle: x\n---\nx');
+    await expect(loadPublishedLessons(root, {})).rejects.toThrow(/must contain exactly/);
+    await writeFile(join(dir, 'teen.md'), '---\ntitle: x\n---\nx');
+    await writeFile(join(dir, 'stray.txt'), 'ignored?');
+    await expect(loadPublishedLessons(root, {})).rejects.toThrow(/must contain exactly/);
+  });
+
+  it('rejects symlinked canonical files', async () => {
+    const root = await mkdtemp(join(tmpdir(), 'five-minutes-symlink-'));
+    const dir = join(root, '2026', 'linked');
+    await mkdir(dir, { recursive: true });
+    await writeFile(join(dir, 'lesson.yaml'), 'x: 1');
+    await writeFile(join(dir, 'adult.md'), '---\ntitle: x\n---\nx');
+    await symlink(join(dir, 'adult.md'), join(dir, 'teen.md'));
+    await expect(loadPublishedLessons(root, {})).rejects.toThrow(/regular non-symlink/);
+  });
+
   it('enforces append-only route ownership against the PR base when CI supplies it', () => {
     const base = process.env.CONTENT_BASE_SHA;
-    if (!base) return;
+    if (!base) {
+      if (process.env.GITHUB_ACTIONS === 'true') throw new Error('CONTENT_BASE_SHA is required in GitHub Actions.');
+      return;
+    }
     const previousText = execFileSync('git', ['show', `${base}:src/content/route-ownership.json`], { encoding: 'utf8' });
     const previous = JSON.parse(previousText);
     const result = validateRouteOwnershipHistory(previous, routeOwnership);
