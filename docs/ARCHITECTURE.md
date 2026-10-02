@@ -1,6 +1,6 @@
 # Five Minutes Architecture
 
-Status: proposed target architecture, based on architecture discovery and reproducible 10,000-lesson benchmarks. Significant changes require Owner approval under docs/GOVERNANCE.md.
+Status: accepted target architecture, based on architecture discovery, reproducible 10,000-lesson benchmarks and Owner-approved ADRs. Significant changes require Owner approval under docs/GOVERNANCE.md.
 
 ## Product architecture goal
 
@@ -141,6 +141,6 @@ The following remain design work rather than accidental commitments:
 - realistic mobile search performance thresholds;
 - analytics product-event requirements;
 - future cross-device state synchronization;
-- final Cloudflare production/preview configuration.
+- final Cloudflare production/custom-domain activation and cutover configuration.
 
 These decisions should be recorded in ADRs when they become significant.
