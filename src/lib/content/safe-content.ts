@@ -36,20 +36,36 @@ function inline(source: string): string {
 }
 
 export function sanitizeRenderedHtml(html: string): string {
-  return html.replace(/<\/?([a-z0-9]+)([^>]*)>/gi, (tag, name: string, attrs: string) => {
-    const n = name.toLowerCase();
-    if (!TAGS.has(n)) return escapeHtml(tag);
-    if (tag.startsWith('</') || n !== 'a') return `<${tag.startsWith('</') ? '/' : ''}${n}>`;
-    const href = /href="([^"]*)"/.exec(attrs)?.[1];
-    if (!href || !SAFE_LINK.test(href)) return escapeHtml(tag);
-    return `<a href="${href}" rel="noopener noreferrer">`;
-  });
+  const completeTag = /<\/?([a-z0-9]+)([^>]*)>/gi;
+  const output: string[] = [];
+  let cursor = 0;
+
+  for (const match of html.matchAll(completeTag)) {
+    const index = match.index ?? 0;
+    output.push(escapeHtml(html.slice(cursor, index)));
+
+    const tag = match[0];
+    const name = match[1].toLowerCase();
+    const attrs = match[2];
+
+    if (!TAGS.has(name)) {
+      output.push(escapeHtml(tag));
+    } else if (tag.startsWith('</') || name !== 'a') {
+      output.push(`<${tag.startsWith('</') ? '/' : ''}${name}>`);
+    } else {
+      const href = /href="([^"]*)"/.exec(attrs)?.[1];
+      output.push(href && SAFE_LINK.test(href)
+        ? `<a href="${href}" rel="noopener noreferrer">`
+        : escapeHtml(tag));
+    }
+    cursor = index + tag.length;
+  }
+
+  output.push(escapeHtml(html.slice(cursor)));
+  return output.join('');
 }
 
 export function renderSafeMarkdown(markdown: string): string {
-  if (/^\s*<[^>]+>/m.test(markdown)) {
-    // Raw HTML is content, never executable markup. Escaping below neutralizes it.
-  }
   const lines = markdown.replace(/\r\n?/g, '\n').split('\n');
   const rendered: string[] = [];
   let list: 'ul' | 'ol' | null = null;
