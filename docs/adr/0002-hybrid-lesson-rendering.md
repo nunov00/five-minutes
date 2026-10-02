@@ -41,4 +41,4 @@ Shard size is operational configuration, not a product contract. It can be adjus
 
 Provider-specific deployment remains outside core content/application logic.
 
-At the 10,000-identity benchmark target, the assembled synthetic artifact contained 20,000 HTML pages plus the compact search artifact. Current hosting limits must be verified separately before production deployment.
+At the 10,000-identity benchmark target, the assembled synthetic artifact contained 20,000 HTML pages plus one compact search artifact (20,001 files total). Cloudflare limits were reverified on 2 October 2026: Free allows 20,000 static files and paid plans 100,000. This is treated as an operational threshold; actual production file count is monitored and hosting/deployment representation is revisited only when needed.

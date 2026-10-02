@@ -29,9 +29,9 @@ Open -> Today's idea -> Read -> Understand -> Test yourself -> Explore another i
 
 Canonical lessons are individual structured files in Git, validated against a schema.
 
-Shared lesson metadata is expected to include stable ID/slug, publication date/status, topic/subtopic, concepts/tags, relationships, provenance/sources and generation/review metadata.
+Shared lesson metadata includes the immutable ID, mutable slug/aliases, publication status/time, topic/subtopic/concepts, relationships, provenance/sources and generation/review metadata defined by ADR-0006.
 
-Audience-specific content includes Adult and Teen title/deck/body/examples/takeaway/retrieval question where appropriate. The exact schema remains a separate design decision.
+Adult Markdown is required and Teen Markdown is optional. Audience-specific title/description/body/examples/takeaway/retrieval question may differ while sharing the same lesson identity.
 
 ### Web framework
 

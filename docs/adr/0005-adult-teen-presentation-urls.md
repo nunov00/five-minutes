@@ -51,6 +51,4 @@ Rejected because it introduces runtime/caching complexity and makes the URL itse
 
 ## Follow-up
 
-Before selecting the final rendering architecture, benchmark the full-prerender candidate with compact metadata search using the two-presentation page-count model.
-
-The exact lesson schema is the next architecture decision.
+The two-presentation rendering benchmark has been completed and is reflected in ADR-0002. Exact route syntax and canonical/alternate metadata are bounded implementation details under this semantic contract.

@@ -134,7 +134,7 @@ The schema supports explicit editorial relationship overrides while allowing bui
 
 Sources are first-class lesson metadata and remain reviewable in Git. Generation metadata records how the draft was created without making any AI provider part of the rendering/content contract.
 
-Review history may record automated and human/AI review events. The policy deciding which review is mandatory before publication is a separate Owner decision.
+Review history may record automated and human/AI review events. ADR-0007 defines the publication review policy; routine publication may be authorized by an independent AI reviewer after required validation.
 
 ### Validation
 
@@ -188,10 +188,4 @@ Rejected for the initial product under ADR-0001; the schema is intentionally por
 
 ## Follow-up decisions
 
-Before implementation architecture is approved:
-
-1. define publication lifecycle / Today semantics and review requirement;
-2. amend the search ADR around edition-specific metadata/catalogue fields and realistic payload budgets;
-3. rerun the rendering/search benchmark using the two-presentation model and realistic text.
-
-The controlled taxonomy and related-content scoring can remain deferred.
+The publication lifecycle/review policy, edition-specific discovery search, and two-presentation rendering benchmark are now defined by ADR-0007, ADR-0003 and ADR-0002 respectively. Controlled taxonomy and related-content scoring remain deliberately deferred.
