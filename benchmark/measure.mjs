@@ -1,6 +1,1 @@
-import { readdir, stat, writeFile } from 'node:fs/promises'; import { join } from 'node:path';
-async function walk(p){let files=[];for(const e of await readdir(p,{withFileTypes:true})){const q=join(p,e.name);if(e.isDirectory())files.push(...await walk(q));else files.push(q)}return files}
-const files=await walk('dist'); let bytes=0; for(const f of files) bytes+=(await stat(f)).size;
-const sf=files.filter(f=>f.includes('/search/')); let sb=0; for(const f of sf) sb+=(await stat(f)).size;
-const result={generatedAt:new Date().toISOString(),distFiles:files.length,distMiB:+(bytes/1048576).toFixed(2),searchFiles:sf.length,searchMiB:+(sb/1048576).toFixed(2)};
-console.log(JSON.stringify(result,null,2)); await writeFile('benchmark-results.json',JSON.stringify(result,null,2));
+import {readdir,stat,writeFile} from 'node:fs/promises';import {join} from 'node:path';async function walk(p){let f=[];for(const e of await readdir(p,{withFileTypes:true})){const q=join(p,e.name);f.push(...(e.isDirectory()?await walk(q):[q]))}return f}const files=await walk('dist');let bytes=0;for(const f of files)bytes+=(await stat(f)).size;const sf=files.filter(f=>f.includes('/search/'));let sb=0;for(const f of sf)sb+=(await stat(f)).size;const html=files.filter(f=>f.endsWith('.html'));const result={generatedAt:new Date().toISOString(),distFiles:files.length,htmlFiles:html.length,distMiB:+(bytes/1048576).toFixed(2),searchFiles:sf.length,searchMiB:+(sb/1048576).toFixed(2)};console.log(JSON.stringify(result,null,2));await writeFile('benchmark-results.json',JSON.stringify(result,null,2));

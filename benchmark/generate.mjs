@@ -1,12 +1,9 @@
-import { mkdir, rm, writeFile } from 'node:fs/promises';
-const root=new URL('../src/content/lessons/',import.meta.url);
-await rm(root,{recursive:true,force:true}); await mkdir(root,{recursive:true});
-const para=(i,a,p)=>`Lesson ${i} ${a} section ${p}. This synthetic paragraph represents explanatory Five Minutes prose about a useful idea, its mechanism, an example, limitations, and a practical takeaway. It is intentionally substantial enough to exercise rendering and search indexing rather than benchmark empty pages.`;
-for(let i=1;i<=10000;i++){
- const id=String(i).padStart(5,'0'), topic=`Topic ${i%20}`, subtopic=`Subtopic ${i%100}`;
- const adult=Array.from({length:7},(_,p)=>para(i,'adult',p+1)).join('\n\n');
- const teen=Array.from({length:6},(_,p)=>para(i,'teen',p+1)).join('\n\n');
- const body=`---\nid: "lesson-${id}"\ntitle: "Synthetic lesson ${id}"\ntopic: "${topic}"\nsubtopic: "${subtopic}"\n---\n# Synthetic lesson ${id}\n\n## Adult\n\n${adult}\n\n## Teen\n\n${teen}\n\n## Takeaway\n\nA concise synthetic takeaway for lesson ${id}.\n`;
- await writeFile(new URL(`lesson-${id}.md`,root),body);
-}
-console.log('generated 10000 lessons');
+import {mkdir,rm,writeFile} from 'node:fs/promises';
+const root=new URL('../src/content/lessons/',import.meta.url); await rm(root,{recursive:true,force:true}); await mkdir(root,{recursive:true});
+const common=['system','change','energy','memory','signal','network','pattern','evidence','model','decision','history','science','language','market','biology','physics','society','technology','learning','design','cause','effect','process','structure','measure','feedback','risk','value','time','space','human','group','resource','information','example','mechanism','context','result','limit','practice'];
+const vocab=Array.from({length:12000},(_,i)=>'term'+String(i+1).padStart(5,'0'));
+function hash(n){let x=n>>>0;x^=x<<13;x^=x>>>17;x^=x<<5;return x>>>0}
+function word(seed,pos){const x=hash(seed*2654435761+pos*2246822519);if(x%100<58)return common[x%common.length];const u=(x%100000)/100000;return vocab[Math.min(vocab.length-1,Math.floor(u*u*vocab.length))]}
+function prose(seed,edition){const ps=[],wc=edition==='adult'?105:90,pc=edition==='adult'?8:7;for(let p=0;p<pc;p++){const ws=[];for(let w=0;w<wc;w++)ws.push(word(seed+p*97,w));ws[0]=edition==='adult'?'Understanding':'Imagine';ps.push(ws.join(' ')+'.')}return ps.join('\n\n')}
+for(let i=1;i<=10000;i++){const n=String(i).padStart(5,'0'),topic='topic-'+i%40,subtopic='subtopic-'+i%240,concepts=[vocab[i*7%vocab.length],vocab[i*19%vocab.length],vocab[i*43%vocab.length]];for(const edition of ['adult','teen']){const title=edition==='adult'?'Understanding idea '+n:'Idea '+n+': why it matters',description='A practical explanation of '+concepts[0]+', '+concepts[1]+' and the mechanism behind '+topic+'.',takeaway='The key connection is between '+concepts[1]+', '+concepts[2]+' and '+subtopic+'.';const body='---\nid: "lesson-'+n+'"\nslug: "lesson-'+n+'"\nedition: "'+edition+'"\ntitle: "'+title+'"\ndescription: "'+description+'"\ntopic: "'+topic+'"\nsubtopic: "'+subtopic+'"\nconcepts: ['+concepts.map(c=>'"'+c+'"').join(', ')+']\ntakeaway: "'+takeaway+'"\n---\n# '+title+'\n\n'+prose(i*2+(edition==='teen'?1:0),edition)+'\n';await writeFile(new URL('lesson-'+n+'-'+edition+'.md',root),body)}}
+console.log('generated 10000 lesson identities / 20000 edition presentations');

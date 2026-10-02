@@ -1,9 +1,9 @@
-name: 10k compact search benchmark
+name: 10k prerender compact-search benchmark
 on:
   pull_request:
     paths:
       - 'benchmark/**'
-      - 'src/pages/lesson/**'
+      - 'src/pages/**'
       - 'src/content.config.ts'
       - 'astro.config.mjs'
       - 'package.json'
@@ -19,17 +19,17 @@ jobs:
         with:
           node-version: 22
       - run: npm install --no-audit --no-fund
-      - name: Generate 10k synthetic lessons
+      - name: Generate 10k realistic-vocabulary lessons with two editions
         run: npm run generate
-      - name: Astro hybrid build
+      - name: Astro full prerender build
         run: /usr/bin/time -v npm run build 2>&1 | tee astro-build.log
-      - name: MiniSearch index and query benchmark
+      - name: Compact metadata MiniSearch benchmark
         run: /usr/bin/time -v npm run index 2>&1 | tee search.log
       - name: Measure output
         run: npm run measure | tee measurements.log
       - uses: actions/upload-artifact@v4
         with:
-          name: compact-search-benchmark-results
+          name: prerender-compact-search-benchmark-results
           path: |
             benchmark-results.json
             search-benchmark-results.json
