@@ -22,6 +22,7 @@ Five Minutes is a Git-backed, static learning publication. Read these before sub
 - AI workers may author changes but do not push directly to `main`.
 - Routine lesson publication may be authorized by an independent AI reviewer after required validation; failed, uncertain or exceptional review must escalate rather than silently publish.
 - Prefer small, testable changes and update documentation/ADRs when architectural behaviour changes.
+- Keep commits atomic at the logical-change level where practical: prepare related code/configuration and documentation together before pushing. Avoid unnecessary sequential commits on CI/CD-connected branches because each push may trigger a full test, preview build or deployment.
 
 ## Commands
 
