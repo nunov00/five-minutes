@@ -8,7 +8,7 @@ Owner approval: pending final architecture approval.
 
 Lesson content is the central contract between research/generation, validation, rendering, search, taxonomy, related content, local reader state and publication.
 
-The contract must support one stable lesson identity with distinct Adult and optional Teen presentations, provenance, lifecycle state, mutable human-readable URLs, and safe AI-authored content. It must remain easy to review in Git and must not require a database.
+The contract must support one stable lesson identity with distinct Adult and Teen presentations, provenance, lifecycle state, mutable human-readable URLs, and safe AI-authored content. It must remain easy to review in Git and must not require a database.
 
 A slug cannot be the durable identity because titles and URLs may change while Saved/Read state must remain stable.
 
@@ -24,7 +24,7 @@ src/content/lessons/
     why-gps-needs-einstein/
       lesson.yaml
       adult.md
-      teen.md        # optional
+      teen.md
 ```
 
 The directory name is an organisational convenience and is not authoritative identity or routing data; it need not equal the current slug. The lesson ID may not change.
@@ -89,7 +89,7 @@ Exact UUID representation and provenance subfields may be tightened by the valid
 
 ### Presentation files
 
-`adult.md` is required. `teen.md` is optional.
+Draft generation may temporarily produce one presentation before the other. Publication requires both `adult.md` and `teen.md`, and both must pass their applicable validation/review gates.
 
 Each presentation has a small validated front matter block plus plain Markdown body:
 
@@ -153,7 +153,7 @@ CI/build validation must reject at least:
 - malformed or unsafe URLs;
 - unknown taxonomy references;
 - relationships to nonexistent IDs;
-- missing Adult presentation;
+- a published lesson missing either Adult or Teen presentation;
 - invalid presentation metadata;
 - unsafe Markdown constructs;
 - published content that violates the publication policy.
@@ -186,7 +186,7 @@ Rejected for the initial product under ADR-0001; the schema is intentionally por
 
 - AI workers have a clear, provider-neutral output contract.
 - Prose remains pleasant to edit and review.
-- Adult and Teen presentations can evolve independently without becoming separate lessons.
+- Adult and Teen presentations can evolve independently without becoming separate lessons, while publication guarantees that both editions exist.
 - URL changes do not invalidate Saved/Read state.
 - Source files remain individually reviewable in Git.
 - Schema validation becomes a mandatory CI quality gate.

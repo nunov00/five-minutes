@@ -11,7 +11,7 @@ Five Minutes is a Git-backed, static learning publication. Read these before sub
 
 - GitHub is authoritative; `main` must remain production-ready.
 - Significant work uses an issue/task, branch, PR, checks and review.
-- Preserve one immutable lesson identity across Adult/Teen presentations.
+- Preserve one immutable lesson identity across Adult/Teen presentations. Both Adult and Teen presentations are mandatory for publication, though a draft may be temporarily incomplete.
 - Canonical content is validated plain Markdown plus structured metadata; do not introduce MDX/raw executable lesson content.
 - Keep core logic provider-neutral. Cloudflare, search engines and AI providers are adapters/configuration choices.
 - Do not add a database, SSR lesson runtime, account system or new service without evidence and the required Owner approval.
