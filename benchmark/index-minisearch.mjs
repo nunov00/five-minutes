@@ -1,7 +1,21 @@
-import MiniSearch from 'minisearch'; import {getCollection} from 'astro:content'; import {mkdir,writeFile} from 'node:fs/promises'; import {gzipSync} from 'node:zlib'; import {performance} from 'node:perf_hooks';
-const presentations=await getCollection('lessons'); const docs=presentations.map(e=>({key:e.data.id+':'+e.data.edition,id:e.data.id,edition:e.data.edition,title:e.data.title,description:e.data.description,topic:e.data.topic,subtopic:e.data.subtopic,concepts:e.data.concepts.join(' '),takeaway:e.data.takeaway,url:'/'+e.data.edition+'/lessons/'+e.data.slug+'/'}));
+import MiniSearch from 'minisearch';
+import { getCollection } from 'astro:content';
+import { mkdir, writeFile } from 'node:fs/promises';
+import { gzipSync } from 'node:zlib';
+import { performance } from 'node:perf_hooks';
+
+const presentations = await getCollection('lessons');
+const identityCount = new Set(presentations.map(e => e.data.id)).size;
+if (presentations.length !== 20000 || identityCount !== 10000) {
+  throw new Error('Cardinality failure before search: expected 20000 presentations / 10000 identities, got ' + presentations.length + ' / ' + identityCount);
+}
+const docs=presentations.map(e=>({key:e.data.id+':'+e.data.edition,id:e.data.id,edition:e.data.edition,title:e.data.title,description:e.data.description,topic:e.data.topic,subtopic:e.data.subtopic,concepts:e.data.concepts.join(' '),takeaway:e.data.takeaway,url:'/'+e.data.edition+'/lessons/'+e.data.slug+'/'}));
+if (new Set(docs.map(d=>d.key)).size !== 20000) throw new Error('Search document keys are not unique');
 const opts={idField:'key',fields:['title','description','topic','subtopic','concepts','takeaway'],storeFields:['id','edition','title','description','topic','subtopic','url'],searchOptions:{boost:{title:5,concepts:3,topic:2,subtopic:2},prefix:true}};
-const t0=performance.now(); const mini=new MiniSearch(opts); mini.addAll(docs); const buildMs=performance.now()-t0,json=JSON.stringify(mini),gzip=gzipSync(json); await mkdir('dist/search',{recursive:true}); await writeFile('dist/search/minisearch-index.json',json);
-const t1=performance.now(),loaded=MiniSearch.loadJSON(json,opts),loadMs=performance.now()-t1; const timings=[];
+const t0=performance.now(); const mini=new MiniSearch(opts); mini.addAll(docs); const buildMs=performance.now()-t0,json=JSON.stringify(mini),gzip=gzipSync(json);
+await mkdir('dist/search',{recursive:true}); await writeFile('dist/search/minisearch-index.json',json);
+const t1=performance.now(),loaded=MiniSearch.loadJSON(json,opts),loadMs=performance.now()-t1;
+const timings=[];
 for(const query of ['idea 04200','term00140 mechanism','topic-7','term03000 subtopic-81']){for(let i=0;i<5;i++)loaded.search(query,{prefix:true,fuzzy:0.2}).slice(0,20);const s=[];for(let i=0;i<20;i++){const q=performance.now();loaded.search(query,{prefix:true,fuzzy:0.2}).slice(0,20);s.push(performance.now()-q)}s.sort((a,b)=>a-b);timings.push({query,p50Ms:+s[9].toFixed(3),p95Ms:+s[18].toFixed(3)})}
-const result={documents:docs.length,lessonIdentities:new Set(docs.map(d=>d.id)).size,buildMs:+buildMs.toFixed(1),loadMs:+loadMs.toFixed(1),indexMiB:+(Buffer.byteLength(json)/1048576).toFixed(2),gzipMiB:+(gzip.byteLength/1048576).toFixed(2),queries:timings}; console.log(JSON.stringify(result,null,2)); await writeFile('search-benchmark-results.json',JSON.stringify(result,null,2));
+const result={documents:docs.length,lessonIdentities:identityCount,buildMs:+buildMs.toFixed(1),loadMs:+loadMs.toFixed(1),indexMiB:+(Buffer.byteLength(json)/1048576).toFixed(2),gzipMiB:+(gzip.byteLength/1048576).toFixed(2),queries:timings};
+console.log(JSON.stringify(result,null,2)); await writeFile('search-benchmark-results.json',JSON.stringify(result,null,2));
