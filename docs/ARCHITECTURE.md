@@ -41,11 +41,11 @@ Stable small routes may be prerendered. Lesson routes use on-demand server rende
 
 ### Search
 
-The application exposes search through an internal search interface rather than coupling UI components to one engine.
+Search is discovery-oriented initially, not full-body text search. A compact generated catalogue/search representation contains edition-specific title, description/deck, taxonomy/concepts, curated search terms and takeaway metadata. It is lazy-loaded only by discovery surfaces.
 
-The initial implementation target is MiniSearch with a generated compact index loaded only when search/discovery requires it. The 10k synthetic benchmark produced a ~7.06 MiB serialized index / ~1.46 MiB gzip representation, built in ~2.1s and loaded in ~162ms on the CI runner, with representative queries around 44-67ms.
+MiniSearch is the initial candidate behind an application-owned search interface. The original full-text synthetic MiniSearch size figures are not treated as evidence for realistic 10k full-text search; realistic-vocabulary and mobile-browser validation is required before acceptance.
 
-Mobile-browser performance must be validated with realistic content before this becomes irreversible. If catalogue growth later exceeds comfortable client-side search, the search implementation can be replaced without changing canonical lesson content or the main UI contract.
+The same compact catalogue should, where practical, power Library, Topics, Surprise Me and local Saved/Read filtering rather than creating multiple browser datasets.
 
 ### Reader state
 
