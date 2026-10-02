@@ -2,7 +2,7 @@
 
 Status: Proposed
 Date: 2026-10-02
-Owner approval: pending final architecture approval.
+Owner direction: independent AI review may authorize routine lesson publication; final architecture approval remains pending.
 
 ## Context
 
@@ -62,9 +62,9 @@ A lesson may not become `published` until:
 4. editorial quality review has completed;
 5. required CI/build tests pass.
 
-The mechanism for factual/editorial review may include an independent AI reviewer, but whether **every lesson requires human review before publication** is an Owner-level product/risk decision and is intentionally not silently decided by this ADR.
+Factual/editorial review may be performed by an independent AI reviewer. The Owner has approved independent AI review as sufficient authorization for routine lesson publication once all required automated validation and CI gates pass.
 
-Until the Owner approves an automated-publication policy, automated AI review alone must not be treated as authorization for unattended production publication.
+The reviewer must be independent of the generation step for that lesson. Review failure, material uncertainty, unsupported claims, safety/policy concerns, schema/security failures or other defined exceptional conditions must fail closed and escalate rather than publish automatically. Human review remains available but is not mandatory for every routine lesson.
 
 ### Corrections
 
@@ -78,8 +78,7 @@ A later schema may add `updatedAt` and material-correction history where useful;
 - All public discovery surfaces share one publication eligibility rule.
 - Today requires no special database/state.
 - Scheduled publication can be implemented with repository automation rather than runtime infrastructure.
-- An unattended AI-to-production loop is not enabled accidentally.
-- The remaining Owner decision about human review can evolve independently of the content schema.
+- Automated publication can operate without mandatory per-lesson human approval while retaining an independent review gate and fail-closed escalation.
 
 ## Required implementation controls
 
@@ -87,12 +86,6 @@ The publication pipeline should use least-privilege credentials, branch protecti
 
 AI-authored canonical bodies use the safe Markdown contract in ADR-0006. Publication validation must reject unsafe links/content according to the security policy.
 
-## Follow-up Owner decision
+## Owner decision
 
-Before unattended automated lesson publication is enabled, choose one of:
-
-1. human approval required for every lesson;
-2. independent AI review may authorize routine lessons, with mandatory human escalation for defined risk/quality conditions;
-3. another explicitly documented review policy.
-
-This decision should be recorded as an amendment or dedicated publication-safety ADR.
+Independent AI review is sufficient for routine lesson publication. Article-content and editorial-quality policy will be refined separately; this ADR defines the authorization mechanism, not the future editorial rubric.

@@ -69,7 +69,7 @@ Schedule/manual trigger
 -> schema/content validation
 -> automated quality checks
 -> pull request
--> independent review
+-> independent AI review (routine publication authority; fail closed/escalate on uncertainty)
 -> merge
 -> deployment
 
@@ -103,6 +103,18 @@ Corrected representative-vocabulary benchmarks on GitHub Actions with Node 22 an
 - Final synthetic assembled artifact: 20,001 files / 145.25 MiB.
 
 The evidence supports sharded static lesson generation plus compact client-side discovery search. It does not support adding a database, client-rendering lesson bodies, or accepting the earlier hybrid/on-demand implementation.
+
+## Repository and operations
+
+The proposed repository structure, build/deployment flow, dependency/secrets strategy, backup/recovery model, AI-worker context and implementation milestones are defined in `docs/OPERATIONS.md`.
+
+The architecture is designed so a clean checkout with pinned dependencies can reproduce the deployable artifact; hosting is replaceable output rather than canonical state.
+
+## Cloudflare deployment boundary
+
+As verified against Cloudflare documentation on 2 October 2026, the Free plan supports 20,000 static files per Pages site or Worker version, while paid plans support 100,000. The synthetic 10,000-identity / 20,000-presentation benchmark produced 20,001 files, so that benchmark exceeds the current Free ceiling by one file but remains far below the paid ceiling.
+
+This is an operational threshold, not a reason to change the content/rendering architecture now. Actual production file count must be monitored. If the project approaches the active hosting limit, reassess plan/provider or deployment representation using then-current evidence. Core architecture must remain portable.
 
 ## Deliberately deferred decisions
 
