@@ -11,8 +11,9 @@
     "test": "vitest run",
     "test:e2e": "playwright test",
     "dist:count": "node scripts/count-dist-files.mjs",
-    "cf:deploy": "node scripts/count-dist-files.mjs --warn-at 16000 && wrangler deploy --config deploy/cloudflare/wrangler.jsonc",
-    "cf:preview": "node scripts/count-dist-files.mjs --warn-at 16000 && wrangler preview --config deploy/cloudflare/wrangler.jsonc"
+    "cf:deploy": "node scripts/count-dist-files.mjs --warn-at 16000 && npm run cf:prepare && wrangler deploy --config deploy/cloudflare/wrangler.jsonc",
+    "cf:preview": "node scripts/count-dist-files.mjs --warn-at 16000 && npm run cf:prepare && wrangler preview --config deploy/cloudflare/wrangler.jsonc",
+    "cf:prepare": "node deploy/cloudflare/compile-redirects.mjs"
   },
   "dependencies": {
     "astro": "7.3.5",
