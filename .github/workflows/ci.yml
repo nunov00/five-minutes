@@ -1,6 +1,7 @@
 name: CI
 
-# Baseline production quality gates for every pull request and for main.
+# Production quality gates for every pull request and for main:
+# `baseline` (install, check, unit tests, build) then `e2e` (Playwright).
 # The 10k architecture benchmarks (benchmark-*.yml) are manual-only and are
 # intentionally not part of this workflow.
 
@@ -47,3 +48,44 @@ jobs:
 
       - name: Production static build (npm run build)
         run: npm run build
+
+  e2e:
+    # Stable check name for branch protection and publication automation.
+    name: e2e
+    # Browser journeys only run once the baseline gates pass.
+    needs: baseline
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Node.js (from .nvmrc)
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies (npm ci)
+        run: npm ci --no-audit --no-fund
+
+      - name: Install Playwright Chromium and system dependencies
+        run: npx playwright install --with-deps chromium
+
+      - name: Production static build (npm run build)
+        run: npm run build
+
+      - name: Playwright E2E against built site (npm run test:e2e)
+        run: npm run test:e2e
+
+      - name: Upload Playwright report
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7

@@ -14,3 +14,8 @@ npm-debug.log*
 
 # OS/editor files
 .DS_Store
+
+# Playwright output
+test-results/
+playwright-report/
+blob-report/
