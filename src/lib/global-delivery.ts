@@ -1,4 +1,5 @@
 import type { LessonBundle, RedirectEntry, RouteOwnershipRegistry } from './content/schema';
+import { validateRouteOwnershipRegistry } from './content/schema';
 import { lessonPath } from './urls';
 import { buildDeliveryManifest, type DeliveryManifest } from './delivery-manifest';
 
@@ -14,21 +15,32 @@ export function buildGlobalDeliveryOutputs(
   lessons: readonly LessonBundle[],
   ownership: RouteOwnershipRegistry,
 ): GlobalDeliveryOutputs {
+  const registryValidation = validateRouteOwnershipRegistry(ownership);
+  if (!registryValidation.valid) {
+    throw new Error(`Invalid route ownership registry: ${registryValidation.issues.map((issue) => issue.message).join('; ')}`);
+  }
+
   const manifest = buildDeliveryManifest(lessons);
   const byId = new Map(lessons.map((lesson) => [lesson.metadata.id, lesson]));
+  const canonicalPaths = new Set(manifest.routes.map((route) => route.path));
   const redirects = [...manifest.redirects];
-  const seen = new Set(redirects.map((entry) => entry.from));
+  const redirectTargets = new Map(redirects.map((entry) => [entry.from, entry.to]));
 
   for (const [historicalName, lessonId] of Object.entries(ownership).sort(([a], [b]) => compare(a, b))) {
     const lesson = byId.get(lessonId);
     if (!lesson) throw new Error(`Historical route "${historicalName}" references unknown lesson ${lessonId}.`);
     if (historicalName === lesson.metadata.slug) continue;
+
     for (const edition of ['adult', 'teen'] as const) {
       const from = lessonPath(edition, historicalName);
       const to = lessonPath(edition, lesson.metadata.slug);
-      if (from === to) continue;
-      if (!seen.has(from)) {
-        seen.add(from);
+      if (canonicalPaths.has(from)) throw new Error(`Historical redirect source "${from}" conflicts with a canonical route.`);
+      const existingTarget = redirectTargets.get(from);
+      if (existingTarget !== undefined && existingTarget !== to) {
+        throw new Error(`Historical redirect source "${from}" conflicts with redirect target "${existingTarget}".`);
+      }
+      if (existingTarget === undefined) {
+        redirectTargets.set(from, to);
         redirects.push({ from, to, lessonId });
       }
     }
