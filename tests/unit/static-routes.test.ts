@@ -11,6 +11,9 @@ describe('static lesson routes', () => {
     expect(source).toContain('export async function getStaticPaths()');
     expect(source).toContain('buildDeliveryManifest');
     expect(source).toContain('manifest.routes.map');
+    expect(source).toContain('route.path !== expectedPath');
+    expect(source).toContain('route.path !== astroPath');
+    expect(source).toContain('alternatePath');
   });
 
   it('the real manifest has one Adult and one Teen canonical route per lesson', async () => {
