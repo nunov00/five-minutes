@@ -65,18 +65,11 @@ Shared taxonomy/concepts may be reused, but one edition's prose must not cause s
 
 Lessons without a Teen presentation are absent from Teen search results unless a later product decision explicitly introduces a cross-edition fallback.
 
-### Performance budgets
+### Performance evidence and remaining mobile gate
 
-Before this ADR becomes Accepted, the corrected benchmark must use realistic-vocabulary content and establish explicit budgets on representative mobile hardware.
+The corrected realistic-vocabulary benchmark at 10,000 lesson identities / 20,000 edition-specific discovery documents produced a 12.49 MiB serialized index and 1.86 MiB gzip representation. Index construction was ~566ms, Node load ~267ms, and representative CI query p95 ~34-51ms.
 
-Initial quality targets to validate, not yet accepted limits:
-
-- compressed catalogue/search transfer should remain small enough for on-demand mobile use;
-- index/catalogue parsing must avoid long main-thread stalls;
-- typical query interaction should feel effectively immediate after load;
-- memory usage must be reasonable on a mid-range mobile device.
-
-The benchmark must record payload size, parse/index load time, memory where measurable, and p50/p95 representative query latency. Final numeric budgets will be set from that evidence rather than invented here.
+This establishes the build-side feasibility of compact discovery search but is not evidence of browser memory or main-thread behaviour. Representative mobile-browser validation remains an implementation acceptance gate before the discovery experience is considered production-hardened. Numeric browser budgets should be set from that evidence rather than invented here.
 
 ### Scaling path
 
@@ -114,4 +107,4 @@ Not justified for the initial product. It adds operational cost, privacy conside
 
 ## Follow-up
 
-The next architecture benchmark must test full prerendering with separate Adult/Teen presentation pages plus this compact metadata-search/catalogue approach using realistic-vocabulary text.
+Validate transfer, parse/load, memory and interaction latency on representative mobile hardware during implementation. If the compact single-index approach fails those budgets, follow the scaling path above.
