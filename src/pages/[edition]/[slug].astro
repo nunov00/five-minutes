@@ -1,0 +1,57 @@
+---
+import { join } from 'node:path';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import routeOwnership from '../../content/route-ownership.json';
+import { loadPublishedLessons, type LoadedLesson } from '../../lib/content/loader';
+import { buildDeliveryManifest, type CatalogueEntry } from '../../lib/delivery-manifest';
+import type { LessonEdition, } from '../../lib/urls';
+
+interface Props {
+  lesson: LoadedLesson;
+  edition: LessonEdition;
+  catalogue: readonly CatalogueEntry[];
+}
+
+export async function getStaticPaths() {
+  const loaded = await loadPublishedLessons(join(process.cwd(), 'src/content/lessons'), routeOwnership);
+  const bundles = loaded.map(({ metadata, adult, teen }) => ({ metadata, adult, teen }));
+  const manifest = buildDeliveryManifest(bundles);
+  const byId = new Map(loaded.map((lesson) => [lesson.metadata.id, lesson]));
+
+  return manifest.routes.map((route) => {
+    const lesson = byId.get(route.lessonId);
+    if (!lesson) throw new Error(`Manifest route references unloaded lesson ${route.lessonId}.`);
+    return {
+      params: { edition: route.edition, slug: route.slug },
+      props: { lesson, edition: route.edition, catalogue: manifest.catalogue },
+    };
+  });
+}
+
+const { lesson, edition, catalogue } = Astro.props as Props;
+const presentation = edition === 'adult' ? lesson.adult : lesson.teen;
+const html = edition === 'adult' ? lesson.adultHtml : lesson.teenHtml;
+if (!presentation) throw new Error(`Missing ${edition} presentation for ${lesson.metadata.id}.`);
+const alternate = edition === 'adult' ? lesson.teen : lesson.adult;
+const alternatePath = catalogue.find((entry) => entry.id === lesson.metadata.id)?.[edition === 'adult' ? 'teen' : 'adult'].path;
+---
+<BaseLayout>
+  <article data-lesson-id={lesson.metadata.id} data-edition={edition}>
+    <header>
+      <p>{edition === 'adult' ? 'Adult' : 'Teen'} edition</p>
+      <h1>{presentation.title}</h1>
+      <p>{presentation.description}</p>
+      {alternate && alternatePath && <a href={alternatePath}>Read the {edition === 'adult' ? 'Teen' : 'Adult'} edition</a>}
+    </header>
+    <div class="lesson-body" set:html={html} />
+    <section aria-labelledby="takeaway-heading">
+      <h2 id="takeaway-heading">Takeaway</h2>
+      <p>{presentation.takeaway}</p>
+    </section>
+    <section aria-labelledby="test-heading">
+      <h2 id="test-heading">Test yourself</h2>
+      <p>{presentation.question}</p>
+      <details><summary>Show answer</summary><p>{presentation.answer}</p></details>
+    </section>
+  </article>
+</BaseLayout>
