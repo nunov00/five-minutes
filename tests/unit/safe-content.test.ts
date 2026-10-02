@@ -56,7 +56,7 @@ describe('safe lesson content pipeline', () => {
     expect(html).toContain('href="https://example.com/?a=1&amp;b=2"');
     expect(html).not.toContain('&amp;amp;');
     expect(html).toContain('href="https://example.com/a_(b)"');
-    expect(html).toContain('<pre><code>const x = &lt;script&gt;;</code></pre>');
+    expect(html).toContain('<pre><code>const x = &quot;&lt;script&gt;&quot;;</code></pre>');
   });
 
 });
