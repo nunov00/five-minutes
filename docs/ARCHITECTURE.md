@@ -36,17 +36,24 @@ Adult Markdown is required and Teen Markdown is optional. Audience-specific titl
 
 ### Web framework
 
-Astro is the target web framework. Lesson pages are statically generated in bounded, deterministic build shards and assembled into one validated deployment artifact. Shard boundaries are invisible to public URLs and lesson identity.
+Astro is the target web framework. The initial production model is a normal static build. Sharding is a measured scale-up mechanism, not a day-one requirement.
 
-Corrected 10,000-identity / 20,000-presentation benchmarks showed that a monolithic Astro content build exceeded the normal Node heap, while four parallel 5,000-page shards completed consistently at about 1.77-1.78 GiB peak RSS each. The assembled result validated all 20,000 unique HTML pages.
+The GitHub Actions 20,000-page monolithic benchmark exhausted the smaller CI runner at ~4.29 GiB RSS, while four 5,000-page shards completed at ~1.77-1.78 GiB each. A second independent review reproduced the monolithic build on a larger 15-GB machine and completed all 20,000 pages in ~260 seconds at ~5.9 GiB peak memory. The evidence therefore identifies CI-resource pressure rather than an Astro/static-generation limit.
+
+ADR-0002 defines the sharding-ready contract: catalogue/URL manifest first, one shared URL generator, global pages built once, lesson pages dependent only on their own body plus compact global metadata, and exact manifest/link validation.
 
 ### Search
 
-Search is discovery-oriented initially, not full-body text search. A compact generated catalogue/search representation contains edition-specific title, description/deck, taxonomy/concepts, curated search terms and takeaway metadata. It is lazy-loaded only by discovery surfaces.
+Search is discovery-oriented initially, not full-body text search.
 
-MiniSearch is the initial candidate behind an application-owned search interface. The original full-text synthetic MiniSearch size figures are not treated as evidence for realistic 10k full-text search; realistic-vocabulary and mobile-browser validation is required before acceptance.
+Discovery delivery is tiered rather than forcing one large browser payload onto every screen:
 
-The same compact catalogue should, where practical, power Library, Topics, Surprise Me and local Saved/Read filtering rather than creating multiple browser datasets.
+- Today, Library and Topics are statically rendered and progressively enhanced; catalogue browsing does not require the search index.
+- A compact browser catalogue contains only the identity/URL/edition/taxonomy/date/title fields needed for Saved/Read joins and lightweight discovery such as Surprise Me.
+- Edition-specific search indexes contain the richer discovery fields (title, description/deck, taxonomy/concepts, curated search terms and takeaway) and load only when search is used.
+- Generated discovery artifacts use content-hashed names where practical so cached clients do not retain stale indexes.
+
+MiniSearch is the initial candidate behind an application-owned interface. Browser/mobile validation remains a production-hardening gate.
 
 ### Reader state
 
@@ -101,17 +108,16 @@ The target quality pipeline includes, as appropriate:
 
 ## Scale evidence
 
-Corrected representative-vocabulary benchmarks on GitHub Actions with Node 22 and Astro 5.14.1:
+Representative-vocabulary GitHub Actions benchmarks with Node 22 and Astro 5.14.1 measured:
 
-- 1,000 lesson identities / 2,000 pages: 25.27s, ~0.94 GiB peak RSS, 13.27 MiB output.
-- 5,000 identities / 10,000 pages: 1m45s, ~2.93 GiB peak RSS, 66.37 MiB output.
-- 10,000 identities / 20,000 pages in one Astro process: Node heap OOM after ~4m22s at ~4.29 GiB RSS.
-- Four 2,500-identity / 5,000-page shards: each ~54-58s and ~1.77-1.78 GiB peak RSS.
-- Assembly validation: four shards -> 20,000 unique HTML pages, no conflicting shard output, plus one compact search artifact.
-- Compact discovery search: 20,000 edition-specific documents / 10,000 identities; 12.49 MiB serialized, 1.86 MiB gzip; index construction ~566ms and Node load ~267ms. Representative CI query p95 was ~34-51ms. Browser/mobile validation remains required.
-- Final synthetic assembled artifact: 20,001 files / 145.25 MiB.
+- 1,000 lesson identities / 2,000 pages: 25.27s, ~0.94 GiB peak RSS.
+- 5,000 identities / 10,000 pages: 1m45s, ~2.93 GiB peak RSS.
+- 10,000 identities / 20,000 pages on the smaller CI runner: heap/resource failure at ~4.29 GiB RSS.
+- Four 5,000-page shards: ~54-58s and ~1.77-1.78 GiB peak RSS each.
+- Independent second-review machine (4 vCPU/15 GB, Node 22 larger default heap): monolithic 20,000-page build completed in ~260s at ~5.9 GiB peak memory.
+- Compact discovery-search benchmark: 20,000 edition documents; 12.49 MiB serialized / 1.86 MiB gzip; build-side feasibility only, not mobile-browser evidence.
 
-The evidence supports sharded static lesson generation plus compact client-side discovery search. It does not support adding a database, client-rendering lesson bodies, or accepting the earlier hybrid/on-demand implementation.
+The correct conclusion is that static generation is viable and build memory grows materially with catalogue size. Sharding is a demonstrated mitigation for per-process memory, but the synthetic assembly benchmark did not model a complete production site and therefore does not justify mandatory sharding now.
 
 ## Repository and operations
 
@@ -121,9 +127,9 @@ The architecture is designed so a clean checkout with pinned dependencies can re
 
 ## Cloudflare deployment boundary
 
-As verified against Cloudflare documentation on 2 October 2026, the Free plan supports 20,000 static files per Pages site or Worker version, while paid plans support 100,000. The synthetic 10,000-identity / 20,000-presentation benchmark produced 20,001 files, so that benchmark exceeds the current Free ceiling by one file but remains far below the paid ceiling.
+As verified against Cloudflare documentation on 2 October 2026, the Free plan supports 20,000 static files per Pages site or Worker version and paid plans support 100,000. The synthetic 20,001-file artifact omitted real global pages, assets, PWA files and redirects, so it must not be described as a realistic near-fit for the Free limit.
 
-This is an operational threshold, not a reason to change the content/rendering architecture now. Actual production file count must be monitored. If the project approaches the active hosting limit, reassess plan/provider or deployment representation using then-current evidence. Core architecture must remain portable.
+The Owner has decided not to pre-commit to a paid plan or provider migration. Actual production file count is monitored. Before the active hosting limit becomes constraining, the project will compare then-current Cloudflare plans, other portable static hosts and deployment representations. Any material recurring-cost choice remains an Owner decision.
 
 ## Deliberately deferred decisions
 

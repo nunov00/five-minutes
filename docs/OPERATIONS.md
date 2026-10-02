@@ -24,15 +24,19 @@ Git lesson sources
       |
       +--> schema/security validation
       |
-      +--> deterministic lesson partitioner
-      |       +--> static shard A --+
-      |       +--> static shard B --+--> collision-safe assembly
-      |       +--> static shard ...-+           |
-      |                                         +--> deployable static artifact
-      +--> catalogue/search generator ----------+
-                                                |
-                                                +--> preview / production deploy
+      +--> complete compact catalogue + URL manifest
+      |       |
+      |       +--> static global pages / sitemap / redirects
+      |       +--> lesson rendering (single build initially)
+      |       +--> compact browser catalogue
+      |       +--> edition-specific search indexes
+      |
+      +--> exact URL/internal-link/completeness validation
+      |
+      +--> deployable static artifact
 ```
+
+If measured build pressure later justifies sharding, only lesson rendering is partitioned. Global outputs are generated once and every shard consumes the same catalogue/URL contract. Partition assignment and final URL completeness are validated explicitly.
 
 A clean checkout plus pinned dependencies must be sufficient to reproduce production output. CI uses the lockfile and `npm ci`; generated lesson fixtures and deployment output are not canonical source.
 
@@ -80,7 +84,7 @@ Provider configuration that cannot live safely in Git must be documented and rep
 
 ## Testing
 
-Required gates evolve with implementation but include schema/security validation, unit/integration tests, a clean production build, shard assembly/completeness checks and Playwright critical journeys. Critical E2E coverage should include Today, explicit Adult/Teen URLs, Library/search discovery, Saved/Read local state, related navigation, mobile viewport behaviour, manifest/installability metadata and standalone-safe navigation.
+Required gates evolve with implementation but include schema/security validation, unit/integration tests, a clean production build, URL-manifest/completeness/internal-link checks and Playwright critical journeys. If build sharding is activated later, deterministic partition and assembly validation become additional gates. Critical E2E coverage should include Today, explicit Adult/Teen URLs, Library/search discovery, Saved/Read local state, related navigation, mobile viewport behaviour, manifest/installability metadata and standalone-safe navigation.
 
 Accessibility and broken-link checks are CI concerns. Performance/mobile search budgets are set from representative evidence rather than invented upfront.
 
@@ -88,7 +92,7 @@ Accessibility and broken-link checks are CI concerns. Performance/mobile search 
 
 1. Foundation: production repo layout, lockfile, Astro shell, schema/validation, CI and preview deployment.
 2. Content pipeline: canonical lesson model, safe Markdown, lifecycle/provenance and deterministic publication eligibility.
-3. Static delivery: deterministic partitioning, shard builds, collision-safe assembly and clean deployment artifact.
+3. Static delivery: catalogue/URL manifest, shared route generation, normal static build, exact completeness/internal-link validation and clean deployment artifact. Add deterministic sharding only when measured build pressure justifies it.
 4. Core reading UX: Today, Adult/Teen lesson URLs, responsive reader, takeaway, Test Yourself and installable PWA shell/manifest/icons.
 5. Discovery: compact catalogue, Library, Topics, Search, Related and Surprise Me.
 6. Local reader state: Saved/Read/recent/edition/appearance with versioned storage abstraction.
