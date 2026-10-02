@@ -44,6 +44,10 @@ jobs:
         run: npm test
       - name: Production static build (npm run build)
         run: npm run build
+      - name: Compile Cloudflare delivery artifacts (npm run cf:prepare)
+        run: npm run cf:prepare
+      - name: Verify built delivery artifacts
+        run: node scripts/verify-delivery-artifacts.mjs
       - name: Deployable file count (npm run dist:count)
         run: npm run dist:count
 
