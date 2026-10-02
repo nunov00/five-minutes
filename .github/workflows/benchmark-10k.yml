@@ -1,4 +1,4 @@
-name: 10k hybrid architecture benchmark
+name: 10k compact search benchmark
 on:
   pull_request:
     paths:
@@ -21,17 +21,18 @@ jobs:
       - run: npm install --no-audit --no-fund
       - name: Generate 10k synthetic lessons
         run: npm run generate
-      - name: Astro build
+      - name: Astro hybrid build
         run: /usr/bin/time -v npm run build 2>&1 | tee astro-build.log
-      - name: Pagefind index
-        run: /usr/bin/time -v npm run index 2>&1 | tee pagefind.log
+      - name: MiniSearch index and query benchmark
+        run: /usr/bin/time -v npm run index 2>&1 | tee search.log
       - name: Measure output
         run: npm run measure | tee measurements.log
       - uses: actions/upload-artifact@v4
         with:
-          name: benchmark-results
+          name: compact-search-benchmark-results
           path: |
             benchmark-results.json
+            search-benchmark-results.json
             astro-build.log
-            pagefind.log
+            search.log
             measurements.log
