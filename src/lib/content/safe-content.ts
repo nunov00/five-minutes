@@ -11,6 +11,7 @@ export class ContentSecurityError extends Error {}
 const SAFE_LINK = /^(?:https?:|mailto:)/i;
 const TAGS = new Set(['p','h1','h2','h3','ul','ol','li','strong','em','code','pre','blockquote','a','br']);
 const escapeHtml = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+const escapeSanitizerText = (s: string) => s.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
 export function parseSafeYaml(source: string): unknown {
   const doc = parseDocument(source, { schema: 'core', customTags: [], resolveKnownTags: false });
@@ -42,7 +43,7 @@ export function sanitizeRenderedHtml(html: string): string {
 
   for (const match of html.matchAll(completeTag)) {
     const index = match.index ?? 0;
-    output.push(escapeHtml(html.slice(cursor, index)));
+    output.push(escapeSanitizerText(html.slice(cursor, index)));
 
     const tag = match[0];
     const name = match[1].toLowerCase();
@@ -61,7 +62,7 @@ export function sanitizeRenderedHtml(html: string): string {
     cursor = index + tag.length;
   }
 
-  output.push(escapeHtml(html.slice(cursor)));
+  output.push(escapeSanitizerText(html.slice(cursor)));
   return output.join('');
 }
 
