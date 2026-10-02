@@ -5,11 +5,12 @@
   "scripts": {
     "generate": "node benchmark/generate.mjs",
     "build": "astro build",
-    "index": "pagefind --site dist",
+    "index": "node benchmark/index-custom.mjs",
     "measure": "node benchmark/measure.mjs",
     "benchmark": "npm run generate && /usr/bin/time -v npm run build && /usr/bin/time -v npm run index && npm run measure"
   },
   "dependencies": {
+    "@astrojs/cloudflare": "12.6.13",
     "astro": "5.14.1",
     "pagefind": "1.4.0"
   }
