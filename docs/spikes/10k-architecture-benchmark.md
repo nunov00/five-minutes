@@ -198,3 +198,29 @@ Initial architecture direction:
 - no client-rendered lesson-body architecture.
 
 This spike is evidence, not production code. Realistic mobile search performance remains a quality gate.
+
+
+## Corrected benchmark and superseding conclusion — 2 October 2026
+
+Independent review found that the earlier A-vs-C conclusion was confounded by Pagefind's file-per-page representation and that the hybrid spike had not established runtime viability. Adult/Teen delivery was also subsequently fixed as separate presentation URLs, making 20,000 presentation pages the representative 10,000-identity target.
+
+Corrected realistic-vocabulary scaling results:
+
+| Lesson identities | Presentation pages | Result | Wall time | Peak RSS |
+| ---: | ---: | --- | ---: | ---: |
+| 1,000 | 2,000 | pass | 25.27s | ~0.94 GiB |
+| 5,000 | 10,000 | pass | 1m45s | ~2.93 GiB |
+| 10,000 | 20,000 | Node heap OOM | ~4m22s | ~4.29 GiB |
+
+Compact discovery search was then measured independently at the full target: 20,000 documents / 10,000 identities, 12.49 MiB serialized / 1.86 MiB gzip, ~566ms index construction, ~267ms Node load, and ~34-51ms p95 for representative CI queries.
+
+A sharded static experiment split the target into four independent 2,500-identity / 5,000-page Astro builds. All four passed in ~54-58 seconds at ~1.77-1.78 GiB peak RSS. An end-to-end assembly workflow then merged them with collision detection and validated:
+
+- four input shards;
+- 20,000 unique HTML pages;
+- no conflicting shard outputs;
+- 20,000 discovery-search documents / 10,000 identities;
+- one final search artifact;
+- 20,001 final files / 145.25 MiB synthetic assembled size.
+
+This supersedes the earlier spike conclusion. The evidence now supports **sharded static generation + compact discovery search** as the initial rendering architecture. The earlier hybrid/on-demand implementation is not accepted as the target architecture.

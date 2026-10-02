@@ -35,9 +35,9 @@ Audience-specific content includes Adult and Teen title/deck/body/examples/takea
 
 ### Web framework
 
-Astro is the target web framework. Architecture benchmarks showed that Astro handles a synthetic 10,000-lesson corpus comfortably within the target build-time constraint.
+Astro is the target web framework. Lesson pages are statically generated in bounded, deterministic build shards and assembled into one validated deployment artifact. Shard boundaries are invisible to public URLs and lesson identity.
 
-Stable small routes may be prerendered. Lesson routes use on-demand server rendering rather than requiring one physical HTML asset per lesson.
+Corrected 10,000-identity / 20,000-presentation benchmarks showed that a monolithic Astro content build exceeded the normal Node heap, while four parallel 5,000-page shards completed consistently at about 1.77-1.78 GiB peak RSS each. The assembled result validated all 20,000 unique HTML pages.
 
 ### Search
 
@@ -55,9 +55,7 @@ A small storage abstraction owns Saved, Read/Unread, recent lessons, selected ed
 
 Cloudflare is the initial deployment target, not an application dependency.
 
-Astro's Cloudflare adapter/configuration forms the provider boundary. Core lesson, search, state and UI logic should remain portable to another supported deployment environment.
-
-On-demand lesson responses should use appropriate CDN/runtime caching so popular immutable published lessons do not require unnecessary repeated computation.
+The initial site is a static deployment artifact: assembled lesson HTML, stable application assets and compact discovery data. No lesson-rendering runtime or application database is required initially. Provider-specific build/deployment configuration remains at the boundary so another static host can replace Cloudflare.
 
 ### Analytics
 
@@ -94,35 +92,24 @@ The target quality pipeline includes, as appropriate:
 
 ## Scale evidence
 
-The 10k spike deliberately separated source-file count, rendered HTML count and search-index file count.
+Corrected representative-vocabulary benchmarks on GitHub Actions with Node 22 and Astro 5.14.1:
 
-Full prerender + Pagefind:
-- 20,064 deployed files / 48.74 MiB;
-- Astro build ~1m33s;
-- Pagefind ~10,064 files.
+- 1,000 lesson identities / 2,000 pages: 25.27s, ~0.94 GiB peak RSS, 13.27 MiB output.
+- 5,000 identities / 10,000 pages: 1m45s, ~2.93 GiB peak RSS, 66.37 MiB output.
+- 10,000 identities / 20,000 pages in one Astro process: Node heap OOM after ~4m22s at ~4.29 GiB RSS.
+- Four 2,500-identity / 5,000-page shards: each ~54-58s and ~1.77-1.78 GiB peak RSS.
+- Assembly validation: four shards -> 20,000 unique HTML pages, no conflicting shard output, plus one compact search artifact.
+- Compact discovery search: 20,000 edition-specific documents / 10,000 identities; 12.49 MiB serialized, 1.86 MiB gzip; index construction ~566ms and Node load ~267ms. Representative CI query p95 was ~34-51ms. Browser/mobile validation remains required.
+- Final synthetic assembled artifact: 20,001 files / 145.25 MiB.
 
-Hybrid lesson rendering + Pagefind:
-- 10,083 deployed files / 90.65 MiB;
-- Pagefind still ~10,060 files.
-
-Hybrid lesson rendering + MiniSearch:
-- 25 deployed files in the synthetic spike;
-- compact search represented by 2 benchmark files;
-- serialized MiniSearch index ~7.06 MiB, gzip ~1.46 MiB;
-- search-index build ~2.1s; load ~162ms on CI;
-- representative synthetic queries ~44-67ms.
-
-The evidence supports hybrid/on-demand lesson rendering plus compact client-side search as the initial scale architecture. It does not support adding a database or client-rendering lesson bodies.
+The evidence supports sharded static lesson generation plus compact client-side discovery search. It does not support adding a database, client-rendering lesson bodies, or accepting the earlier hybrid/on-demand implementation.
 
 ## Deliberately deferred decisions
 
 The following remain design work rather than accidental commitments:
 
-- exact lesson schema and source format;
 - exact topic/concept taxonomy;
 - related-content scoring/override rules;
-- exact cache policy;
-- final URL conventions;
 - search-index sharding threshold;
 - realistic mobile search performance thresholds;
 - analytics product-event requirements;
