@@ -50,8 +50,10 @@ jobs:
         run: npm run cf:prepare
       - name: Verify built delivery artifacts
         run: node deploy/cloudflare/verify-redirects.mjs
-      - name: Deployable file count (npm run dist:count)
-        run: npm run dist:count
+      - name: Verify Cloudflare hosting capacity
+        run: npm run cf:verify-capacity
+      - name: Deployable file count with early warning
+        run: node scripts/count-dist-files.mjs --warn-at 16000
 
   e2e:
     # Stable check name used by branch protection/publication automation.
