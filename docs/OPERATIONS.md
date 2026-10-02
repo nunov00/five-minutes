@@ -110,3 +110,16 @@ Before architecture discovery closes:
 - clean-build and deployment approach is reproducible;
 - current hosting limits are documented as operational thresholds;
 - implementation can proceed in bounded issues without reopening core architecture.
+
+
+## M1 foundation integration gate
+
+Before starting the content/schema milestone (M2), verify the merged M1 foundation as one system:
+
+1. From a clean checkout, use Node.js 22 and run `npm ci`, `npm run check`, `npm test`, `npm run build`, `npm run dist:count`, then `npm run test:e2e`.
+2. Confirm GitHub CI passes both the baseline and Playwright jobs on the integration PR.
+3. Confirm Cloudflare Workers Builds creates a working branch Preview from the same provider-neutral `dist/`; production/custom-domain activation is not part of this gate.
+4. Reconcile repository documentation with observed behaviour and review the accepted ADRs for implementation drift.
+5. Record and obtain Owner approval for any architecture deviation before closing M1.
+
+The gate is verification-first: do not add product features while closing M1. Defect fixes and documentation corrections discovered by the gate are in scope.
