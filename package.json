@@ -15,7 +15,8 @@
     "cf:preview": "node scripts/count-dist-files.mjs --warn-at 16000 && wrangler preview --config deploy/cloudflare/wrangler.jsonc"
   },
   "dependencies": {
-    "astro": "7.3.5"
+    "astro": "7.3.5",
+    "yaml": "2.9.1"
   },
   "devDependencies": {
     "@astrojs/check": "0.9.4",
