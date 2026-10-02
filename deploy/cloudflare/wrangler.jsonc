@@ -1,0 +1,21 @@
+// Cloudflare deployment adapter for Five Minutes.
+//
+// Deploys the provider-neutral static build (`npm run build` -> dist/) with
+// Workers Static Assets. There is no Worker script (`main`): Cloudflare serves
+// dist/ as static files only, with no server-side runtime. Nothing in src/
+// depends on this file. See deploy/cloudflare/README.md.
+{
+  // Deliberately distinct from any existing Five Minutes Worker/Pages project so
+  // a deploy can never replace the current public site. Renaming is an Owner
+  // decision.
+  "name": "five-minutes-v2",
+  "compatibility_date": "2026-10-02",
+  "assets": {
+    // Relative to this file.
+    "directory": "../../dist"
+  },
+  // Serve on <name>.<account-subdomain>.workers.dev and allow per-version /
+  // per-branch preview URLs. No custom domain or route is attached here.
+  "workers_dev": true,
+  "preview_urls": true
+}
