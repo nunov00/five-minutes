@@ -13,7 +13,7 @@ const TAGS = new Set(['p','h1','h2','h3','ul','ol','li','strong','em','code','pr
 const escapeHtml = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
 export function parseSafeYaml(source: string): unknown {
-  const doc = parseDocument(source, { schema: 'core', customTags: [], maxAliasCount: 50 });
+  const doc = parseDocument(source, { schema: 'core', customTags: [] });
   if (doc.errors.length || doc.warnings.length) throw new ContentSecurityError('Unsafe or invalid YAML.');
   return doc.toJS({ maxAliasCount: 50 });
 }
