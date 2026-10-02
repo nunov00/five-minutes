@@ -1,4 +1,4 @@
-import type { LessonBundle } from '../../../src/lib/content/schema';
+import type { LessonBundle } from '../../src/lib/content/schema';
 
 export function validLesson(overrides: Partial<LessonBundle> = {}): LessonBundle {
   return {
