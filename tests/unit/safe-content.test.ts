@@ -5,6 +5,15 @@ describe('safe lesson content pipeline', () => {
   it('parses core YAML without constructing custom tagged objects', () => {
     expect(parseSafeYaml('title: Hello\ncount: 2')).toEqual({ title: 'Hello', count: 2 });
     expect(() => parseSafeYaml('value: !!js/function >\n  function () { return 1 }')).toThrow(ContentSecurityError);
+    for (const tagged of [
+      'a: !!binary aGVsbG8=',
+      'a: !!set {x: null}',
+      'a: !!omap [ {x: 1} ]',
+      'a: !!timestamp 2026-10-03',
+    ]) {
+      expect(() => parseSafeYaml(tagged)).toThrow(ContentSecurityError);
+    }
+    expect(() => parseSafeYaml('base: &base {x: 1}\ncopy: *base')).toThrow(ContentSecurityError);
   });
 
   it('neutralizes raw HTML and script content', () => {
@@ -27,6 +36,7 @@ describe('safe lesson content pipeline', () => {
     expect(sanitizeRenderedHtml('<img src=x onerror=alert(1)><p onclick="x">safe</p>')).toBe('&lt;img src=x onerror=alert(1)&gt;<p>safe</p>');
     expect(sanitizeRenderedHtml('<<b>script>alert(1)<</b>/script>')).not.toContain('<script>');
     expect(sanitizeRenderedHtml('<<b>img src=x onerror=alert(1)>')).not.toContain('<img');
+    expect(sanitizeRenderedHtml('<p>ok</p><img src=x onerror="document.title=EXECUTED" ')).not.toContain('<img');
   });
 
   it('parses front matter and plain Markdown without MDX execution', () => {
