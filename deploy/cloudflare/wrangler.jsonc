@@ -5,6 +5,7 @@
 // dist/ as static files only, with no server-side runtime. Nothing in src/
 // depends on this file. See deploy/cloudflare/README.md.
 {
+  "$schema": "../../node_modules/wrangler/config-schema.json",
   // Deliberately distinct from any existing Five Minutes Worker/Pages project so
   // a deploy can never replace the current public site. Renaming is an Owner
   // decision.
@@ -14,8 +15,13 @@
     // Relative to this file.
     "directory": "../../dist"
   },
-  // Serve on <name>.<account-subdomain>.workers.dev and allow per-version /
-  // per-branch preview URLs. No custom domain or route is attached here.
+  // Serve on <name>.<account-subdomain>.workers.dev. No custom domain or
+  // route is attached here. Branch/PR testing uses Worker Previews (below),
+  // not the older per-version Version URLs (`preview_urls`), which this
+  // adapter does not configure.
   "workers_dev": true,
-  "preview_urls": true
+  // Worker Previews (`wrangler preview`, used by `npm run cf:preview` for
+  // branch/PR testing). A static-assets-only site needs no preview-specific
+  // bindings, vars or secrets, so this block is intentionally empty.
+  "previews": {}
 }
