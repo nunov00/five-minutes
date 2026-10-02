@@ -100,6 +100,7 @@ Nothing below changes DNS, billing or the existing public Five Minutes site.
 5. Open or update a pull request. Confirm that Cloudflare's PR comment shows a Worker Preview URL, then open it.
 
 > Integration note: the first preview build was intentionally triggered after connecting Workers Builds, so the Git integration could be verified against an already-open pull request.
+> The first live setup also confirmed that Preview URLs must be enabled for the Worker before `wrangler preview` receives an active `workers.dev` URL.
 
 ### Alternative: GitHub Actions deploy (not chosen)
 
