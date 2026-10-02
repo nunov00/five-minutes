@@ -39,4 +39,4 @@ Use Node.js 22 (see `.nvmrc`) and the committed lockfile:
 
 CI (`.github/workflows/ci.yml`) runs on every pull request and on `main`: check `baseline` runs `npm ci`, `npm run check`, `npm test`, `npm run build` and `npm run dist:count` in that order; check `e2e` then runs `npm run build` and `npm run test:e2e` (desktop Chromium and iPhone-class mobile projects). Run the same sequence locally before opening a PR. The `benchmark-*.yml` workflows are manual-only architecture evidence and are not part of CI.
 
-Schema/content validation commands will be added here when the implementation creates them.
+Canonical content validation is part of `npm test` and `npm run build`. Pull-request CI additionally supplies the base commit to the tests so `src/content/route-ownership.json` is proven append-only. Do not bypass `src/lib/content/loader.ts` when consuming canonical lessons.
