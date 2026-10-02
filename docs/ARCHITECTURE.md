@@ -22,6 +22,7 @@ Open -> Today's idea -> Read -> Understand -> Test yourself -> Explore another i
 8. **Evidence before complexity.** Scale decisions should be benchmarked. A hypothetical future problem is not sufficient reason to add infrastructure today.
 9. **Production through review.** AI workers create reviewable repository changes; they do not directly publish production.
 10. **Accessible, mobile-first, progressively enhanced reading.** The lesson itself must not depend on a heavy client application.
+11. **Installable web app.** Five Minutes must be installable and usable with standalone app-like presentation on iOS/iPadOS via Add to Home Screen and in Chrome on supported platforms, while remaining a normal standards-based website.
 
 ## Target system
 
@@ -56,6 +57,14 @@ A small storage abstraction owns Saved, Read/Unread, recent lessons, selected ed
 Cloudflare is the initial deployment target, not an application dependency.
 
 The initial site is a static deployment artifact: assembled lesson HTML, stable application assets and compact discovery data. No lesson-rendering runtime or application database is required initially. Provider-specific build/deployment configuration remains at the boundary so another static host can replace Cloudflare.
+
+### Installable app / PWA
+
+Five Minutes is a Progressive Web App as well as a website. The production app must provide a web app manifest, appropriate icons and metadata, standalone display behaviour, secure HTTPS delivery and installability on supported Chrome platforms and iOS/iPadOS Add to Home Screen.
+
+PWA support must remain standards-based and provider-neutral. Core reading must continue to work in an ordinary browser without installation.
+
+Initial offline scope is deliberately modest: the app shell and graceful offline behaviour may be cached, but downloading the complete lesson catalogue for offline use is not an initial requirement. Service-worker caching must not make newly published or corrected lessons unexpectedly stale.
 
 ### Analytics
 

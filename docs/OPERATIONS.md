@@ -80,7 +80,7 @@ Provider configuration that cannot live safely in Git must be documented and rep
 
 ## Testing
 
-Required gates evolve with implementation but include schema/security validation, unit/integration tests, a clean production build, shard assembly/completeness checks and Playwright critical journeys. Critical E2E coverage should include Today, explicit Adult/Teen URLs, Library/search discovery, Saved/Read local state, related navigation and mobile viewport behaviour.
+Required gates evolve with implementation but include schema/security validation, unit/integration tests, a clean production build, shard assembly/completeness checks and Playwright critical journeys. Critical E2E coverage should include Today, explicit Adult/Teen URLs, Library/search discovery, Saved/Read local state, related navigation, mobile viewport behaviour, manifest/installability metadata and standalone-safe navigation.
 
 Accessibility and broken-link checks are CI concerns. Performance/mobile search budgets are set from representative evidence rather than invented upfront.
 
@@ -89,7 +89,7 @@ Accessibility and broken-link checks are CI concerns. Performance/mobile search 
 1. Foundation: production repo layout, lockfile, Astro shell, schema/validation, CI and preview deployment.
 2. Content pipeline: canonical lesson model, safe Markdown, lifecycle/provenance and deterministic publication eligibility.
 3. Static delivery: deterministic partitioning, shard builds, collision-safe assembly and clean deployment artifact.
-4. Core reading UX: Today, Adult/Teen lesson URLs, responsive reader, takeaway and Test Yourself.
+4. Core reading UX: Today, Adult/Teen lesson URLs, responsive reader, takeaway, Test Yourself and installable PWA shell/manifest/icons.
 5. Discovery: compact catalogue, Library, Topics, Search, Related and Surprise Me.
 6. Local reader state: Saved/Read/recent/edition/appearance with versioned storage abstraction.
 7. Automated publication: generation -> validation -> independent AI review -> eligible PR -> scheduled merge/deploy, with escalation on review failure/uncertainty.
