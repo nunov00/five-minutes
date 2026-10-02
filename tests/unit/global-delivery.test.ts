@@ -36,4 +36,22 @@ describe('global delivery outputs', () => {
     expect(buildGlobalDeliveryOutputs([lesson], { 'current-name': lesson.metadata.id }).sitemapPaths)
       .toEqual(['/', '/adult/current-name', '/teen/current-name']);
   });
+
+  it('rejects malformed historical route names independently of the loader', () => {
+    expect(() => buildGlobalDeliveryOutputs([lesson], {
+      'current-name': lesson.metadata.id,
+      'bad route': lesson.metadata.id,
+    })).toThrow(/Invalid route ownership registry/);
+  });
+
+  it('rejects a historical redirect source that is another canonical route', () => {
+    const second: LessonBundle = {
+      ...lesson,
+      metadata: { ...lesson.metadata, id: '0199a5b7-6e21-7a42-9c3d-8f1b2e4a6c71', slug: 'second-name' },
+    };
+    expect(() => buildGlobalDeliveryOutputs([lesson, second], {
+      'current-name': lesson.metadata.id,
+      'second-name': lesson.metadata.id,
+    })).toThrow(/conflicts with a canonical route/);
+  });
 });
