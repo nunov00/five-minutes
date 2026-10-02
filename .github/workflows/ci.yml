@@ -44,6 +44,8 @@ jobs:
         run: npm test
       - name: Production static build (npm run build)
         run: npm run build
+      - name: Verify static completeness and internal links (npm run verify:static)
+        run: npm run verify:static
       - name: Compile Cloudflare delivery artifacts (npm run cf:prepare)
         run: npm run cf:prepare
       - name: Verify built delivery artifacts

@@ -13,7 +13,8 @@
     "dist:count": "node scripts/count-dist-files.mjs",
     "cf:deploy": "npm run cf:prepare && node scripts/count-dist-files.mjs --warn-at 16000 && wrangler deploy --config deploy/cloudflare/wrangler.jsonc",
     "cf:preview": "npm run cf:prepare && node scripts/count-dist-files.mjs --warn-at 16000 && wrangler preview --config deploy/cloudflare/wrangler.jsonc",
-    "cf:prepare": "node deploy/cloudflare/compile-redirects.mjs"
+    "cf:prepare": "node deploy/cloudflare/compile-redirects.mjs",
+    "verify:static": "node scripts/verify-static-integrity.mjs"
   },
   "dependencies": {
     "astro": "7.3.5",
