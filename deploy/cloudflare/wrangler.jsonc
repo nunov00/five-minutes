@@ -16,10 +16,11 @@
     "directory": "../../dist"
   },
   // Serve on <name>.<account-subdomain>.workers.dev. No custom domain or
-  // route is attached here. Branch/PR testing uses Worker Previews (below),
-  // not the older per-version Version URLs (`preview_urls`), which this
-  // adapter does not configure.
+  // route is attached here. Branch/PR testing uses Worker Previews (below).
   "workers_dev": true,
+  // Expose Worker Previews on workers.dev URLs. Wrangler 4.147.0 requires
+  // this for `wrangler preview` deployments to have an active URL.
+  "preview_urls": true,
   // Worker Previews (`wrangler preview`, used by `npm run cf:preview` for
   // branch/PR testing). A static-assets-only site needs no preview-specific
   // bindings, vars or secrets, so this block is intentionally empty.
