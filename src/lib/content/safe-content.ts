@@ -101,6 +101,7 @@ export function sanitizeRenderedHtml(html: string): string {
 }
 
 export function renderSafeMarkdown(markdown: string): string {
+  if (markdown.includes('\u0000')) throw new ContentSecurityError('NUL characters are not allowed in Markdown.');
   const lines = markdown.replace(/\r\n?/g, '\n').split('\n');
   const rendered: string[] = [];
   let list: 'ul' | 'ol' | null = null;

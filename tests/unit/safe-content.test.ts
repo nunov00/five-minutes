@@ -59,4 +59,8 @@ describe('safe lesson content pipeline', () => {
     expect(html).toContain('<pre><code>const x = &quot;&lt;script&gt;&quot;;</code></pre>');
   });
 
+  it('rejects NUL characters so internal placeholder tokens cannot be spoofed', () => {
+    expect(() => renderSafeMarkdown('[safe](https://example.com) \u00000\u0000')).toThrow(ContentSecurityError);
+  });
+
 });
