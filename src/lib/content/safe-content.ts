@@ -13,9 +13,9 @@ const TAGS = new Set(['p','h1','h2','h3','ul','ol','li','strong','em','code','pr
 const escapeHtml = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
 export function parseSafeYaml(source: string): unknown {
-  const doc = parseDocument(source, { schema: 'core', customTags: [] });
+  const doc = parseDocument(source, { schema: 'core', customTags: [], resolveKnownTags: false });
   if (doc.errors.length || doc.warnings.length) throw new ContentSecurityError('Unsafe or invalid YAML.');
-  return doc.toJS({ maxAliasCount: 50 });
+  try { return doc.toJS({ maxAliasCount: 0 }); } catch { throw new ContentSecurityError('Unsafe or invalid YAML.'); }
 }
 
 function safeHref(raw: string): string {
@@ -38,10 +38,10 @@ function inline(source: string): string {
 export function sanitizeRenderedHtml(html: string): string {
   return html.replace(/<\/?([a-z0-9]+)([^>]*)>/gi, (tag, name: string, attrs: string) => {
     const n = name.toLowerCase();
-    if (!TAGS.has(n)) return '';
+    if (!TAGS.has(n)) return escapeHtml(tag);
     if (tag.startsWith('</') || n !== 'a') return `<${tag.startsWith('</') ? '/' : ''}${n}>`;
     const href = /href="([^"]*)"/.exec(attrs)?.[1];
-    if (!href || !SAFE_LINK.test(href)) return '';
+    if (!href || !SAFE_LINK.test(href)) return escapeHtml(tag);
     return `<a href="${href}" rel="noopener noreferrer">`;
   });
 }
