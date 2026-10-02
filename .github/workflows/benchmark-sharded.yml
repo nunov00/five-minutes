@@ -1,13 +1,5 @@
 name: Astro sharded static benchmark
 on:
-  pull_request:
-    paths:
-      - 'benchmark/**'
-      - 'src/pages/**'
-      - 'src/content.config.ts'
-      - 'astro.config.mjs'
-      - 'package.json'
-      - '.github/workflows/benchmark-sharded.yml'
   workflow_dispatch:
 jobs:
   shard:

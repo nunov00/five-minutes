@@ -15,7 +15,8 @@ Five Minutes is a Git-backed, static learning publication. Read these before sub
 - Canonical content is validated plain Markdown plus structured metadata; do not introduce MDX/raw executable lesson content.
 - Keep core logic provider-neutral. Cloudflare, search engines and AI providers are adapters/configuration choices.
 - Do not add a database, SSR lesson runtime, account system or new service without evidence and the required Owner approval.
-- Lesson pages are static and generated in bounded build shards; shard boundaries must never affect public identity/URLs.
+- Lesson pages are static. Use a normal static build initially; build sharding is a measured scale-up mechanism, not a day-one requirement. If activated, shard boundaries must never affect public identity/URLs.
+- Generate the compact catalogue/URL manifest before rendering; all routes and discovery artifacts use the shared URL generator rather than reconstructing lesson URLs.
 - Search is discovery-oriented initially and uses compact metadata, not full lesson bodies.
 - Reader state is local-first behind a storage abstraction.
 - AI workers may author changes but do not push directly to `main`.

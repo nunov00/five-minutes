@@ -1,5 +1,5 @@
 name: Assemble sharded static site
-on: [workflow_dispatch, pull_request]
+on: workflow_dispatch
 jobs:
   shard:
     strategy:
