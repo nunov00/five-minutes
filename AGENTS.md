@@ -22,3 +22,14 @@ Five Minutes is a Git-backed, static learning publication. Read these before sub
 - AI workers may author changes but do not push directly to `main`.
 - Routine lesson publication may be authorized by an independent AI reviewer after required validation; failed, uncertain or exceptional review must escalate rather than silently publish.
 - Prefer small, testable changes and update documentation/ADRs when architectural behaviour changes.
+
+## Commands
+
+Use Node.js 22 (see `.nvmrc`) and the committed lockfile:
+
+- `npm ci` — reproducible install;
+- `npm run check` — Astro/TypeScript diagnostics;
+- `npm run build` — production static build into `dist/`;
+- `npm run dev` / `npm run preview` — local development server / preview of the built site.
+
+Schema/content validation and test commands will be added here when the implementation creates them.
