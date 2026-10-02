@@ -1,0 +1,1 @@
+{"name":"five-minutes-10k-spike","private":true,"type":"module","scripts":{"generate":"node benchmark/generate.mjs","build":"astro build","index":"node benchmark/index-minisearch.mjs","measure":"node benchmark/measure.mjs"},"dependencies":{"astro":"5.14.1","minisearch":"7.2.0"}}
