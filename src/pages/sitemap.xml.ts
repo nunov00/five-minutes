@@ -1,4 +1,3 @@
----
 import { join } from 'node:path';
 import routeOwnership from '../content/route-ownership.json';
 import { loadPublishedLessons } from '../lib/content/loader';
@@ -15,4 +14,3 @@ export async function GET({ site }: { site: URL | undefined }) {
     '\n</urlset>\n';
   return new Response(xml, { headers: { 'content-type': 'application/xml; charset=utf-8' } });
 }
----
