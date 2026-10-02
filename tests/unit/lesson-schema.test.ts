@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildRedirectManifest, updateRouteOwnershipRegistry, validateLessonBundle, validateLessonCollection, validateLessonReferences, validatePublicationCollection, validatePublicationEligibility } from '../../src/lib/content/schema';
+import { buildRedirectManifest, updateRouteOwnershipRegistry, validateLessonBundle, validateLessonCollection, validateLessonReferences, validatePublicationCollection, validatePublicationEligibility, validateRouteOwnershipHistory, validateRouteOwnershipRegistry } from '../../src/lib/content/schema';
 import { validLesson } from '../fixtures/lesson-fixtures';
 
 describe('lesson schema v1', () => {
@@ -242,6 +242,80 @@ describe('lesson schema v1', () => {
       { from: '/adult/gps-and-relativity', to: '/adult/why-gps-needs-einstein', lessonId: lesson.metadata.id },
       { from: '/teen/gps-and-relativity', to: '/teen/why-gps-needs-einstein', lessonId: lesson.metadata.id },
     ]);
+  });
+
+  it('rejects removal or reassignment from historical route ownership', () => {
+    const id = validLesson().metadata.id;
+    const other = '018f47a2-5d7b-7c31-9d4f-0d9a8b6c2e12';
+    expect(validateRouteOwnershipHistory({ old: id }, {}).issues).toContainEqual(expect.objectContaining({
+      path: 'routeOwnership.old', code: 'registry-entry-removed',
+    }));
+    expect(validateRouteOwnershipHistory({ old: id }, { old: other }).issues).toContainEqual(expect.objectContaining({
+      path: 'routeOwnership.old', code: 'registry-owner-changed',
+    }));
+  });
+
+  it('requires every current slug and alias to be registered', () => {
+    const lesson = validLesson();
+    const result = validateLessonReferences([lesson], {});
+    expect(result.issues.filter((x) => x.code === 'unregistered-route')).toHaveLength(2);
+  });
+
+  it('supports a full rename while permanently retaining the old route owner', () => {
+    const lesson = validLesson();
+    const initial = updateRouteOwnershipRegistry([lesson], {});
+    const oldSlug = lesson.metadata.slug;
+    lesson.metadata.slug = 'gps-relativity-explained';
+    lesson.metadata.aliases = [oldSlug];
+    const renamed = updateRouteOwnershipRegistry([lesson], initial);
+    expect(validateRouteOwnershipHistory(initial, renamed).valid).toBe(true);
+    expect(validateLessonReferences([lesson], renamed).issues.filter((x) => /route/.test(x.code))).toEqual([]);
+
+    lesson.metadata.aliases = [];
+    const retired = updateRouteOwnershipRegistry([lesson], renamed);
+    expect(retired[oldSlug]).toBe(lesson.metadata.id);
+
+    const other = validLesson();
+    other.metadata.id = '018f47a2-5d7b-7c31-9d4f-0d9a8b6c2e12';
+    other.metadata.slug = oldSlug;
+    other.metadata.aliases = [];
+    expect(validateLessonReferences([lesson, other], retired).issues).toContainEqual(expect.objectContaining({
+      path: 'lessons[1].metadata.slug', code: 'historical-route-owner',
+    }));
+  });
+
+  it('validates registry keys and owners without prototype lookups', () => {
+    const id = validLesson().metadata.id;
+    expect(validateRouteOwnershipRegistry({ 'Bad Key': id, ok: 'NOT-A-UUID' }).issues.map((x) => x.code))
+      .toEqual(expect.arrayContaining(['registry-route', 'registry-owner']));
+    const lesson = validLesson();
+    lesson.metadata.slug = 'constructor';
+    lesson.metadata.aliases = [];
+    expect(validateLessonReferences([lesson], { constructor: id }).issues.filter((x) => x.code === 'historical-route-owner')).toEqual([]);
+  });
+
+  it('reports precise broken exclude and self-relationship paths', () => {
+    const lesson = validLesson();
+    const registry = updateRouteOwnershipRegistry([lesson], {});
+    lesson.metadata.related.manual = [{ id: lesson.metadata.id, reason: 'self' }];
+    lesson.metadata.related.exclude = ['018f47a2-5d7b-7c31-9d4f-0d9a8b6c2e12'];
+    const result = validateLessonReferences([lesson], registry);
+    expect(result.issues).toEqual(expect.arrayContaining([
+      expect.objectContaining({ path: 'lessons[0].metadata.related.manual[0].id', code: 'self-relationship' }),
+      expect.objectContaining({ path: 'lessons[0].metadata.related.exclude[0]', code: 'unknown-relationship' }),
+    ]));
+  });
+
+  it('refuses redirects for incomplete or duplicate-route input', () => {
+    const incomplete = validLesson();
+    delete incomplete.teen;
+    expect(() => buildRedirectManifest([incomplete])).toThrow(/incomplete lesson/);
+
+    const first = validLesson();
+    const second = validLesson();
+    second.metadata.id = '018f47a2-5d7b-7c31-9d4f-0d9a8b6c2e12';
+    second.metadata.slug = 'second';
+    expect(() => buildRedirectManifest([first, second])).toThrow(/Duplicate redirect source/);
   });
 
 });
