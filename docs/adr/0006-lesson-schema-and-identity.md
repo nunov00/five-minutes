@@ -27,7 +27,7 @@ src/content/lessons/
       teen.md        # optional
 ```
 
-The directory/slug may change. The lesson ID may not.
+The directory name is an organisational convenience and is not authoritative identity or routing data; it need not equal the current slug. The lesson ID may not change.
 
 ### Identity
 
@@ -36,6 +36,8 @@ Every lesson has:
 - `id`: immutable UUID;
 - `slug`: current human-readable slug;
 - `aliases`: zero or more previous slugs, used to preserve old links when a slug changes.
+
+Active slugs and aliases share one global namespace: validation rejects any value reused by another active slug or alias, and a retired alias is never reassigned to a different lesson.
 
 Reader state and internal relationships use `id`, never slug or URL.
 
@@ -51,8 +53,7 @@ id: "018f..."
 slug: "why-gps-needs-einstein"
 aliases: []
 
-status: draft
-publishedAt: null
+publishedAt: "2026-10-03T00:00:00Z"
 
 topic: science
 subtopic: physics
@@ -108,17 +109,23 @@ Article body in plain Markdown...
 
 Audience-specific titles, descriptions, examples, body, takeaway and retrieval question/answer may differ substantially. Shared facts such as identity, publication date, taxonomy, relationships and research provenance do not get duplicated into presentation files.
 
-### Markdown safety
+### Markdown and structured-data safety
 
 Lesson bodies use Markdown, not MDX. AI-authored lesson content must not execute code during the site build.
 
-Raw HTML in lesson Markdown is disabled or sanitized. Links are validated for safe schemes. Rendering policy and Content Security Policy are implementation/security controls derived from this contract.
+Raw HTML in lesson Markdown is disabled. Rendered lesson HTML is sanitized as defence in depth. Markdown remote images are forbidden initially; lesson imagery, when introduced, must use validated local/approved assets rather than arbitrary third-party URLs. Links are validated for safe schemes, and external links receive appropriate `rel` attributes. Lesson fields inserted into JSON-LD or other structured output are serialized/escaped rather than concatenated as executable markup.
 
-### Lifecycle field
+YAML is parsed in a safe mode with custom/object-construction tags disabled. The application owns a Content Security Policy; deployment adapters apply it as response headers where supported, with standards-compatible document controls used where appropriate. Provider-specific header syntax is not part of the lesson/domain contract.
 
-The schema supports `draft`, `reviewed` and `published` states. The precise transition/publishing semantics, including the definition of Today and scheduled publication, are a separate publication-pipeline ADR.
+### Publication field
 
-Only content eligible under that publication policy may enter production catalogue/search/sitemap outputs.
+Canonical lesson files do not persist a `reviewed` workflow state. Draft/review status belongs to the branch/PR and required checks.
+
+A lesson PR sets `publishedAt` to its intended publication time before independent review. Content on `main` is authoritative published content; publication automation may merge only at or after `publishedAt`. CI rejects canonical production content missing a valid publication timestamp or violating publication policy.
+
+### Redirects and aliases
+
+Aliases are provider-neutral source metadata. The build produces a redirect manifest from them. A deployment adapter may compile that manifest to native host redirects when suitable; the portable fallback is generated static redirect pages. Redirect outputs count toward hosting limits and are included in deployment-file monitoring.
 
 ### Taxonomy
 
@@ -142,9 +149,8 @@ CI/build validation must reject at least:
 
 - missing/invalid immutable ID;
 - duplicate IDs;
-- duplicate active slugs;
+- any collision or reuse across active slugs and aliases;
 - malformed or unsafe URLs;
-- unknown lifecycle values;
 - unknown taxonomy references;
 - relationships to nonexistent IDs;
 - missing Adult presentation;

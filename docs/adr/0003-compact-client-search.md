@@ -32,30 +32,25 @@ The complete Adult/Teen article body is not part of the initial client-side sear
 
 Full-text article search is a future feature requiring its own evidence and architecture decision.
 
-### Catalogue manifest
+### Tiered discovery data
 
-The build generates a compact catalogue representation containing the metadata needed by browser-side discovery features, including as appropriate:
+Do not make the search index a dependency of every discovery screen.
 
-- immutable lesson ID;
-- current slug/URL;
-- edition availability;
-- Adult and Teen titles/descriptions;
-- publication date;
-- topic/subtopic;
-- concepts/tags;
-- compact related/discovery metadata.
+- **Static discovery pages:** Today, Library and Topics are rendered as static HTML (with pagination where needed) and work without downloading the client search index.
+- **Compact browser catalogue:** a deliberately small representation contains immutable ID, URL/slug, edition availability, publication date, topic/subtopic and edition titles. It supports Saved/Read joins, lightweight filtering and Surprise Me.
+- **Search indexes:** richer edition-specific discovery fields (description/deck, concepts/tags, curated synonyms/search terms and takeaway in addition to the compact fields) live in search-only payloads loaded when search is used.
 
-The catalogue is the common source for Library, Topics, Surprise Me and other catalogue-level client features. Saved/Read state is joined against immutable lesson IDs locally.
+Generated browser artifacts should use content-hashed filenames where practical so cached clients do not silently retain stale catalogue/search data.
 
-Do not create parallel browser datasets when the same compact catalogue can serve the requirement.
+All URLs are produced by the shared application URL-generation module defined by ADR-0002; search/index code must not reconstruct route strings independently.
 
 ### Search implementation
 
 MiniSearch remains the initial candidate implementation behind an application-owned search interface.
 
-The build derives edition-specific search documents from the catalogue/content metadata. The UI must not depend directly on MiniSearch-specific data structures.
+The build derives edition-specific search documents from validated content metadata. The UI must not depend directly on MiniSearch-specific data structures.
 
-The search/catalogue payload is lazy-loaded when a discovery surface needs it. It is not required on the core Today/lesson reading path.
+Search payloads are lazy-loaded only when search is used. The compact browser catalogue is loaded only by features that need it. Neither is required on the core Today/lesson reading path.
 
 ### Edition semantics
 
@@ -100,7 +95,7 @@ Not justified for the initial product. It adds operational cost, privacy conside
 
 - Search is optimised for discovering lessons by idea rather than searching every sentence.
 - Search queries remain local to the browser initially.
-- Library, Topics and Surprise Me can share the same compact catalogue data.
+- Static Library/Topics pages avoid a heavy client dependency; Saved/Read and Surprise Me use the smaller browser catalogue.
 - Search remains replaceable.
 - Realistic mobile performance becomes a required acceptance gate.
 - Full-text search can be added later without changing the lesson schema.
