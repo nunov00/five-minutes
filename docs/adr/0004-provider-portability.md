@@ -1,6 +1,6 @@
 # ADR-0004: Provider and technology portability
 
-Status: Proposed
+Status: Accepted
 Date: 2026-10-02
 
 ## Context

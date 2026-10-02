@@ -1,8 +1,8 @@
 # ADR-0006: Lesson source schema and identity contract
 
-Status: Proposed
+Status: Accepted
 Date: 2026-10-02
-Owner approval: pending final architecture approval.
+Owner approval: approved 2026-10-02.
 
 ## Context
 

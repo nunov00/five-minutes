@@ -1,8 +1,8 @@
 # ADR-0003: Compact catalogue and metadata search
 
-Status: Proposed
+Status: Accepted
 Date: 2026-10-02
-Owner approval: pending final architecture approval.
+Owner approval: approved 2026-10-02.
 
 ## Context
 

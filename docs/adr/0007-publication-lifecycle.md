@@ -1,8 +1,8 @@
 # ADR-0007: Publication lifecycle and Today semantics
 
-Status: Proposed
+Status: Accepted
 Date: 2026-10-02
-Owner direction: independent AI review may authorize routine lesson publication; final architecture approval remains pending.
+Owner approval: approved 2026-10-02, including independent AI review for routine publication.
 
 ## Context
 
