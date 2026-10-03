@@ -6,14 +6,10 @@ question: After five of ten doublings, why are you nowhere near half the final a
 answer: Each later doubling acts on a larger base, so the final few steps add far more than all the early steps.
 searchTerms: [exponential growth explained, doubling numbers, compounding]
 ---
-Imagine one pixel doubling into two, then four, then eight. After ten doublings there are 1,024 pixels. At the halfway point—five doublings—there are only 32.
+Imagine a video has 1,000 views and its audience doubles every hour. Five hours later it has 32,000 views. That sounds large—until hour ten, when it passes one million. Half the hours produced only about three per cent of the final count.
 
-Nothing sped up. Every step followed exactly the same rule. The surprise comes from multiplication.
+Nothing suddenly went viral in hour six. The rule stayed the same; the base it acted on kept growing. Adding 1,000 views per hour would make a straight line. Doubling multiplies the whole current audience, so every jump contains all the earlier growth and then matches it.
 
-Linear growth adds the same number each time: 10, 20, 30, 40. Exponential growth multiplies by the same factor: 10, 20, 40, 80. Each new jump is larger because it starts with everything created before it.
+This is why **doubling time** is more revealing than the latest increase. A steady doubling time creates larger and larger additions even though the clock never accelerates.
 
-The easiest way to reason about this pattern is its **doubling time**. If a quantity doubles every day, 100 becomes 200 in the same time that 100,000 becomes 200,000. The clock is steady; the added amount is not.
-
-Real populations, trends and technologies eventually meet limits, so exponential growth is a model, not a forever rule.
-
-**Takeaway:** when something doubles repeatedly, the ending can dominate the entire story.
+Real audiences, populations and technologies eventually run out of people, resources or room to expand. Exponential growth describes the stretch where proportional growth is a useful model, not a promise that doubling continues forever.

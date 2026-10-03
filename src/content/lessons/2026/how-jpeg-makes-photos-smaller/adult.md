@@ -16,4 +16,3 @@ JPEG **quantization** rounds those pattern measurements. Fine variations can be 
 
 Rounding is why standard JPEG is lossy: the decoder can construct a close image, not recover every original value. Strong compression may reveal block boundaries, ringing near sharp edges or smeared texture. Re-encoding can add further loss because another round of approximation is applied.
 
-**Takeaway:** JPEG's small files come from a carefully chosen mismatch between the stored image and the original.

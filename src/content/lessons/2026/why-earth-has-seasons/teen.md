@@ -14,4 +14,3 @@ As Earth completes its orbit, the axis keeps pointing in nearly the same directi
 
 Six months later, the pattern reverses. Earth's distance does change slightly during the year, but it is actually closest to the Sun in early January.
 
-**Takeaway:** seasons switch between hemispheres because tilt changes the angle and daily duration of sunlight.

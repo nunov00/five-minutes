@@ -14,4 +14,3 @@ The mathematics was straightforward; preserving the reference time was not. Pend
 
 John Harrison developed marine timekeepers that resisted those disturbances. By 1761 his chronometer kept time on a voyage accurately enough to demonstrate a practical solution to the longitude problem.
 
-**Takeaway:** the clock did not sense position—it carried one location's time so astronomy could compare it with another.

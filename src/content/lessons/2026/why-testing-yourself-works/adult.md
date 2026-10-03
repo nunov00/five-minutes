@@ -16,4 +16,3 @@ Retrieval also supplies honest feedback. A smooth reread can hide a missing caus
 
 This does not mean replacing understanding with endless quizzes. First build a clear model, then practise reconstructing and applying it at increasing intervals.
 
-**Takeaway:** memory improves when study resembles the future act of remembering.

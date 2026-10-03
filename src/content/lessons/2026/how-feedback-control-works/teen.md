@@ -19,4 +19,3 @@ More correction is not always better. A slow system may take too long to reach i
 
 The same basic loop appears in cruise control and many robots: measure, compare, act, repeat.
 
-**Takeaway:** a system can handle surprises when it keeps looking at what actually happened.

@@ -2,7 +2,7 @@ schemaVersion: 1
 id: 99b24089-9f36-404c-8b44-8cb594115dac
 slug: how-a-clock-found-longitude
 aliases: []
-publishedAt: 2026-09-18T08:00:00+02:00
+publishedAt: 2026-10-03T18:00:00+02:00
 topic: history
 subtopic: navigation
 concepts: [longitude, marine-chronometer, timekeeping]
@@ -13,6 +13,11 @@ sources:
     publisher: National Institute of Standards and Technology
     accessedAt: 2026-10-03
     note: Historical account of John Harrison's marine chronometer and the longitude prize.
+  - title: Longitude found — the story of Harrison's timekeepers
+    url: https://www.rmg.co.uk/stories/time/harrisons-clocks-longitude-problem
+    publisher: Royal Museums Greenwich
+    accessedAt: 2026-10-03
+    note: Museum chronology of Harrison's timekeepers, including H4 and its 1761 Jamaica trial.
 provenance:
   createdAt: 2026-10-03T16:21:11+02:00
   createdBy: { type: ai, provider: openai, model: gpt-5.6-sol, promptVersion: editorial-calibration-v1 }

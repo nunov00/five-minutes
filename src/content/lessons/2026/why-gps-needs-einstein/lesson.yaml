@@ -23,4 +23,11 @@ provenance:
   createdAt: 2026-10-02T18:00:00+02:00
   createdBy:
     type: human
-  reviews: []
+  reviews:
+    - reviewedAt: 2026-10-03T14:23:24+02:00
+      reviewer:
+        type: ai
+        provider: openai
+        model: gpt-5.6-sol
+      purpose: substantive editorial revision
+      promptVersion: editorial-calibration-v1

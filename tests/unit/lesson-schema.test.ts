@@ -94,6 +94,15 @@ describe('lesson schema v1', () => {
     }));
   });
 
+  it('rejects publication before provenance creation', () => {
+    const lesson = validLesson();
+    lesson.metadata.provenance.createdAt = '2026-10-03T01:00:00Z';
+    lesson.metadata.publishedAt = '2026-10-03T00:59:59Z';
+    expect(validateLessonBundle(lesson).issues).toContainEqual(expect.objectContaining({
+      path: 'metadata.publishedAt', code: 'publication-before-creation',
+    }));
+  });
+
   it.each([
     ['slug to slug', 'shared-route', [], 'shared-route', []],
     ['alias to alias', 'first-lesson', ['shared-route'], 'second-lesson', ['shared-route']],

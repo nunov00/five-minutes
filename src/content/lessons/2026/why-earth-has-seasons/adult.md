@@ -14,4 +14,3 @@ The tilted hemisphere receives sunlight at a more direct angle, concentrating th
 
 Earth's orbit is slightly non-circular, but the distance change is not the main driver. In fact, Earth is closest to the Sun in early January, during northern winter.
 
-**Takeaway:** seasons are a geometry-of-light effect created by a tilted rotating planet.

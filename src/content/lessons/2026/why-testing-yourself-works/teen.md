@@ -14,4 +14,3 @@ In one study, students repeatedly reread passages or repeatedly tried to recall 
 
 The struggle is useful, but guessing forever is not. Try to answer, check the source, correct the gap and return later. Flashcards can do this, but so can explaining a lesson aloud, drawing its process from memory or answering its Test Yourself question before opening the answer.
 
-**Takeaway:** the uncomfortable moment when you search your memory is part of the learning, not proof that learning failed.

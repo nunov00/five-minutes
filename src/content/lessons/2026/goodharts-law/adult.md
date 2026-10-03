@@ -23,4 +23,3 @@ The proxy works while it moves with the real goal. It becomes unreliable when pe
 
 That does not make metrics useless. It means a metric needs context. Pair speed with measures of repeat calls and customer outcomes. Audit surprising improvements. Ask what behaviour the target rewards, and revise it when that behaviour changes.
 
-**Takeaway:** manage the goal, not just the number that was chosen to represent it.

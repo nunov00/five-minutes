@@ -56,6 +56,12 @@ describe('safe lesson content pipeline', () => {
     expect(parsed.html).not.toContain('<h1>');
   });
 
+  it('renders the front-matter takeaway only once', () => {
+    expect(() => parsePresentationFile('---\ntitle: T\ntakeaway: Durable insight.\n---\nBody.\n\n**Takeaway:** Duplicate insight.\n')).toThrow(/takeaway belongs in presentation front matter/i);
+    const parsed = parsePresentationFile('---\ntitle: T\ntakeaway: Durable insight.\n---\n```\n**Takeaway:** example text\n```\n');
+    expect(parsed.html).toContain('**Takeaway:** example text');
+  });
+
   it('keeps level-1 headings available to generic Markdown rendering', () => {
     expect(renderSafeMarkdown('# Title')).toBe('<h1>Title</h1>');
   });

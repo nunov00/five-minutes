@@ -17,4 +17,3 @@ This is the idea commonly called Goodhart's law: when a measure becomes a target
 
 The same trap appears in follower counts, test results, workplace targets and game rankings. It does not mean every score is bad. Useful systems check more than one signal and look at the result behind the score. A reading programme could combine the count with discussion, choice and evidence of understanding.
 
-**Takeaway:** before chasing a number, ask what it measures—and what it leaves out.

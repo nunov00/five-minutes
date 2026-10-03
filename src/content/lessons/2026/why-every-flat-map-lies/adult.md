@@ -14,4 +14,3 @@ The Mercator projection is conformal. A constant compass bearing appears as a st
 
 That does not make Mercator fraudulent; it makes it unsuitable for comparing country sizes. No projection is best for every purpose. A route map, a population map and a classroom world map may need different compromises.
 
-**Takeaway:** before trusting a map's visual message, ask what its projection preserves and what it distorts.
