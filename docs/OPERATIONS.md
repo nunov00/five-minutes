@@ -41,6 +41,16 @@ If measured build pressure later justifies sharding, only lesson rendering is pa
 
 A clean checkout plus pinned dependencies must be sufficient to reproduce production output. CI uses the lockfile and `npm ci`; generated lesson fixtures and deployment output are not canonical source.
 
+## Shared build content (pre-M5, #48)
+
+Astro route consumers use `src/lib/content/build-content.ts` rather than calling the canonical loader independently. `getBuildMetadata()` provides validated lesson metadata/front matter, the shared catalogue/routes, historical redirects and sitemap paths without article HTML or source-directory fields. Today and future Library/Topics/Search/Related consumers use this metadata path. Reading route generation calls `getBuildContent()` once and uses its `getLesson(id)` lookup for each lesson body.
+
+The production server bundle owns one lazy, in-flight promise per build process. Its first consumer runs the existing strict filesystem, safe Markdown/YAML and publication/reference validation pipeline over the complete collection, renders both presentations once and builds the delivery outputs once. Later and concurrent consumers reuse that snapshot. Nested content is frozen to prevent a consumer changing another consumer's input. A rejected load is propagated to every waiting consumer and is never cached as a successful result; a subsequent attempt must validate again.
+
+The cache exists only in memory during a static production build. A normal `astro build` starts a fresh process; no disk cache or cross-build content state exists. Development/test access creates a fresh snapshot per call so content and route-ownership edits are re-read. A reading-route consumer obtains one snapshot for the whole route enumeration even in development. This does not introduce lazy body rendering, sharding or a browser/runtime content service: all source content still passes the full safe-content pipeline before discovery metadata is exposed.
+
+Verification on the current seed corpus, Node 22.20.0: a temporary loader probe measured four full loads in a build without `SITE_URL` (five with a sitemap origin) before this change, versus one after it. Generated artifacts were compared byte for byte; this is evidence of eliminated duplicate work, not a large-corpus timing benchmark. Behavioural tests cover concurrent reuse, metadata/body separation, delivery equivalence, nested mutation protection, validation failure/retry and independent build/ownership snapshots.
+
 ## Environments
 
 Pull requests receive preview deployments where practical. `main` represents production-ready repository state. Production deployment consumes only validated published content.
