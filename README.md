@@ -57,6 +57,7 @@ The application produces standard static output in `dist/`. Hosting-provider con
 - `/adult/<slug>` and `/teen/<slug>` are the static lesson pages. The edition switch links to the other edition's manifest path; the URL alone decides the edition (ADR-0005). Takeaway and Test Yourself follow the lesson body; the answer uses `<details>`, so it works without JavaScript.
 - The reading page owns the only `<h1>` (the presentation title from front matter). Lesson bodies therefore start headings at `##`; the content pipeline rejects `#` in a presentation body, and the sanitized body HTML is rendered unchanged.
 - `src/styles/global.css` holds the shared, mobile-first design tokens (colour, type, spacing, shape) and a few components (`container`, `card`, `button`, `eyebrow`, `lede`, `edition-switch`). Light/dark follows the operating-system setting. Reuse these tokens rather than adding new values.
+- The site is an installable PWA without a service worker: a web app manifest, locally owned icons and Apple touch-icon metadata, with nothing cached offline. See "Installable app (PWA)" in `docs/OPERATIONS.md` for cache/update behaviour and how to change icons safely.
 - Pages ship no client-side JavaScript, and styles are emitted as external files (`build.inlineStylesheets: 'never'`) so a later Content Security Policy needs no inline-style allowance.
 
 ## Deployment
@@ -68,7 +69,7 @@ Cloudflare is the initial host. Its configuration lives only in `deploy/cloudfla
 - `src/` — production application code
 - `docs/` — architecture, governance, ADRs and operations
 - `deploy/` — hosting-provider adapters (currently `deploy/cloudflare/`); not application code
-- `scripts/` — build/deployment tooling such as `count-dist-files.mjs`
+- `scripts/` — build/deployment tooling such as `count-dist-files.mjs`, plus the manual icon generator `generate-icons.mjs`
 - `benchmark/` and `.github/workflows/benchmark-*.yml` — retained architecture-spike evidence; not production application code. These tools were written for the spike's Astro 5 package setup and are not runnable against the current production `package.json`. To reproduce the published benchmark results, check out commit `c098907` (the merged architecture spike) and follow `docs/spikes/10k-architecture-benchmark.md`.
 
 Implementation work is tracked from GitHub issue #4.
