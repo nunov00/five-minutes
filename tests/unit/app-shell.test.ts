@@ -26,6 +26,18 @@ describe('app shell', () => {
     expect(html).not.toContain('<script');
   });
 
+  it('declares the web app manifest and install metadata on every page', async () => {
+    const container = await AstroContainer.create();
+    const html = await container.renderToString(BaseLayout);
+
+    expect(html).toContain('<link rel="manifest" href="/manifest.webmanifest">');
+    expect(html).toContain('<link rel="apple-touch-icon" href="/apple-touch-icon.png">');
+    expect(html).toContain('<link rel="icon" href="/favicon.svg" type="image/svg+xml">');
+    expect(html).toContain('<meta name="apple-mobile-web-app-title" content="Five Minutes">');
+    expect(html.match(/<meta name="theme-color"/g)).toHaveLength(2);
+    expect(html).not.toContain('serviceWorker');
+  });
+
   it('lets pages override the document title and description', async () => {
     const container = await AstroContainer.create();
     const html = await container.renderToString(BaseLayout, {
