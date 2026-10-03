@@ -3,6 +3,13 @@ import '../styles/global.css';
 
 interface Props { title?: string; description?: string; }
 const { title = 'Five Minutes', description = 'One worthwhile idea, made easy to discover, understand and explore.' } = Astro.props;
+const pathname = Astro.url.pathname;
+const navigation = [
+  { href: '/', label: 'Today', current: pathname === '/' },
+  { href: '/library', label: 'Library', current: pathname.startsWith('/library') },
+  { href: '/topics', label: 'Topics', current: pathname.startsWith('/topics') },
+  { href: '/search', label: 'Search', current: pathname.startsWith('/search') },
+];
 ---
 <!doctype html>
 <html lang="en">
@@ -24,6 +31,11 @@ const { title = 'Five Minutes', description = 'One worthwhile idea, made easy to
     <header class="site-header">
       <div class="container">
         <a class="brand" href="/">Five Minutes</a>
+        <nav class="site-nav" aria-label="Main navigation">
+          {navigation.map((item) => (
+            <a href={item.href} aria-current={item.current ? 'page' : undefined}>{item.label}</a>
+          ))}
+        </nav>
       </div>
     </header>
     <main id="main" class="site-main container"><slot /></main>

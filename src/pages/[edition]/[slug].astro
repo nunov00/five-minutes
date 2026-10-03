@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import type { LoadedLesson } from '../../lib/content/loader';
 import { getBuildContent } from '../../lib/content/build-content';
+import { relatedLessons } from '../../lib/discovery/related';
 import { EDITION_LABELS } from '../../lib/reading';
 import { formatEditorialDate } from '../../lib/today';
 import { lessonPath, type LessonEdition } from '../../lib/urls';
@@ -13,7 +14,7 @@ interface Props {
 }
 
 export async function getStaticPaths() {
-  const { metadata: { manifest }, getLesson } = await getBuildContent();
+  const { metadata: { manifest, lessons }, getLesson } = await getBuildContent();
   const catalogueById = new Map(manifest.catalogue.map((entry) => [entry.id, entry]));
 
   return manifest.routes.map((route) => {
@@ -28,14 +29,15 @@ export async function getStaticPaths() {
     const alternatePath = route.edition === 'adult' ? catalogueEntry.teen.path : catalogueEntry.adult.path;
     if (!alternatePath) throw new Error(`Missing alternate edition route for ${route.lessonId}.`);
     const editionPaths = { [route.edition]: route.path, [route.edition === 'adult' ? 'teen' : 'adult']: alternatePath } as Record<LessonEdition, string>;
+    const related = relatedLessons(route.lessonId, lessons, route.edition);
     return {
       params: { edition: route.edition, slug: route.slug },
-      props: { lesson, edition: route.edition, editionPaths },
+      props: { lesson, edition: route.edition, editionPaths, related },
     };
   });
 }
 
-const { lesson, edition, editionPaths } = Astro.props as Props;
+const { lesson, edition, editionPaths, related } = Astro.props as Props & { related: ReturnType<typeof relatedLessons> };
 const presentation = edition === 'adult' ? lesson.adult : lesson.teen;
 const html = edition === 'adult' ? lesson.adultHtml : lesson.teenHtml;
 if (!presentation) throw new Error(`Missing ${edition} presentation for ${lesson.metadata.id}.`);
@@ -65,6 +67,18 @@ const editions: LessonEdition[] = ['adult', 'teen'];
         <summary>Show answer</summary>
         <p class="answer">{presentation.answer}</p>
       </details>
+    </section>
+    <section class="lesson-section" aria-labelledby="related-heading">
+      <p class="eyebrow">Keep exploring</p>
+      <h2 id="related-heading">Explore next</h2>
+      <div class="related-list">
+        {related.map((candidate) => (
+          <article class="card related-card" data-related-id={candidate.id}>
+            <h3><a href={candidate.path}>{candidate.title}</a></h3>
+            <p>{candidate.reason}</p>
+          </article>
+        ))}
+      </div>
     </section>
     <p class="lesson-section"><a href="/">Back to Today</a></p>
   </article>

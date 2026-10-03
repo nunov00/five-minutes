@@ -2,6 +2,7 @@ import type { LessonBundle, RedirectEntry, RouteOwnershipRegistry } from './cont
 import { validateRouteOwnershipRegistry } from './content/schema';
 import { lessonPath } from './urls';
 import { buildDeliveryManifest, type DeliveryManifest } from './delivery-manifest';
+import { discoveryPagePaths } from './discovery/catalogue';
 
 export interface GlobalDeliveryOutputs {
   manifest: DeliveryManifest;
@@ -47,6 +48,6 @@ export function buildGlobalDeliveryOutputs(
   }
 
   redirects.sort((a, b) => compare(a.from, b.from));
-  const sitemapPaths = ['/', ...manifest.routes.map((route) => route.path)].sort(compare);
+  const sitemapPaths = [...discoveryPagePaths(lessons), ...manifest.routes.map((route) => route.path)].sort(compare);
   return { manifest, redirects, sitemapPaths };
 }

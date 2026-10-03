@@ -3,10 +3,16 @@ id: 99b24089-9f36-404c-8b44-8cb594115dac
 slug: how-a-clock-found-longitude
 aliases: []
 publishedAt: 2026-10-03T18:00:00+02:00
-topic: history
-subtopic: navigation
+topic: society
+subtopic: history
 concepts: [longitude, marine-chronometer, timekeeping]
-related: { manual: [], exclude: [] }
+related:
+  manual:
+    - id: 0199a5b7-6e21-7a42-9c3d-8f1b2e4a6c70
+      reason: Both navigation systems turn extremely accurate timekeeping into a position.
+    - id: b6fbc2e0-bcad-4ad7-8336-2fed9576e788
+      reason: Once longitude can be measured, a map still has to represent the curved Earth.
+  exclude: []
 sources:
   - title: A Walk Through Time — A Revolution in Timekeeping
     url: https://www.nist.gov/pml/time-and-frequency-division/popular-links/walk-through-time/walk-through-time-revolution

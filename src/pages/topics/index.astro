@@ -1,0 +1,27 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getBuildMetadata } from '../../lib/content/build-content';
+import { TAXONOMY } from '../../lib/taxonomy';
+
+const { lessons } = await getBuildMetadata();
+const topics = TAXONOMY.map((topic) => ({
+  ...topic,
+  count: lessons.filter((lesson) => lesson.metadata.topic === topic.token).length,
+})).filter((topic) => topic.count > 0);
+---
+<BaseLayout title="Topics · Five Minutes" description="Explore Five Minutes lessons by topic.">
+  <section aria-labelledby="topics-heading">
+    <p class="eyebrow">Discovery</p>
+    <h1 id="topics-heading">Topics</h1>
+    <p class="lede">Start with a field, then follow the connections between ideas.</p>
+    <div class="topic-grid">
+      {topics.map((topic) => (
+        <article class="card topic-card">
+          <p class="eyebrow">{topic.count} {topic.count === 1 ? 'lesson' : 'lessons'}</p>
+          <h2><a href={`/topics/${topic.token}`}>{topic.label}</a></h2>
+          <p>{topic.description}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

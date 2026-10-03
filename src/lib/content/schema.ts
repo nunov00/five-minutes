@@ -1,4 +1,5 @@
 import { lessonPath } from '../urls';
+import { isTaxonomyPair, taxonomyTopic } from '../taxonomy';
 
 export const LESSON_SCHEMA_VERSION = 1 as const;
 
@@ -165,6 +166,15 @@ export function validateLessonMetadata(value: unknown, path = 'metadata'): Valid
   }
   for (const key of ['topic', 'subtopic'] as const) {
     if (!nonEmpty(value[key]) || !TOKEN.test(value[key])) issue(issues, `${path}.${key}`, 'taxonomy-token', 'Expected a canonical taxonomy token.');
+  }
+  if (nonEmpty(value.topic) && TOKEN.test(value.topic) && !taxonomyTopic(value.topic)) {
+    issue(issues, `${path}.topic`, 'unknown-topic', `Unknown controlled topic "${value.topic}".`);
+  } else if (
+    nonEmpty(value.topic) && TOKEN.test(value.topic)
+    && nonEmpty(value.subtopic) && TOKEN.test(value.subtopic)
+    && !isTaxonomyPair(value.topic, value.subtopic)
+  ) {
+    issue(issues, `${path}.subtopic`, 'unknown-subtopic', `Subtopic "${value.subtopic}" is not defined under "${value.topic}".`);
   }
   validateStringArray(value.concepts, `${path}.concepts`, issues, TOKEN);
 

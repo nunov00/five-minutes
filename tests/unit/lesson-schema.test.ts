@@ -29,6 +29,16 @@ describe('lesson schema v1', () => {
     expect(result.issues.map((x) => x.code)).toEqual(expect.arrayContaining(['uuid', 'slug']));
   });
 
+  it('rejects unknown topics and subtopics outside their controlled parent', () => {
+    const unknownTopic = validLesson();
+    unknownTopic.metadata.topic = 'unknown';
+    expect(validateLessonBundle(unknownTopic).issues).toContainEqual(expect.objectContaining({ code: 'unknown-topic' }));
+
+    const wrongParent = validLesson();
+    wrongParent.metadata.subtopic = 'computing';
+    expect(validateLessonBundle(wrongParent).issues).toContainEqual(expect.objectContaining({ code: 'unknown-subtopic' }));
+  });
+
   it('rejects duplicate IDs deterministically', () => {
     const first = validLesson();
     const second = validLesson({

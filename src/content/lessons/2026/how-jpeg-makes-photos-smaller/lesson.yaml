@@ -6,7 +6,13 @@ publishedAt: 2026-10-03T18:00:00+02:00
 topic: technology
 subtopic: computing
 concepts: [jpeg, lossy-compression, quantization]
-related: { manual: [], exclude: [] }
+related:
+  manual:
+    - id: b6fbc2e0-bcad-4ad7-8336-2fed9576e788
+      reason: JPEG and map projections both preserve selected information by accepting distortion elsewhere.
+    - id: 1629895d-f11a-4bb7-afe5-8c8df5c07123
+      reason: Image dimensions show how repeated multiplication can make data size grow surprisingly fast.
+  exclude: []
 sources:
   - title: Overview of JPEG 1
     url: https://jpeg.org/jpeg/
