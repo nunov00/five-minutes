@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { ContentSecurityError, parsePresentationFile, parseSafeYaml, renderSafeMarkdown, sanitizeRenderedHtml, serializeStructuredData } from '../../src/lib/content/safe-content';
+import { ContentContractError, ContentSecurityError, parsePresentationFile, parseSafeYaml, renderSafeMarkdown, sanitizeRenderedHtml, serializeStructuredData } from '../../src/lib/content/safe-content';
 
 describe('safe lesson content pipeline', () => {
   it('parses core YAML without constructing custom tagged objects', () => {
@@ -40,10 +40,24 @@ describe('safe lesson content pipeline', () => {
   });
 
   it('parses front matter and plain Markdown without MDX execution', () => {
-    const parsed = parsePresentationFile('---\ntitle: Safe\n---\n\n# Hello\n\n{danger()}');
+    const parsed = parsePresentationFile('---\ntitle: Safe\n---\n\n## Hello\n\n{danger()}');
     expect(parsed.frontmatter).toEqual({ title: 'Safe' });
-    expect(parsed.html).toContain('<h1>Hello</h1>');
+    expect(parsed.html).toContain('<h2>Hello</h2>');
     expect(parsed.html).toContain('{danger()}');
+  });
+
+  it('reserves the level-1 heading for the presentation title', () => {
+    expect(() => parsePresentationFile('---\ntitle: T\n---\n# T\n\nBody.')).toThrow(ContentContractError);
+    expect(() => parsePresentationFile('---\ntitle: T\n---\nIntro.\n\n# Later\n')).toThrow(/headings must start at level 2/);
+    const parsed = parsePresentationFile('---\ntitle: T\n---\n## Part\n\n### Detail\n\n```\n# not a heading\n```\n');
+    expect(parsed.html).toContain('<h2>Part</h2>');
+    expect(parsed.html).toContain('<h3>Detail</h3>');
+    expect(parsed.html).toContain('# not a heading');
+    expect(parsed.html).not.toContain('<h1>');
+  });
+
+  it('keeps level-1 headings available to generic Markdown rendering', () => {
+    expect(renderSafeMarkdown('# Title')).toBe('<h1>Title</h1>');
   });
 
   it('escapes structured data before embedding in HTML', () => {
