@@ -1,0 +1,164 @@
+---
+import { PREFIX, EDITIONS, PAGE_SIZE, prototypeContent, prototypeRoutes, discovery, lessonPath, titleCase, date, synthetic, predictionFixtures, escapeHtml as esc } from '../../prototype/model';
+import { TAXONOMY } from '../../lib/taxonomy';
+import SeasonFigure from '../../components/prototype/SeasonFigure.astro';
+
+export async function getStaticPaths() {
+  const lessons=await prototypeContent();
+  return prototypeRoutes(lessons.map(l=>l.metadata.slug)).map(route=>({params:{route:route||undefined}}));
+}
+const lessons=await prototypeContent();
+const route=Astro.params.route||'';
+const parts=route.split('/');
+const edition=parts.includes('teen')?'teen':'adult';
+const isLesson=EDITIONS.some(e=>parts[0]===e);
+const current=isLesson?lessons.find(l=>l.metadata.slug===parts[1]):undefined;
+const rest=parts[0]==='editions'?parts.slice(2):parts;
+const view=isLesson?'lesson':(rest[0]||'today');
+const topic=TAXONOMY.find(t=>t.token===rest[1]);
+const subtopic=topic?.subtopics.find(s=>s.token===rest[2]);
+const isPaged=rest.includes('page');
+const page=isPaged?Number(rest[rest.indexOf('page')+1]):1;
+const isShelf=view==='topics'&&!!subtopic;
+const fixture=isPaged;
+const fixtureCount=isShelf?96:1000;
+const archiveFixture=synthetic(fixtureCount).map(l => isShelf ? {...l,topic:topic!.token,topicLabel:topic!.label,subtopic:subtopic!.token,subtopicLabel:subtopic!.label,
+  adult:{...l.adult,title:`Synthetic archive entry ${l.id.slice(-5)}: understanding ${subtopic!.label.toLowerCase()}`},
+  teen:{...l.teen,title:`Synthetic archive entry ${l.id.slice(-5)}: a question about ${subtopic!.label.toLowerCase()}`}} : l);
+const filtered=fixture?archiveFixture:lessons.filter(l=>!topic||l.metadata.topic===topic.token&&(!subtopic||l.metadata.subtopic===subtopic.token));
+const visible=fixture?filtered.slice((page-1)*PAGE_SIZE,page*PAGE_SIZE):filtered;
+const featured=lessons.find(l=>l.metadata.slug==='why-earth-has-seasons')!;
+const presentation=current?.[edition];
+const primaryNav=['today','library','search','saved'];
+const suffix=isLesson?'':rest[0]===''?'':rest.join('/');
+const switchPath=(e:string)=>isLesson?lessonPath(e,current!.metadata.slug):discovery(e,view==='today'?'':suffix);
+const pageTitle=current?current[edition].title:view==='today'?'Today':subtopic?.label||topic?.label||titleCase(view);
+const kicker=(l:any)=>`${TAXONOMY.find(t=>t.token===l.metadata.topic)?.label} · ${TAXONOMY.find(t=>t.token===l.metadata.topic)?.subtopics.find(s=>s.token===l.metadata.subtopic)?.label}`;
+const row=(l:any, synth=false)=>{
+  const m=synth?l:l.metadata; const p=l[edition];
+  const href=synth?`${PREFIX}/fixture?id=${m.id}`:lessonPath(edition,m.slug);
+  const label=synth?`${m.topicLabel} · ${m.subtopicLabel}`:kicker(l);
+  return `<li class="lesson-row"><span class="state-gutter" data-state-id="${esc(m.id)}" aria-label="Unread"></span><a class="row-link" href="${href}"><span class="row-topic">${esc(label)}</span><span class="row-title">${esc(p.title)}</span><span class="row-deck">${esc(p.description)}</span></a><span class="row-date">${esc(date(m.publishedAt))}${synth?'<span class="prototype-note">Synthetic</span>':''}</span></li>`;
+};
+const groupedRows=(entries:any[],synth=false)=>{
+  const groups=new Map<string,any[]>();
+  for(const l of entries){const m=synth?l:l.metadata;const month=new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/Zurich',month:'long',year:'numeric'}).format(new Date(m.publishedAt));groups.set(month,[...(groups.get(month)||[]),l]);}
+  return [...groups].map(([month,list])=>`<section class="archive-year"><h2>${esc(month)}</h2><ul class="lesson-list">${list.map(l=>row(l,synth)).join('')}</ul></section>`).join('');
+};
+const bodyHtml=current?current[edition+'Html' as 'adultHtml'|'teenHtml']:'';
+const firstEnd=bodyHtml.indexOf('</p>')+4;
+const intro=firstEnd>=4?bodyHtml.slice(0,firstEnd):'';
+const body=firstEnd>=4?bodyHtml.slice(firstEnd):bodyHtml;
+const prediction=current?predictionFixtures[current.metadata.slug]:undefined;
+const currentIndex=current?lessons.indexOf(current):-1;
+const previous=currentIndex>=0?lessons[currentIndex+1]:undefined;
+const next=currentIndex>0?lessons[currentIndex-1]:undefined;
+const related=current?current.metadata.related.manual.map(r=>({lesson:lessons.find(l=>l.metadata.id===r.id),reason:r.reason})).filter(r=>r.lesson):[];
+const weekEarlier=lessons.filter(l=>l.metadata.id!==featured.metadata.id&&date(l.metadata.publishedAt)!==date(featured.metadata.publishedAt)).slice(0,3);
+const sameDay=lessons.filter(l=>l.metadata.id!==featured.metadata.id&&date(l.metadata.publishedAt)===date(featured.metadata.publishedAt)).slice(0,3);
+const sparseRows=sameDay.slice(0,2).map((l,i)=>({...l,metadata:{...l.metadata,publishedAt:i?'2026-10-01T18:00:00+02:00':'2026-09-28T18:00:00+02:00'}}));
+const iconPaths:Record<string,string>={today:'M12 3v3m0 12v3M3 12h3m12 0h3M5.6 5.6l2.1 2.1m8.6 8.6 2.1 2.1M5.6 18.4l2.1-2.1m8.6-8.6 2.1-2.1 M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0',library:'M4 4h5v16H4zM10 4h5v16h-5zM17 5l3-1 4 15-3 1z',search:'M16 10a6 6 0 1 1-12 0 6 6 0 0 1 12 0M15 15l6 6',saved:'M6 3h12v18l-6-4-6 4z',science:'M9 3h6m-5 0v7L4 20h16l-6-10V3M7 15h10',technology:'M6 6h12v12H6zM9 9h6v6H9zM9 2v4m6-4v4M9 18v4m6-4v4M2 9h4m-4 6h4M18 9h4m-4 6h4','human-mind':'M12 5C9 1 5 4 5 7c-4 1-4 7 0 8-1 5 5 8 7 3m0-13c3-4 7-1 7 2 4 1 4 7 0 8 1 5-5 8-7 3M12 5v15M5 7l3 2M5 15l3-2m11-6-3 2m3 6-3-2','health-human-body':'M12 21L3 12C-2 5 7 0 12 7c5-7 14-2 9 5z','society':'M10 7a3 3 0 1 1-6 0 3 3 0 0 1 6 0M20 7a3 3 0 1 1-6 0 3 3 0 0 1 6 0M1 21v-4c0-5 12-5 12 0v4m0-7c4-3 10-1 10 3v4','mathematics-thinking':'M20 4H4l9 8-9 8h16'};
+---
+<!doctype html>
+<html lang="en" data-edition={edition} data-view={view} data-prototype-route={route}>
+<head>
+  <meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="robots" content="noindex,nofollow"/>
+  <meta name="color-scheme" content="light dark"/>
+  <title>{pageTitle} · Five Minutes design preview</title>
+  <link rel="manifest" href="/manifest.webmanifest"/>
+  <link rel="stylesheet" href="/design-preview/prototype.css"/>
+  <script is:inline src="/design-preview/restore.js"></script>
+</head>
+<body>
+<aside class="review-bar" aria-label="Prototype controls">
+  <span>Design preview · proposed behaviour</span>
+  <details><summary>Review controls</summary><div class="review-panel">
+    <a href="/">Current site</a><a href={`${PREFIX}/not-found`}>404 example</a>
+    <label>Teen activity <select id="review-activity"><option value="tokens">Typography only</option><option value="modules">With prediction</option></select></label>
+    <label>Figures <select id="review-figure"><option value="explain">Explanatory figures</option><option value="none">No figures</option></select></label>
+    <label>First visit <select id="review-first"><option value="offer">Adult + optional offer</option><option value="choice">Optional choice panel</option></select></label>
+    <label>Search catalogue <select id="review-scale"><option value="real">12 real lessons</option><option value="1000">1,000 synthetic entries</option><option value="10000">10,000 synthetic entries</option></select></label>
+    <label>Search connection <select id="review-network"><option value="normal">Normal</option><option value="slow">Slow simulation</option><option value="error">Error simulation</option></select></label>
+    <label>Device storage <select id="review-storage"><option value="normal">Available</option><option value="blocked">Blocked simulation</option></select></label>
+    <button type="button" id="review-mismatch">Store other edition</button>
+    <button type="button" id="review-clear">Reset prototype state</button>
+    <button type="button" id="review-rename">Seed saved item by ID</button>
+    <button type="button" id="review-long">90-character title fixture</button>
+    <button type="button" id="review-sparse">Sparse publication fixture</button>
+    <p>Figures and predictions are prototype proposals. Synthetic entries test layout and interactions; they are not published lessons or a full production performance benchmark. The existing PWA still starts at the current site.</p>
+  </div></details>
+</aside>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+ <a class="wordmark" href={discovery(edition)} aria-label="Five Minutes Today"><span class="brand-mark" aria-hidden="true"></span><span>Five Minutes<span class="brand-subline">One idea at a time</span></span></a>
+ <nav class="desktop-nav" aria-label="Main navigation">{primaryNav.map(v=><a href={discovery(edition,v==='today'?'':v)} aria-current={view===v?'page':undefined}>{titleCase(v)}</a>)}</nav>
+ <div class="header-controls"><nav class="edition-control" aria-label="Edition">{EDITIONS.map(e=><a data-edition-choice={e} href={switchPath(e)} aria-current={e===edition?'true':undefined}>{titleCase(e)}</a>)}</nav><a class="preferences-link" href={discovery(edition,'preferences')} aria-label="Preferences">⚙<span>Preferences</span></a></div>
+</header>
+<div class="preference-bridge" id="preference-bridge" hidden><span id="bridge-text"></span><a id="bridge-return" href={discovery(edition==='adult'?'teen':'adult')}>Return to my edition</a><button id="bridge-make" type="button">Make this my edition</button></div>
+<p class="storage-message" id="storage-message" role="status" hidden></p>
+<main id="main" class:list={['page',view==='lesson'?'reading-page':'']}>
+{view==='today'&&<>
+  <section class="daily-hero">
+    <div class="issue-line"><span>Today’s idea</span><time datetime={featured.metadata.publishedAt}>{date(featured.metadata.publishedAt)}</time></div>
+    <a class="topic-kicker" href={discovery(edition,`topics/${featured.metadata.topic}/${featured.metadata.subtopic}`)}>{kicker(featured)}</a>
+    <h1 data-original-title={featured[edition].title}>{featured[edition].title}</h1>
+    <p class="deck">{featured[edition].description}</p>
+    <a class="primary-action" href={lessonPath(edition,featured.metadata.slug)}>Read today’s idea <span aria-hidden="true">→</span></a>
+  </section>
+  <section class="first-visit" id="first-visit" hidden><div><h2>Two voices. One idea.</h2><p>Choose the edition that feels right for you. You can switch at any time.</p></div><a data-edition-choice="teen" href={discovery('teen')}>Try Teen →</a><button type="button" id="dismiss-first">Keep reading</button></section>
+  <section class="earlier-section"><div class="section-heading"><h2>Earlier this week</h2><a href={discovery(edition,'library')}>The Library →</a></div><div id="earlier-real">{weekEarlier.length?<ul class="lesson-list" set:html={weekEarlier.map(l=>row(l)).join('')}/>:<p class="quiet">No earlier lessons this week yet.</p>}</div><div id="earlier-sparse" hidden><p class="prototype-note">Synthetic publication dates · two entries with missing days</p><ul class="lesson-list" set:html={sparseRows.map(l=>row(l)).join('')}/></div></section>
+  {sameDay.length>0&&<section class="also-section"><h2>Also published today</h2><ul class="lesson-list" set:html={sameDay.map(l=>row(l)).join('')}/></section>}
+  <a class="surprise-link" href={lessonPath(edition,'goodharts-law')} data-surprise>Surprise me <span aria-hidden="true">↗</span></a>
+</>}
+{view==='lesson'&&current&&presentation&&<>
+ <div class="reading-top"><a href={discovery(edition)}>← Today</a><span>{date(current.metadata.publishedAt)}</span></div>
+ <header class="lesson-heading"><a class="topic-kicker" href={discovery(edition,`topics/${current.metadata.topic}/${current.metadata.subtopic}`)}>{kicker(current)}</a><h1 data-original-title={presentation.title}>{presentation.title}</h1><p class="deck">{presentation.description}</p></header>
+ {prediction&&<section class="prediction-module" id="prediction-module" hidden={edition!=='teen'} data-answer-id={prediction.answerId}><p class="prototype-note">Proposed optional activity · editorial review pending</p><h2>What would you expect?</h2><p>{prediction.prompt}</p><ol>{prediction.options.map(o=><li><span class="prediction-plain">{o.text}</span><button class="prediction-choice" type="button" data-prediction-id={o.id}>{o.text}</button></li>)}</ol><p class="quiet prediction-instruction">Decide before you reveal.</p><details id="prediction-reveal"><summary>Reveal the explanation</summary><p id="prediction-selected" class="quiet"></p><p>{prediction.explanation}</p></details></section>}
+ <div class:list={['lesson-content', current.metadata.slug==='why-earth-has-seasons'?'has-figure':'']}>
+   <div class="article-body"><div class="opening" set:html={intro}/><div class="body-continuation" set:html={body}/></div>
+   {current.metadata.slug==='why-earth-has-seasons'&&<aside class="figure-column"><SeasonFigure edition={edition}/></aside>}
+ </div>
+ <section class="lesson-ending" data-lesson-id={current.metadata.id}>
+   <div class="recall"><p class="eyebrow">Before you go</p><h2>What stayed with you?</h2><p class="recall-question">{presentation.question}</p><details class="recall-reveal"><summary>Reveal answer and takeaway</summary><div class="reveal-content"><p class="eyebrow">Answer</p><p>{presentation.answer}</p><p class="eyebrow">Keep this idea</p><p class="takeaway">{presentation.takeaway}</p></div></details></div>
+   <div class="reader-actions"><button class="js-only" type="button" data-save-id={current.metadata.id} aria-pressed="false">Save this idea</button><button class="js-only" type="button" data-read-id={current.metadata.id}>Mark as read</button><button class="js-only" type="button" data-share>Share</button><a class="plain-share" href={lessonPath(edition,current.metadata.slug)}>Link to this lesson</a></div>
+   <p id="action-status" role="status" class="quiet"></p><noscript><p class="quiet">Saved and Read need JavaScript. You can bookmark or copy this lesson’s link.</p></noscript>
+   {related.length>0&&<section class="further"><h2>Follow the idea</h2><ul>{related.map(r=><li><a href={lessonPath(edition,r.lesson!.metadata.slug)}>{r.lesson![edition].title}</a><p>{r.reason}</p></li>)}</ul></section>}
+   <section class="sources"><h2>Further reading</h2><ul>{current.metadata.sources.map(s=><li><a href={s.url} rel="noopener noreferrer">{s.title}</a><p>{s.note}</p><span class="quiet">{s.publisher}</span></li>)}</ul></section>
+   <nav class="adjacent-lessons" aria-label="Publication order">{previous&&<a href={lessonPath(edition,previous.metadata.slug)}><span>← Previous published idea</span>{previous[edition].title}</a>}{next&&<a href={lessonPath(edition,next.metadata.slug)}><span>Next published idea →</span>{next[edition].title}</a>}</nav>
+   <a class="cross-edition" data-edition-choice={edition==='adult'?'teen':'adult'} href={lessonPath(edition==='adult'?'teen':'adult',current.metadata.slug)}>Also in the {edition==='adult'?'Teen':'Adult'} edition →</a>
+ </section>
+</>}
+{view==='library'&&<>
+ <p class="eyebrow">The archive</p><h1>Library</h1><p class="deck">A place for ideas you want to return to.</p>
+ <nav class="library-views" aria-label="Library views"><a aria-current="page" href={discovery(edition,'library')}>By date</a><a href={discovery(edition,'topics')}>By topic →</a></nav>
+ {!fixture&&<><p class="archive-count">{lessons.length} published ideas</p><div set:html={groupedRows(visible)}/><a class="fixture-link" href={discovery(edition,'library/page/1')}>Open the 1,000-entry archive fixture →</a></>}
+ {fixture&&<><p class="fixture-notice">Synthetic scale fixture · 1,000 entries · 24 per page. These are layout examples, not published lessons.</p><div set:html={groupedRows(visible,true)}/><nav class="pagination" aria-label="Archive pages">{page>1&&<a href={discovery(edition,`library/page/${page-1}`)}>← Previous</a>}<span>Page {page} of 42</span>{page<42&&<a href={discovery(edition,`library/page/${page+1}`)}>Next →</a>}</nav><a href={discovery(edition,'library')}>Return to real lessons</a></>}
+</>}
+{view==='topics'&&<>
+ <p class="eyebrow">Explore the Library</p><h1>{subtopic?.label||topic?.label||'Topics'}</h1>
+ <nav class="breadcrumbs" aria-label="Breadcrumb"><a href={discovery(edition,'library')}>Library</a><span> / </span><a href={discovery(edition,'topics')}>Topics</a>{topic&&<><span> / </span><a href={discovery(edition,`topics/${topic.token}`)}>{topic.label}</a></>}</nav>
+ {!topic&&<div class="topic-index">{TAXONOMY.map(t=><a class="topic-item" href={discovery(edition,`topics/${t.token}`)}><svg viewBox="0 0 24 24" aria-hidden="true"><path d={iconPaths[t.token]}/></svg><span><h2>{t.label}</h2><p>{t.description}</p><span class="quiet">{lessons.filter(l=>l.metadata.topic===t.token).length} ideas</span></span><span aria-hidden="true">→</span></a>)}</div>}
+ {topic&&!subtopic&&<><p class="deck">{topic.description}</p><div class="subtopic-shelves">{topic.subtopics.filter(s=>lessons.some(l=>l.metadata.topic===topic.token&&l.metadata.subtopic===s.token)).map(s=><section><div class="section-heading"><h2>{s.label}</h2><a href={discovery(edition,`topics/${topic.token}/${s.token}`)}>All ideas →</a></div><ul class="lesson-list" set:html={lessons.filter(l=>l.metadata.topic===topic.token&&l.metadata.subtopic===s.token).slice(0,3).map(l=>row(l)).join('')}/></section>)}</div></>}
+ {subtopic&&<>{fixture&&<p class="fixture-notice">Synthetic shelf fixture · 96 entries · 24 per page</p>}<ul class="lesson-list" set:html={visible.map(l=>row(l,fixture)).join('')}/>{visible.length===0&&<p>No lessons in this shelf yet.</p>}{fixture?<nav class="pagination" aria-label="Shelf pages">{page>1&&<a href={discovery(edition,`topics/${topic!.token}/${subtopic.token}/page/${page-1}`)}>← Previous</a>}<span>Page {page} of 4</span>{page<4&&<a href={discovery(edition,`topics/${topic!.token}/${subtopic.token}/page/${page+1}`)}>Next →</a>}</nav>:['astronomy','economics'].includes(subtopic.token)&&<a class="fixture-link" href={discovery(edition,`topics/${topic!.token}/${subtopic.token}/page/1`)}>Open the paged shelf fixture →</a>}</>}
+</>}
+{view==='search'&&<>
+ <p class="eyebrow">Find an idea</p><h1>Search</h1><p class="deck">Search the {titleCase(edition)} edition.</p>
+ <form id="search-form" action={discovery(edition,'search')} method="get"><label for="search-query">What are you curious about?</label><div class="search-field"><input id="search-query" type="search" name="q" autocomplete="off" maxlength="500" placeholder="Try seasons or targets"/><button type="submit">Search</button></div></form>
+ <p id="search-status" role="status" class="search-status">Enter a word or an idea to begin.</p><div id="search-results"></div><button id="search-retry" type="button" hidden>Try again</button>
+ <noscript><p>Search needs JavaScript. You can explore the <a href={discovery(edition,'topics')}>Topics</a> or browse the <a href={discovery(edition,'library')}>Library</a>.</p></noscript>
+</>}
+{view==='saved'&&<>
+ <p class="eyebrow">Your collection</p><h1>Saved</h1><p class="deck">Ideas worth another look.</p><p class="quiet">Prototype state stays on this device and is shared between editions.</p><div id="saved-content"><p class="empty-state">No saved ideas yet. Open a lesson and choose “Save this idea”.</p><a href={discovery(edition)}>Find today’s idea →</a></div><noscript><p>Saved needs JavaScript and device storage. You can use browser bookmarks instead.</p></noscript>
+</>}
+{view==='preferences'&&<>
+ <p class="eyebrow">Make room for reading</p><h1>Preferences</h1><section class="settings-section"><h2>Edition</h2><p>Change the voice, keep the idea.</p><nav class="settings-editions" aria-label="Preferred edition">{EDITIONS.map(e=><a data-edition-choice={e} href={discovery(e,'preferences')}>{titleCase(e)}</a>)}</nav></section>
+ <form id="preferences-form"><section class="settings-section"><h2>Appearance</h2><label for="appearance">Colour scheme</label><select id="appearance" name="appearance"><option value="system">Use device setting</option><option value="light">Light</option><option value="dark">Dark</option></select><label for="text-size">Reading text</label><select id="text-size" name="text-size"><option value="normal">Standard</option><option value="large">Larger</option></select></section></form><p class="quiet">These preview settings do not change the current site.</p><p id="preferences-status" role="status"></p><noscript><p>Saving preferences needs JavaScript. The page follows your device’s colour scheme.</p></noscript>
+</>}
+{view==='fixture'&&<><p class="eyebrow">Synthetic fixture</p><h1>Layout example, not a lesson</h1><p class="deck">This entry exists to test a large archive and search results. It has no article, sources or editorial approval.</p><a href={discovery(edition,'library')}>Return to the Library →</a></>}
+{view==='not-found'&&<><p class="eyebrow">404 example</p><h1>This idea isn’t here.</h1><p class="deck">Try the Library, or start with today’s idea.</p><a class="primary-action" href={discovery(edition)}>Back to Today →</a><p class="prototype-note">Visual 404 fixture; this demonstration page is served with HTTP 200. Invalid real routes remain 404.</p></>}
+</main>
+<footer class="site-footer"><span>Five Minutes</span><a href={discovery(edition,'preferences')}>Preferences</a><span class="prototype-note">Design preview · not the final site</span></footer>
+<nav class="mobile-nav" aria-label="Main navigation">{primaryNav.map(v=><a href={discovery(edition,v==='today'?'':v)} aria-current={view===v?'page':undefined}><svg viewBox="0 0 24 24" aria-hidden="true"><path d={iconPaths[v]}/></svg><span>{titleCase(v)}</span></a>)}</nav>
+<script is:inline src="/design-preview/prototype.js" defer></script>
+</body></html>
