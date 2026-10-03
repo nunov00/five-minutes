@@ -1,6 +1,6 @@
 # Five Minutes editorial standard
 
-Status: calibration draft for Owner review under issue #49.
+Status: accepted editorial standard. Owner calibration review was completed under issue #49 on 3 October 2026.
 
 ## Purpose
 
@@ -22,7 +22,7 @@ A publishable lesson must meet every criterion below. Reviewers use judgement an
 | Explanation and examples | The lesson explains the mechanism or reasoning, not just the result. Examples are concrete, accurate and chosen to reveal the idea's limits as well as its basic form where useful. | An analogy replaces the explanation; an equation appears without interpretation; examples are technically false or too distant from the reader. |
 | Structure and flow | The title sets an honest expectation. The opening establishes the question or tension, each paragraph follows from the last, and the ending resolves the opening. Headings are used only when they help navigation. | The key explanation arrives late; sections feel interchangeable; the lesson changes subject; a heading adds hierarchy without meaning. |
 | Appropriate depth | The lesson includes what the reader needs to understand and use the idea, without assuming unexplained specialist knowledge. It names important limits but does not turn every caveat into a tangent. | A crucial causal step is skipped; jargon carries the argument; detail accumulates after the central idea is already complete. |
-| Takeaway and retrieval question | The takeaway states the durable insight in one useful sentence. The question tests that insight, and the answer explains it rather than rewarding a trivial word match. | The takeaway is a slogan; the question tests an isolated number or wording copied from the title; the answer introduces new unsupported information. |
+| Takeaway and retrieval question | The front-matter takeaway states the durable insight in one useful sentence and is rendered once by the reading page; the body earns that conclusion without adding a second labelled takeaway. The question tests the insight, and the answer explains it rather than rewarding a trivial word match. | The takeaway is repeated or contradicted in the body; it is a slogan; the question tests an isolated number or wording copied from the title; the answer introduces new unsupported information. |
 | Adult presentation | Adult writing is intelligent, economical and precise. It may use technical language when it immediately explains it. It respects the reader without sounding academic for its own sake. | Corporate or textbook tone; needless jargon; oversimplification that removes the interesting mechanism. |
 | Teen presentation | Teen writing is engaging and natural. It may choose a different hook, example and structure from Adult while preserving the same facts and depth. It never relies on forced slang, trend references or a patronising voice. | The Adult version is merely shortened; slang tries to manufacture relevance; the reader is talked down to; nuance disappears. |
 | Title, deck and discoverability | Each edition has a specific, accurate title and a description that adds information. Search terms cover likely language a reader would use without stuffing synonyms. | Clickbait, vague titles, duplicated title/description, promises absent from the body or irrelevant search terms. |
@@ -67,6 +67,8 @@ For factual and editorial review, record:
 
 Do not report a numeric quality score, an averaged rubric percentage or a precision-style confidence number. Descriptive confidence is useful only when it explains what is uncertain and what evidence would resolve it.
 
+The canonical review record is the GitHub pull-request review on the exact commit. Any accepted MINOR finding and its rationale must be recorded in the same PR conversation or merge record. `provenance.reviews` may preserve earlier lesson-level review or substantive-revision events already incorporated into the reviewed commit; it is not updated after the final exact-head review, because doing so would create a new unreviewed head.
+
 ## Author checklist
 
 Before requesting review:
@@ -84,4 +86,4 @@ Before requesting review:
 
 ## Calibration corpus
 
-Issue #49 establishes a representative corpus in two stages. The first stage contains the existing GPS lesson plus four publishable calibration lessons spanning science, technology and society. The Owner reviews this rubric and the content direction before the second stage expands the corpus to roughly 10–15 lesson identities across broader topics and subtopics. The remaining entries must add editorial range; they must not be filler added to reach a count.
+Issue #49 established the representative corpus in two stages. The first stage used the existing GPS lesson plus four publishable calibration lessons spanning science, technology and society. In project chat on 3 October 2026, the Owner reviewed the rubric and content direction, required usefulness, factual accuracy and audience attention to be explicit quality gates, and then authorised expansion. The second stage expanded the same change to 12 lesson identities across broader topics and subtopics. PR #58 and issue #49 hold the durable decision record. The additional entries add editorial range; they are not filler added to reach a count.

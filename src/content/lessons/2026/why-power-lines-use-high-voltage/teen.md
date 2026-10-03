@@ -9,12 +9,10 @@ searchTerms:
   - electricity grid explained
   - power loss in wires
 ---
-Power lines are not perfect conductors. They resist electric current and warm up, which means some electrical energy escapes as heat before reaching anyone who can use it.
+The small brick on a phone charger changes voltage before electricity reaches the phone. The grid does something related on a much larger scale: it changes voltage several times between a power station and the device in your hand.
 
-The amount of power being carried depends on both voltage and current. If the voltage is increased, the same power can travel with less current. That matters because heating loss grows with the **square** of the current. Cut current to one-tenth and, in the same wire, the heating loss falls to one-hundredth.
+For the long-distance part of that trip, the grid raises voltage. Electrical power depends on voltage multiplied by current, so a higher voltage can carry the same power with less current. That matters because wires resist current and heat up. Heating grows with the **square** of current, so even a moderate reduction in current prevents a much larger waste of energy.
 
-The grid uses transformers to change voltage. Near a power source, a transformer raises it for the long journey. Other transformers lower it in steps so electricity can be distributed and finally used by ordinary equipment.
+Transformers make the journey possible. One raises voltage before transmission; others lower it in stages for local distribution and use. A phone charger then performs another conversion suited to the device.
 
-There is a trade-off. Very high voltage needs larger clearances, better insulation and specialised equipment. It is dangerous to approach, and nothing about this principle makes power lines safe to touch. The grid accepts those engineering costs because lower current saves so much energy over long distances.
-
-**Takeaway:** voltage is raised for efficient travel, then lowered for practical use.
+The grid cannot raise voltage without limit. Higher voltages need more insulation, wider clearances and equipment that prevents dangerous arcs. Engineers balance those costs against the energy that lower current saves. Power lines remain dangerous regardless of where they are in that chain.

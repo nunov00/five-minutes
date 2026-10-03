@@ -21,4 +21,3 @@ Correction can also create trouble. If the response is too weak, the system appr
 
 Thermostats, cruise control and many biological processes share this pattern. Their parts differ, but the logic is the same: observe the result, compare it with the goal and let the mismatch shape the next action.
 
-**Takeaway:** feedback replaces a one-off guess with repeated correction.

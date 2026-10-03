@@ -9,12 +9,10 @@ searchTerms:
   - how urine is made
   - nephrons
 ---
-Your kidneys are often described as filters, but that can make them sound like simple strainers. Their real method is more interesting: make a rough draft, then edit it.
+After exercise, your body may need to conserve water. After a salty meal, it has a different balancing problem. Your kidneys respond to both situations using the same surprising method: they first make far too much filtered fluid, then edit it.
 
-Inside each kidney are tiny working units called **nephrons**. At the start of each one, blood flows through a bundle of small vessels. Pressure moves water and many small substances into a separate space. Blood cells and most large proteins stay in the blood.
+The editing happens inside microscopic units called **nephrons**. Each begins with a bundle of small blood vessels. Pressure moves water and many small dissolved substances out of the blood, while blood cells and most large proteins stay behind.
 
-That first filtered fluid still contains plenty the body can use. As it moves through a narrow tubule, the kidney sends needed water, glucose and salts back into the bloodstream. It can also add some extra wastes to the fluid. The smaller amount left at the end becomes urine.
+That rough draft is not urine yet. It flows through a tubule whose cells return useful water, glucose and salts to the bloodstream. The tubule can also move additional wastes into the fluid. Only the much smaller remainder leaves as urine.
 
-Because the body keeps changing—after a drink, a salty meal or exercise—the kidneys keep adjusting what they return. This helps balance water, salts and acidity instead of only removing rubbish.
-
-**Takeaway:** kidneys do their most careful work after the first filter, when they decide what the body should keep.
+Changing what gets returned lets the kidneys respond continuously to drinking, food and activity. They are not strainers with one fixed mesh; they are editors helping control water, salts and acidity while removing waste.

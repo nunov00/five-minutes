@@ -16,4 +16,3 @@ The label is useful, but ecosystems are not simple rows of dominoes. Effects dep
 
 The deeper lesson is about networks: direct relationships create indirect consequences. Protecting or removing one population may change organisms it never touches.
 
-**Takeaway:** in a food web, ecological importance is not measured only by how many individuals exist.

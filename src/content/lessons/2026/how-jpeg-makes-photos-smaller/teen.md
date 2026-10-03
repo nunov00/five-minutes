@@ -14,4 +14,3 @@ Then comes **quantization**. The pattern values are rounded, often more strongly
 
 The decoder rebuilds an approximation. At gentle settings it may look almost identical. Push compression harder and block edges, blurry texture or ripples around sharp lines become visible. Save and recompress the file repeatedly, and new rounding can damage it further.
 
-**Takeaway:** JPEG saves space by deciding which differences are cheap enough to lose.

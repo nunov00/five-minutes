@@ -19,4 +19,3 @@ Special relativity says that motion makes the orbiting satellite clock run slowe
 
 The effects do not cancel. Together, the satellite clock gains about 38 microseconds per day relative to ground clocks. GPS is designed to account for that difference. Without the correction, timing errors would become positioning errors so quickly that the system would soon be useless for navigation.
 
-**Takeaway:** GPS works because engineers treat time as something that speed and gravity can change.

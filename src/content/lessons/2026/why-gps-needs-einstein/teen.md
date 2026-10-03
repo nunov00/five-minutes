@@ -18,4 +18,3 @@ Here is the strange part: two effects change the satellite clocks in opposite di
 
 The second effect is larger, leaving a net gain of about 38 microseconds per day. GPS accounts for this from the start. If it did not, the growing timing mismatch would quickly make the system useless for navigation.
 
-**Takeaway:** relativity is not just a distant-space idea; your map uses it every time it works out where you are.

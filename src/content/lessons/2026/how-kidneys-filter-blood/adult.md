@@ -21,4 +21,3 @@ This filter-and-reclaim design lets the kidneys continually adjust the blood rat
 
 The useful mental model is therefore not a passive strainer. A kidney is a selective recycling and balancing system: it creates a broad first draft of fluid, then edits that draft according to the body's needs.
 
-**Takeaway:** the precision of a kidney comes mainly from what it reclaims after filtration.

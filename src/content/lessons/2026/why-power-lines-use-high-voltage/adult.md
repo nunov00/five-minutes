@@ -19,4 +19,3 @@ Power systems therefore raise voltage before long-distance transmission. For alt
 
 Higher voltage is not free. It needs more insulation, greater clearance and equipment designed to prevent dangerous electrical arcs. Engineers choose a voltage by balancing those costs against the savings from lower current and lower loss.
 
-**Takeaway:** transmission lines use high voltage so they can carry useful power without wasting as much of it as heat.

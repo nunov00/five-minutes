@@ -18,4 +18,3 @@ That is why exponential change can appear uneventful and then sudden. It did not
 
 Real systems rarely grow exponentially forever. Resources, competition, policy or physical limits change the rate. The model is useful over the interval where proportional growth is a reasonable assumption—not as a promise of infinity.
 
-**Takeaway:** when change compounds, ask about the multiplier and doubling time, not only the latest increase.

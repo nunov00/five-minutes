@@ -16,4 +16,3 @@ An equal-area projection fixes that comparison, but shapes stretch instead. Othe
 
 So the useful question is not “Which map is true?” It is “True enough for what job?” A navigation map and a map comparing land area need different strengths.
 
-**Takeaway:** every flat map edits the globe, and understanding the edit helps you read it correctly.
