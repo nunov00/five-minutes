@@ -1,0 +1,38 @@
+---
+const { edition = 'adult' } = Astro.props;
+---
+<figure class:list={['season-figure',edition]} aria-labelledby="figure-caption">
+  <p class="figure-kicker">Same tilt. Opposite seasons.</p>
+  <div class="figure-pair">
+    <svg viewBox="0 0 300 210" role="img" aria-labelledby="june-title june-desc">
+      <title id="june-title">June: the north tilts towards the Sun</title>
+      <desc id="june-desc">Earth is left of the Sun. The north end of its axis leans right. Northern days are longer and sunlight arrives more directly.</desc>
+      <text x="12" y="23" class="diagram-month">June</text>
+      <circle cx="245" cy="90" r="26" class="diagram-sun"/>
+      <path d="M204 90H150 M204 68H150 M204 112H150" class="diagram-ray"/>
+      <circle cx="83" cy="90" r="48" class="diagram-earth"/>
+      <path d="M63 137L103 43" class="diagram-axis"/>
+      <path d="M44 73L123 107" class="diagram-equator"/>
+      <text x="109" y="42">N</text><text x="46" y="153">S</text>
+      <text x="245" y="142" text-anchor="middle">Sun</text>
+      <text x="12" y="184">North: longer days</text>
+      <text x="12" y="205">More direct sunlight</text>
+    </svg>
+    <svg viewBox="0 0 300 210" role="img" aria-labelledby="dec-title dec-desc">
+      <title id="dec-title">December: the south tilts towards the Sun</title>
+      <desc id="dec-desc">Earth is right of the Sun. Its axis still leans right, so the north tilts away. Southern days are longer and sunlight arrives more directly.</desc>
+      <text x="12" y="23" class="diagram-month">December</text>
+      <circle cx="52" cy="90" r="26" class="diagram-sun"/>
+      <path d="M92 90H145 M92 68H145 M92 112H145" class="diagram-ray"/>
+      <circle cx="220" cy="90" r="48" class="diagram-earth"/>
+      <path d="M200 137L240 43" class="diagram-axis"/>
+      <path d="M180 73L260 107" class="diagram-equator"/>
+      <text x="246" y="42">N</text><text x="184" y="153">S</text>
+      <text x="52" y="142" text-anchor="middle">Sun</text>
+      <text x="12" y="184">South: longer days</text>
+      <text x="12" y="205">More direct sunlight</text>
+    </svg>
+  </div>
+  <figcaption id="figure-caption">The axis points in nearly the same direction as Earth travels around the Sun. Schematic; not to scale. <span class="prototype-note">Proposed figure · factual review pending</span></figcaption>
+  <details class="figure-description"><summary>Text explanation of this figure</summary><p>In June the Northern Hemisphere tilts towards the Sun, receiving more direct sunlight and longer days. In December the Southern Hemisphere does. The axis keeps nearly the same direction throughout the orbit. The positions, sizes and distances here are schematic.</p></details>
+</figure>
