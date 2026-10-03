@@ -50,6 +50,8 @@ Rejected because it introduces runtime/caching complexity and makes the URL itse
 - The lesson schema must separate immutable identity from mutable slug and model Adult/Teen presentations explicitly.
 - Local reader state must use immutable lesson IDs.
 - Search and catalogue generation must respect the selected edition.
+- With Astro's current directory-style static output, slash-less canonical paths require each hosting adapter to provide equivalent URL handling. Cloudflare does this with `drop-trailing-slash`; `astro preview` deliberately follows Astro's `trailingSlash: 'never'` behavior and returns 404 for a non-canonical trailing-slash lesson request rather than Cloudflare's normalization redirect. A file-style build is a possible future alternative if adapter-specific normalization becomes undesirable.
+- Cloudflare's normalization redirect is 307 (provider behavior, not an application contract). Canonical/alternate metadata and 404 `noindex` handling remain bounded SEO follow-up work.
 
 ## Follow-up
 
