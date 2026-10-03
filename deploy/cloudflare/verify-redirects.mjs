@@ -6,7 +6,7 @@ if (manifest.version !== 1 || !Array.isArray(manifest.redirects)) throw new Erro
 
 const expectedLines = [];
 for (const { from, to } of manifest.redirects) {
-  expectedLines.push(`${from} ${to}/ 301`, `${from}/ ${to}/ 301`);
+  expectedLines.push(`${from} ${to} 301`, `${from}/ ${to} 301`);
 }
 const expected = expectedLines.join('\n') + (expectedLines.length ? '\n' : '');
 if (compiled !== expected) throw new Error('Cloudflare _redirects does not match the neutral redirect manifest.');

@@ -3,6 +3,7 @@
 Status: Accepted
 Date: 2026-10-02
 Owner approval: approved 2026-10-02.
+Amended: 2026-10-03 — canonical route syntax settled before M5 (#47).
 
 ## Context
 
@@ -16,7 +17,9 @@ The edition-delivery choice also affects the rendering benchmark because two pre
 
 Use one canonical lesson identity with separate presentation URLs for Adult and Teen editions.
 
-The exact final URL syntax remains a later routing detail, but the semantic contract is:
+Canonical presentation paths use lower-case, slash-less routes: `/adult/<slug>` and `/teen/<slug>`. The application URL generator owns this syntax. Static-host adapters must serve their generated artifact consistently with these canonical paths rather than changing the application contract to match provider defaults.
+
+The semantic contract is:
 
 - an explicit Adult URL renders the Adult presentation;
 - an explicit Teen URL renders the Teen presentation;
@@ -27,7 +30,7 @@ The exact final URL syntax remains a later routing detail, but the semantic cont
 - search/catalogue representations are edition-aware;
 - Saved/Read state is keyed by immutable lesson identity, not slug or presentation URL, so editions do not become separate saved lessons.
 
-Appropriate canonical/alternate metadata between presentations will be defined during routing/SEO implementation.
+A request for the same canonical path with a trailing slash should normalize to the slash-less form at the hosting boundary. Historical aliases may accept both slash forms but redirect to the slash-less canonical destination. Appropriate canonical/alternate metadata between presentations will be defined during routing/SEO implementation.
 
 ## Alternatives considered
 
@@ -50,4 +53,4 @@ Rejected because it introduces runtime/caching complexity and makes the URL itse
 
 ## Follow-up
 
-The two-presentation rendering benchmark has been completed and is reflected in ADR-0002. Exact route syntax and canonical/alternate metadata are bounded implementation details under this semantic contract.
+The two-presentation rendering benchmark has been completed and is reflected in ADR-0002. Canonical route syntax was settled by #47 before M5; canonical/alternate metadata remains bounded SEO implementation work.
