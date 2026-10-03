@@ -47,6 +47,17 @@ Pull requests receive preview deployments where practical. `main` represents pro
 
 Cloudflare is the initial target. Deployment configuration is replaceable and must not leak into core content/domain APIs.
 
+## Installable app (PWA): cache and update behaviour
+
+Five Minutes is installable (iOS/iPadOS Add to Home Screen and supported Chromium platforms) while remaining an ordinary static website.
+
+- **Files:** `public/manifest.webmanifest` (copied unchanged into `dist/`), `public/favicon.svg`, `public/apple-touch-icon.png` (180x180, opaque) and `public/icons/` (192 and 512 "any" icons plus a 512 maskable icon). `src/layouts/BaseLayout.astro` links them from every page, together with `apple-mobile-web-app-title` and light/dark `theme-color`.
+- **App identity:** `id`, `start_url` and `scope` are all `/` (Today). Do not change `id`: browsers treat a different `id` as a different installed app. `npm run verify:static` enforces these values, the standalone display mode, and that every manifest icon resolves to a PNG of its declared size.
+- **No service worker.** Current Chromium reports the site as installable without one (Playwright asks Chromium directly via `Page.getInstallabilityErrors`), and iOS does not require one. Nothing is pre-cached or cached by the app, so there is no service-worker update lifecycle and no risk of serving stale lessons. Opening the installed app without a network connection shows the platform's normal offline error, exactly as the website does. Adding a service worker (for example a network-first offline fallback page) is a separate decision: it must stay bounded, never pre-cache the catalogue, and include a versioned cache and a removal path.
+- **HTTP caching:** freshness is left to the host. Cloudflare Workers Static Assets currently serves HTML, the manifest, icons and stylesheets with `Cache-Control: public, max-age=0, must-revalidate` plus an `ETag`, so newly published or corrected lessons appear on the next navigation. Stylesheets also carry content-hashed file names (`/_astro/*.css`).
+- **Changing icons or the manifest:** browsers and installed apps refresh the manifest and icons on their own schedule (often days) and may keep old icons. When an icon changes, regenerate with `node scripts/generate-icons.mjs` (set `CHROMIUM_PATH` if Playwright's browser is not installed) and give the PNGs new file names, then update the manifest and `BaseLayout.astro`. Keep `id` unchanged.
+- **Standalone navigation:** installed (standalone) display has no browser back button or address bar. Every page therefore links back to Today (the header brand link; lesson pages also have "Back to Today"), lesson pages switch edition with in-page links, and internal links never open a new window. `npm run verify:static` checks all three for every built page.
+
 ## Dependency management
 
 - Commit the package lockfile and use `npm ci` in CI.
