@@ -59,7 +59,7 @@ for (const file of files.filter((f) => f.endsWith('.html'))) {
     if (!href.startsWith('/') || href.startsWith('//')) continue;
     const pathname = href.split(/[?#]/, 1)[0];
     if (pathname !== '/' && pathname.endsWith('/')) throw new Error(`Internal link must use the slash-less canonical form in ${webPath(file)}: ${href}`);
-    const candidates = [pathname, pathname + '/index.html'];
+    const candidates = pathname === '/' ? ['/index.html'] : [pathname, pathname + '/index.html'];
     if (!candidates.some((p) => targets.has(p))) throw new Error(`Broken internal link in ${webPath(file)}: ${href}`);
   }
 }
