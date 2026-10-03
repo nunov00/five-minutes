@@ -1,0 +1,33 @@
+schemaVersion: 1
+id: 037395c2-7035-4e44-bf37-2e9c5c542da1
+slug: why-power-lines-use-high-voltage
+aliases: []
+publishedAt: 2026-10-03T18:00:00+02:00
+topic: technology
+subtopic: electrical-engineering
+concepts:
+  - electric-power
+  - transmission-loss
+  - transformers
+related:
+  manual: []
+  exclude: []
+sources:
+  - title: Delivery to consumers
+    url: https://www.eia.gov/energyexplained/electricity/delivery-to-consumers.php
+    publisher: U.S. Energy Information Administration
+    accessedAt: 2026-10-03
+    note: Overview of high-voltage transmission and transformers that raise and lower voltage.
+  - title: Assessing HVDC Transmission for Impacts of Non-Dispatchable Generation
+    url: https://www.eia.gov/analysis/studies/electricity/hvdctransmission/pdf/transmission.pdf
+    publisher: U.S. Energy Information Administration
+    accessedAt: 2026-10-03
+    note: Explains the relationship between transmission voltage, current and resistive loss.
+provenance:
+  createdAt: 2026-10-03T14:23:24+02:00
+  createdBy:
+    type: ai
+    provider: openai
+    model: gpt-5.6-sol
+    promptVersion: editorial-calibration-v1
+  reviews: []

@@ -28,7 +28,7 @@ describe('canonical content integration', () => {
 id: ${id}
 slug: hostile
 aliases: []
-publishedAt: 2026-09-01T00:00:00Z
+publishedAt: 2026-10-02T01:00:00Z
 topic: science
 subtopic: physics
 concepts: [safety]
