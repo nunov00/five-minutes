@@ -58,7 +58,7 @@ The 100,000-file limit requires Wrangler 4.34.0 or later, and Worker Previews re
 - `CI / baseline` counts the final deployable `dist/` after Cloudflare artifacts are compiled and warns at **16,000 files** (80% of the current Free limit).
 - `npm run cf:verify-capacity` enforces Cloudflare's current hard representation limits at the deployment boundary: at most 100,000 files, at most 25 MiB per file and at most 2,000 static redirect rules. It warns rather than fails between 20,001 and 100,000 files because choosing a paid plan versus another portable representation/provider is an Owner decision.
 - `npm run cf:deploy` / `npm run cf:preview` run that capacity gate before upload. The generic `dist:count` script remains provider-neutral.
-- The current adapter emits two static rules per neutral alias (slash and non-slash), so **1,000 aliases** consume the 2,000-rule `_redirects` ceiling. Before that becomes constraining, compare Bulk Redirects, another portable redirect representation or another host rather than silently dropping aliases.
+- The current adapter emits an Adult and Teen neutral redirect for each historical alias name, and each neutral redirect compiles to two static rules (slash and non-slash). That is **four Cloudflare rules per historical alias name**, so roughly **500 historical alias names** consume the 2,000-rule `_redirects` ceiling. Before that becomes constraining, compare Bulk Redirects, another portable redirect representation or another host rather than silently dropping aliases.
 
 ## Commands
 
@@ -67,8 +67,8 @@ The 100,000-file limit requires Wrangler 4.34.0 or later, and Worker Previews re
 | `npm run build` | provider-neutral static build into `dist/` |
 | `npm run dist:count` | provider-neutral report of deployable files |
 | `npm run cf:verify-capacity` | verify the assembled artifact against Cloudflare hosting limits |
-| `npm run cf:preview` | count files, then `wrangler preview`: creates or updates a **Worker Preview** for the current branch without touching production |
-| `npm run cf:deploy` | count files, then `wrangler deploy`: deploys the production version of the Worker |
+| `npm run cf:preview` | compile redirects, verify Cloudflare capacity, then `wrangler preview`: create/update a **Worker Preview** without touching production |
+| `npm run cf:deploy` | compile redirects, verify Cloudflare capacity, then `wrangler deploy`: deploy the production Worker version |
 
 Both `cf:*` scripts run the project's pinned Wrangler from `node_modules/.bin`, not a global or `npx`-downloaded copy. Cloudflare's Preview documentation recommends updating the project dependency because project commands do not use a newer global installation. Both commands need Cloudflare authentication and are meant to run inside Workers Builds.
 
