@@ -32,7 +32,7 @@ Responsibilities include:
 - Integrating completed work.
 - Identifying decisions requiring Owner approval.
 
-The Manager may also act as a Worker or Reviewer.
+The Manager may also act as a Worker or Reviewer, subject to the independence requirements in sections 7 and 9.
 
 ### Worker
 
@@ -46,7 +46,7 @@ If a Worker identifies a better architectural approach, it should be proposed ra
 
 The Reviewer independently evaluates proposed changes for correctness, maintainability, architectural consistency, security, performance where relevant, test coverage, regressions and unnecessary complexity.
 
-Worker and Reviewer are roles, not permanently assigned systems. Claude may implement a change and ChatGPT review it, or vice versa.
+Worker and Reviewer are roles, not permanently assigned systems. Claude (Anthropic) may implement a change and ChatGPT/Codex (OpenAI) review it, or vice versa. ChatGPT reviewing Codex work does not count as independent AI review.
 
 ## 3. Source of Truth
 
@@ -111,6 +111,16 @@ The Manager should protect the Owner from unnecessary technical decisions by res
 
 When genuinely uncertain about the appropriate authority level, escalate rather than silently assume approval.
 
+### Maximise autonomous progress within approved scope (Owner instruction, 2026-10-03)
+
+Owner attention is a scarce resource. Once the Owner approves a goal, scope, plan or PR direction, the Manager should carry out as many safe, in-scope steps as practical before returning control. Prefer one substantial Manager cycle over repeated requests to approve routine intermediate steps.
+
+Implementation, tests, documentation updates, CI/deployment checks, in-scope failure fixes, review remediation, re-testing and merging when authorised do not require repeated Owner approval. Wait for required jobs to finish, inspect their results and resolve in-scope failures before reporting completion. A status update is not a request for further approval.
+
+Escalate only when a material decision changes scope, architecture or risk; an external dependency requires Owner action; governance requires an approval not already given; or safe progress is otherwise blocked. Prepare a concrete, reviewable result and complete independent work before escalating. If an available different AI reviewer needs an Owner-relayed prompt, prepare one self-contained hand-off for the completed work and keep the merge pending.
+
+This principle does not waive quality gates or authorise new product, architectural, cost, privacy, security or destructive decisions. The Owner's approval covers the agreed direction and its routine execution; do not ask for the same approval again.
+
 ### Standing merge authorisation (Owner instruction, 2026-10-03)
 
 The Owner authorises the Manager to merge qualifying Pull Requests without a separate final approval request and to inform the Owner afterwards. This delegation also covers bounded technical clarifications to an existing ADR, such as PR #52's canonical URL amendment, when they remain within the agreed project direction.
@@ -173,7 +183,9 @@ AI contributors must not silently reinterpret project requirements. When ambigui
 
 AI contributors are encouraged to challenge existing approaches when they identify genuine problems, but architectural or product changes should be proposed before being introduced.
 
-Different AI systems may deliberately be used for implementation and review to provide independent perspectives. No AI-generated change is exempt from normal project quality requirements.
+For this rule, independence is defined at the provider/model-family level: OpenAI products (including ChatGPT and Codex) count as one reviewer family; Anthropic products (including Claude and Claude Code) count as another. Different products, models, sessions or sub-agents from the same provider do not qualify as independent from one another.
+
+When independent AI review is required, the Reviewer must use a different AI system from the implementer (for example, Claude reviews Codex work, or Codex reviews Claude work). A separate session, sub-agent or model within the same AI system does not by itself satisfy this requirement. See section 9 for the narrow exceptions. No AI-generated change is exempt from normal project quality requirements.
 
 ## 8. Quality Gates
 
@@ -201,7 +213,15 @@ Reviews should evaluate the change rather than simply confirm that it runs.
 
 Reviewers should challenge unnecessary complexity, architecture violations, fragile implementations, undocumented behavioural changes, missing tests, unnecessary dependencies, and solutions that solve the immediate task while creating avoidable future constraints.
 
-Minor changes may use proportionally lighter review. For significant changes, independent review by a contributor other than the implementer is preferred.
+Minor changes may use proportionally lighter review. Significant changes, including code, architecture/ADRs, governance and content rules, require independent review before merge; when AI systems implement and review the work, they must be different systems as defined in section 7.
+
+### Different-AI review and exceptions (Owner instruction, 2026-10-03)
+
+Use a different AI system from the implementer for any required independent AI review. The purpose is a different perspective, not another pass by the same system. Same-system verification can supplement this review but must be described accurately and cannot silently replace it.
+
+Exceptions are allowed only when a different AI system genuinely cannot perform the review, or the Owner explicitly requests an alternative. Record the implementer and reviewer systems, the reason for any exception, and any applicable Owner instruction on the PR before merging. Needing an Owner-relayed prompt or lacking a direct tool to invoke an available different AI system is not, by itself, evidence that review is impossible. In that case, prepare a self-contained review hand-off and keep the merge gate pending.
+
+The reviewer must evaluate the exact current head independently, record actionable findings on the PR, and distinguish their own checks from evidence supplied by the implementer. After fixes, obtain appropriate re-review from the different AI system on the final head and pass the required checks before merging. The standing merge authorisation does not waive this requirement.
 
 ### Review communication and record
 
