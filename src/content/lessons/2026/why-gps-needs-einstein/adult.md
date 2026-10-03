@@ -8,8 +8,6 @@ searchTerms:
   - satellite clocks
   - relativity
 ---
-# Why GPS Needs Einstein
-
 GPS finds your position by measuring the travel time of radio signals from satellites. Because light moves about 300,000 kilometres per second, even a tiny clock error becomes a noticeable distance error.
 
 Two effects matter: special relativity makes moving satellite clocks run slightly slower, while general relativity makes clocks in weaker gravity run faster. Engineers account for the combined difference so the system stays useful.

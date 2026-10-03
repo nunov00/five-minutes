@@ -9,8 +9,6 @@ searchTerms:
   - einstein
   - satellite clocks
 ---
-# Your Phone Uses Einstein to Find You
-
 GPS is basically an absurdly precise stopwatch in space. Your phone compares signals from several satellites and uses their travel times to work out where you are.
 
 The catch: clocks on those satellites do not tick at exactly the same rate as clocks on Earth. Their speed and the weaker gravity both matter. Relativity predicts the difference, and GPS engineers correct for it.
