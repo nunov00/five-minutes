@@ -1,4 +1,6 @@
 ---
+import '../styles/global.css';
+
 interface Props { title?: string; description?: string; }
 const { title = 'Five Minutes', description = 'One worthwhile idea, made easy to discover, understand and explore.' } = Astro.props;
 ---
@@ -6,11 +8,18 @@ const { title = 'Five Minutes', description = 'One worthwhile idea, made easy to
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
     <meta name="description" content={description} />
     <title>{title}</title>
   </head>
   <body>
-    <main><slot /></main>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <div class="container">
+        <a class="brand" href="/">Five Minutes</a>
+      </div>
+    </header>
+    <main id="main" class="site-main container"><slot /></main>
   </body>
 </html>
