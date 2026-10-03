@@ -10,7 +10,7 @@ const lines = [];
 const sources = new Set();
 for (const entry of manifest.redirects) {
   if (!pathPattern.test(entry?.from) || !pathPattern.test(entry?.to)) throw new Error('Invalid redirect path.');
-  for (const [from, to] of [[entry.from, `${entry.to}/`], [`${entry.from}/`, `${entry.to}/`]]) {
+  for (const [from, to] of [[entry.from, entry.to], [`${entry.from}/`, entry.to]]) {
     if (sources.has(from)) throw new Error(`Duplicate redirect source: ${from}`);
     sources.add(from);
     lines.push(`${from} ${to} 301`);
