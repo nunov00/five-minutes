@@ -40,7 +40,7 @@ test.describe('Today → lesson → edition switch → Takeaway → Test yoursel
     const lessonId = await page.locator('[data-lesson-id]').first().getAttribute('data-lesson-id');
 
     await page.getByRole('link', { name: /^Read the Adult edition/ }).click();
-    await expect(page).toHaveURL(/\/adult\/[a-z0-9-]+\/?$/);
+    await expect(page).toHaveURL(/\/adult\/[a-z0-9-]+$/);
     const article = page.locator('article[data-lesson-id]');
     await expect(article).toHaveAttribute('data-lesson-id', lessonId!);
     await expect(article).toHaveAttribute('data-edition', 'adult');
@@ -53,7 +53,7 @@ test.describe('Today → lesson → edition switch → Takeaway → Test yoursel
     await expectNoHorizontalOverflow(page);
 
     await editionNav.getByRole('link', { name: 'Teen' }).click();
-    await expect(page).toHaveURL(/\/teen\/[a-z0-9-]+\/?$/);
+    await expect(page).toHaveURL(/\/teen\/[a-z0-9-]+$/);
     await expect(article).toHaveAttribute('data-lesson-id', lessonId!);
     await expect(article).toHaveAttribute('data-edition', 'teen');
     await expect(editionNav.getByRole('link', { name: 'Teen' })).toHaveAttribute('aria-current', 'page');
@@ -75,7 +75,7 @@ test.describe('Today → lesson → edition switch → Takeaway → Test yoursel
     await expectNoHorizontalOverflow(page);
 
     await editionNav.getByRole('link', { name: 'Adult' }).click();
-    await expect(page).toHaveURL(/\/adult\/[a-z0-9-]+\/?$/);
+    await expect(page).toHaveURL(/\/adult\/[a-z0-9-]+$/);
     await page.getByRole('link', { name: 'Back to Today' }).click();
     await expect(page.getByRole('heading', { level: 1, name: "Today's idea" })).toBeVisible();
   });
