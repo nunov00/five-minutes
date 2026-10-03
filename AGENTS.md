@@ -11,6 +11,7 @@ Five Minutes is a Git-backed, static learning publication. Read these before sub
 
 - GitHub is authoritative; `main` must remain production-ready.
 - Significant work uses an issue/task, branch, PR, checks and review.
+- Required independent AI reviews use a different AI system from the implementer (for example Claude reviews Codex, or vice versa). A separate session, sub-agent or model within the same system is supplementary verification, not a substitute. Exceptions require genuine inability to obtain different-system review or an explicit Owner request, and must be recorded on the PR with implementer/reviewer identities and the reason. An available reviewer needing an Owner-relayed prompt is not automatically impossible: prepare the hand-off and keep the merge pending. See GOVERNANCE section 9. Re-review fixes on the final head before merge.
 - Preserve one immutable lesson identity across Adult/Teen presentations. Both Adult and Teen presentations are mandatory for publication, though a draft may be temporarily incomplete.
 - Canonical content is validated plain Markdown plus structured metadata; do not introduce MDX/raw executable lesson content.
 - Keep core logic provider-neutral. Cloudflare, search engines and AI providers are adapters/configuration choices. Cloudflare configuration lives only in `deploy/cloudflare/`; nothing in `src/` may import Cloudflare APIs.
