@@ -37,7 +37,7 @@ Git lesson sources
       +--> deployable static artifact
 ```
 
-If measured build pressure later justifies sharding, only lesson rendering is partitioned. Global outputs are generated once and every shard consumes the same catalogue/URL contract. Partition assignment and final URL completeness are validated explicitly.
+If measured build pressure later justifies sharding, only lesson rendering is partitioned. Global outputs are generated once and every shard consumes the same catalogue/URL contract. Partition assignment and final URL completeness are validated explicitly. M3 deliberately leaves sharding disabled: the trigger is measured production build time/memory pressure on the chosen CI resources, not catalogue size alone. Hosting file/redirect limits are a separate deployment-representation concern and do not by themselves justify build sharding.
 
 A clean checkout plus pinned dependencies must be sufficient to reproduce production output. CI uses the lockfile and `npm ci`; generated lesson fixtures and deployment output are not canonical source.
 
@@ -123,3 +123,11 @@ Before starting the content/schema milestone (M2), verify the merged M1 foundati
 5. Record and obtain Owner approval for any architecture deviation before closing M1.
 
 The gate is verification-first: do not add product features while closing M1. Defect fixes and documentation corrections discovered by the gate are in scope.
+
+## M3 static-delivery integration gate
+
+The assembled static artifact is the integration boundary. CI builds it, verifies exact canonical Adult/Teen route completeness and internal links, compiles provider-specific delivery artifacts, verifies those artifacts, checks current Cloudflare capacity, records the final deployable file count with a 16,000-file early warning, and then runs Playwright against the built site.
+
+Cloudflare-specific hard limits remain under `deploy/cloudflare/`; provider-neutral build/content code contains no Cloudflare capacity constants. As verified for M3.5 in October 2026, the adapter checks 20,000 Free / 100,000 Paid static-file capacity, 25 MiB maximum individual assets and 2,000 static redirect rules. Crossing the Free file limit does not silently choose a paid plan: it warns and requires an Owner decision before production deployment strategy changes. Crossing the Paid/file-size/redirect hard ceilings fails closed.
+
+No deterministic build sharding is enabled at M3 close. If measured build time or memory later becomes operationally constraining, ADR-0002's deterministic sharding design can be activated and the same final assembled-artifact integrity/capacity gates remain applicable.
