@@ -12,7 +12,7 @@ import { formatEditorialDate, selectTodayLesson } from '../lib/today';
 const loaded = await loadPublishedLessons(join(process.cwd(), 'src/content/lessons'), routeOwnership);
 const manifest = buildDeliveryManifest(loaded.map(({ metadata, adult, teen }) => ({ metadata, adult, teen })));
 const today = selectTodayLesson(manifest.catalogue);
-const lesson = loaded.find((candidate) => candidate.metadata.id === today.id);
+const lesson = new Map(loaded.map((candidate) => [candidate.metadata.id, candidate])).get(today.id);
 if (!lesson?.adult || !lesson.teen) throw new Error(`Today lesson ${today.id} is not a complete published lesson.`);
 
 // Both editions are offered explicitly; edition paths come from the manifest.

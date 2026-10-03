@@ -15,6 +15,8 @@ All canonical files are parsed through `src/lib/content/loader.ts` and the safe 
 
 The route-ownership registry is durable history, not a generated cache. New slugs/aliases must be registered to their lesson UUID. Existing entries may be added to but never removed or reassigned. Pull-request CI compares the registry with the PR base commit using `validateRouteOwnershipHistory`.
 
+Each presentation's `title` front-matter field is its page's only level-1 heading, so presentation bodies must not use `#` headings: start body sections at `##` (`###` for sub-sections). Do not repeat the title as a body heading. The pipeline rejects a `#` heading in a presentation body (outside fenced code) and fails the build.
+
 Raw HTML is not executable lesson content, remote Markdown images are forbidden, and links are restricted by the safe-content pipeline. The build imports the canonical loader so a normal production build cannot bypass these gates.
 
 Draft generation may temporarily be incomplete on a working branch, but incomplete content is not publication-eligible and must not reach production `main`.

@@ -8,6 +8,14 @@ export interface ParsedPresentation {
 
 export class ContentSecurityError extends Error {}
 
+/** A structural lesson-content rule was violated (not a security failure). */
+export class ContentContractError extends Error {}
+
+export interface MarkdownOptions {
+  /** Lowest heading level the source may use; shallower `#` headings fail closed. */
+  minHeadingLevel?: 1 | 2;
+}
+
 const SAFE_LINK = /^(?:https?:|mailto:)/i;
 const TAGS = new Set(['p','h1','h2','h3','ul','ol','li','strong','em','code','pre','blockquote','a','br']);
 const escapeHtml = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -100,7 +108,7 @@ export function sanitizeRenderedHtml(html: string): string {
   return output.join('');
 }
 
-export function renderSafeMarkdown(markdown: string): string {
+export function renderSafeMarkdown(markdown: string, { minHeadingLevel = 1 }: MarkdownOptions = {}): string {
   if (markdown.includes('\u0000')) throw new ContentSecurityError('NUL characters are not allowed in Markdown.');
   const lines = markdown.replace(/\r\n?/g, '\n').split('\n');
   const rendered: string[] = [];
@@ -118,6 +126,9 @@ export function renderSafeMarkdown(markdown: string): string {
     if (fence !== null) { fence.push(line); continue; }
     if (!line.trim()) { closeList(); continue; }
     const heading = /^(#{1,3})\s+(.+)$/.exec(line);
+    if (heading && heading[1].length < minHeadingLevel) {
+      throw new ContentContractError(`Markdown headings must start at level ${minHeadingLevel}: "${line}".`);
+    }
     if (heading) { closeList(); rendered.push(`<h${heading[1].length}>${inline(heading[2])}</h${heading[1].length}>`); continue; }
     const bullet = /^[-*]\s+(.+)$/.exec(line);
     const numbered = /^\d+\.\s+(.+)$/.exec(line);
@@ -140,7 +151,9 @@ export function parsePresentationFile(source: string): ParsedPresentation {
   if (!match) throw new ContentSecurityError('Presentation requires YAML front matter.');
   const frontmatter = parseSafeYaml(match[1]);
   const markdown = match[2];
-  return { frontmatter, markdown, html: renderSafeMarkdown(markdown) };
+  // The presentation title (front matter) is the page's level-1 heading, so
+  // body headings start at level 2 and rendered HTML is used unchanged.
+  return { frontmatter, markdown, html: renderSafeMarkdown(markdown, { minHeadingLevel: 2 }) };
 }
 
 export function serializeStructuredData(value: unknown): string {
