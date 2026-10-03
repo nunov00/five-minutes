@@ -1,0 +1,31 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import LessonCard from '../../components/LessonCard.astro';
+import SurpriseLinks from '../../components/SurpriseLinks.astro';
+import { getBuildMetadata } from '../../lib/content/build-content';
+import { buildDiscoveryArtifacts } from '../../lib/discovery/artifacts';
+import { libraryPages } from '../../lib/discovery/catalogue';
+import { TAXONOMY } from '../../lib/taxonomy';
+
+const { lessons } = await getBuildMetadata();
+const [page] = libraryPages(lessons);
+if (!page) throw new Error('Library requires at least one published lesson.');
+const artifacts = buildDiscoveryArtifacts(lessons);
+const fallback = artifacts.catalogue.payload.find((entry) => entry.id !== artifacts.catalogue.payload[0]?.id) ?? artifacts.catalogue.payload[0];
+if (!fallback) throw new Error('Library has no Surprise Me fallback.');
+const populatedTopics = TAXONOMY.filter((topic) => lessons.some((lesson) => lesson.metadata.topic === topic.token));
+---
+<BaseLayout title="Library · Five Minutes" description="Browse every published Five Minutes lesson.">
+  <section aria-labelledby="library-heading">
+    <p class="eyebrow">Discovery</p>
+    <h1 id="library-heading">Library</h1>
+    <p class="lede">Browse every idea, or narrow the collection by topic.</p>
+    <nav class="filter-links" aria-label="Library topics">
+      {populatedTopics.map((topic) => <a href={`/topics/${topic.token}`}>{topic.label}</a>)}
+    </nav>
+    <div class="lesson-list">
+      {page.map((lesson) => <LessonCard lesson={lesson} />)}
+    </div>
+    <SurpriseLinks catalogue={artifacts.catalogue} adultFallback={fallback.adult.path} teenFallback={fallback.teen.path} />
+  </section>
+</BaseLayout>

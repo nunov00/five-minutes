@@ -51,6 +51,16 @@ The cache exists only in memory during a static production build. A normal `astr
 
 Verification on the current seed corpus, Node 22.20.0: a temporary loader probe measured four full loads in a build without `SITE_URL` (five with a sitemap origin) before this change, versus one after it. Generated artifacts were compared byte for byte; this is evidence of eliminated duplicate work, not a large-corpus timing benchmark. Behavioural tests cover concurrent reuse, metadata/body separation, delivery equivalence, nested mutation protection, validation failure/retry and independent build/ownership snapshots.
 
+## Discovery data (M5, #59)
+
+Library and Topics are static HTML generated from the shared validated build metadata. Library pagination is by lesson identity, not presentation, and topic pages are emitted only for populated controlled topics.
+
+Browser discovery uses three content-hashed JSON artifacts under `/discovery/`: one compact catalogue for Surprise Me and one search document set per edition. Search payloads contain title, description, taxonomy labels, concepts, curated search terms and takeaway; article bodies and source/provenance records are excluded. Today and reading pages never request a search payload. Search fetches only the selected edition after the reader starts a query.
+
+The browser ranking function is application-owned and deterministic. It currently supports exact words, prefixes, multi-word matching and conservative one-character tolerance for longer terms. It is deliberately replaceable; ADR-0003's representative mobile transfer, parse, memory and interaction validation remains an M8 production-hardening gate before a large catalogue is launched.
+
+Related links use immutable IDs and shared generated URLs. Manual editorial relationships with reader-facing reasons rank first, followed by deterministic taxonomy/concept inference. Surprise Me loads only the compact catalogue on activation, excludes the current Today lesson and retains a normal static link as its no-JavaScript/network-failure fallback. Saved/Read/recent weighting remains M6 reader-state work.
+
 ## Environments
 
 Pull requests receive preview deployments where practical. `main` represents production-ready repository state. Production deployment consumes only validated published content.

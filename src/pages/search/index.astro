@@ -1,0 +1,103 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getBuildMetadata } from '../../lib/content/build-content';
+import { buildDiscoveryArtifacts } from '../../lib/discovery/artifacts';
+
+const { lessons } = await getBuildMetadata();
+const artifacts = buildDiscoveryArtifacts(lessons);
+---
+<BaseLayout title="Search · Five Minutes" description="Search Five Minutes lessons by idea, topic or takeaway.">
+  <section aria-labelledby="search-heading">
+    <p class="eyebrow">Discovery</p>
+    <h1 id="search-heading">Search</h1>
+    <p class="lede">Search titles, ideas, topics and takeaways. Article bodies stay out of the index.</p>
+
+    <div class="search-panel" id="search-app" data-adult-index={artifacts.search.adult.path} data-teen-index={artifacts.search.teen.path}>
+      <form class="search-form" role="search">
+        <label for="lesson-query">What would you like to understand?</label>
+        <div class="search-row">
+          <input id="lesson-query" name="q" type="search" autocomplete="off" enterkeyhint="search" minlength="2" required />
+          <button class="button" type="submit">Search</button>
+        </div>
+        <fieldset class="edition-options">
+          <legend>Edition</legend>
+          <label><input type="radio" name="edition" value="adult" checked /> Adult</label>
+          <label><input type="radio" name="edition" value="teen" /> Teen</label>
+        </fieldset>
+      </form>
+      <p class="search-status" role="status" aria-live="polite">Enter at least two characters to search.</p>
+      <ol class="search-results" aria-label="Search results"></ol>
+      <noscript><p>Search needs JavaScript. You can still browse every lesson in the <a href="/library">Library</a>.</p></noscript>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import { searchDocuments } from '../../lib/discovery/search';
+  import type { LessonEdition } from '../../lib/urls';
+  import type { SearchDocument } from '../../lib/discovery/types';
+
+  const app = document.querySelector<HTMLElement>('#search-app');
+  const form = app?.querySelector<HTMLFormElement>('form');
+  const input = app?.querySelector<HTMLInputElement>('#lesson-query');
+  const status = app?.querySelector<HTMLElement>('.search-status');
+  const list = app?.querySelector<HTMLOListElement>('.search-results');
+  const indexes: Partial<Record<LessonEdition, Promise<SearchDocument[]>>> = {};
+  let timer: number | undefined;
+
+  function selectedEdition(): LessonEdition {
+    return form?.querySelector<HTMLInputElement>('input[name="edition"]:checked')?.value === 'teen' ? 'teen' : 'adult';
+  }
+
+  async function documents(edition: LessonEdition): Promise<SearchDocument[]> {
+    if (!app) return [];
+    const path = edition === 'teen' ? app.dataset.teenIndex : app.dataset.adultIndex;
+    if (!path) throw new Error(`Missing ${edition} search index path.`);
+    return indexes[edition] ??= fetch(path).then((response) => {
+      if (!response.ok) throw new Error(`Search index request failed: ${response.status}`);
+      return response.json() as Promise<SearchDocument[]>;
+    });
+  }
+
+  function appendResult(result: SearchDocument) {
+    if (!list) return;
+    const li = window.document.createElement('li');
+    li.className = 'card search-result';
+    const meta = window.document.createElement('p');
+    meta.className = 'eyebrow';
+    meta.textContent = `${result.topicLabel} · ${result.subtopicLabel}`;
+    const heading = window.document.createElement('h2');
+    const link = window.document.createElement('a');
+    link.href = result.path;
+    link.textContent = result.title;
+    heading.append(link);
+    const description = window.document.createElement('p');
+    description.textContent = result.description;
+    li.append(meta, heading, description);
+    list.append(li);
+  }
+
+  async function runSearch() {
+    if (!input || !status || !list) return;
+    const query = input.value.trim();
+    list.replaceChildren();
+    if (query.length < 2) { status.textContent = 'Enter at least two characters to search.'; return; }
+    status.textContent = 'Searching…';
+    try {
+      const results = searchDocuments(await documents(selectedEdition()), query);
+      results.forEach(({ document }) => appendResult(document));
+      status.textContent = results.length === 0
+        ? `No lessons found for “${query}”. Try a broader idea or browse the Library.`
+        : `${results.length} ${results.length === 1 ? 'lesson' : 'lessons'} found.`;
+    } catch {
+      status.textContent = 'Search could not load. Browse the Library and try again later.';
+    }
+  }
+
+  form?.addEventListener('submit', (event) => { event.preventDefault(); void runSearch(); });
+  input?.addEventListener('input', () => {
+    window.clearTimeout(timer);
+    timer = window.setTimeout(() => void runSearch(), 180);
+  });
+  form?.addEventListener('change', () => { if ((input?.value.trim().length ?? 0) >= 2) void runSearch(); });
+</script>

@@ -10,7 +10,11 @@ concepts:
   - transmission-loss
   - transformers
 related:
-  manual: []
+  manual:
+    - id: e38e6794-fa4d-466c-9aa8-b6c6f6e386e1
+      reason: Power grids use feedback control to keep voltage and frequency within safe limits.
+    - id: 0199a5b7-6e21-7a42-9c3d-8f1b2e4a6c70
+      reason: Both are continent-scale systems whose reliability depends on precise engineering corrections.
   exclude: []
 sources:
   - title: Delivery to consumers

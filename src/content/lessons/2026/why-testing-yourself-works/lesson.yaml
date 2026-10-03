@@ -3,10 +3,16 @@ id: 24b8d784-84b3-40ee-b873-40e9d67b52f9
 slug: why-testing-yourself-works
 aliases: []
 publishedAt: 2026-10-03T18:00:00+02:00
-topic: science
-subtopic: psychology
+topic: human-mind
+subtopic: learning
 concepts: [retrieval-practice, memory, learning]
-related: { manual: [], exclude: [] }
+related:
+  manual:
+    - id: 7cd5dca8-857f-49e5-8fd5-16a03658b0b7
+      reason: Goodhart's law explains why measuring study time can be worse than testing actual recall.
+    - id: a9181b9d-e382-44c1-9d61-a3913dd1eb70
+      reason: Retrieval practice can help you remember a multi-stage process such as kidney filtration.
+  exclude: []
 sources:
   - title: "Test-enhanced learning: taking memory tests improves long-term retention"
     url: https://pubmed.ncbi.nlm.nih.gov/16507066/

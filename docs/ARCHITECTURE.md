@@ -135,8 +135,6 @@ The Owner has decided not to pre-commit to a paid plan or provider migration. Ac
 
 The following remain design work rather than accidental commitments:
 
-- exact topic/concept taxonomy;
-- related-content scoring/override rules;
 - search-index sharding threshold;
 - realistic mobile search performance thresholds;
 - analytics product-event requirements;
@@ -144,3 +142,5 @@ The following remain design work rather than accidental commitments:
 - final Cloudflare production/custom-domain activation and cutover configuration.
 
 These decisions should be recorded in ADRs when they become significant.
+
+The initial controlled topic/subtopic vocabulary and related-content priority rules are defined by ADR-0008. Concept vocabulary remains editorially extensible and is not a public hierarchy.

@@ -20,3 +20,7 @@ Each presentation's `title` front-matter field is its page's only level-1 headin
 Raw HTML is not executable lesson content, remote Markdown images are forbidden, and links are restricted by the safe-content pipeline. The build imports the canonical loader so a normal production build cannot bypass these gates.
 
 Draft generation may temporarily be incomplete on a working branch, but incomplete content is not publication-eligible and must not reach production `main`.
+
+`topic` and `subtopic` must use a parent/child pair from `src/lib/taxonomy.ts`; validation rejects unknown values and valid subtopics placed under the wrong topic. `concepts` remain focused canonical tokens rather than a public hierarchy.
+
+Related lessons use immutable UUIDs. Prefer two or more specific manual relationships with a short reader-facing reason when the editorial connection matters. Build-time inference can supplement them from shared concepts/taxonomy, while `related.exclude` prevents inappropriate suggestions. Never store a slug or reconstructed URL as a relationship.

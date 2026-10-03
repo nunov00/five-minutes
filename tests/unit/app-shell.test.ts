@@ -23,7 +23,9 @@ describe('app shell', () => {
 
     expect(html).toMatch(/href="\/adult\/[a-z0-9-]+"/);
     expect(html).toMatch(/href="\/teen\/[a-z0-9-]+"/);
-    expect(html).not.toContain('<script');
+    expect(html).toMatch(/data-catalogue="\/discovery\/catalogue\.[a-f0-9]{12}\.json"/);
+    expect(html).not.toContain('search-adult');
+    expect(html).not.toContain('search-teen');
   });
 
   it('declares the web app manifest and install metadata on every page', async () => {

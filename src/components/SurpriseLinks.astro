@@ -1,0 +1,51 @@
+---
+import type { DiscoveryArtifacts } from '../lib/discovery/artifacts';
+import type { LessonEdition } from '../lib/urls';
+
+interface Props {
+  catalogue: DiscoveryArtifacts['catalogue'];
+  excludeId?: string;
+  adultFallback: string;
+  teenFallback: string;
+}
+const { catalogue, excludeId = '', adultFallback, teenFallback } = Astro.props as Props;
+const links: Array<{ edition: LessonEdition; fallback: string; label: string }> = [
+  { edition: 'adult', fallback: adultFallback, label: 'Surprise me · Adult' },
+  { edition: 'teen', fallback: teenFallback, label: 'Surprise me · Teen' },
+];
+---
+<div class="surprise-actions" data-surprise data-catalogue={catalogue.path} data-exclude-id={excludeId}>
+  {links.map(({ edition, fallback, label }) => (
+    <a class="button button-secondary" href={fallback} data-surprise-edition={edition}>{label}</a>
+  ))}
+</div>
+
+<script>
+  import type { BrowserCatalogueEntry } from '../lib/discovery/types';
+
+  for (const container of document.querySelectorAll<HTMLElement>('[data-surprise]')) {
+    const cataloguePath = container.dataset.catalogue;
+    const excludedId = container.dataset.excludeId;
+    let pending: Promise<BrowserCatalogueEntry[]> | undefined;
+    const load = () => pending ??= fetch(cataloguePath ?? '').then((response) => {
+      if (!response.ok) throw new Error(`Catalogue request failed: ${response.status}`);
+      return response.json() as Promise<BrowserCatalogueEntry[]>;
+    });
+    for (const link of container.querySelectorAll<HTMLAnchorElement>('[data-surprise-edition]')) {
+      link.addEventListener('click', async (event) => {
+        event.preventDefault();
+        try {
+          const choices = (await load()).filter((entry) => entry.id !== excludedId);
+          if (choices.length === 0) { window.location.assign(link.href); return; }
+          const random = new Uint32Array(1);
+          crypto.getRandomValues(random);
+          const choice = choices[random[0] % choices.length];
+          const edition = link.dataset.surpriseEdition === 'teen' ? 'teen' : 'adult';
+          window.location.assign(choice[edition].path);
+        } catch {
+          window.location.assign(link.href);
+        }
+      });
+    }
+  }
+</script>

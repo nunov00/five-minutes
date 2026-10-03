@@ -10,7 +10,11 @@ concepts:
   - incentives
   - measurement
 related:
-  manual: []
+  manual:
+    - id: e38e6794-fa4d-466c-9aa8-b6c6f6e386e1
+      reason: Both examine what happens when a measured signal starts driving a system.
+    - id: 24b8d784-84b3-40ee-b873-40e9d67b52f9
+      reason: Retrieval practice shows why a useful measure of learning must test recall, not activity.
   exclude: []
 sources:
   - title: A Select Bibliography of Published Research by the Reserve Bank of Australia — Conference Volumes
