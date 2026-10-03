@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import LessonCard from '../../../components/LessonCard.astro';
+import LibraryPagination from '../../../components/LibraryPagination.astro';
 import { getBuildMetadata } from '../../../lib/content/build-content';
 import { libraryPages } from '../../../lib/discovery/catalogue';
 
@@ -22,9 +23,6 @@ const { lessons, pageNumber, pageCount } = Astro.props as Props;
     <p class="eyebrow">Discovery · Page {pageNumber} of {pageCount}</p>
     <h1 id="library-heading">Library</h1>
     <div class="lesson-list">{lessons.map((lesson) => <LessonCard lesson={lesson} />)}</div>
-    <nav class="pagination" aria-label="Library pages">
-      <a href={pageNumber === 2 ? '/library' : `/library/page/${pageNumber - 1}`}>Previous</a>
-      {pageNumber < pageCount && <a href={`/library/page/${pageNumber + 1}`}>Next</a>}
-    </nav>
+    <LibraryPagination pageNumber={pageNumber} pageCount={pageCount} />
   </section>
 </BaseLayout>

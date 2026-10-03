@@ -34,6 +34,47 @@ test.describe('M5 discovery', () => {
     expect(requested.some((url) => url.includes('search-teen'))).toBe(true);
   });
 
+  test('keeps only the latest search when requests overlap or submit repeats', async ({ page }) => {
+    let releaseAdult!: () => void;
+    const adultGate = new Promise<void>((resolve) => { releaseAdult = resolve; });
+    await page.route('**/discovery/search-adult.*.json', async (route) => {
+      await adultGate;
+      await route.continue();
+    });
+    await page.goto('/search');
+    const adultRequest = page.waitForRequest((request) => request.url().includes('/discovery/search-adult.'));
+    await page.getByRole('searchbox').fill('clock');
+    await adultRequest;
+    await page.getByRole('radio', { name: 'Teen' }).check();
+    await page.getByRole('searchbox').fill('ship navigation clock');
+    await expect(page.getByRole('link', { name: 'The Clock That Told Sailors Where They Were' })).toBeVisible();
+    const adultResponse = page.waitForResponse((response) => response.url().includes('/discovery/search-adult.'));
+    releaseAdult();
+    await adultResponse;
+    await expect(page.getByRole('link', { name: "How an Accurate Clock Revealed a Ship's Longitude" })).toHaveCount(0);
+
+    await page.getByRole('radio', { name: 'Adult' }).check();
+    await page.getByRole('searchbox').fill('kidneys');
+    await page.getByRole('searchbox').press('Enter');
+    await expect(page.getByRole('status')).toContainText('1 lesson found');
+    await expect(page.locator('.search-results > li')).toHaveCount(1);
+  });
+
+  test('retries a search index after a transient load failure', async ({ page }) => {
+    let attempts = 0;
+    await page.route('**/discovery/search-adult.*.json', async (route) => {
+      attempts += 1;
+      if (attempts === 1) await route.abort('failed');
+      else await route.continue();
+    });
+    await page.goto('/search');
+    await page.getByRole('searchbox').fill('clock');
+    await expect(page.getByRole('status')).toContainText('Search could not load');
+    await page.getByRole('searchbox').fill('marine chronometer');
+    await expect(page.getByRole('link', { name: "How an Accurate Clock Revealed a Ship's Longitude" })).toBeVisible();
+    expect(attempts).toBe(2);
+  });
+
   test('shows specific related lessons and keeps the same edition', async ({ page }) => {
     await page.goto('/teen/why-gps-needs-einstein');
     const section = page.getByRole('region', { name: 'Explore next' });

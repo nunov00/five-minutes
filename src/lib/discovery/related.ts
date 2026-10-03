@@ -9,13 +9,7 @@ interface Candidate {
   reason: string;
 }
 
-export function relatedLessons(
-  lessonId: string,
-  lessons: readonly LessonBundle[],
-  edition: LessonEdition,
-  limit = 3,
-): RelatedLesson[] {
-  if (limit < 2 || limit > 4) throw new Error('Related lesson limit must be between 2 and 4.');
+function rankedCandidates(lessonId: string, lessons: readonly LessonBundle[]): Candidate[] {
   const source = lessons.find((lesson) => lesson.metadata.id === lessonId);
   if (!source) throw new Error(`Cannot find source lesson ${lessonId}.`);
   const excluded = new Set([lessonId, ...source.metadata.related.exclude]);
@@ -44,7 +38,21 @@ export function relatedLessons(
     selected.push({ lesson, score, reason });
   }
 
-  const results = selected.sort((a, b) => b.score - a.score || a.lesson.metadata.id.localeCompare(b.lesson.metadata.id)).slice(0, limit);
+  return selected.sort((a, b) => b.score - a.score || a.lesson.metadata.id.localeCompare(b.lesson.metadata.id));
+}
+
+export function relatedCandidateCount(lessonId: string, lessons: readonly LessonBundle[]): number {
+  return rankedCandidates(lessonId, lessons).length;
+}
+
+export function relatedLessons(
+  lessonId: string,
+  lessons: readonly LessonBundle[],
+  edition: LessonEdition,
+  limit = 3,
+): RelatedLesson[] {
+  if (limit < 2 || limit > 4) throw new Error('Related lesson limit must be between 2 and 4.');
+  const results = rankedCandidates(lessonId, lessons).slice(0, limit);
   if (results.length < 2 && lessons.length >= 3) {
     throw new Error(`Lesson ${lessonId} has fewer than two related discovery results.`);
   }

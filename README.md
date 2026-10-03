@@ -65,7 +65,7 @@ The application produces standard static output in `dist/`. Hosting-provider con
 - The reading page owns the only `<h1>` (the presentation title from front matter). Lesson bodies therefore start headings at `##`; the content pipeline rejects `#` in a presentation body, and the sanitized body HTML is rendered unchanged.
 - `src/styles/global.css` holds the shared, mobile-first design tokens (colour, type, spacing, shape) and a few components (`container`, `card`, `button`, `eyebrow`, `lede`, `edition-switch`). Light/dark follows the operating-system setting. Reuse these tokens rather than adding new values.
 - The site is an installable PWA without a service worker: a web app manifest, locally owned icons and Apple touch-icon metadata, with nothing cached offline. See "Installable app (PWA)" in `docs/OPERATIONS.md` for cache/update behaviour and how to change icons safely.
-- Pages ship no client-side JavaScript, and styles are emitted as external files (`build.inlineStylesheets: 'never'`) so a later Content Security Policy needs no inline-style allowance.
+- Core reading, edition switching, navigation, Takeaway and Test Yourself work without JavaScript. M5 adds small client scripts for metadata search and Surprise Me; their discovery data is fetched only on interaction. Styles remain external (`build.inlineStylesheets: 'never'`). A future Content Security Policy must externalise or authorise the generated scripts without weakening the policy for lesson content.
 
 ## Deployment
 

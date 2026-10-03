@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import LessonCard from '../../components/LessonCard.astro';
+import LibraryPagination from '../../components/LibraryPagination.astro';
 import SurpriseLinks from '../../components/SurpriseLinks.astro';
 import { getBuildMetadata } from '../../lib/content/build-content';
 import { buildDiscoveryArtifacts } from '../../lib/discovery/artifacts';
@@ -8,7 +9,8 @@ import { libraryPages } from '../../lib/discovery/catalogue';
 import { TAXONOMY } from '../../lib/taxonomy';
 
 const { lessons } = await getBuildMetadata();
-const [page] = libraryPages(lessons);
+const pages = libraryPages(lessons);
+const [page] = pages;
 if (!page) throw new Error('Library requires at least one published lesson.');
 const artifacts = buildDiscoveryArtifacts(lessons);
 const fallback = artifacts.catalogue.payload.find((entry) => entry.id !== artifacts.catalogue.payload[0]?.id) ?? artifacts.catalogue.payload[0];
@@ -26,6 +28,7 @@ const populatedTopics = TAXONOMY.filter((topic) => lessons.some((lesson) => less
     <div class="lesson-list">
       {page.map((lesson) => <LessonCard lesson={lesson} />)}
     </div>
+    <LibraryPagination pageNumber={1} pageCount={pages.length} />
     <SurpriseLinks catalogue={artifacts.catalogue} adultFallback={fallback.adult.path} teenFallback={fallback.teen.path} />
   </section>
 </BaseLayout>

@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest';
+import { join } from 'node:path';
+import routeOwnership from '../../src/content/route-ownership.json';
+import { loadPublishedLessons } from '../../src/lib/content/loader';
 import { buildDiscoveryArtifacts } from '../../src/lib/discovery/artifacts';
-import { libraryPages } from '../../src/lib/discovery/catalogue';
+import { libraryPages, libraryPagination } from '../../src/lib/discovery/catalogue';
 import { relatedLessons } from '../../src/lib/discovery/related';
 import { searchDocuments } from '../../src/lib/discovery/search';
 import { validLesson } from '../fixtures/lesson-fixtures';
@@ -64,6 +67,9 @@ describe('M5 discovery contracts', () => {
     expect(searchDocuments(documents, 'longit')[0].document.id).toBe(secondId);
     expect(searchDocuments(documents, 'longitide')[0].document.id).toBe(secondId);
     expect(searchDocuments(documents, 'not present')).toEqual([]);
+    expect(searchDocuments(documents, 'astrology')).toEqual([]);
+    expect(searchDocuments(documents, 'algebra')).toEqual([]);
+    expect(searchDocuments(documents, 'theory')).toEqual([]);
   });
 
   it('keeps Adult and Teen wording separate', () => {
@@ -71,6 +77,15 @@ describe('M5 discovery contracts', () => {
     expect(searchDocuments(artifacts.search.adult.payload, 'marine chronometer')).toHaveLength(1);
     expect(searchDocuments(artifacts.search.teen.payload, 'marine chronometer')).toHaveLength(0);
     expect(searchDocuments(artifacts.search.teen.payload, 'ship clock')).toHaveLength(1);
+  });
+
+  it('does not match unrelated longer words against short corpus words', async () => {
+    const lessons = await loadPublishedLessons(join(process.cwd(), 'src/content/lessons'), routeOwnership);
+    const artifacts = buildDiscoveryArtifacts(lessons);
+    for (const query of ['astrology', 'algebra', 'theory']) {
+      expect(searchDocuments(artifacts.search.adult.payload, query), `Adult: ${query}`).toEqual([]);
+      expect(searchDocuments(artifacts.search.teen.payload, query), `Teen: ${query}`).toEqual([]);
+    }
   });
 
   it('uses manual related reasons and shared URL generation deterministically', () => {
@@ -88,5 +103,8 @@ describe('M5 discovery contracts', () => {
     const pages = libraryPages(corpus(), 2);
     expect(pages.map((page) => page.length)).toEqual([2, 1]);
     expect(pages.flat()).toHaveLength(3);
+    expect(libraryPagination(1, 3)).toEqual({ previous: undefined, next: '/library/page/2' });
+    expect(libraryPagination(2, 3)).toEqual({ previous: '/library', next: '/library/page/3' });
+    expect(libraryPagination(3, 3)).toEqual({ previous: '/library/page/2', next: undefined });
   });
 });

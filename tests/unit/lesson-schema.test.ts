@@ -247,6 +247,29 @@ describe('lesson schema v1', () => {
     expect(validateLessonReferences([first, second], {}).issues.filter((x) => x.code === 'unknown-relationship')).toEqual([]);
   });
 
+  it('reports a content validation issue when a lesson cannot produce two related results', () => {
+    const first = validLesson();
+    first.metadata.aliases = [];
+    first.metadata.concepts = ['relativity'];
+    const second = validLesson();
+    second.metadata.id = '018f47a2-5d7b-7c31-9d4f-0d9a8b6c2e12';
+    second.metadata.slug = 'second-lesson';
+    second.metadata.aliases = [];
+    second.metadata.topic = 'society';
+    second.metadata.subtopic = 'history';
+    second.metadata.concepts = ['history'];
+    const third = validLesson();
+    third.metadata.id = '018f47a2-5d7b-7c31-ad4f-0d9a8b6c2e13';
+    third.metadata.slug = 'third-lesson';
+    third.metadata.aliases = [];
+    third.metadata.topic = 'technology';
+    third.metadata.subtopic = 'computing';
+    third.metadata.concepts = ['computing'];
+    expect(validateLessonReferences([first, second, third], {}).issues).toContainEqual(expect.objectContaining({
+      path: 'lessons[0].metadata.related', code: 'insufficient-related',
+    }));
+  });
+
   it('requires absolute HTTP(S) source URLs', () => {
     const lesson = validLesson();
     lesson.metadata.sources[0].url = 'javascript:alert(1)';

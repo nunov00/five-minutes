@@ -1,0 +1,14 @@
+---
+import { libraryPagination } from '../lib/discovery/catalogue';
+
+interface Props { pageNumber: number; pageCount: number; }
+const { pageNumber, pageCount } = Astro.props as Props;
+const pagination = libraryPagination(pageNumber, pageCount);
+---
+{pageCount > 1 && (
+  <nav class="pagination" aria-label="Library pages">
+    {pagination.previous && <a href={pagination.previous}>Previous</a>}
+    <span aria-current="page">Page {pageNumber} of {pageCount}</span>
+    {pagination.next && <a href={pagination.next}>Next</a>}
+  </nav>
+)}
