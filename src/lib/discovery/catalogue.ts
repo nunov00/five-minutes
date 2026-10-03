@@ -1,7 +1,11 @@
 import type { LessonBundle } from '../content/schema';
 import { TAXONOMY } from '../taxonomy';
 
-export const LIBRARY_PAGE_SIZE = 24;
+const testPageSize = process.env.FIVE_MINUTES_TEST_LIBRARY_PAGE_SIZE;
+export const LIBRARY_PAGE_SIZE = testPageSize === undefined ? 24 : Number(testPageSize);
+if (!Number.isInteger(LIBRARY_PAGE_SIZE) || LIBRARY_PAGE_SIZE < 1) {
+  throw new Error('FIVE_MINUTES_TEST_LIBRARY_PAGE_SIZE must be a positive integer.');
+}
 
 export function newestLessons(lessons: readonly LessonBundle[]): LessonBundle[] {
   return [...lessons].sort((a, b) => Date.parse(b.metadata.publishedAt) - Date.parse(a.metadata.publishedAt)

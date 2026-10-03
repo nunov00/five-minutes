@@ -93,6 +93,13 @@ for (const match of sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)) {
   sitemapPaths.push(url.pathname);
 }
 const sitemapSet = new Set(sitemapPaths);
+const absentSiteMarker = '<!-- site-origin: absent -->';
+if (sitemapPaths.length === 0 && !sitemap.includes(absentSiteMarker)) {
+  throw new Error('Sitemap is empty without the explicit absent-site-origin marker.');
+}
+if (sitemapPaths.length > 0 && sitemap.includes(absentSiteMarker)) {
+  throw new Error('Populated sitemap must not claim that the site origin is absent.');
+}
 const expectedSitemapPaths = [...canonicalPagePaths].filter((path) => path !== '/404').sort();
 const missingSitemapPaths = expectedSitemapPaths.filter((path) => !sitemapSet.has(path));
 const unexpectedSitemapPaths = [...sitemapSet].filter((path) => !expectedSitemapPaths.includes(path));
