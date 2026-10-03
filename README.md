@@ -18,14 +18,21 @@ npm run dev
 
 ## Quality checks and production build
 
-CI runs the same commands, in this order, as the `baseline` check on every pull request and on `main`:
+CI runs these commands, in this order, as the `baseline` check on every pull request and on `main`:
 
 ```sh
 npm ci
-npm run check   # Astro/TypeScript diagnostics
-npm test        # unit/integration tests (Vitest)
-npm run build   # production static build into dist/
+npm run check                                      # Astro/TypeScript diagnostics
+npm test                                           # unit/integration tests (Vitest)
+npm run build                                      # production static build into dist/
+npm run verify:static                              # route completeness, links, standalone navigation, manifest
+npm run cf:prepare                                 # compile Cloudflare _redirects from dist/redirects.json
+node deploy/cloudflare/verify-redirects.mjs        # verify the compiled redirects
+npm run cf:verify-capacity                         # Cloudflare file/size/redirect limits
+node scripts/count-dist-files.mjs --warn-at 16000  # deployable file count with early warning
 ```
+
+The `e2e` check then builds again and runs `npm run test:e2e` (see below).
 
 Preview the built site locally with `npm run preview`.
 
