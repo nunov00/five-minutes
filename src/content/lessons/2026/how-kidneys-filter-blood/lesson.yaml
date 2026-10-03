@@ -1,0 +1,33 @@
+schemaVersion: 1
+id: a9181b9d-e382-44c1-9d61-a3913dd1eb70
+slug: how-kidneys-filter-blood
+aliases: []
+publishedAt: 2026-09-23T08:00:00+02:00
+topic: science
+subtopic: biology
+concepts:
+  - kidneys
+  - nephrons
+  - homeostasis
+related:
+  manual: []
+  exclude: []
+sources:
+  - title: Your Kidneys & How They Work
+    url: https://www.niddk.nih.gov/health-information/kidney-disease/kidneys-how-they-work
+    publisher: National Institute of Diabetes and Digestive and Kidney Diseases
+    accessedAt: 2026-10-03
+    note: Authoritative overview of filtration, tubule reabsorption, urine formation and kidney functions.
+  - title: Measuring How Well the Kidney Works—One Nephron at a Time
+    url: https://www.niddk.nih.gov/news/archive/2017/measuring-how-well-kidney-works-one-nephron-time
+    publisher: National Institute of Diabetes and Digestive and Kidney Diseases
+    accessedAt: 2026-10-03
+    note: Background on nephrons as the kidney's filtering units.
+provenance:
+  createdAt: 2026-10-03T14:23:24+02:00
+  createdBy:
+    type: ai
+    provider: openai
+    model: gpt-5.6-sol
+    promptVersion: editorial-calibration-v1
+  reviews: []
