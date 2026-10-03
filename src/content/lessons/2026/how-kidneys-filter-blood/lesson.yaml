@@ -3,14 +3,18 @@ id: a9181b9d-e382-44c1-9d61-a3913dd1eb70
 slug: how-kidneys-filter-blood
 aliases: []
 publishedAt: 2026-10-03T18:00:00+02:00
-topic: science
-subtopic: biology
+topic: health-human-body
+subtopic: human-biology
 concepts:
   - kidneys
   - nephrons
   - homeostasis
 related:
-  manual: []
+  manual:
+    - id: e38e6794-fa4d-466c-9aa8-b6c6f6e386e1
+      reason: Kidney regulation is a living example of sensing, comparison and corrective feedback.
+    - id: 24b8d784-84b3-40ee-b873-40e9d67b52f9
+      reason: Testing yourself can help retain the linked steps of filtration and reabsorption.
   exclude: []
 sources:
   - title: Your Kidneys & How They Work

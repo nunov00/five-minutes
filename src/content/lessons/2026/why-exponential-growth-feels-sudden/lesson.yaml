@@ -3,10 +3,16 @@ id: 1629895d-f11a-4bb7-afe5-8c8df5c07123
 slug: why-exponential-growth-feels-sudden
 aliases: []
 publishedAt: 2026-10-03T18:00:00+02:00
-topic: mathematics
-subtopic: exponential-functions
+topic: mathematics-thinking
+subtopic: mathematics
 concepts: [exponential-growth, doubling-time, compounding]
-related: { manual: [], exclude: [] }
+related:
+  manual:
+    - id: 3cebf076-45ac-49ea-9b01-bd0917fb1c13
+      reason: Compounding population changes can help ecological effects spread quickly through a system.
+    - id: 24b8d784-84b3-40ee-b873-40e9d67b52f9
+      reason: Both show how repeated cycles can produce effects that a single-step view makes easy to underestimate.
+  exclude: []
 sources:
   - title: Exponential Growth and Decay
     url: https://openstax.org/books/calculus-volume-2/pages/2-8-exponential-growth-and-decay

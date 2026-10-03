@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import SurpriseLinks from '../components/SurpriseLinks.astro';
 import { getBuildMetadata } from '../lib/content/build-content';
+import { buildDiscoveryArtifacts } from '../lib/discovery/artifacts';
 import { EDITION_LABELS } from '../lib/reading';
 import { formatEditorialDate, selectTodayLesson } from '../lib/today';
 
@@ -14,6 +16,9 @@ const editions = [
   { edition: 'adult' as const, path: today.adult.path, presentation: lesson.adult },
   { edition: 'teen' as const, path: today.teen.path, presentation: lesson.teen },
 ];
+const artifacts = buildDiscoveryArtifacts(lessons);
+const fallback = artifacts.catalogue.payload.find((entry) => entry.id !== today.id);
+if (!fallback) throw new Error('Today requires another lesson for Surprise Me.');
 ---
 <BaseLayout title="Today · Five Minutes">
   <section aria-labelledby="today-heading" data-lesson-id={today.id}>
@@ -28,5 +33,11 @@ const editions = [
         <a class="button" href={path} aria-label={`Read the ${EDITION_LABELS[edition]} edition: ${presentation.title}`}>Read the {EDITION_LABELS[edition]} edition</a>
       </article>
     ))}
+    <section class="discovery-callout" aria-labelledby="discover-heading">
+      <p class="eyebrow">A different direction</p>
+      <h2 id="discover-heading">Follow your curiosity</h2>
+      <p>Pick another idea at random, or explore the complete <a href="/library">Library</a>.</p>
+      <SurpriseLinks catalogue={artifacts.catalogue} excludeId={today.id} adultFallback={fallback.adult.path} teenFallback={fallback.teen.path} />
+    </section>
   </section>
 </BaseLayout>

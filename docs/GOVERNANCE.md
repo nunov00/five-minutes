@@ -229,6 +229,12 @@ For Pull Request work, technical review communication should be recorded directl
 
 Workers should respond to review findings on the Pull Request, push fixes to the existing branch, and record enough context for a later contributor to understand how significant findings were resolved. Re-review results should likewise be recorded on the Pull Request.
 
+### Risk-proportionate depth
+
+The requirement for independent review is unchanged, but review depth should match the likely impact. Architecture, security boundaries, content loading/validation, canonical URLs, deployment and publication changes require adversarial review: inspect the implementation and tests, exercise important failure modes and verify the exact head independently. Material lesson batches require factual and editorial review under `docs/EDITORIAL.md`.
+
+Routine bounded changes may use a lighter review that checks the focused diff, relevant tests and architectural fit. Reviewers should not repeat expensive unrelated checks merely to create ceremony. A lighter review does not permit a significant change to be self-reviewed or exempt it from the different-system requirement above.
+
 The Owner should receive concise summaries and make decisions that require Owner authority, but should not normally have to relay technical messages between Workers, Reviewers and the Manager. Repository discussion is the authoritative engineering record; chat conversations are coordination surfaces rather than a substitute for that record.
 
 ## 10. Documentation
