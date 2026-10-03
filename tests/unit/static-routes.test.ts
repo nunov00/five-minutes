@@ -9,7 +9,7 @@ describe('static lesson routes', () => {
   it('defines Astro static paths from the delivery manifest', async () => {
     const source = await readFile(join(process.cwd(), 'src/pages/[edition]/[slug].astro'), 'utf8');
     expect(source).toContain('export async function getStaticPaths()');
-    expect(source).toContain('buildDeliveryManifest');
+    expect(source).toContain('getBuildContent');
     expect(source).toContain('manifest.routes.map');
     expect(source).toContain('route.path !== expectedPath');
     expect(source).toContain('route.path !== astroPath');

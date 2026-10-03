@@ -1,9 +1,7 @@
 ---
-import { join } from 'node:path';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import routeOwnership from '../../content/route-ownership.json';
-import { loadPublishedLessons, type LoadedLesson } from '../../lib/content/loader';
-import { buildDeliveryManifest } from '../../lib/delivery-manifest';
+import type { LoadedLesson } from '../../lib/content/loader';
+import { getBuildContent } from '../../lib/content/build-content';
 import { EDITION_LABELS } from '../../lib/reading';
 import { formatEditorialDate } from '../../lib/today';
 import { lessonPath, type LessonEdition } from '../../lib/urls';
@@ -15,10 +13,7 @@ interface Props {
 }
 
 export async function getStaticPaths() {
-  const loaded = await loadPublishedLessons(join(process.cwd(), 'src/content/lessons'), routeOwnership);
-  const bundles = loaded.map(({ metadata, adult, teen }) => ({ metadata, adult, teen }));
-  const manifest = buildDeliveryManifest(bundles);
-  const byId = new Map(loaded.map((lesson) => [lesson.metadata.id, lesson]));
+  const { metadata: { manifest }, getLesson } = await getBuildContent();
   const catalogueById = new Map(manifest.catalogue.map((entry) => [entry.id, entry]));
 
   return manifest.routes.map((route) => {
@@ -27,8 +22,7 @@ export async function getStaticPaths() {
     if (route.path !== expectedPath || route.path !== astroPath) {
       throw new Error(`Manifest route disagrees with static route ownership: ${route.path}.`);
     }
-    const lesson = byId.get(route.lessonId);
-    if (!lesson) throw new Error(`Manifest route references unloaded lesson ${route.lessonId}.`);
+    const lesson = getLesson(route.lessonId);
     const catalogueEntry = catalogueById.get(route.lessonId);
     if (!catalogueEntry) throw new Error(`Manifest route has no catalogue entry for ${route.lessonId}.`);
     const alternatePath = route.edition === 'adult' ? catalogueEntry.teen.path : catalogueEntry.adult.path;
