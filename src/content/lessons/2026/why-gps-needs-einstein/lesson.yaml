@@ -14,10 +14,11 @@ related:
   manual: []
   exclude: []
 sources:
-  - title: GPS and relativity
-    url: https://www.gps.gov/systems/gps/performance/accuracy/
-    publisher: GPS.gov
-    accessedAt: 2026-10-02
+  - title: A Century of General Relativity — Relativity in Your Hand
+    url: https://assets.science.nasa.gov/content/dam/science/astro/programs/physics-of-the-cosmos/documents/brochures-factsheets/april-2016-aps/GR_Centennial_Brochure-Mar2016-final.pdf
+    publisher: NASA Physics of the Cosmos Program
+    accessedAt: 2026-10-03
+    note: Explains GPS signal timing, the opposing special- and general-relativity effects, their approximate daily offsets and the navigation consequence without correction.
 provenance:
   createdAt: 2026-10-02T18:00:00+02:00
   createdBy:

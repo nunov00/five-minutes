@@ -1,0 +1,33 @@
+schemaVersion: 1
+id: 7cd5dca8-857f-49e5-8fd5-16a03658b0b7
+slug: goodharts-law
+aliases: []
+publishedAt: 2026-09-22T08:00:00+02:00
+topic: society
+subtopic: economics
+concepts:
+  - goodharts-law
+  - incentives
+  - measurement
+related:
+  manual: []
+  exclude: []
+sources:
+  - title: A Select Bibliography of Published Research by the Reserve Bank of Australia — Conference Volumes
+    url: https://www.rba.gov.au/publications/rdp/1990/9013/conference-volumes.html
+    publisher: Reserve Bank of Australia
+    accessedAt: 2026-10-03
+    note: Identifies Charles Goodhart's 1975 paper and confirms it contains the first reference to what became known as Goodhart's law.
+  - title: Categorizing Variants of Goodhart's Law
+    url: https://arxiv.org/abs/1803.04585
+    publisher: arXiv
+    accessedAt: 2026-10-03
+    note: A taxonomy of ways that optimising a proxy can break its relationship with the real goal.
+provenance:
+  createdAt: 2026-10-03T14:23:24+02:00
+  createdBy:
+    type: ai
+    provider: openai
+    model: gpt-5.6-sol
+    promptVersion: editorial-calibration-v1
+  reviews: []

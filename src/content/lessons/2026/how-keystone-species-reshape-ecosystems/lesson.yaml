@@ -1,0 +1,24 @@
+schemaVersion: 1
+id: 3cebf076-45ac-49ea-9b01-bd0917fb1c13
+slug: how-keystone-species-reshape-ecosystems
+aliases: []
+publishedAt: 2026-09-16T08:00:00+02:00
+topic: science
+subtopic: ecology
+concepts: [keystone-species, trophic-cascade, food-webs]
+related: { manual: [], exclude: [] }
+sources:
+  - title: Keystone Species
+    url: https://education.nationalgeographic.org/resource/keystone-species/
+    publisher: National Geographic Society
+    accessedAt: 2026-10-03
+    note: Defines keystone species, gives food-web examples and notes limits of the simplified label.
+  - title: Reintroduction of the Top Predator
+    url: https://education.nationalgeographic.org/resource/reintroduction-top-predator/
+    publisher: National Geographic Society
+    accessedAt: 2026-10-03
+    note: Explains the sea-otter, sea-urchin and kelp trophic cascade.
+provenance:
+  createdAt: 2026-10-03T16:21:11+02:00
+  createdBy: { type: ai, provider: openai, model: gpt-5.6-sol, promptVersion: editorial-calibration-v1 }
+  reviews: []
