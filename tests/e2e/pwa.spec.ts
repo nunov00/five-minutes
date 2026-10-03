@@ -73,10 +73,10 @@ test.describe('installable PWA shell', () => {
 
     // No browser chrome in standalone display: every step uses links on the page.
     await page.getByRole('link', { name: /^Read the Teen edition/ }).click();
-    await expect(page.locator('article')).toHaveAttribute('data-edition', 'teen');
+    await expect(page.locator('article[data-lesson-id]')).toHaveAttribute('data-edition', 'teen');
     inScope();
     await page.getByRole('navigation', { name: 'Edition' }).getByRole('link', { name: 'Adult' }).click();
-    await expect(page.locator('article')).toHaveAttribute('data-edition', 'adult');
+    await expect(page.locator('article[data-lesson-id]')).toHaveAttribute('data-edition', 'adult');
     inScope();
     await page.getByRole('link', { name: 'Back to Today' }).click();
     await expect(page.getByRole('heading', { level: 1, name: "Today's idea" })).toBeVisible();
