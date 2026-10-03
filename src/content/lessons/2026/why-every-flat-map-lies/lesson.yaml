@@ -6,7 +6,13 @@ publishedAt: 2026-10-03T18:00:00+02:00
 topic: society
 subtopic: geography
 concepts: [map-projections, distortion, mercator]
-related: { manual: [], exclude: [] }
+related:
+  manual:
+    - id: 99b24089-9f36-404c-8b44-8cb594115dac
+      reason: Measuring longitude solved one navigation problem; projecting the globe creates another.
+    - id: 5d0eaefd-39c4-404e-9dbb-7e75e88474f6
+      reason: Map projections and JPEG both trade perfect fidelity for a useful representation.
+  exclude: []
 sources:
   - title: Map Projection
     url: https://arxiv.org/abs/1412.7690

@@ -6,7 +6,13 @@ publishedAt: 2026-10-03T18:00:00+02:00
 topic: science
 subtopic: ecology
 concepts: [keystone-species, trophic-cascade, food-webs]
-related: { manual: [], exclude: [] }
+related:
+  manual:
+    - id: e38e6794-fa4d-466c-9aa8-b6c6f6e386e1
+      reason: Ecosystems and engineered controllers can both amplify or damp changes through feedback.
+    - id: 1629895d-f11a-4bb7-afe5-8c8df5c07123
+      reason: Population changes can compound, helping a trophic cascade spread through a food web.
+  exclude: []
 sources:
   - title: Keystone Species
     url: https://education.nationalgeographic.org/resource/keystone-species/

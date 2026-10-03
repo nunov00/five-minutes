@@ -84,7 +84,7 @@ test.describe('Today → lesson → edition switch → Takeaway → Test yoursel
     for (const route of await deliveryRoutes(page)) {
       const response = await page.goto(route.path);
       expect(response?.ok(), route.path).toBe(true);
-      await expect(page.locator('article')).toHaveAttribute('data-edition', route.edition);
+      await expect(page.locator('article[data-lesson-id]')).toHaveAttribute('data-edition', route.edition);
       await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1);
       await expect(page.getByRole('region', { name: 'Takeaway' })).toBeVisible();
       await expect(page.getByRole('region', { name: 'Test yourself' })).toBeVisible();

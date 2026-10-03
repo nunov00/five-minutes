@@ -200,4 +200,4 @@ Rejected for the initial product under ADR-0001; the schema is intentionally por
 
 ## Follow-up decisions
 
-The publication lifecycle/review policy, edition-specific discovery search, and two-presentation rendering benchmark are now defined by ADR-0007, ADR-0003 and ADR-0002 respectively. Controlled taxonomy and related-content scoring remain deliberately deferred.
+The publication lifecycle/review policy, edition-specific discovery search, two-presentation rendering benchmark, and initial controlled taxonomy/related rules are defined by ADR-0007, ADR-0003, ADR-0002 and ADR-0008 respectively.

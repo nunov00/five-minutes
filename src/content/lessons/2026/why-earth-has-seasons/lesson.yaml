@@ -6,7 +6,13 @@ publishedAt: 2026-10-03T18:00:00+02:00
 topic: science
 subtopic: astronomy
 concepts: [seasons, axial-tilt, sunlight]
-related: { manual: [], exclude: [] }
+related:
+  manual:
+    - id: 0199a5b7-6e21-7a42-9c3d-8f1b2e4a6c70
+      reason: Both ideas depend on precisely understanding motion, time and geometry around Earth.
+    - id: b6fbc2e0-bcad-4ad7-8336-2fed9576e788
+      reason: Earth's curvature and orientation shape both the seasons and every flat map of the planet.
+  exclude: []
 sources:
   - title: What Causes the Seasons?
     url: https://spaceplace.nasa.gov/seasons/en/

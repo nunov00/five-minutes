@@ -1,4 +1,6 @@
 import { lessonPath } from '../urls';
+import { isTaxonomyPair, taxonomyTopic } from '../taxonomy';
+import { relatedCandidateCount } from '../discovery/related';
 
 export const LESSON_SCHEMA_VERSION = 1 as const;
 
@@ -166,6 +168,15 @@ export function validateLessonMetadata(value: unknown, path = 'metadata'): Valid
   for (const key of ['topic', 'subtopic'] as const) {
     if (!nonEmpty(value[key]) || !TOKEN.test(value[key])) issue(issues, `${path}.${key}`, 'taxonomy-token', 'Expected a canonical taxonomy token.');
   }
+  if (nonEmpty(value.topic) && TOKEN.test(value.topic) && !taxonomyTopic(value.topic)) {
+    issue(issues, `${path}.topic`, 'unknown-topic', `Unknown controlled topic "${value.topic}".`);
+  } else if (
+    nonEmpty(value.topic) && TOKEN.test(value.topic)
+    && nonEmpty(value.subtopic) && TOKEN.test(value.subtopic)
+    && !isTaxonomyPair(value.topic, value.subtopic)
+  ) {
+    issue(issues, `${path}.subtopic`, 'unknown-subtopic', `Subtopic "${value.subtopic}" is not defined under "${value.topic}".`);
+  }
   validateStringArray(value.concepts, `${path}.concepts`, issues, TOKEN);
 
   if (!isObject(value.related)) {
@@ -308,8 +319,9 @@ export function validateLessonReferences(
   bundles: readonly unknown[],
   routeOwnership: RouteOwnershipRegistry,
 ): ValidationResult {
+  const collectionValidation = validateLessonCollection(bundles);
   const issues = [
-    ...validateLessonCollection(bundles).issues,
+    ...collectionValidation.issues,
     ...validateRouteOwnershipRegistry(routeOwnership).issues,
   ];
   const ids = new Set<string>();
@@ -370,6 +382,20 @@ export function validateLessonReferences(
       }
     });
   });
+
+  if (
+    bundles.length >= 3
+    && collectionValidation.valid
+    && !issues.some((entry) => ['unknown-relationship', 'self-relationship'].includes(entry.code))
+  ) {
+    const lessons = bundles as readonly LessonBundle[];
+    lessons.forEach((bundle, index) => {
+      if (relatedCandidateCount(bundle.metadata.id, lessons) < 2) {
+        issue(issues, `lessons[${index}].metadata.related`, 'insufficient-related',
+          'A published lesson must have at least two eligible related lessons after exclusions.');
+      }
+    });
+  }
 
   return { valid: issues.length === 0, issues };
 }

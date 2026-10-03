@@ -11,7 +11,11 @@ concepts:
   - relativity
   - time-dilation
 related:
-  manual: []
+  manual:
+    - id: 99b24089-9f36-404c-8b44-8cb594115dac
+      reason: Harrison's clock and GPS both find position by comparing extremely accurate time.
+    - id: c50774ec-4593-4557-b8df-ecc65e504566
+      reason: Both reveal how motion and geometry around Earth shape everyday observations.
   exclude: []
 sources:
   - title: A Century of General Relativity — Relativity in Your Hand

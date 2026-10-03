@@ -29,6 +29,16 @@ describe('lesson schema v1', () => {
     expect(result.issues.map((x) => x.code)).toEqual(expect.arrayContaining(['uuid', 'slug']));
   });
 
+  it('rejects unknown topics and subtopics outside their controlled parent', () => {
+    const unknownTopic = validLesson();
+    unknownTopic.metadata.topic = 'unknown';
+    expect(validateLessonBundle(unknownTopic).issues).toContainEqual(expect.objectContaining({ code: 'unknown-topic' }));
+
+    const wrongParent = validLesson();
+    wrongParent.metadata.subtopic = 'computing';
+    expect(validateLessonBundle(wrongParent).issues).toContainEqual(expect.objectContaining({ code: 'unknown-subtopic' }));
+  });
+
   it('rejects duplicate IDs deterministically', () => {
     const first = validLesson();
     const second = validLesson({
@@ -235,6 +245,29 @@ describe('lesson schema v1', () => {
     second.metadata.aliases = [];
     first.metadata.related.manual = [{ id: second.metadata.id, reason: 'Continue learning' }];
     expect(validateLessonReferences([first, second], {}).issues.filter((x) => x.code === 'unknown-relationship')).toEqual([]);
+  });
+
+  it('reports a content validation issue when a lesson cannot produce two related results', () => {
+    const first = validLesson();
+    first.metadata.aliases = [];
+    first.metadata.concepts = ['relativity'];
+    const second = validLesson();
+    second.metadata.id = '018f47a2-5d7b-7c31-9d4f-0d9a8b6c2e12';
+    second.metadata.slug = 'second-lesson';
+    second.metadata.aliases = [];
+    second.metadata.topic = 'society';
+    second.metadata.subtopic = 'history';
+    second.metadata.concepts = ['history'];
+    const third = validLesson();
+    third.metadata.id = '018f47a2-5d7b-7c31-ad4f-0d9a8b6c2e13';
+    third.metadata.slug = 'third-lesson';
+    third.metadata.aliases = [];
+    third.metadata.topic = 'technology';
+    third.metadata.subtopic = 'computing';
+    third.metadata.concepts = ['computing'];
+    expect(validateLessonReferences([first, second, third], {}).issues).toContainEqual(expect.objectContaining({
+      path: 'lessons[0].metadata.related', code: 'insufficient-related',
+    }));
   });
 
   it('requires absolute HTTP(S) source URLs', () => {
