@@ -58,6 +58,7 @@ test.describe('M5 discovery', () => {
     await page.getByRole('radio', { name: 'Teen' }).check();
     await page.getByRole('searchbox').fill('ship navigation clock');
     await expect(page.getByRole('link', { name: 'The Clock That Told Sailors Where They Were' })).toBeVisible();
+    await expect(page.getByRole('status')).toHaveText('1 lesson found.');
     const adultResponse = page.waitForResponse((response) => response.url().includes('/discovery/search-adult.'));
     releaseAdult();
     await adultResponse;

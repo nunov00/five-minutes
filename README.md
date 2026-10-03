@@ -44,7 +44,7 @@ Playwright journeys live in `tests/e2e/` as `*.spec.ts`. They run against the **
 
 ```sh
 npx playwright install chromium   # once per machine / Playwright upgrade (add --with-deps on Linux)
-npm run build
+FIVE_MINUTES_TEST_LIBRARY_PAGE_SIZE=5 npm run build  # exercise multi-page Library navigation as CI does
 npm run test:e2e
 ```
 
