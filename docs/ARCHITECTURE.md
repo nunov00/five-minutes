@@ -71,7 +71,7 @@ Five Minutes is a Progressive Web App as well as a website. The production app m
 
 PWA support must remain standards-based and provider-neutral. Core reading must continue to work in an ordinary browser without installation.
 
-Initial offline scope is deliberately modest: the app shell and graceful offline behaviour may be cached, but downloading the complete lesson catalogue for offline use is not an initial requirement. Service-worker caching must not make newly published or corrected lessons unexpectedly stale.
+Installability does not require a service worker on the target platforms, and the current implementation deliberately has none: the app caches nothing, and reading is network-dependent exactly like the website. A service worker (for example a bounded offline fallback) is optional future work that requires a deliberate decision. Any such caching must stay bounded, must never pre-cache or download the complete lesson catalogue, and must not make newly published or corrected lessons unexpectedly stale. Operational details and cache/update behaviour are in `docs/OPERATIONS.md`.
 
 ### Analytics
 

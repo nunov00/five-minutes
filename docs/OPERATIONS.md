@@ -142,3 +142,20 @@ The assembled static artifact is the integration boundary. CI builds it, verifie
 Cloudflare-specific hard limits remain under `deploy/cloudflare/`; provider-neutral build/content code contains no Cloudflare capacity constants. As verified for M3.5 in October 2026, the adapter checks 20,000 Free / 100,000 Paid static-file capacity, 25 MiB maximum individual assets and 2,000 static redirect rules. Crossing the Free file limit does not silently choose a paid plan: it warns and requires an Owner decision before production deployment strategy changes. Crossing the Paid/file-size/redirect hard ceilings fails closed.
 
 No deterministic build sharding is enabled at M3 close. If measured build time or memory later becomes operationally constraining, ADR-0002's deterministic sharding design can be activated and the same final assembled-artifact integrity/capacity gates remain applicable.
+
+## M4 core reading UX + PWA integration gate
+
+M4 closes with Today, explicit Adult/Teen reading pages and the installable shell verified as one static system (#45). The checks that guard it are part of normal CI:
+
+- `npm run verify:static` checks every built page for the web app manifest link, an in-page link to Today and no internal new-window links. It also checks the manifest contract (`id`, `start_url` and `scope` are `/`; `display` is `standalone`; every icon resolves to a PNG of its declared size).
+- Playwright (desktop Chromium and iPhone-class mobile) covers:
+  - Today → Adult/Teen → edition switch → Takeaway → Test Yourself → back to Today;
+  - one page `<h1>`, no horizontal overflow, keyboard access and the system light/dark scheme;
+  - install metadata and Chromium's own installability check;
+  - no service worker or Cache Storage;
+  - an in-page-only, in-scope journey from the manifest `start_url`.
+- The presentation heading contract (ADR-0006) is enforced by the content pipeline at build time.
+
+Installability on iOS/iPadOS cannot be exercised in CI, so it was verified on a real device. On 2026-10-03 the Owner installed the PR #44 Cloudflare preview on an iPhone via Safari Add to Home Screen: the "Five Minutes" name and icon appeared correctly, the standalone launch removed Safari's browser chrome, and Today rendered correctly. The current icon is accepted as v1 branding; it can be replaced later by the process in "Installable app (PWA)" above, without changing the app `id`.
+
+M4 deliberately ships no service worker, no stored edition/appearance preference (M6) and no discovery features (M5). Remaining non-blocking review items are tracked in #42.

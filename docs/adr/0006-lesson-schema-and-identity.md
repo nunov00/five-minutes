@@ -3,6 +3,7 @@
 Status: Accepted
 Date: 2026-10-02
 Owner approval: approved 2026-10-02.
+Amended: 2026-10-03 — presentation heading contract (Owner-approved during M4.1, PR #39; recorded at the M4 gate, #45).
 
 ## Context
 
@@ -109,6 +110,10 @@ Article body in plain Markdown...
 
 Audience-specific titles, descriptions, examples, body, takeaway and retrieval question/answer may differ substantially. Shared facts such as identity, publication date, taxonomy, relationships and research provenance do not get duplicated into presentation files.
 
+#### Presentation heading contract
+
+The front-matter `title` of each presentation is the reading page's only level-1 heading (`<h1>`). The Markdown body therefore starts at level 2: it may use `##` and `###` headings and must not define a level-1 (`#`) heading. The content pipeline enforces this when it parses a presentation file and fails the build on a `#` heading in a body; rendered, sanitized body HTML is used unchanged, with no heading rewriting after sanitization.
+
 ### Markdown and structured-data safety
 
 Lesson bodies use Markdown, not MDX. AI-authored lesson content must not execute code during the site build.
@@ -156,6 +161,7 @@ CI/build validation must reject at least:
 - a published lesson missing either Adult or Teen presentation;
 - invalid presentation metadata;
 - unsafe Markdown constructs;
+- a level-1 heading in a presentation body;
 - published content that violates the publication policy.
 
 A schema version is mandatory so future changes can be migrated deliberately.
