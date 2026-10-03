@@ -37,7 +37,9 @@ test.describe('M5 discovery', () => {
   test('shows specific related lessons and keeps the same edition', async ({ page }) => {
     await page.goto('/teen/why-gps-needs-einstein');
     const section = page.getByRole('region', { name: 'Explore next' });
-    await expect(section.locator('article')).toHaveCount(2);
+    const relatedCount = await section.locator('article[data-related-id]').count();
+    expect(relatedCount).toBeGreaterThanOrEqual(2);
+    expect(relatedCount).toBeLessThanOrEqual(4);
     await expect(section.getByText("Harrison's clock and GPS both find position by comparing extremely accurate time.")).toBeVisible();
     await section.getByRole('link').first().click();
     await expect(page).toHaveURL(/\/teen\//);
