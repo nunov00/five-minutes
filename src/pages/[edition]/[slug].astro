@@ -4,12 +4,14 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import routeOwnership from '../../content/route-ownership.json';
 import { loadPublishedLessons, type LoadedLesson } from '../../lib/content/loader';
 import { buildDeliveryManifest } from '../../lib/delivery-manifest';
+import { EDITION_LABELS, prepareLessonBody } from '../../lib/reading';
+import { formatEditorialDate } from '../../lib/today';
 import { lessonPath, type LessonEdition } from '../../lib/urls';
 
 interface Props {
   lesson: LoadedLesson;
   edition: LessonEdition;
-  alternatePath: string;
+  editionPaths: Record<LessonEdition, string>;
 }
 
 export async function getStaticPaths() {
@@ -31,35 +33,45 @@ export async function getStaticPaths() {
     if (!catalogueEntry) throw new Error(`Manifest route has no catalogue entry for ${route.lessonId}.`);
     const alternatePath = route.edition === 'adult' ? catalogueEntry.teen.path : catalogueEntry.adult.path;
     if (!alternatePath) throw new Error(`Missing alternate edition route for ${route.lessonId}.`);
+    const editionPaths = { [route.edition]: route.path, [route.edition === 'adult' ? 'teen' : 'adult']: alternatePath } as Record<LessonEdition, string>;
     return {
       params: { edition: route.edition, slug: route.slug },
-      props: { lesson, edition: route.edition, alternatePath },
+      props: { lesson, edition: route.edition, editionPaths },
     };
   });
 }
 
-const { lesson, edition, alternatePath } = Astro.props as Props;
+const { lesson, edition, editionPaths } = Astro.props as Props;
 const presentation = edition === 'adult' ? lesson.adult : lesson.teen;
 const html = edition === 'adult' ? lesson.adultHtml : lesson.teenHtml;
 if (!presentation) throw new Error(`Missing ${edition} presentation for ${lesson.metadata.id}.`);
+const editions: LessonEdition[] = ['adult', 'teen'];
 ---
-<BaseLayout>
+<BaseLayout title={`${presentation.title} · ${EDITION_LABELS[edition]} edition · Five Minutes`} description={presentation.description}>
   <article data-lesson-id={lesson.metadata.id} data-edition={edition}>
-    <header>
-      <p>{edition === 'adult' ? 'Adult' : 'Teen'} edition</p>
+    <header class="reader-header">
+      <nav class="edition-switch" aria-label="Edition">
+        {editions.map((option) => (
+          <a href={editionPaths[option]} aria-current={option === edition ? 'page' : undefined}>{EDITION_LABELS[option]}</a>
+        ))}
+      </nav>
+      <p class="eyebrow">{EDITION_LABELS[edition]} edition · <time datetime={lesson.metadata.publishedAt}>{formatEditorialDate(lesson.metadata.publishedAt)}</time></p>
       <h1>{presentation.title}</h1>
-      <p>{presentation.description}</p>
-      <a href={alternatePath}>Read the {edition === 'adult' ? 'Teen' : 'Adult'} edition</a>
+      <p class="lede">{presentation.description}</p>
     </header>
-    <div class="lesson-body" set:html={html} />
-    <section aria-labelledby="takeaway-heading">
+    <div class="lesson-body" set:html={prepareLessonBody(html, presentation.title)} />
+    <section class="card lesson-section" aria-labelledby="takeaway-heading">
       <h2 id="takeaway-heading">Takeaway</h2>
       <p>{presentation.takeaway}</p>
     </section>
-    <section aria-labelledby="test-heading">
+    <section class="card lesson-section" aria-labelledby="test-heading">
       <h2 id="test-heading">Test yourself</h2>
       <p>{presentation.question}</p>
-      <details><summary>Show answer</summary><p>{presentation.answer}</p></details>
+      <details>
+        <summary>Show answer</summary>
+        <p class="answer">{presentation.answer}</p>
+      </details>
     </section>
+    <p class="lesson-section"><a href="/">Back to Today</a></p>
   </article>
 </BaseLayout>
