@@ -192,6 +192,8 @@ export function validateLessonMetadata(value: unknown, path = 'metadata'): Valid
 
   if (!isObject(value.provenance) || !isValidTimestamp(value.provenance.createdAt) || !isObject(value.provenance.createdBy) || !['ai', 'human'].includes(String(value.provenance.createdBy.type)) || !Array.isArray(value.provenance.reviews)) {
     issue(issues, `${path}.provenance`, 'provenance', 'Expected createdAt, createdBy and reviews.');
+  } else if (isValidTimestamp(value.publishedAt) && Date.parse(value.publishedAt) < Date.parse(value.provenance.createdAt)) {
+    issue(issues, `${path}.publishedAt`, 'publication-before-creation', 'Publication timestamp must not predate provenance.createdAt.');
   }
 
   return { valid: issues.length === 0, issues };

@@ -151,6 +151,16 @@ export function parsePresentationFile(source: string): ParsedPresentation {
   if (!match) throw new ContentSecurityError('Presentation requires YAML front matter.');
   const frontmatter = parseSafeYaml(match[1]);
   const markdown = match[2];
+  let fenced = false;
+  for (const line of markdown.replace(/\r\n?/g, '\n').split('\n')) {
+    if (/^```/.test(line)) {
+      fenced = !fenced;
+      continue;
+    }
+    if (!fenced && /^\s*\*\*Takeaway:\*\*/i.test(line)) {
+      throw new ContentContractError('The takeaway belongs in presentation front matter and must not be repeated in the body.');
+    }
+  }
   // The presentation title (front matter) is the page's level-1 heading, so
   // body headings start at level 2 and rendered HTML is used unchanged.
   return { frontmatter, markdown, html: renderSafeMarkdown(markdown, { minHeadingLevel: 2 }) };

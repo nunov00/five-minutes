@@ -28,10 +28,12 @@ describe('Astro build content mode', () => {
     const source = await import('../../src/lib/content/loader');
     const realLoad = source.loadPublishedLessons;
     let revision = 0;
+    let revisedLessonId: string | undefined;
     const load = vi.spyOn(source, 'loadPublishedLessons').mockImplementation(async (...args) => {
       const lessons = await realLoad(...args);
       const lesson = lessons[0];
       if (!lesson?.adult) throw new Error('Test requires a canonical Adult presentation');
+      revisedLessonId = lesson.metadata.id;
       lesson.adult.title = `Development revision ${++revision}`;
       return lessons;
     });
@@ -39,9 +41,9 @@ describe('Astro build content mode', () => {
     const first = await getBuildMetadata();
     const second = await getBuildContent();
     const third = await getBuildMetadata();
-    expect(first.manifest.catalogue[0].adult.title).toBe('Development revision 1');
-    expect(second.metadata.manifest.catalogue[0].adult.title).toBe('Development revision 2');
-    expect(third.manifest.catalogue[0].adult.title).toBe('Development revision 3');
+    expect(first.manifest.catalogue.find(({ id }) => id === revisedLessonId)?.adult.title).toBe('Development revision 1');
+    expect(second.metadata.manifest.catalogue.find(({ id }) => id === revisedLessonId)?.adult.title).toBe('Development revision 2');
+    expect(third.manifest.catalogue.find(({ id }) => id === revisedLessonId)?.adult.title).toBe('Development revision 3');
     expect(load).toHaveBeenCalledTimes(3);
   });
 });

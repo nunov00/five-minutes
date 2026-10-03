@@ -1,0 +1,33 @@
+schemaVersion: 1
+id: e38e6794-fa4d-466c-9aa8-b6c6f6e386e1
+slug: how-feedback-control-works
+aliases: []
+publishedAt: 2026-10-03T18:00:00+02:00
+topic: technology
+subtopic: engineering
+concepts:
+  - feedback-control
+  - sensors
+  - stability
+related:
+  manual: []
+  exclude: []
+sources:
+  - title: Process Controllers (Temperature, Pressure, etc.)
+    url: https://www.nist.gov/ncnr/nice-help/devices/process-controllers-temperature-pressure-etc
+    publisher: National Institute of Standards and Technology
+    accessedAt: 2026-10-03
+    note: Overview of setpoints, sensor measurements and controller responses.
+  - title: Lecture 10 — Feedback and Control
+    url: https://ocw.mit.edu/courses/6-003-signals-and-systems-fall-2011/resources/lecture-10-feedback-and-control/
+    publisher: MIT OpenCourseWare
+    accessedAt: 2026-10-03
+    note: Educational treatment of feedback, stability and compensation for error and disturbance.
+provenance:
+  createdAt: 2026-10-03T14:23:24+02:00
+  createdBy:
+    type: ai
+    provider: openai
+    model: gpt-5.6-sol
+    promptVersion: editorial-calibration-v1
+  reviews: []

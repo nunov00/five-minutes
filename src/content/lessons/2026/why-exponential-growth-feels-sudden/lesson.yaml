@@ -1,0 +1,19 @@
+schemaVersion: 1
+id: 1629895d-f11a-4bb7-afe5-8c8df5c07123
+slug: why-exponential-growth-feels-sudden
+aliases: []
+publishedAt: 2026-10-03T18:00:00+02:00
+topic: mathematics
+subtopic: exponential-functions
+concepts: [exponential-growth, doubling-time, compounding]
+related: { manual: [], exclude: [] }
+sources:
+  - title: Exponential Growth and Decay
+    url: https://openstax.org/books/calculus-volume-2/pages/2-8-exponential-growth-and-decay
+    publisher: OpenStax
+    accessedAt: 2026-10-03
+    note: Defines exponential growth, proportional growth rate and constant doubling time.
+provenance:
+  createdAt: 2026-10-03T16:21:11+02:00
+  createdBy: { type: ai, provider: openai, model: gpt-5.6-sol, promptVersion: editorial-calibration-v1 }
+  reviews: []

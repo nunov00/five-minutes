@@ -6,6 +6,7 @@ Five Minutes is a Git-backed, static learning publication. Read these before sub
 2. `docs/ARCHITECTURE.md`
 3. relevant files under `docs/adr/`
 4. `docs/OPERATIONS.md`
+5. `docs/EDITORIAL.md` for lesson authoring or review
 
 ## Working rules
 
