@@ -186,6 +186,14 @@ Reviewers should challenge unnecessary complexity, architecture violations, frag
 
 Minor changes may use proportionally lighter review. For significant changes, independent review by a contributor other than the implementer is preferred.
 
+### Review communication and record
+
+For Pull Request work, technical review communication should be recorded directly on the Pull Request whenever practical. Reviewers should post actionable findings there, using inline comments for code-specific findings and a summary comment or review for the overall result. Findings should be classified consistently when useful (for example BLOCKER, IMPORTANT and MINOR).
+
+Workers should respond to review findings on the Pull Request, push fixes to the existing branch, and record enough context for a later contributor to understand how significant findings were resolved. Re-review results should likewise be recorded on the Pull Request.
+
+The Owner should receive concise summaries and make decisions that require Owner authority, but should not normally have to relay technical messages between Workers, Reviewers and the Manager. Repository discussion is the authoritative engineering record; chat conversations are coordination surfaces rather than a substitute for that record.
+
 ## 10. Documentation
 
 Documentation is part of implementation.
