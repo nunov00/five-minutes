@@ -1,5 +1,6 @@
 import { lessonPath } from '../urls';
 import { isTaxonomyPair, taxonomyTopic } from '../taxonomy';
+import { relatedCandidateCount } from '../discovery/related';
 
 export const LESSON_SCHEMA_VERSION = 1 as const;
 
@@ -318,8 +319,9 @@ export function validateLessonReferences(
   bundles: readonly unknown[],
   routeOwnership: RouteOwnershipRegistry,
 ): ValidationResult {
+  const collectionValidation = validateLessonCollection(bundles);
   const issues = [
-    ...validateLessonCollection(bundles).issues,
+    ...collectionValidation.issues,
     ...validateRouteOwnershipRegistry(routeOwnership).issues,
   ];
   const ids = new Set<string>();
@@ -380,6 +382,20 @@ export function validateLessonReferences(
       }
     });
   });
+
+  if (
+    bundles.length >= 3
+    && collectionValidation.valid
+    && !issues.some((entry) => ['unknown-relationship', 'self-relationship'].includes(entry.code))
+  ) {
+    const lessons = bundles as readonly LessonBundle[];
+    lessons.forEach((bundle, index) => {
+      if (relatedCandidateCount(bundle.metadata.id, lessons) < 2) {
+        issue(issues, `lessons[${index}].metadata.related`, 'insufficient-related',
+          'A published lesson must have at least two eligible related lessons after exclusions.');
+      }
+    });
+  }
 
   return { valid: issues.length === 0, issues };
 }

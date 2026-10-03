@@ -68,6 +68,12 @@ for (const file of files.filter((f) => f.endsWith('.html'))) {
     if (htmlTargets.has(pathname)) throw new Error(`Internal page link must not use an explicit .html path in ${webPath(file)}: ${href}`);
     if (!canonicalPagePaths.has(pathname) && !targets.has(pathname)) throw new Error(`Broken internal link in ${webPath(file)}: ${href}`);
   }
+  for (const match of html.matchAll(/\bdata-(?:catalogue|adult-index|teen-index)=["']([^"']+)["']/g)) {
+    const path = match[1];
+    if (!path.startsWith('/') || path.startsWith('//') || !targets.has(path)) {
+      throw new Error(`Discovery data path does not resolve in ${webPath(file)}: ${path}`);
+    }
+  }
 }
 const redirects = JSON.parse(await readFile(join(dist, 'redirects.json'), 'utf8'));
 if (redirects.version !== 1 || !Array.isArray(redirects.redirects)) throw new Error('Invalid redirect manifest.');
@@ -80,9 +86,19 @@ for (const redirect of redirects.redirects) {
 }
 
 const sitemap = await readFile(join(dist, 'sitemap.xml'), 'utf8');
+const sitemapPaths = [];
 for (const match of sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)) {
   const url = new URL(match[1].replace(/&amp;/g, '&'));
   if (!canonicalPagePaths.has(url.pathname)) throw new Error(`Sitemap URL is not a generated canonical page: ${url.pathname}`);
+  sitemapPaths.push(url.pathname);
+}
+const sitemapSet = new Set(sitemapPaths);
+const expectedSitemapPaths = [...canonicalPagePaths].filter((path) => path !== '/404').sort();
+const missingSitemapPaths = expectedSitemapPaths.filter((path) => !sitemapSet.has(path));
+const unexpectedSitemapPaths = [...sitemapSet].filter((path) => !expectedSitemapPaths.includes(path));
+const duplicateSitemapPaths = sitemapPaths.filter((path, index) => sitemapPaths.indexOf(path) !== index);
+if (sitemapPaths.length > 0 && (missingSitemapPaths.length || unexpectedSitemapPaths.length || duplicateSitemapPaths.length)) {
+  throw new Error(`Sitemap completeness mismatch. Missing: ${missingSitemapPaths.join(', ') || 'none'}; unexpected: ${unexpectedSitemapPaths.join(', ') || 'none'}; duplicates: ${[...new Set(duplicateSitemapPaths)].join(', ') || 'none'}.`);
 }
 // Web app manifest: identity/scope are stable and every icon resolves to a PNG of its declared size.
 const manifest = JSON.parse(await readFile(join(dist, 'manifest.webmanifest'), 'utf8'));

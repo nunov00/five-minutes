@@ -38,7 +38,7 @@ function editDistanceAtMostOne(a: string, b: string): boolean {
 
 function tokenScore(query: string, candidates: readonly string[]): number {
   if (candidates.includes(query)) return 4;
-  if (candidates.some((candidate) => candidate.startsWith(query) || query.startsWith(candidate))) return 2;
+  if (query.length >= 3 && candidates.some((candidate) => candidate.startsWith(query))) return 2;
   if (query.length >= 5 && candidates.some((candidate) => editDistanceAtMostOne(query, candidate))) return 1;
   return 0;
 }

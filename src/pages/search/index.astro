@@ -44,6 +44,7 @@ const artifacts = buildDiscoveryArtifacts(lessons);
   const list = app?.querySelector<HTMLOListElement>('.search-results');
   const indexes: Partial<Record<LessonEdition, Promise<SearchDocument[]>>> = {};
   let timer: number | undefined;
+  let searchSequence = 0;
 
   function selectedEdition(): LessonEdition {
     return form?.querySelector<HTMLInputElement>('input[name="edition"]:checked')?.value === 'teen' ? 'teen' : 'adult';
@@ -53,10 +54,18 @@ const artifacts = buildDiscoveryArtifacts(lessons);
     if (!app) return [];
     const path = edition === 'teen' ? app.dataset.teenIndex : app.dataset.adultIndex;
     if (!path) throw new Error(`Missing ${edition} search index path.`);
-    return indexes[edition] ??= fetch(path).then((response) => {
+    if (indexes[edition]) return indexes[edition];
+    const request = fetch(path).then((response) => {
       if (!response.ok) throw new Error(`Search index request failed: ${response.status}`);
       return response.json() as Promise<SearchDocument[]>;
     });
+    indexes[edition] = request;
+    try {
+      return await request;
+    } catch (error) {
+      if (indexes[edition] === request) delete indexes[edition];
+      throw error;
+    }
   }
 
   function appendResult(result: SearchDocument) {
@@ -79,25 +88,36 @@ const artifacts = buildDiscoveryArtifacts(lessons);
 
   async function runSearch() {
     if (!input || !status || !list) return;
+    const sequence = ++searchSequence;
     const query = input.value.trim();
+    const edition = selectedEdition();
     list.replaceChildren();
     if (query.length < 2) { status.textContent = 'Enter at least two characters to search.'; return; }
     status.textContent = 'Searching…';
     try {
-      const results = searchDocuments(await documents(selectedEdition()), query);
+      const results = searchDocuments(await documents(edition), query);
+      if (sequence !== searchSequence) return;
       results.forEach(({ document }) => appendResult(document));
       status.textContent = results.length === 0
         ? `No lessons found for “${query}”. Try a broader idea or browse the Library.`
         : `${results.length} ${results.length === 1 ? 'lesson' : 'lessons'} found.`;
     } catch {
+      if (sequence !== searchSequence) return;
       status.textContent = 'Search could not load. Browse the Library and try again later.';
     }
   }
 
-  form?.addEventListener('submit', (event) => { event.preventDefault(); void runSearch(); });
+  form?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    window.clearTimeout(timer);
+    void runSearch();
+  });
   input?.addEventListener('input', () => {
     window.clearTimeout(timer);
     timer = window.setTimeout(() => void runSearch(), 180);
   });
-  form?.addEventListener('change', () => { if ((input?.value.trim().length ?? 0) >= 2) void runSearch(); });
+  form?.addEventListener('change', () => {
+    window.clearTimeout(timer);
+    if ((input?.value.trim().length ?? 0) >= 2) void runSearch();
+  });
 </script>
