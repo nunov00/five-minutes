@@ -12,7 +12,7 @@ src/ (Astro, provider-neutral) --npm run build--> dist/ (plain static files)
 ```
 
 - `npm run build` produces ordinary static HTML/assets in `dist/`. Nothing in `src/` imports Cloudflare APIs, and the build does not use a Cloudflare adapter.
-- `wrangler.jsonc` deploys `dist/` as **Workers Static Assets** with no Worker script (`main`), so there is no server-side runtime. `preview_urls` is enabled only at this Cloudflare boundary so Worker Preview deployments receive testable `workers.dev` URLs.
+- `wrangler.jsonc` deploys `dist/` as **Workers Static Assets** with no Worker script (`main`), so there is no server-side runtime. It sets `assets.html_handling` to `drop-trailing-slash` so Cloudflare serves Astro's directory-style `index.html` output at the provider-neutral slash-less canonical URL. `preview_urls` is enabled only at this Cloudflare boundary so Worker Preview deployments receive testable `workers.dev` URLs.
 - Replacing Cloudflare means deploying the same `dist/` elsewhere and deleting this directory plus the `cf:*` npm scripts.
 
 ## Why Workers Static Assets
@@ -58,7 +58,8 @@ The 100,000-file limit requires Wrangler 4.34.0 or later, and Worker Previews re
 - `CI / baseline` counts the final deployable `dist/` after Cloudflare artifacts are compiled and warns at **16,000 files** (80% of the current Free limit).
 - `npm run cf:verify-capacity` enforces Cloudflare's current hard representation limits at the deployment boundary: at most 100,000 files, at most 25 MiB per file and at most 2,000 static redirect rules. It warns rather than fails between 20,001 and 100,000 files because choosing a paid plan versus another portable representation/provider is an Owner decision.
 - `npm run cf:deploy` / `npm run cf:preview` run that capacity gate before upload. The generic `dist:count` script remains provider-neutral.
-- The current adapter emits an Adult and Teen neutral redirect for each historical alias name, and each neutral redirect compiles to two static rules (slash and non-slash). That is **four Cloudflare rules per historical alias name**, so roughly **500 historical alias names** consume the 2,000-rule `_redirects` ceiling. Before that becomes constraining, compare Bulk Redirects, another portable redirect representation or another host rather than silently dropping aliases.
+- Canonical lesson URLs are slash-less (`/adult/slug`, `/teen/slug`). The adapter explicitly uses `drop-trailing-slash`, so normal canonical links are served directly rather than redirected to a slash form.
+- Historical aliases remain deliberately tolerant of both source forms. The adapter emits an Adult and Teen neutral redirect for each historical alias name, and each neutral redirect compiles to two static rules (slash and non-slash), both targeting the slash-less canonical URL. That remains **four Cloudflare rules per historical alias name**, so roughly **500 historical alias names** consume the 2,000-rule `_redirects` ceiling. We do not trade redirect capacity for an extra normalization hop. Before the ceiling becomes constraining, compare Bulk Redirects, another portable redirect representation or another host rather than silently dropping aliases.
 
 ## Commands
 
