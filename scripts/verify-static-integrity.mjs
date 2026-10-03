@@ -45,6 +45,14 @@ if (missing.length || unexpected.length || unexpectedFiles.length || generated.l
 const targets = new Set(files.map(webPath));
 for (const file of files.filter((f) => f.endsWith('.html'))) {
   const html = await readFile(file, 'utf8');
+  // Installed (standalone) display has no browser back button or address bar:
+  // every page must declare the manifest and offer an in-page way back to Today,
+  // and internal links must not escape the app window.
+  if (!/<link rel="manifest" href="\/manifest\.webmanifest"/.test(html)) throw new Error(`Missing web app manifest link in ${webPath(file)}.`);
+  if (!/<a\b[^>]*\bhref="\/"/.test(html)) throw new Error(`No in-page link to Today in ${webPath(file)}.`);
+  for (const anchor of html.matchAll(/<a\b[^>]*>/g)) {
+    if (/\btarget=/.test(anchor[0]) && /\bhref=["']\/(?!\/)/.test(anchor[0])) throw new Error(`Internal link opens a new window in ${webPath(file)}: ${anchor[0]}`);
+  }
   for (const match of html.matchAll(/\bhref=["']([^"']*)["']/g)) {
     const href = match[1];
     if (href.startsWith('#')) continue;
@@ -69,4 +77,25 @@ for (const match of sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)) {
   const url = new URL(match[1].replace(/&amp;/g, '&'));
   if (!expectedSet.has(url.pathname) && url.pathname !== '/') throw new Error(`Sitemap URL is not in the delivery inventory: ${url.pathname}`);
 }
-console.log(`Verified ${generated.length} canonical lesson pages, global outputs, Adult/Teen completeness and internal links.`);
+// Web app manifest: identity/scope are stable and every icon resolves to a PNG of its declared size.
+const manifest = JSON.parse(await readFile(join(dist, 'manifest.webmanifest'), 'utf8'));
+for (const field of ['id', 'name', 'short_name', 'start_url', 'scope', 'display', 'background_color', 'theme_color']) {
+  if (typeof manifest[field] !== 'string' || !manifest[field]) throw new Error(`Web app manifest is missing ${field}.`);
+}
+if (manifest.id !== '/' || manifest.scope !== '/' || manifest.start_url !== '/') throw new Error('Web app manifest id, scope and start_url must stay "/" (changing id creates a different installed app).');
+if (manifest.display !== 'standalone') throw new Error('Web app manifest display must be standalone.');
+if (!Array.isArray(manifest.icons)) throw new Error('Web app manifest has no icons.');
+for (const icon of manifest.icons) {
+  if (!targets.has(icon.src)) throw new Error(`Web app manifest icon does not resolve: ${icon.src}`);
+  const png = await readFile(join(dist, icon.src));
+  if (png.subarray(1, 4).toString('latin1') !== 'PNG') throw new Error(`Web app manifest icon is not a PNG: ${icon.src}`);
+  const actual = `${png.readUInt32BE(16)}x${png.readUInt32BE(20)}`;
+  if (icon.sizes !== actual) throw new Error(`Web app manifest icon ${icon.src} declares ${icon.sizes} but is ${actual}.`);
+}
+for (const [size, purpose] of [['192x192', 'any'], ['512x512', 'any'], ['512x512', 'maskable']]) {
+  if (!manifest.icons.some((icon) => icon.sizes === size && (icon.purpose ?? 'any').split(' ').includes(purpose))) {
+    throw new Error(`Web app manifest needs a ${size} ${purpose} icon.`);
+  }
+}
+
+console.log(`Verified ${generated.length} canonical lesson pages, global outputs, Adult/Teen completeness, internal links, standalone navigation and the web app manifest.`);

@@ -12,6 +12,12 @@ const { title = 'Five Minutes', description = 'One worthwhile idea, made easy to
     <meta name="color-scheme" content="light dark" />
     <meta name="description" content={description} />
     <title>{title}</title>
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="Five Minutes" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fbfaf7" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#15171a" />
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
