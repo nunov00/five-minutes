@@ -111,11 +111,28 @@ The Manager should protect the Owner from unnecessary technical decisions by res
 
 When genuinely uncertain about the appropriate authority level, escalate rather than silently assume approval.
 
+### Standing merge authorisation (Owner instruction, 2026-10-03)
+
+The Owner authorises the Manager to merge qualifying Pull Requests without a separate final approval request and to inform the Owner afterwards. This delegation also covers bounded technical clarifications to an existing ADR, such as PR #52's canonical URL amendment, when they remain within the agreed project direction.
+
+Before merging, the Manager must verify that:
+- all required automated checks have passed on the exact current PR head; required tests must actually run, not be skipped;
+- any preview/deployment verification required by the change's scope and risk has succeeded for that head;
+- the required independent review is complete for that head, with no unresolved BLOCKER or IMPORTANT findings;
+- remaining MINOR findings are explicitly non-blocking and are resolved or recorded as follow-up work;
+- the change stays within the Owner-authorised scope and does not introduce an unapproved product, major architecture, cost, privacy, security or destructive decision.
+
+Record the readiness evidence and use an expected-head SHA guard when merging. A changed head requires fresh checks and appropriate re-review. After merging, inform the Owner concisely of what merged, the validation result and any remaining follow-ups; verify the resulting production checks/deployment where applicable and report failures.
+
+This is standing authorisation for the final merge gate, not permission to bypass quality checks or expand project scope. Decisions reserved to the Owner still require approval before implementation unless already explicitly delegated. Once that decision or scope is authorised and the gates above pass, do not ask for the same approval again.
+
 ## 5. Development Workflow
 
 Substantial development should normally follow:
 
-**Objective → Issue/Task → Implementation → Tests → Review → Preview → Approval → Merge → Production**
+**Objective → Issue/Task → Implementation → Tests → Review → Preview → Merge authorisation → Merge → Production**
+
+Merge authorisation may come from the standing delegation in section 4; a separate Owner confirmation is needed only for a decision outside existing authorisation.
 
 Changes should normally be associated with a clearly defined task or GitHub Issue and implemented on a dedicated branch.
 
