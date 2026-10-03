@@ -1,16 +1,22 @@
 import { expect, test } from './support/fixtures';
 
 test.describe('home / app shell', () => {
-  test('loads and shows the Five Minutes shell', async ({ page }) => {
+  test('loads the Today page inside the Five Minutes shell', async ({ page }) => {
     const response = await page.goto('/');
     expect(response?.ok(), 'home page HTTP status').toBe(true);
 
     await expect(page).toHaveTitle(/Five Minutes/);
+    await expect(page.getByRole('banner').getByRole('link', { name: 'Five Minutes' })).toHaveAttribute('href', '/');
     await expect(page.getByRole('main')).toBeVisible();
-    await expect(page.getByRole('heading', { level: 1, name: 'Five Minutes' })).toBeVisible();
-    await expect(
-      page.getByText('One worthwhile idea, made easy to discover, understand and explore.'),
-    ).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1, name: "Today's idea" })).toBeVisible();
+  });
+
+  test('offers a keyboard skip link to the main content', async ({ page }) => {
+    await page.goto('/');
+    await page.keyboard.press('Tab');
+    const skip = page.getByRole('link', { name: 'Skip to content' });
+    await expect(skip).toBeFocused();
+    await expect(skip).toBeInViewport();
   });
 
   test('fits the viewport without horizontal scrolling', async ({ page }) => {

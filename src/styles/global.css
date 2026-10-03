@@ -1,0 +1,311 @@
+/*
+ * Five Minutes visual foundation.
+ *
+ * Mobile-first: base rules target small screens; the single breakpoint only
+ * relaxes spacing and type. Colours, type, spacing and shape are tokens so
+ * later pages reuse them rather than introducing new values. Light/dark
+ * follows the operating-system preference; there is no stored appearance
+ * setting yet (local reader state is a later milestone).
+ */
+
+:root {
+  color-scheme: light dark;
+
+  --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-serif: Charter, 'Bitstream Charter', 'Sitka Text', Cambria, Georgia, serif;
+  --font-mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  --text-sm: 0.875rem;
+  --text-base: 1.0625rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.625rem;
+  --text-2xl: 2rem;
+  --leading-tight: 1.2;
+  --leading-body: 1.65;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+
+  --radius: 0.75rem;
+  --measure: 38rem;
+  --gutter: var(--space-4);
+  --tap-target: 2.75rem;
+
+  --color-bg: #fbfaf7;
+  --color-surface: #ffffff;
+  --color-text: #1d1f23;
+  --color-muted: #5a5f68;
+  --color-border: #dcdad3;
+  --color-accent: #1f5fbf;
+  --color-accent-contrast: #ffffff;
+  --color-accent-soft: #e6eefa;
+  --color-focus: #1f5fbf;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #15171a;
+    --color-surface: #1e2125;
+    --color-text: #eceae5;
+    --color-muted: #a8acb3;
+    --color-border: #363a40;
+    --color-accent: #8cb4ff;
+    --color-accent-contrast: #10213f;
+    --color-accent-soft: #23324a;
+    --color-focus: #8cb4ff;
+  }
+}
+
+@media (min-width: 40rem) {
+  :root {
+    --text-base: 1.125rem;
+    --text-xl: 1.875rem;
+    --text-2xl: 2.5rem;
+    --gutter: var(--space-6);
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: var(--leading-body);
+  overflow-wrap: break-word;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  line-height: var(--leading-tight);
+  margin: var(--space-6) 0 var(--space-3);
+}
+
+h1 {
+  font-size: var(--text-2xl);
+  margin-top: 0;
+}
+
+h2 {
+  font-size: var(--text-xl);
+}
+
+h3,
+h4 {
+  font-size: var(--text-lg);
+}
+
+p,
+ul,
+ol,
+blockquote,
+pre {
+  margin: 0 0 var(--space-4);
+}
+
+a {
+  color: var(--color-accent);
+  text-underline-offset: 0.15em;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+code,
+pre {
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+}
+
+pre {
+  overflow-x: auto;
+  padding: var(--space-3);
+  border-radius: calc(var(--radius) / 2);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+}
+
+blockquote {
+  margin-left: 0;
+  padding-left: var(--space-4);
+  border-left: 3px solid var(--color-border);
+  color: var(--color-muted);
+}
+
+/* Layout */
+
+.skip-link {
+  position: absolute;
+  left: var(--space-2);
+  top: -10rem;
+  padding: var(--space-2) var(--space-3);
+  background: var(--color-surface);
+  border-radius: calc(var(--radius) / 2);
+  z-index: 1;
+}
+
+.skip-link:focus {
+  top: var(--space-2);
+}
+
+.container {
+  width: 100%;
+  max-width: calc(var(--measure) + 2 * var(--gutter));
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+.site-header {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.site-header .container {
+  display: flex;
+  align-items: center;
+  min-height: 3.5rem;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-target);
+  font-weight: 700;
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.site-main {
+  padding-top: var(--space-6);
+  padding-bottom: var(--space-7);
+}
+
+/* Shared components */
+
+.eyebrow {
+  margin: 0 0 var(--space-2);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.lede {
+  font-size: var(--text-lg);
+  color: var(--color-muted);
+}
+
+.card {
+  display: block;
+  padding: var(--space-5);
+  margin: 0 0 var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.card h2 {
+  margin-top: 0;
+}
+
+.card > :last-child,
+details > :last-child {
+  margin-bottom: 0;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--tap-target);
+  padding: var(--space-2) var(--space-5);
+  border-radius: 999px;
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* Reading */
+
+.reader-header {
+  margin-bottom: var(--space-5);
+}
+
+.edition-switch {
+  display: flex;
+  gap: var(--space-1);
+  width: fit-content;
+  margin: 0 0 var(--space-5);
+  padding: var(--space-1);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+}
+
+.edition-switch a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-target);
+  padding: 0 var(--space-4);
+  border-radius: 999px;
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.edition-switch a[aria-current='page'] {
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+  font-weight: 600;
+}
+
+.lesson-body {
+  font-family: var(--font-serif);
+}
+
+.lesson-section {
+  margin-top: var(--space-6);
+}
+
+.lesson-section h2 {
+  margin-top: 0;
+  font-size: var(--text-lg);
+}
+
+details {
+  margin-top: var(--space-3);
+}
+
+summary {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap-target);
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--color-accent);
+}
+
+.answer {
+  margin-top: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-border);
+}

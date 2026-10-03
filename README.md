@@ -45,11 +45,19 @@ Projects: `desktop-chromium` (Desktop Chrome) and `mobile-iphone` (iPhone 15 vie
 
 `npm run test:e2e` starts `astro preview` on `http://127.0.0.1:4321` itself, or reuses a server already running there outside CI. When Astro detects an AI agent it starts `astro preview` in the background, so in that case start it first with `npm run preview`, run the tests, then stop it with `npx astro preview stop`.
 
-Write journeys with `test`/`expect` imported from `tests/e2e/support/fixtures.ts`: every page is guarded so an uncaught browser exception fails the test. Add one spec per product journey (for example `today.spec.ts`, `library.spec.ts`), shared helpers under `tests/e2e/support/`, and prefer user-visible assertions (roles, text) over HTML structure.
+Write journeys with `test`/`expect` imported from `tests/e2e/support/fixtures.ts`: every page is guarded so an uncaught browser exception fails the test. Add one spec per product journey (for example `today-reading.spec.ts`, `library.spec.ts`), shared helpers under `tests/e2e/support/`, and prefer user-visible assertions (roles, text) over HTML structure.
 
 The application produces standard static output in `dist/`. Hosting-provider configuration belongs at the deployment boundary and must not leak into application/domain logic.
 
 `npm run dist:count` reports how many deployable files `dist/` contains (CI prints this after every build), because hosting providers limit files per deployment.
+
+## Reading experience and visual foundation
+
+- `/` is **Today**: the newest published lesson by `publishedAt` (ties broken by lesson ID), offered in both editions (ADR-0007). Dates display in the Europe/Zurich editorial timezone. Selection and formatting live in `src/lib/today.ts`.
+- `/adult/<slug>` and `/teen/<slug>` are the static lesson pages. The edition switch links to the other edition's manifest path; the URL alone decides the edition (ADR-0005). Takeaway and Test Yourself follow the lesson body; the answer uses `<details>`, so it works without JavaScript.
+- The reading page owns the only `<h1>`. `src/lib/reading.ts` demotes sanitized body headings one level and drops a leading body heading that repeats the title, without changing canonical lesson files.
+- `src/styles/global.css` holds the shared, mobile-first design tokens (colour, type, spacing, shape) and a few components (`container`, `card`, `button`, `eyebrow`, `lede`, `edition-switch`). Light/dark follows the operating-system setting. Reuse these tokens rather than adding new values.
+- Pages ship no client-side JavaScript, and styles are emitted as external files (`build.inlineStylesheets: 'never'`) so a later Content Security Policy needs no inline-style allowance.
 
 ## Deployment
 

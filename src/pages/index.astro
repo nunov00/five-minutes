@@ -3,13 +3,36 @@ import { join } from 'node:path';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import routeOwnership from '../content/route-ownership.json';
 import { loadPublishedLessons } from '../lib/content/loader';
+import { buildDeliveryManifest } from '../lib/delivery-manifest';
+import { EDITION_LABELS } from '../lib/reading';
+import { formatEditorialDate, selectTodayLesson } from '../lib/today';
 
 // Production builds deliberately load the canonical set through the same
 // fail-closed safe-content and publication-validation pipeline used by tests.
-await loadPublishedLessons(join(process.cwd(), 'src/content/lessons'), routeOwnership);
+const loaded = await loadPublishedLessons(join(process.cwd(), 'src/content/lessons'), routeOwnership);
+const manifest = buildDeliveryManifest(loaded.map(({ metadata, adult, teen }) => ({ metadata, adult, teen })));
+const today = selectTodayLesson(manifest.catalogue);
+const lesson = loaded.find((candidate) => candidate.metadata.id === today.id);
+if (!lesson?.adult || !lesson.teen) throw new Error(`Today lesson ${today.id} is not a complete published lesson.`);
+
+// Both editions are offered explicitly; edition paths come from the manifest.
+const editions = [
+  { edition: 'adult' as const, path: today.adult.path, presentation: lesson.adult },
+  { edition: 'teen' as const, path: today.teen.path, presentation: lesson.teen },
+];
 ---
-<BaseLayout>
-  <h1>Five Minutes</h1>
-  <p>One worthwhile idea, made easy to discover, understand and explore.</p>
-  <p>The production foundation is ready. The reading experience arrives in later milestones.</p>
+<BaseLayout title="Today · Five Minutes">
+  <section aria-labelledby="today-heading" data-lesson-id={today.id}>
+    <p class="eyebrow"><time datetime={today.publishedAt}>{formatEditorialDate(today.publishedAt)}</time></p>
+    <h1 id="today-heading">Today's idea</h1>
+    <p class="lede">One idea in two editions. Choose the one that suits you.</p>
+    {editions.map(({ edition, path, presentation }) => (
+      <article class="card" data-edition={edition}>
+        <p class="eyebrow">{EDITION_LABELS[edition]} edition</p>
+        <h2>{presentation.title}</h2>
+        <p>{presentation.description}</p>
+        <a class="button" href={path} aria-label={`Read the ${EDITION_LABELS[edition]} edition: ${presentation.title}`}>Read the {EDITION_LABELS[edition]} edition</a>
+      </article>
+    ))}
+  </section>
 </BaseLayout>
