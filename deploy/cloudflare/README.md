@@ -48,24 +48,27 @@ Official documentation:
 |---|---|---|
 | Files per Worker version | 20,000 | 100,000 |
 | Maximum size of one file | 25 MiB | 25 MiB |
+| Static `_redirects` rules | 2,000 | 2,000 |
 | Requests to static assets | free, unlimited | free, unlimited |
 
 The 100,000-file limit requires Wrangler 4.34.0 or later, and Worker Previews require Wrangler 4.135.0 or later. Wrangler is pinned at **4.147.0** as a project `devDependency` (exact version, recorded in `package-lock.json`).
 
 ## File-count observability
 
-- `npm run dist:count` prints the number of files in `dist/` (and fails if `dist/` is missing). `CI / baseline` runs it after every build and adds the count to the job summary.
-- `npm run cf:deploy` / `npm run cf:preview` run the same count with `--warn-at 16000`, about 80% of the current Free limit, before uploading.
-- The threshold lives only in these deployment scripts, not in application code. Change it if the hosting plan or provider changes.
+- `CI / baseline` counts the final deployable `dist/` after Cloudflare artifacts are compiled and warns at **16,000 files** (80% of the current Free limit).
+- `npm run cf:verify-capacity` enforces Cloudflare's current hard representation limits at the deployment boundary: at most 100,000 files, at most 25 MiB per file and at most 2,000 static redirect rules. It warns rather than fails between 20,001 and 100,000 files because choosing a paid plan versus another portable representation/provider is an Owner decision.
+- `npm run cf:deploy` / `npm run cf:preview` run that capacity gate before upload. The generic `dist:count` script remains provider-neutral.
+- The current adapter emits an Adult and Teen neutral redirect for each historical alias name, and each neutral redirect compiles to two static rules (slash and non-slash). That is **four Cloudflare rules per historical alias name**, so roughly **500 historical alias names** consume the 2,000-rule `_redirects` ceiling. Before that becomes constraining, compare Bulk Redirects, another portable redirect representation or another host rather than silently dropping aliases.
 
 ## Commands
 
 | Command | Use |
 |---|---|
 | `npm run build` | provider-neutral static build into `dist/` |
-| `npm run dist:count` | report deployable files |
-| `npm run cf:preview` | count files, then `wrangler preview`: creates or updates a **Worker Preview** for the current branch without touching production |
-| `npm run cf:deploy` | count files, then `wrangler deploy`: deploys the production version of the Worker |
+| `npm run dist:count` | provider-neutral report of deployable files |
+| `npm run cf:verify-capacity` | verify the assembled artifact against Cloudflare hosting limits |
+| `npm run cf:preview` | compile redirects, verify Cloudflare capacity, then `wrangler preview`: create/update a **Worker Preview** without touching production |
+| `npm run cf:deploy` | compile redirects, verify Cloudflare capacity, then `wrangler deploy`: deploy the production Worker version |
 
 Both `cf:*` scripts run the project's pinned Wrangler from `node_modules/.bin`, not a global or `npx`-downloaded copy. Cloudflare's Preview documentation recommends updating the project dependency because project commands do not use a newer global installation. Both commands need Cloudflare authentication and are meant to run inside Workers Builds.
 
@@ -119,6 +122,6 @@ Use this only if Workers Builds is unsuitable. It needs:
 
 On the Workers Free plan, serving static assets costs nothing: asset requests are free and unlimited, and there is no Worker script to bill.
 
-- **Current usage:** the build is 1 file today, so the file limit is not a constraint.
+- **Current usage:** CI reports the actual assembled build on every change; the repository does not hard-code a stale current count in documentation.
 - **Builds:** Workers Builds has its own per-plan build allowances. Check Cloudflare's Builds limits if publication frequency grows.
 - **Paid plan:** needed only if `dist/` approaches 20,000 files. That is an Owner cost decision (ARCHITECTURE.md, "Cloudflare deployment boundary").
