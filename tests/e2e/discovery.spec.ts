@@ -4,7 +4,17 @@ test.describe('M5 discovery', () => {
   test('browses the static Library and populated Topics', async ({ page }) => {
     await page.goto('/library');
     await expect(page.getByRole('heading', { level: 1, name: 'Library' })).toBeVisible();
-    expect(await page.locator('article[data-lesson-id]').count()).toBe(12);
+    const lessonIds: string[] = [];
+    for (let pageNumber = 1; pageNumber <= 10; pageNumber += 1) {
+      lessonIds.push(...await page.locator('article[data-lesson-id]').evaluateAll((cards) => cards.map((card) => card.getAttribute('data-lesson-id') ?? '')));
+      const next = page.getByRole('navigation', { name: 'Library pages' }).getByRole('link', { name: 'Next' });
+      if (await next.count() === 0) break;
+      await next.click();
+    }
+    expect(lessonIds).toHaveLength(12);
+    expect(new Set(lessonIds).size).toBe(12);
+
+    await page.goto('/library');
     await expect(page.getByRole('navigation', { name: 'Library topics' }).getByRole('link')).toHaveCount(6);
 
     await page.getByRole('link', { name: 'Human Mind' }).click();
@@ -51,6 +61,7 @@ test.describe('M5 discovery', () => {
     const adultResponse = page.waitForResponse((response) => response.url().includes('/discovery/search-adult.'));
     releaseAdult();
     await adultResponse;
+    await page.waitForTimeout(250);
     await expect(page.getByRole('link', { name: "How an Accurate Clock Revealed a Ship's Longitude" })).toHaveCount(0);
 
     await page.getByRole('radio', { name: 'Adult' }).check();
