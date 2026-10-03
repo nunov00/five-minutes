@@ -173,7 +173,7 @@ AI contributors must not silently reinterpret project requirements. When ambigui
 
 AI contributors are encouraged to challenge existing approaches when they identify genuine problems, but architectural or product changes should be proposed before being introduced.
 
-Different AI systems may deliberately be used for implementation and review to provide independent perspectives. No AI-generated change is exempt from normal project quality requirements.
+When independent AI review is required, the Reviewer must use a different AI system from the implementer (for example, Claude reviews Codex work, or Codex reviews Claude work). A separate session, sub-agent or model within the same AI system does not by itself satisfy this requirement. See section 9 for the narrow exceptions. No AI-generated change is exempt from normal project quality requirements.
 
 ## 8. Quality Gates
 
@@ -201,7 +201,15 @@ Reviews should evaluate the change rather than simply confirm that it runs.
 
 Reviewers should challenge unnecessary complexity, architecture violations, fragile implementations, undocumented behavioural changes, missing tests, unnecessary dependencies, and solutions that solve the immediate task while creating avoidable future constraints.
 
-Minor changes may use proportionally lighter review. For significant changes, independent review by a contributor other than the implementer is preferred.
+Minor changes may use proportionally lighter review. Significant code changes require independent review before merge; when AI systems implement and review the work, they must be different systems as defined in section 7.
+
+### Different-AI review and exceptions (Owner instruction, 2026-10-03)
+
+Use a different AI system from the implementer for any required independent AI review. The purpose is a different perspective, not another pass by the same system. Same-system verification can supplement this review but must be described accurately and cannot silently replace it.
+
+Exceptions are allowed only when a different AI system genuinely cannot perform the review, or the Owner explicitly requests an alternative. Record the implementer and reviewer systems, the reason for any exception, and any applicable Owner instruction on the PR before merging. Needing an Owner-relayed prompt or lacking a direct tool to invoke an available different AI system is not, by itself, evidence that review is impossible. In that case, prepare a self-contained review hand-off and keep the merge gate pending.
+
+The reviewer must evaluate the exact current head independently, record actionable findings on the PR, and distinguish their own checks from evidence supplied by the implementer. After fixes, obtain appropriate re-review from the different AI system on the final head and pass the required checks before merging. The standing merge authorisation does not waive this requirement.
 
 ### Review communication and record
 
