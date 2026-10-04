@@ -28,6 +28,14 @@ A publishable lesson must meet every criterion below. Reviewers use judgement an
 | Title, deck and discoverability | Each edition has a specific, accurate title and a description that adds information. Search terms cover likely language a reader would use without stuffing synonyms. | Clickbait, vague titles, duplicated title/description, promises absent from the body or irrelevant search terms. |
 | Originality and non-duplication | The lesson has a distinct central insight and treatment. Before publication, compare its identity, title, concepts, takeaway and examples with the catalogue. Overlap is acceptable only when the new lesson answers a materially different question. | A new title hides the same lesson; familiar material is paraphrased without a fresh explanatory angle; Adult and Teen differ only cosmetically. |
 
+## Figures and Teen activities
+
+Optional figures are part of an individual presentation and are reviewed with the same factual standard as its prose. A figure must materially improve understanding; decorative imagery is not a reason to add one. Reviewers verify every label, scale, relationship and caption against the lesson's sources, and confirm that required alt text communicates the explanatory purpose rather than merely naming the picture. Adult and Teen may use different figures/captions.
+
+Only the safe representations defined by ADR-0006 are publishable: application-rendered diagrams from validated structured data or local PNG/WebP assets within configured size/file-count limits. Lesson-authored SVG, HTML, remote images and executable embeds are not accepted.
+
+Teen may include an optional lightweight activity when prediction or choice helps the reader engage with the mechanism. It is not a quota or mandatory gamification. Reviewers verify that the prompt is unambiguous, every option is plausible in context, the marked/recommended answer is correct, and the explanation follows from the lesson without introducing unsupported claims. The activity must remain understandable and revealable without JavaScript and must not patronise the reader.
+
 ## Research and source practice
 
 Prefer primary, official or otherwise authoritative sources for factual foundations. A secondary source may help explain or contextualise a subject, but it should not be the only support for a claim it merely repeats. Match each source to the claims it can actually establish.
