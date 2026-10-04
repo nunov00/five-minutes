@@ -130,6 +130,8 @@ Accessibility and broken-link checks are CI concerns. Performance/mobile search 
 4. Core reading UX: Today, Adult/Teen lesson URLs, responsive reader, takeaway, Test Yourself and installable PWA shell/manifest/icons.
 5. Discovery: compact catalogue, Library, Topics, Search, Related and Surprise Me.
 6. Local reader state: Saved/Read/recent/edition/appearance with versioned storage abstraction.
+
+   Post-M5 design integration does not create a separate milestone numbering scheme. Proposed ADR-0009 is the architecture gate before M6 implementation. Resolve its neutral-entry, preference/history and figure/activity contracts first. If edition preference is introduced as part of the production shell, its first write must already use the final versioned M6 storage abstraction/format; do not create a temporary preference store.
 7. Automated publication: generation -> validation -> independent AI review -> eligible PR -> scheduled merge/deploy, with escalation on review failure/uncertainty.
 8. Production hardening: Playwright, accessibility, link checks, performance/mobile validation, analytics boundary and operational recovery test.
 
