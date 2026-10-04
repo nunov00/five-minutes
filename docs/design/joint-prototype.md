@@ -84,3 +84,9 @@ New browser regressions cover the preference-neutral cross-edition bridge, same-
 Remediation validation: Node 22 check has zero diagnostics; 105 unit tests and 70 browser journeys passed (26 prototype cases plus 44 existing cases). All 32 refreshed captures were generated with no horizontal overflow at the captured phone/desktop widths. Dedicated geometry checks also pass at 320px, 375×667 and 390×844. Static integrity, redirect and capacity gates are retained. Actual Safari/iPhone and screen-reader checks remain pending.
 
 Pinned-browser CI exposed the no-JavaScript answer control behind fixed bottom tabs after expanding the prediction. Mobile controls now have scroll clearance; the touch journey explicitly scrolls that answer control to the centre before a normal, unforced click. First-viewport geometry assertions are unchanged. This follows the reader’s scrolling interaction rather than treating the full viewport as unobstructed.
+
+## Owner device feedback — 4 October 2026
+
+The Owner finds both editions comfortable to read. The collapsed Teen activity is noticeable and useful, and the seasons diagram helps enough to justify its inclusion. Preserve the current edition voices, optional collapsed activity and explanatory figure direction. This is design feedback, not approval of production contracts or routing.
+
+Refinement: replace “Predict first” with the provisional, conversational “What do you think?”. Use native, mutually exclusive radio choices in compact unboxed rows, with no option numbers. A single-answer question uses radios rather than checkboxes. Selecting still reveals the explanation; keyboard arrow navigation follows native radio behaviour. Without JavaScript the unnumbered options remain plain text with a native answer reveal. Choices remain ephemeral. Claude’s review of 98dd2a0 predates this refinement; the updated head needs independent re-review before any production adoption.
