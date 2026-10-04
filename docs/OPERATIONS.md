@@ -99,17 +99,19 @@ Five Minutes is installable (iOS/iPadOS Add to Home Screen and supported Chromiu
 
 ADR-0007 is the authority for automated lesson publication. The initial subscription-based schedule is:
 
-- ChatGPT writer: once per Europe/Zurich day, after checking the `publication-paused` off switch, today's slot and existing automated PRs;
+- ChatGPT writer: once per Europe/Zurich day and no later than 14:00, after checking `publication-paused`, closing clearly stale automated new-lesson PRs, and checking today's slot and remaining automated PRs;
 - Claude Code reviewer: every two hours from approximately 06:00 through 20:00 Europe/Zurich;
-- named merge checks: `baseline`, `e2e` and `lesson-guard` after M7.2;
+- named merge checks: `baseline`, `e2e` and `lesson-guard` after M7.2; only the latest completed result of each exact name on the current SHA counts, and it must be `success`;
 - stale boundary: an unmerged candidate closes when its intended Zurich date ends;
 - failure behaviour: no source access, no capacity, no successful check or any uncertainty means no publication.
 
-The reviewer begins editorial review only after all named checks succeed on the current head. Ready review and `expectedHeadSha` merge occur in that same routine run; an earlier comment, review or label is never authority. Auto-merge is disabled for this flow.
+The reviewer begins editorial review only after all named checks succeed on the current head. Ready review and `expectedHeadSha` merge occur in that same routine run; immediately before merge, the reviewer re-checks the unchanged head, latest named results and that the base commit still equals current `main`. An earlier comment, review or label is never authority. Auto-merge is disabled for this flow.
 
 Any open issue labelled `publication-paused` is the shared off switch. Removing the label or closing the issue resumes future runs only. It never revives an ineligible or stale PR.
 
-Before activation, M7.3 records subscription capability, source access, actual GitHub identities and guarded-merge failure tests. M7.4 records three shadow lessons. M7.5 records the exact repository protection settings and confirms that required checks apply to administrators, no approval-count rule blocks the shared identity, and force pushes, deletion and available bypass of `main` are disabled. Recheck these settings during the monthly publication audit because Claude cannot inspect them during each run.
+The fixed writer and reviewer instructions are versioned in `docs/automation/publication-task-contracts.md` and read policy from current `main` before any untrusted data. Before activation, M7.3 records subscription capability, source access, actual GitHub identities and guarded-merge failure tests on a disposable non-production target branch. M7.4 records three shadow lessons. M7.5 records the exact repository protection settings and confirms that required checks apply to administrators, no approval-count rule blocks the shared identity, and force pushes, deletion and available bypass of `main` are disabled. Recheck these settings during the monthly publication audit because Claude cannot inspect them during each run.
+
+Corrections do not use the daily automation. The Manager or Owner initiates them through the normal `review:mandatory` workflow, and the Manager merges under GOVERNANCE.md after independent review.
 
 Operational records must distinguish routine infrastructure completion from publication success. A green scheduled session is not evidence that a lesson was reviewed or merged; the PR review, exact SHA, named check results and merge record are the durable evidence.
 
