@@ -116,13 +116,18 @@ test('unreadable reader data is preserved until an explicit warned reset', async
  }
 });
 
-test('Library Surprise Me follows its edition without changing preference; 404 choices retain edition', async ({page}) => {
+test('Library Surprise Me follows its edition without changing preference', async ({page}) => {
  await prefer(page,'adult');await page.goto('/editions/teen/library');
  await expect(page.locator('[data-surprise-edition]')).toHaveCount(1);
  await expect(page.locator('.lesson-card [aria-label^="Editions for"]')).toHaveCount(0);
  await page.getByRole('link',{name:'Surprise me · Teen',exact:true}).click();
  await expect(page).toHaveURL(/\/teen\/[^/]+$/);
+ await page.waitForLoadState('load');
+ await expect(page.locator('article[data-lesson-id]')).toHaveAttribute('data-edition','teen');
  expect(await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!).edition,key)).toBe('adult');
+});
+
+test('404 is noncanonical and edition choices retain the destination edition', async ({page}) => {
  await page.goto('/not-a-page?q=clock#main');
  await expect(page.locator('link[rel="canonical"]')).toHaveCount(0);
  await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content','noindex,follow');
