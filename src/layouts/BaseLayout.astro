@@ -4,8 +4,8 @@ import { discoveryPath, editionDiscoveryPath, type LessonEdition } from '../lib/
 import { getBuildMetadata } from '../lib/content/build-content';
 import { libraryPages } from '../lib/discovery/catalogue';
 import { TAXONOMY } from '../lib/taxonomy';
-interface Props { title?: string; description?: string; edition?: LessonEdition; editionPaths?: Record<LessonEdition,string>; neutralDiscovery?: boolean; noindex?: boolean; wide?: boolean; preferenceSurface?: boolean; }
-const { title = 'Five Minutes', description = 'One worthwhile idea, made easy to discover, understand and explore.', edition, editionPaths, neutralDiscovery=false, noindex=false, wide=false, preferenceSurface=false } = Astro.props;
+interface Props { title?: string; description?: string; edition?: LessonEdition; editionPaths?: Record<LessonEdition,string>; neutralDiscovery?: boolean; noindex?: boolean; wide?: boolean; preferenceSurface?: boolean; todaySurface?: boolean; }
+const { title = 'Five Minutes', description = 'One worthwhile idea, made easy to discover, understand and explore.', edition, editionPaths, neutralDiscovery=false, noindex=false, wide=false, preferenceSurface=false, todaySurface=false } = Astro.props;
 const pathname = Astro.url.pathname;
 const { lessons } = await getBuildMetadata();
 const bounds = { topics: TAXONOMY.filter(t=>lessons.some(l=>l.metadata.topic===t.token)).map(t=>t.token), libraryPages:libraryPages(lessons).length };
@@ -23,7 +23,7 @@ const choices = editionPaths ?? { adult: editionDiscoveryPath(pathname,'adult') 
 const canonical = !neutralDiscovery && !noindex && Astro.site ? new URL(pathname,Astro.site).href : undefined;
 ---
 <!doctype html>
-<html lang="en" data-edition={edition} data-neutral-discovery={neutralDiscovery ? 'true' : undefined} data-preference-surface={preferenceSurface?'true':undefined} data-search={search?'true':undefined} data-discovery={discovery||search?'true':undefined} data-discovery-bounds={JSON.stringify(bounds)}>
+<html lang="en" data-edition={edition} data-today={todaySurface?'true':undefined} data-neutral-discovery={neutralDiscovery ? 'true' : undefined} data-preference-surface={preferenceSurface?'true':undefined} data-search={search?'true':undefined} data-discovery={discovery||search?'true':undefined} data-discovery-bounds={JSON.stringify(bounds)}>
   <head>
     <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light dark" /><meta name="description" content={description} /><title>{title}</title>
@@ -34,7 +34,7 @@ const canonical = !neutralDiscovery && !noindex && Astro.site ? new URL(pathname
     <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fbfaf7" />
     <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#15171a" />
     <script is:inline>
-      try { const s=JSON.parse(localStorage.getItem('five-minutes.reader-state')||'null'); if(s?.version===1&&['system','light','dark'].includes(s.appearance))document.documentElement.dataset.appearance=s.appearance; } catch {}
+      try { const s=JSON.parse(localStorage.getItem('five-minutes.reader-state')||'null'); if(s?.version===1){if(['system','light','dark'].includes(s.appearance))document.documentElement.dataset.appearance=s.appearance;if(document.documentElement.dataset.today==='true'&&['adult','teen'].includes(s.edition))document.documentElement.dataset.edition=s.edition;} } catch {}
     </script>
   </head>
   <body>
