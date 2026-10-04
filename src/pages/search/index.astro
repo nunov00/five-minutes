@@ -96,6 +96,7 @@ const artifacts = buildDiscoveryArtifacts(lessons);
     if (!list) return;
     const li = window.document.createElement('li');
     li.className = 'card search-result';
+    li.dataset.lessonId = result.id;
     const meta = window.document.createElement('p');
     meta.className = 'eyebrow';
     meta.textContent = `${result.topicLabel} · ${result.subtopicLabel}`;
@@ -106,8 +107,10 @@ const artifacts = buildDiscoveryArtifacts(lessons);
     heading.append(link);
     const description = window.document.createElement('p');
     description.textContent = result.description;
-    li.append(meta, heading, description);
+    const marker = window.document.createElement('span'); marker.className = 'reader-markers'; marker.dataset.readerMarkers = ''; marker.hidden = true;
+    li.append(meta, heading, description, marker);
     list.append(li);
+    document.dispatchEvent(new Event('reader-state-change'));
   }
 
   async function runSearch() {

@@ -47,7 +47,7 @@ if (!presentation) throw new Error(`Missing ${edition} presentation for ${lesson
 const positioned=presentation.figure?figurePosition(html,presentation.figure.afterParagraph):null;
 ---
 <BaseLayout title={`${presentation.title} · ${EDITION_LABELS[edition]} edition · Five Minutes`} description={presentation.description} edition={edition} editionPaths={editionPaths} wide={!!presentation.figure}>
-  <article class:list={['reading-article', {'has-figure': !!presentation.figure}]} data-lesson-id={lesson.metadata.id} data-edition={edition}>
+  <article class:list={['reading-article', {'has-figure': !!presentation.figure}]} data-reader-lesson data-lesson-id={lesson.metadata.id} data-edition={edition}>
     <header class="reader-header">
       <p class="eyebrow">{EDITION_LABELS[edition]} edition · <time datetime={lesson.metadata.publishedAt}>{formatEditorialDate(lesson.metadata.publishedAt)}</time></p>
       <h1>{presentation.title}</h1>
@@ -70,6 +70,11 @@ const positioned=presentation.figure?figurePosition(html,presentation.figure.aft
           <p>{presentation.takeaway}</p>
         </section>
       </details>
+    </section>
+    <section class="lesson-section reader-actions" aria-label="Your reading">
+      <button class="button button-secondary" type="button" data-save-lesson hidden>Save lesson</button>
+      <button class="button button-secondary" type="button" data-read-lesson hidden>Mark unread</button>
+      <p class="reader-js-fallback">Saving and read markers need JavaScript. The lesson itself remains fully readable.</p>
     </section>
     <section class="lesson-section" aria-labelledby="related-heading">
       <p class="eyebrow">Keep exploring</p>

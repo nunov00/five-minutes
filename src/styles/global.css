@@ -3,9 +3,8 @@
  *
  * Mobile-first: base rules target small screens; the single breakpoint only
  * relaxes spacing and type. Colours, type, spacing and shape are tokens so
- * later pages reuse them rather than introducing new values. Light/dark
- * follows the operating-system preference; there is no stored appearance
- * setting yet (local reader state is a later milestone).
+ * later pages reuse them rather than introducing new values. Light/dark can
+ * follow the operating-system preference or an explicit local preference.
  */
 
 :root {
@@ -48,7 +47,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-appearance='light']) {
     --color-bg: #15171a;
     --color-surface: #1e2125;
     --color-text: #eceae5;
@@ -59,6 +58,20 @@
     --color-accent-soft: #23324a;
     --color-focus: #8cb4ff;
   }
+}
+
+:root[data-appearance='light'] { color-scheme: light; }
+:root[data-appearance='dark'] {
+  color-scheme: dark;
+  --color-bg: #15171a;
+  --color-surface: #1e2125;
+  --color-text: #eceae5;
+  --color-muted: #a8acb3;
+  --color-border: #363a40;
+  --color-accent: #8cb4ff;
+  --color-accent-contrast: #10213f;
+  --color-accent-soft: #23324a;
+  --color-focus: #8cb4ff;
 }
 
 @media (min-width: 40rem) {
@@ -450,15 +463,16 @@ summary {
   border-top: 1px solid var(--color-border);
 }
 
-/* Shared edition shell. Preferences beyond edition arrive in M6.3. */
+/* Shared edition shell. */
 html[data-edition=adult]{--color-accent:#286146;--color-focus:#286146;--color-accent-soft:#e5eee7}
 html[data-edition=teen]{--color-accent:#6940ac;--color-focus:#6940ac;--color-accent-soft:#eee8f6}
 html[data-edition=adult] h1,html[data-edition=adult] h2{font-family:var(--font-serif)}
 html[data-edition=teen] .lesson-body{font-family:var(--font-sans)}
-@media(prefers-color-scheme:dark){html[data-edition=adult]{--color-accent:#a0d6ba;--color-focus:#a0d6ba;--color-accent-soft:#23362b;--color-accent-contrast:#17261d}html[data-edition=teen]{--color-accent:#c4b0ff;--color-focus:#c4b0ff;--color-accent-soft:#30253e;--color-accent-contrast:#24143b}}
+@media(prefers-color-scheme:dark){html[data-edition=adult]:not([data-appearance=light]){--color-accent:#a0d6ba;--color-focus:#a0d6ba;--color-accent-soft:#23362b;--color-accent-contrast:#17261d}html[data-edition=teen]:not([data-appearance=light]){--color-accent:#c4b0ff;--color-focus:#c4b0ff;--color-accent-soft:#30253e;--color-accent-contrast:#24143b}}
+html[data-appearance=dark][data-edition=adult]{--color-accent:#a0d6ba;--color-focus:#a0d6ba;--color-accent-soft:#23362b;--color-accent-contrast:#17261d}html[data-appearance=dark][data-edition=teen]{--color-accent:#c4b0ff;--color-focus:#c4b0ff;--color-accent-soft:#30253e;--color-accent-contrast:#24143b}
 .site-header .container{gap:8px;justify-content:space-between}.site-header .edition-switch{margin:0;padding:0;border-radius:6px;gap:0}.site-header .edition-switch a{padding:0 10px;border-radius:4px}
 .site-nav{justify-content:space-between}.site-nav a{padding:0 8px}.quiet-note{font-size:var(--text-sm);color:var(--color-muted);padding-top:8px}.chooser{display:flex;flex-wrap:wrap;gap:16px}.lesson-card{background:transparent;border:0;border-top:1px solid var(--color-border);border-radius:0;padding:20px 0}.other-version{display:inline-block;min-height:44px;padding:10px 0}[hidden]{display:none!important}
-@media(max-width:639px){body{padding-bottom:76px}.site-nav{position:fixed;bottom:0;left:0;width:100%;z-index:10;padding:8px 8px calc(8px + env(safe-area-inset-bottom));background:var(--color-bg);border-top:1px solid var(--color-border);overflow:visible}.site-nav a{min-width:56px;font-size:14px;justify-content:center}.site-header .container{flex-wrap:nowrap}.brand{font-size:18px}.site-header .edition-switch a{font-size:14px;padding:0 8px}html{scroll-padding-bottom:96px}a,input,button,summary{scroll-margin-bottom:96px}.site-main{padding-top:24px}}
+@media(max-width:639px){body{padding-bottom:76px}.site-nav{position:fixed;bottom:0;left:0;width:100%;z-index:10;padding:8px 4px calc(8px + env(safe-area-inset-bottom));background:var(--color-bg);border-top:1px solid var(--color-border);overflow:visible}.site-nav a{min-width:0;flex:1;font-size:13px;padding-inline:4px;justify-content:center}.site-header .container{flex-wrap:nowrap}.brand{font-size:18px}.site-header .edition-switch a{font-size:14px;padding:0 8px}html{scroll-padding-bottom:96px}a,input,button,summary{scroll-margin-bottom:96px}.site-main{padding-top:24px}}
 @media(min-width:640px){.site-header .container{flex-wrap:wrap}.site-nav{width:auto;margin-left:0}}
 
 .reader-enhanced .no-script-note{display:none}
@@ -473,9 +487,18 @@ html[data-edition=teen] .diagram-axis,html[data-edition=teen] .diagram-ray{strok
 .teen-activity{margin:16px 0 24px;padding:8px 16px;border:1px solid var(--color-border);border-radius:8px;background:var(--color-accent-soft)}
 .teen-activity p{margin:12px 0}.teen-activity fieldset{border:0;padding:0;margin:16px 0}.activity-choice{display:flex;align-items:center;gap:12px;min-height:44px;margin:0;padding:8px 0;cursor:pointer}.activity-choice input{width:20px;height:20px;margin:0;accent-color:var(--color-accent);flex-shrink:0}.activity-choice span{flex:1}.activity-plain-options{list-style:disc;padding-left:24px}
 .reveal-marker{display:inline-block;margin-right:8px}.recall-section details[open]>summary .reveal-marker{transform:rotate(90deg)}.recall-section h3{font-size:var(--text-lg)}
-@media(prefers-color-scheme:dark){.diagram-ray{stroke:#ecc86b}.diagram-sun{stroke:#ecc86b}.diagram-earth{stroke:#bedbea}.diagram-equator{stroke:#27566f}}
+@media(prefers-color-scheme:dark){html:not([data-appearance=light]) .diagram-ray{stroke:#ecc86b}html:not([data-appearance=light]) .diagram-sun{stroke:#ecc86b}html:not([data-appearance=light]) .diagram-earth{stroke:#bedbea}html:not([data-appearance=light]) .diagram-equator{stroke:#27566f}}
+html[data-appearance=dark] .diagram-ray{stroke:#ecc86b}html[data-appearance=dark] .diagram-sun{stroke:#ecc86b}html[data-appearance=dark] .diagram-earth{stroke:#bedbea}html[data-appearance=dark] .diagram-equator{stroke:#27566f}
 .reading-article{max-width:760px;margin-inline:auto;overflow-wrap:anywhere}.reading-article.has-figure{max-width:1100px}.teen-activity{max-width:760px}
 @media(min-width:1000px){.reader-header{max-width:760px}.reading-with-figure{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(300px,0.9fr);grid-template-rows:min-content 1fr;gap:0 40px;align-items:start}.figure-opening{grid-column:1;grid-row:1}.figure-rest{grid-column:1;grid-row:2}.reading-with-figure .lesson-figure{grid-column:2;grid-row:1 / span 2;position:sticky;top:24px;margin-top:0}.recall-section{max-width:760px}}
 @media(forced-colors:active){.diagram-axis,.diagram-equator,.diagram-ray{stroke:CanvasText}.diagram-earth,.diagram-sun{fill:Canvas;stroke:CanvasText}.season-panels text{fill:CanvasText}.activity-choice input{forced-color-adjust:auto}}
 
 @media(min-width:1000px){.site-main.reader-wide{max-width:calc(1100px + 2 * var(--gutter))}}
+
+/* M6.3 local reader surfaces. */
+.reader-actions{display:flex;flex-wrap:wrap;gap:12px}.reader-actions button[aria-pressed=true]{background:var(--color-accent-soft);color:var(--color-text)}
+.card-actions{display:flex;justify-content:space-between;gap:12px;align-items:baseline}.reader-markers{font-size:var(--text-sm);font-weight:700;color:var(--color-accent)}
+.personal-page{max-width:760px;margin-inline:auto}.personal-list{padding:0;list-style:none;border-top:1px solid var(--color-border)}.personal-list li{display:grid;gap:4px;padding:16px 0;border-bottom:1px solid var(--color-border)}.personal-links{display:block;font-size:var(--text-sm);color:var(--color-muted)}.personal-editions{display:grid;gap:6px}
+.preferences fieldset{border:0;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:8px 24px}.preferences label,.confirm-control{display:flex;align-items:center;gap:8px;min-height:44px}.preferences input,.confirm-control input{width:20px;height:20px;accent-color:var(--color-accent)}
+.data-tools{display:grid;gap:12px;min-width:0}.data-tools>*{margin-block:0;min-width:0}.data-tools .button{justify-self:start;max-width:100%}.file-control{display:grid;gap:6px;min-width:0}.file-control input{font:inherit;width:100%;min-width:0;max-width:100%}
+.reader-js-only{display:none}.reader-features .reader-js-only{display:block}.reader-features .reader-js-fallback{display:none}
