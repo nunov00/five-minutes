@@ -7,20 +7,24 @@ test('lesson visits are read and recent, while Save is shared across editions', 
   await page.goto(lesson);
   const id = await page.locator('[data-reader-lesson]').getAttribute('data-lesson-id');
   await expect(page.getByRole('button', {name:'Mark unread'})).toBeVisible();
-  await page.getByRole('button', {name:'Save', exact:true}).click();
+  const save=page.getByRole('button', {name:'Save lesson', exact:true}); await save.click();
+  await expect(save).toHaveAttribute('aria-pressed','true'); await expect(save).toHaveText('Save lesson');
   expect(await page.evaluate(k => JSON.parse(localStorage.getItem(k)!), key)).toMatchObject({saved:[id], read:{[id!]:expect.any(String)}, recent:[{id,edition:'teen'}]});
   await page.goto('/adult/why-earth-has-seasons');
-  await expect(page.getByRole('button', {name:'Saved', exact:true})).toHaveAttribute('aria-pressed','true');
+  await expect(page.getByRole('button', {name:'Save lesson', exact:true})).toHaveAttribute('aria-pressed','true');
   await page.getByRole('button', {name:'Mark unread'}).click();
+  await expect(page.getByRole('button', {name:'Mark read'})).not.toHaveAttribute('aria-pressed',/.+/);
   expect(await page.evaluate(({key,id}) => JSON.parse(localStorage.getItem(key)!).read[id!], {key,id})).toBeUndefined();
 });
 
 test('Saved renders both editions, Recent preserves the visited edition, and markers appear', async ({page}) => {
-  await page.goto(lesson); await page.getByRole('button', {name:'Save', exact:true}).click();
+  await page.goto(lesson); await page.getByRole('button', {name:'Save lesson', exact:true}).click();
   await page.getByRole('navigation', {name:'Main navigation'}).getByRole('link', {name:'Saved'}).click();
   await expect(page).toHaveURL('/saved');
   await expect(page.getByRole('heading', {name:'Saved and recent'})).toBeVisible();
   await expect(page.locator('[data-saved-list]')).toContainText('Adult'); await expect(page.locator('[data-saved-list]')).toContainText('Teen');
+  await expect(page.locator('[data-saved-list]')).toContainText('Adult: Why Summer Is Not Earth Moving Closer to the Sun');
+  await expect(page.locator('[data-saved-list]')).toContainText('Teen: The Season Explanation That Fails Half the Planet');
   await expect(page.locator('[data-recent-list]')).toContainText('Teen');
   await page.getByRole('navigation',{name:'Main navigation'}).getByRole('link', {name:'Library', exact:true}).focus(); await page.keyboard.press('Enter'); await page.getByRole('link', {name:'Explore Teen', exact:true}).click();
   await expect(page.locator('[data-reader-markers]').filter({hasText:'Saved'}).first()).toBeVisible();
@@ -55,8 +59,16 @@ test('import requires confirmation, rejects invalid data, and replaces valid v1 
 
 test('another tab refreshes Saved through the storage event', async ({page}) => {
   await page.goto('/saved'); await expect(page.locator('[data-saved-empty]')).toHaveText('No saved lessons yet.');
-  const reading=await page.context().newPage(); await reading.goto(lesson); await reading.getByRole('button',{name:'Save',exact:true}).click();
+  const reading=await page.context().newPage(); await reading.goto(lesson); await reading.getByRole('button',{name:'Save lesson',exact:true}).click();
   await expect(page.locator('[data-saved-list] li')).toHaveCount(1); await reading.close();
+});
+
+test('write failures are explained and controls return to stored state', async ({page}) => {
+  await page.addInitScript(()=>{const original=Storage.prototype.setItem;Storage.prototype.setItem=function(k,v){if(this===localStorage)throw Error('full');original.call(this,k,v);};});
+  await page.goto(lesson); await expect(page.locator('#preference-note')).toContainText('could not be saved');
+  await page.getByRole('button',{name:'Save lesson'}).click(); await expect(page.locator('#preference-note')).toBeVisible();
+  await page.goto('/saved'); await page.getByRole('radio',{name:'Light'}).click();
+  await expect(page.getByRole('radio',{name:'System'})).toBeChecked(); await expect(page.locator('#preference-note')).toContainText('will not be remembered');
 });
 
 test('blocked storage disables personal controls without changing content access', async ({page}) => {
@@ -71,6 +83,7 @@ test('reader surfaces fail safely without JavaScript', async ({browser}) => {
   await page.goto('http://127.0.0.1:4321/teen/why-earth-has-seasons');
   await expect(page.getByText('Saving and read markers need JavaScript.')).toBeVisible(); await expect(page.getByRole('button',{name:'Save'})).toHaveCount(0);
   await page.goto('http://127.0.0.1:4321/saved'); await expect(page.getByText(/Saved lessons, recent reading/)).toBeVisible();
+  await expect(page.getByText('Loading saved lessons…')).toBeHidden(); await expect(page.getByText('Saved lessons need JavaScript to appear here.')).toBeVisible();
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content','noindex,follow'); expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
   await context.close();
 });
