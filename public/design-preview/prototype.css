@@ -27,3 +27,5 @@ html[data-figure=none] .lesson-content{grid-template-areas:none}
  .prediction-module{padding:8px 14px;margin:12px auto 18px}.prediction-module>summary{font-size:14px}
 }
 @media(max-width:350px){.wordmark{font-size:16px;gap:5px}.brand-mark{width:24px;height:24px}.brand-mark:after{left:10px;top:2px}.site-header{gap:4px}.header-controls{gap:0}.edition-control a{min-width:44px;padding:10px 7px}.site-header{margin:0 12px}.page{padding-left:18px;padding-right:18px}.review-bar{padding:0 12px}.review-bar>span{max-width:56%}}
+
+@media(max-width:850px){html{scroll-padding-bottom:100px}a,button,input,select,summary{scroll-margin-top:20px;scroll-margin-bottom:100px}}
