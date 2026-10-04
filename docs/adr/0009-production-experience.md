@@ -57,13 +57,13 @@ Today `/` is deliberately different: it remains the two-edition Today page for b
 
 ### D2 — Preference-writing actions
 
-Only the global Adult/Teen selector writes edition preference, including the first-visit choice on Today. On a lesson page the selector also opens the same immutable lesson in the selected edition and shows the edition of the page currently open.
+Only global Adult/Teen selection surfaces write edition preference: the shared header selector, first-visit choices on Today, and edition choices on neutral Library/Topics choosers. On a lesson page the selector also opens the same immutable lesson in the selected edition and shows the edition of the page currently open.
 
 Explicit/shared lesson links and the visually distinct “Read the other version” link never write preference. If browser storage is blocked/unavailable, the selector still navigates and a quiet note explains that the choice will not be remembered.
 
 ### D3 — History, Return and restoration
 
-Edition switches add normal history entries. Return is a normal link, never an invocation of browser Back: it targets the last Library, Topics or Search page visited in the current browsing session, otherwise Today. This origin must be represented safely as session navigation state and validated as an internal supported discovery destination before rendering a Return link.
+Edition switches add normal history entries. The initial choice on a neutral Library/Topics chooser instead completes the neutral entry handoff with replacement history, like automatic forwarding, so Back does not return to a chooser that immediately forwards again. Without JavaScript these links navigate normally and no preference forwarding occurs. Return is a normal link, never an invocation of browser Back: it targets the last Library, Topics or Search page visited in the current browsing session, otherwise Today. This origin must be represented safely as session navigation state and validated as an internal supported discovery destination before rendering a Return link.
 
 A URL naming an edition always renders that edition. Neutral pages re-check saved preference when restored from browser cache. Safari/WebKit verification must assert these behaviours, including storage-blocked and installed-app/cold-entry fallbacks.
 

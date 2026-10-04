@@ -1,3 +1,4 @@
+import { discoveryPath, type LessonEdition } from '../urls';
 import type { LessonBundle } from '../content/schema';
 import { TAXONOMY } from '../taxonomy';
 
@@ -18,21 +19,22 @@ export function libraryPages(lessons: readonly LessonBundle[], pageSize = LIBRAR
   return Array.from({ length: Math.ceil(ordered.length / pageSize) }, (_, index) => ordered.slice(index * pageSize, (index + 1) * pageSize));
 }
 
-export function libraryPagination(pageNumber: number, pageCount: number): { previous?: string; next?: string } {
+export function libraryPagination(pageNumber: number, pageCount: number, edition: LessonEdition | null = null): { previous?: string; next?: string } {
   if (!Number.isInteger(pageNumber) || !Number.isInteger(pageCount) || pageCount < 1 || pageNumber < 1 || pageNumber > pageCount) {
     throw new Error('Library pagination requires a valid current page and page count.');
   }
   return {
-    previous: pageNumber > 1 ? (pageNumber === 2 ? '/library' : `/library/page/${pageNumber - 1}`) : undefined,
-    next: pageNumber < pageCount ? `/library/page/${pageNumber + 1}` : undefined,
+    previous: pageNumber > 1 ? discoveryPath(edition, 'library', pageNumber - 1) : undefined,
+    next: pageNumber < pageCount ? discoveryPath(edition, 'library', pageNumber + 1) : undefined,
   };
 }
 
 export function discoveryPagePaths(lessons: readonly LessonBundle[]): string[] {
-  const paths = ['/', '/library', '/search', '/topics'];
-  for (const topic of TAXONOMY) {
-    if (lessons.some((lesson) => lesson.metadata.topic === topic.token)) paths.push(`/topics/${topic.token}`);
-  }
-  for (let page = 2; page <= libraryPages(lessons).length; page += 1) paths.push(`/library/page/${page}`);
-  return paths;
+ const paths=['/','/search'];
+ for(const edition of ['adult','teen'] as const){
+  paths.push(discoveryPath(edition,'library'),discoveryPath(edition,'topics'));
+  for(const topic of TAXONOMY)if(lessons.some(l=>l.metadata.topic===topic.token))paths.push(discoveryPath(edition,'topics',topic.token));
+  for(let page=2;page<=libraryPages(lessons).length;page++)paths.push(discoveryPath(edition,'library',page));
+ }
+ return paths;
 }

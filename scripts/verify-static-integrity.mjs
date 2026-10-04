@@ -49,8 +49,10 @@ const canonicalPagePaths = new Set([...htmlTargets].map((path) => {
   if (path.endsWith('/index.html')) return path.slice(0, -'/index.html'.length);
   return path.replace(/\.html$/, '');
 }));
+const noindexPages = new Set();
 for (const file of files.filter((f) => f.endsWith('.html'))) {
   const html = await readFile(file, 'utf8');
+  if (/<meta[^>]*name="robots"[^>]*content="noindex(?:,|\s)/.test(html)) noindexPages.add(webPath(file).replace(/\/index\.html$/, '') || '/');
   // Installed (standalone) display has no browser back button or address bar:
   // every page must declare the manifest and offer an in-page way back to Today,
   // and internal links must not escape the app window.
@@ -100,7 +102,7 @@ if (sitemapPaths.length === 0 && !sitemap.includes(absentSiteMarker)) {
 if (sitemapPaths.length > 0 && sitemap.includes(absentSiteMarker)) {
   throw new Error('Populated sitemap must not claim that the site origin is absent.');
 }
-const expectedSitemapPaths = [...canonicalPagePaths].filter((path) => path !== '/404').sort();
+const expectedSitemapPaths = [...canonicalPagePaths].filter((path) => path !== '/404' && !noindexPages.has(path)).sort();
 const missingSitemapPaths = expectedSitemapPaths.filter((path) => !sitemapSet.has(path));
 const unexpectedSitemapPaths = [...sitemapSet].filter((path) => !expectedSitemapPaths.includes(path));
 const duplicateSitemapPaths = sitemapPaths.filter((path, index) => sitemapPaths.indexOf(path) !== index);

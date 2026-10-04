@@ -20,7 +20,7 @@ const artifacts = buildDiscoveryArtifacts(lessons);
 const fallback = artifacts.catalogue.payload.find((entry) => entry.id !== today.id);
 if (!fallback) throw new Error('Today requires another lesson for Surprise Me.');
 ---
-<BaseLayout title="Today · Five Minutes">
+<BaseLayout title="Today · Five Minutes" editionPaths={{adult:today.adult.path,teen:today.teen.path}}>
   <section aria-labelledby="today-heading" data-lesson-id={today.id}>
     <p class="eyebrow"><time datetime={today.publishedAt}>{formatEditorialDate(today.publishedAt)}</time></p>
     <h1 id="today-heading">Today's idea</h1>
@@ -30,7 +30,7 @@ if (!fallback) throw new Error('Today requires another lesson for Surprise Me.')
         <p class="eyebrow">{EDITION_LABELS[edition]} edition</p>
         <h2>{presentation.title}</h2>
         <p>{presentation.description}</p>
-        <a class="button" href={path} aria-label={`Read the ${EDITION_LABELS[edition]} edition: ${presentation.title}`}>Read the {EDITION_LABELS[edition]} edition</a>
+        <a class="button" data-edition-choice={edition} href={path} aria-label={`Read the ${EDITION_LABELS[edition]} edition: ${presentation.title}`}>Read the {EDITION_LABELS[edition]} edition</a>
       </article>
     ))}
     <section class="discovery-callout" aria-labelledby="discover-heading">

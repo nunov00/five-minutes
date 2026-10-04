@@ -1,9 +1,10 @@
 ---
+import { type LessonEdition } from '../lib/urls';
 import { libraryPagination } from '../lib/discovery/catalogue';
 
-interface Props { pageNumber: number; pageCount: number; }
-const { pageNumber, pageCount } = Astro.props as Props;
-const pagination = libraryPagination(pageNumber, pageCount);
+interface Props { pageNumber: number; pageCount: number; edition?:LessonEdition; }
+const { pageNumber, pageCount, edition } = Astro.props as Props;
+const pagination = libraryPagination(pageNumber, pageCount, edition??null);
 ---
 {pageCount > 1 && (
   <nav class="pagination" aria-label="Library pages">

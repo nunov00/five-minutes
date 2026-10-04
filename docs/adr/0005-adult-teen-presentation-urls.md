@@ -29,10 +29,10 @@ The semantic contract is:
 - neutral `/library` and `/topics` entry points route a returning reader to the corresponding `/editions/<saved-edition>/...` URL while preserving query and hash; without saved preference they render a simple Adult/Teen chooser and do not default;
 - Search remains the single `/search` URL with an edition setting that initially uses saved preference when available and otherwise requires/retains an explicit reader choice;
 - an edition-specific URL always renders the edition named by that URL, including after browser restoration;
-- only the global edition selector writes preference. On a lesson page it both writes preference and navigates to the same immutable lesson in the selected edition. Explicit/shared lesson navigation and a visually distinct “Read the other version” link never write preference;
+- only global edition selection surfaces write preference (the header selector, Today choices and neutral Library/Topics chooser choices). On a lesson page it both writes preference and navigates to the same immutable lesson in the selected edition. Explicit/shared lesson navigation and a visually distinct “Read the other version” link never write preference;
 - the selector reflects the edition of the page currently open. If browser storage is unavailable, it still navigates and quietly explains that the choice will not be remembered;
 - neutral pages re-check saved preference when restored from browser cache;
-- edition switches use normal history entries; they do not replace history;
+- edition switches use normal history entries; they do not replace history. A first choice from a neutral Library/Topics chooser completes the neutral entry handoff with replacement history, preventing Back from returning to a chooser that immediately forwards again;
 - lesson Return is an ordinary generated link, never a browser-Back action: it targets the last Library, Topics or Search page visited in the current browsing session, otherwise Today;
 - both Adult and Teen presentations are required for publication;
 - drafts on branches may be temporarily incomplete while generation is in progress, but incomplete lessons are not publication-eligible and generate no production routes;
