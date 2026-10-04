@@ -83,7 +83,7 @@ test('no-JavaScript edition navigation, recall, prediction and pagination work',
  const ctx=await browser.newContext({javaScriptEnabled:false,viewport:{width:320,height:800}});const page=await ctx.newPage();
  await page.goto('http://127.0.0.1:4321'+p+'/teen/why-earth-has-seasons');
  await expect(page.locator('.prediction-plain')).toHaveCount(2);await expect(page.locator('.prediction-choice').first()).toBeHidden();
- await page.locator('#prediction-module > summary').click();await expect(page.locator('.prediction-plain').first()).toBeVisible();await page.locator('#prediction-reveal summary').click();await expect(page.locator('#prediction-reveal')).toHaveAttribute('open','');
+ await page.locator('#prediction-module > summary').click();await expect(page.locator('.prediction-plain').first()).toBeVisible();await page.locator('#prediction-reveal summary').evaluate(el=>el.scrollIntoView({block:'center'}));await page.locator('#prediction-reveal summary').click();await expect(page.locator('#prediction-reveal')).toHaveAttribute('open','');
  await page.locator('.recall-reveal summary').click();await expect(page.locator('.takeaway')).toBeVisible();
  await page.locator('.edition-control').getByText('Adult',{exact:true}).click();await expect(page).toHaveURL(/\/adult\/why-earth-has-seasons$/);
  await page.goto('http://127.0.0.1:4321'+p+'/editions/teen/library/page/7');await expect(page.locator('.lesson-row')).toHaveCount(24);
