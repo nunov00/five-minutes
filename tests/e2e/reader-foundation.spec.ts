@@ -7,7 +7,7 @@ test('first-visit neutral chooser and preference forwarding preserve path/query/
  await page.getByRole('link',{name:'Explore Teen',exact:true}).click();await expect(page).toHaveURL('/editions/teen/library/page/2?q=clock#main');
  expect(await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!).edition,key)).toBe('teen');
  await page.goto('/topics/science?from=library#main');await expect(page).toHaveURL('/editions/teen/topics/science?from=library#main');
- await page.goto('/');await expect(page).toHaveURL('/');await expect(page.getByRole('link',{name:/^Read the Adult edition/})).toBeVisible();await expect(page.getByRole('link',{name:/^Read the Teen edition/})).toBeVisible();
+ await page.goto('/');await expect(page).toHaveURL('/');await expect(page.getByRole('link',{name:/^Read the Adult edition/})).toBeHidden();await expect(page.getByRole('link',{name:/^Read the Teen edition/})).toBeVisible();
 });
 test('explicit routes and alternate version do not write preference; selector adds history',async({page})=>{
  await prefer(page,'adult');await page.goto('/teen/why-earth-has-seasons');

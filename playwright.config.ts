@@ -24,13 +24,23 @@ export default defineConfig({
   projects: [
     {
       name: 'desktop-chromium',
+      testIgnore: '**/m6-integration-webkit.spec.ts',
       use: { ...devices['Desktop Chrome'] },
     },
     {
       // iPhone-class viewport, touch, pixel ratio and user agent, emulated in
       // Chromium. This does not exercise the WebKit engine.
       name: 'mobile-iphone',
+      testIgnore: '**/m6-integration-webkit.spec.ts',
       use: { ...devices['iPhone 15'], browserName: 'chromium' },
+    },
+    {
+      // Focused engine coverage for the M6 journeys most exposed to Safari
+      // differences. A headless WebKit build is evidence, not a substitute
+      // for the physical-iPhone gate recorded in the M6.4 checklist.
+      name: 'mobile-webkit',
+      testMatch: '**/m6-integration-webkit.spec.ts',
+      use: { ...devices['iPhone 15'], browserName: 'webkit' },
     },
   ],
   webServer: {

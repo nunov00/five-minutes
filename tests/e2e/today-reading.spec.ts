@@ -35,6 +35,39 @@ test.describe('Today → lesson → edition switch → Takeaway → Test yoursel
     await expect(page.getByRole('main').locator('time')).toHaveText(/^\d{1,2} [A-Z][a-z]+ \d{4}$/);
   });
 
+  test('Today shows only the deliberately saved edition on later visits', async ({ page }) => {
+    await page.addInitScript(() => {
+      if (!localStorage.getItem('five-minutes.reader-state')) localStorage.setItem('five-minutes.reader-state', JSON.stringify({
+        version: 1, edition: 'teen', saved: [], read: {}, recent: [], appearance: 'system',
+      }));
+    });
+    await page.goto('/');
+    await expect(page.locator('[data-today-edition="teen"]')).toBeVisible();
+    await expect(page.locator('[data-today-edition="adult"]')).toBeHidden();
+    await expect(page.getByRole('link', { name: /^Read the Teen edition/ })).toBeVisible();
+    await expect(page.getByRole('link', { name: /^Read the Adult edition/ })).toBeHidden();
+    await expect(page.getByRole('navigation', { name: 'Edition' }).getByRole('link', { name: 'Teen' })).toHaveAttribute('aria-current', 'page');
+    await expect(page.locator('[data-today-returning]')).toBeVisible();
+
+    await page.getByRole('navigation', { name: 'Edition' }).getByRole('link', { name: 'Adult' }).click();
+    await expect(page).toHaveURL(/\/adult\//);
+    await page.getByRole('link', { name: 'Back to Today' }).click();
+    await expect(page.locator('[data-today-edition="adult"]')).toBeVisible();
+    await expect(page.locator('[data-today-edition="teen"]')).toBeHidden();
+  });
+
+  test('Today ignores an edition inside unreadable version 1 data', async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem('five-minutes.reader-state', JSON.stringify({
+      version: 1, edition: 'teen', saved: ['not-a-lesson-id'], read: {}, recent: [], appearance: 'dark',
+    })));
+    await page.goto('/');
+    await expect(page.locator('[data-today-edition="adult"]')).toBeVisible();
+    await expect(page.locator('[data-today-edition="teen"]')).toBeVisible();
+    await expect(page.locator('html')).not.toHaveAttribute('data-edition', /.+/);
+    await expect(page.locator('html')).not.toHaveAttribute('data-appearance', 'dark');
+    await expect(page.locator('#reader-recovery')).toBeVisible();
+  });
+
   test('reads a lesson, switches edition and tests understanding', async ({ page }) => {
     await page.goto('/');
     const lessonId = await page.locator('[data-lesson-id]').first().getAttribute('data-lesson-id');

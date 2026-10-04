@@ -73,8 +73,8 @@ jobs:
           cache: npm
       - name: Install dependencies (npm ci)
         run: npm ci --no-audit --no-fund
-      - name: Install Playwright Chromium and system dependencies
-        run: npx playwright install --with-deps chromium
+      - name: Install Playwright Chromium, WebKit and system dependencies
+        run: npx playwright install --with-deps chromium webkit
       - name: Production static build (npm run build)
         # Exercise real multi-page Library rendering while the seed catalogue
         # remains smaller than the production page size.
