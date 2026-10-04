@@ -120,9 +120,10 @@ test('Library Surprise Me follows its edition without changing preference', asyn
  await prefer(page,'adult');await page.goto('/editions/teen/library');
  await expect(page.locator('[data-surprise-edition]')).toHaveCount(1);
  await expect(page.locator('.lesson-card [aria-label^="Editions for"]')).toHaveCount(0);
- await page.getByRole('link',{name:'Surprise me · Teen',exact:true}).click();
- await expect(page).toHaveURL(/\/teen\/[^/]+$/);
- await page.waitForLoadState('load');
+ await Promise.all([
+  page.waitForURL(url => /^\/teen\/[^/]+$/.test(url.pathname), {waitUntil:'load'}),
+  page.getByRole('link',{name:'Surprise me · Teen',exact:true}).click(),
+ ]);
  await expect(page.locator('article[data-lesson-id]')).toHaveAttribute('data-edition','teen');
  expect(await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!).edition,key)).toBe('adult');
 });
