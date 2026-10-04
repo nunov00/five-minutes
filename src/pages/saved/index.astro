@@ -15,11 +15,11 @@ const catalogue = buildDiscoveryArtifacts(lessons).catalogue.path;
 
     <section class="lesson-section" aria-labelledby="saved-lessons-heading">
       <h2 id="saved-lessons-heading">Saved lessons</h2>
-      <p data-saved-empty>Loading saved lessons…</p><ol class="personal-list" data-saved-list></ol>
+      <p class="reader-js-only" data-saved-empty>Loading saved lessons…</p><p class="reader-js-fallback">Saved lessons need JavaScript to appear here.</p><ol class="personal-list" data-saved-list></ol>
     </section>
     <section class="lesson-section" aria-labelledby="recent-heading">
       <h2 id="recent-heading">Recently read</h2>
-      <p data-recent-empty>Loading recent lessons…</p><ol class="personal-list" data-recent-list></ol>
+      <p class="reader-js-only" data-recent-empty>Loading recent lessons…</p><p class="reader-js-fallback">Recent lessons need JavaScript to appear here.</p><ol class="personal-list" data-recent-list></ol>
       <p class="quiet-note" data-missing-items hidden></p>
     </section>
     <section class="lesson-section card preferences" aria-labelledby="appearance-heading">
