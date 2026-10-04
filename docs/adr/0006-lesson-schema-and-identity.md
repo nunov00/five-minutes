@@ -113,7 +113,9 @@ Audience-specific titles, descriptions, examples, body, takeaway and retrieval q
 
 ### Optional presentation media and activities
 
-Schema version 2 adds optional presentation-owned explanatory figures. Adult and Teen may have different figures and captions, or neither may have one. Lesson content never supplies SVG, HTML or executable drawing code. A diagram is an application-owned renderer selected from a closed type vocabulary and fed only validated structured data from the presentation. Raster figure assets are repository-local PNG or WebP only. Every figure requires non-empty alternative text and a caption; validation enforces configured dimensions/byte-size and deployment file-count limits.
+Schema version 2 adds optional presentation-owned explanatory figures. Existing schemaVersion 1 lessons remain valid source during the M6.2 transition: the migration is deterministic and content-preserving—update each canonical lesson to schemaVersion 2 without inventing figure/activity fields, then validate the complete corpus as v2 before any v2-only content is merged. Once that corpus migration lands, production validation rejects schemaVersion 1; mixed published schema versions are not a steady state.
+
+Schema version 2 adds optional presentation-owned explanatory figures. Adult and Teen may have different figures and captions, or neither may have one. Lesson content never supplies SVG, HTML or executable drawing code. A diagram is an application-owned renderer selected from a closed type vocabulary and fed only validated structured data from the presentation. Raster figure assets are repository-local PNG or WebP only. Every figure requires non-empty alternative text and a caption; validation enforces configured image dimensions and per-asset byte-size limits. Aggregate deployment file-count/capacity remains a deployment-adapter/artifact gate under OPERATIONS.md, not canonical content validation.
 
 Teen presentations may additionally contain an optional structured activity. Activities are Teen-only, supplementary and non-persistent. Their prompt, choices, correct/recommended answer and explanation are validated data rendered by application components. Adult presentations must not contain the activity field. Essential lesson comprehension and the answer/reveal remain available without JavaScript.
 
@@ -170,7 +172,7 @@ CI/build validation must reject at least:
 - a published lesson missing either Adult or Teen presentation;
 - invalid presentation metadata;
 - schema-version mismatch or invalid figure/activity structured data;
-- Adult activity fields, non-local/unsupported figure assets, SVG/HTML/executable figure content, missing figure alt text/caption, or configured asset size/count violations;
+- Adult activity fields, non-local/unsupported figure assets, SVG/HTML/executable figure content, missing figure alt text/caption, or configured per-asset type/dimension/byte-size violations;
 - unsafe Markdown constructs;
 - a level-1 heading in a presentation body;
 - published content that violates the publication policy.
