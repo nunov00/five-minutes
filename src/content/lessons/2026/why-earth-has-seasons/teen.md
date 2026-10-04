@@ -5,6 +5,18 @@ takeaway: A hemisphere gets summer when tilt gives it more direct sunlight and l
 question: What observation quickly disproves the idea that distance from the Sun causes the seasons?
 answer: The Northern and Southern Hemispheres have opposite seasons even though the whole Earth is the same distance from the Sun.
 searchTerms: [why seasons happen, earth axis tilt, opposite seasons]
+figure:
+  type: seasons-orbit
+  data: { tiltDegrees: 23.4 }
+  afterParagraph: 1
+  alt: "Earth keeps the same axis direction: north tilts towards the Sun in June; south does in December."
+  caption: "Earth's axis keeps pointing towards nearly the same place in space throughout its orbit."
+  description: "In June the Northern Hemisphere tilts towards the Sun and receives more direct sunlight and longer days. In December the Southern Hemisphere does. Both drawings keep the axis pointing in the same direction. Sizes, positions and distances are schematic, not to scale."
+activity:
+  prompt: "It is January. Which hemisphere is having summer?"
+  options: ["The Northern Hemisphere", "The Southern Hemisphere"]
+  answer: 1
+  explanation: "The Southern Hemisphere tilts towards the Sun at this time of year. It receives more direct sunlight and longer days, even while the north has winter."
 ---
 “Earth is closer to the Sun in summer” sounds reasonable until you ask: whose summer?
 

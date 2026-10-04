@@ -1,0 +1,23 @@
+---
+import type { TeenActivity } from '../../lib/content/presentation-extensions';
+interface Props { activity: TeenActivity; id: string; }
+const {activity,id}=Astro.props;
+---
+<details class="teen-activity" data-activity>
+ <summary>What do you think?</summary>
+ <p class="activity-prompt">{activity.prompt}</p>
+ <p data-activity-static>Decide before you reveal.</p>
+ <p data-activity-js hidden>Choose an option to see the explanation.</p>
+ <ul class="activity-plain-options" data-activity-static>{activity.options.map(option=><li>{option}</li>)}</ul>
+ <fieldset data-activity-choices hidden>
+  <legend>Choose one</legend>
+  {activity.options.map((option,i)=><label class="activity-choice" for={`${id}-choice-${i}`}><input type="radio" id={`${id}-choice-${i}`} name={`${id}-choice`} value={String(i)} autocomplete="off"/><span>{option}</span></label>)}
+ </fieldset>
+ <p data-activity-selection aria-live="polite" aria-atomic="true"></p>
+ <details data-activity-reveal>
+  <summary>Reveal the explanation</summary>
+  <p><strong>{activity.options[activity.answer]}</strong></p>
+  <p>{activity.explanation}</p>
+ </details>
+</details>
+<script>import '../../lib/reading-activity';</script>
