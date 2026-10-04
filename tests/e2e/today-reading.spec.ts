@@ -56,6 +56,18 @@ test.describe('Today → lesson → edition switch → Takeaway → Test yoursel
     await expect(page.locator('[data-today-edition="teen"]')).toBeHidden();
   });
 
+  test('Today ignores an edition inside unreadable version 1 data', async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem('five-minutes.reader-state', JSON.stringify({
+      version: 1, edition: 'teen', saved: ['not-a-lesson-id'], read: {}, recent: [], appearance: 'dark',
+    })));
+    await page.goto('/');
+    await expect(page.locator('[data-today-edition="adult"]')).toBeVisible();
+    await expect(page.locator('[data-today-edition="teen"]')).toBeVisible();
+    await expect(page.locator('html')).not.toHaveAttribute('data-edition', /.+/);
+    await expect(page.locator('html')).not.toHaveAttribute('data-appearance', 'dark');
+    await expect(page.locator('#reader-recovery')).toBeVisible();
+  });
+
   test('reads a lesson, switches edition and tests understanding', async ({ page }) => {
     await page.goto('/');
     const lessonId = await page.locator('[data-lesson-id]').first().getAttribute('data-lesson-id');
