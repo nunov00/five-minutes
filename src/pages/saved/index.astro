@@ -1,0 +1,44 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getBuildMetadata } from '../../lib/content/build-content';
+import { buildDiscoveryArtifacts } from '../../lib/discovery/artifacts';
+
+const { lessons } = await getBuildMetadata();
+const catalogue = buildDiscoveryArtifacts(lessons).catalogue.path;
+---
+<BaseLayout title="Saved and recent · Five Minutes" description="Reader data kept on this device." noindex preferenceSurface editionPaths={{adult:'/saved',teen:'/saved'}}>
+  <section class="personal-page" data-personal-page data-catalogue={catalogue} aria-labelledby="saved-heading">
+    <p class="eyebrow">On this device</p>
+    <h1 id="saved-heading">Saved and recent</h1>
+    <p class="lede">These lists and preferences stay in this browser. Five Minutes does not receive them.</p>
+    <p data-personal-status role="status" aria-live="polite"></p>
+
+    <section class="lesson-section" aria-labelledby="saved-lessons-heading">
+      <h2 id="saved-lessons-heading">Saved lessons</h2>
+      <p data-saved-empty>Loading saved lessons…</p><ol class="personal-list" data-saved-list></ol>
+    </section>
+    <section class="lesson-section" aria-labelledby="recent-heading">
+      <h2 id="recent-heading">Recently read</h2>
+      <p data-recent-empty>Loading recent lessons…</p><ol class="personal-list" data-recent-list></ol>
+      <p class="quiet-note" data-missing-items hidden></p>
+    </section>
+    <section class="lesson-section card preferences" aria-labelledby="appearance-heading">
+      <h2 id="appearance-heading">Appearance</h2>
+      <fieldset><legend>Colour theme</legend>
+        <label><input type="radio" name="appearance" value="system"/> System</label>
+        <label><input type="radio" name="appearance" value="light"/> Light</label>
+        <label><input type="radio" name="appearance" value="dark"/> Dark</label>
+      </fieldset>
+    </section>
+    <section class="lesson-section card data-tools" aria-labelledby="data-heading">
+      <h2 id="data-heading">Your reader data</h2>
+      <p>Export a copy before changing devices or browsers. Import replaces this browser’s current reader data.</p>
+      <button class="button button-secondary" type="button" data-export-reader>Export data</button>
+      <label class="file-control">Import a Five Minutes JSON file <input type="file" accept="application/json,.json" data-import-file/></label>
+      <label class="confirm-control"><input type="checkbox" data-import-confirm/> I understand that importing will replace this device’s reader data.</label>
+      <button class="button button-secondary" type="button" data-import-reader>Import and replace</button>
+      <p data-import-status role="status" aria-live="polite"></p>
+    </section>
+    <p class="card reader-js-fallback">Saved lessons, recent reading, appearance and data export need JavaScript. You can still read and browse every lesson.</p>
+  </section>
+</BaseLayout>
