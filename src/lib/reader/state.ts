@@ -26,9 +26,22 @@ export function parseReaderState(raw: string | null): ReaderStateV1 | null {
     return s as ReaderStateV1;
   } catch { return null; }
 }
+export type ReaderStorageStatus = { kind: 'valid'; state: ReaderStateV1 } | { kind: 'invalid' | 'unavailable' };
 /** Unknown/corrupt versions are preserved, never silently overwritten. */
 export function readerStorage(getStorage: () => StoragePort) {
+  const inspect = (): ReaderStorageStatus => {
+    try {
+      const state = parseReaderState(getStorage().getItem(READER_STATE_KEY));
+      return state ? { kind: 'valid', state } : { kind: 'invalid' };
+    } catch { return { kind: 'unavailable' }; }
+  };
   return {
+    inspect,
+    /** Called only after the reader explicitly accepts discarding unreadable data. */
+    reset(): boolean {
+      try { getStorage().setItem(READER_STATE_KEY, JSON.stringify(emptyReaderState())); return true; }
+      catch { return false; }
+    },
     read(): ReaderStateV1 | null { try { return parseReaderState(getStorage().getItem(READER_STATE_KEY)); } catch { return null; } },
     chooseEdition(edition: LessonEdition): boolean {
       if (!isEdition(edition)) return false;
