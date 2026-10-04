@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import LessonCard from '../../components/LessonCard.astro';
+import LibraryPagination from '../../components/LibraryPagination.astro';
+import { getBuildMetadata } from '../../lib/content/build-content';
+import { discoveryPath, type LessonEdition } from '../../lib/urls';
+import { libraryPages, newestLessons } from '../../lib/discovery/catalogue';
+import { TAXONOMY } from '../../lib/taxonomy';
+import type { LessonBundle } from '../../lib/content/schema';
+interface Props { edition:LessonEdition; kind:'library'|'topics'; pageNumber:number; pageCount:number; lessons:LessonBundle[]; topic?:typeof TAXONOMY[number]; topics: typeof TAXONOMY; }
+export async function getStaticPaths(){
+ const {lessons}=await getBuildMetadata();const pages=libraryPages(lessons),topics=TAXONOMY.filter(t=>lessons.some(l=>l.metadata.topic===t.token));
+ return (['adult','teen'] as const).flatMap(edition=>[
+  ...pages.map((items,i)=>({params:{path:discoveryPath(edition,'library',i+1).slice('/editions/'.length)},props:{edition,kind:'library',pageNumber:i+1,pageCount:pages.length,lessons:items,topics}})),
+  {params:{path:discoveryPath(edition,'topics').slice('/editions/'.length)},props:{edition,kind:'topics',pageNumber:1,pageCount:1,lessons,topics}},
+  ...topics.map(topic=>({params:{path:discoveryPath(edition,'topics',topic.token).slice('/editions/'.length)},props:{edition,kind:'topics',topic,pageNumber:1,pageCount:1,lessons:newestLessons(lessons.filter(l=>l.metadata.topic===topic.token)),topics}})),
+ ]);
+}
+const {edition,kind,pageNumber,pageCount,lessons,topic,topics}=Astro.props as Props;
+const heading=kind==='library'?'Library':topic?.label??'Topics';
+const groups=topic?.subtopics.map(subtopic=>({subtopic,lessons:lessons.filter(l=>l.metadata.subtopic===subtopic.token)})).filter(g=>g.lessons.length);
+---
+<BaseLayout title={`${heading} · ${edition==='adult'?'Adult':'Teen'} edition · Five Minutes`} edition={edition}>
+ <section aria-labelledby="discovery-heading">
+  <p class="eyebrow">{edition==='adult'?'Adult':'Teen'} edition{pageCount>1?` · Page ${pageNumber} of ${pageCount}`:''}</p>
+  <h1 id="discovery-heading">{heading}</h1>
+  {kind==='library'&&<>
+   <p class="lede">The dated archive of every published idea.</p>
+   <nav class="filter-links" aria-label="Library topics">{topics.map(t=><a href={discoveryPath(edition,'topics',t.token)}>{t.label}</a>)}</nav>
+   <div class="lesson-list">{lessons.map(lesson=><LessonCard lesson={lesson} edition={edition}/>)}</div>
+   <LibraryPagination pageNumber={pageNumber} pageCount={pageCount} edition={edition}/>
+  </>}
+  {kind==='topics'&&!topic&&<><p class="lede">Start with a field, then follow the connections between ideas.</p><div class="topic-grid">{topics.map(t=><article class="card topic-card"><h2><a href={discoveryPath(edition,'topics',t.token)}>{t.label}</a></h2><p>{t.description}</p></article>)}</div></>}
+  {topic&&<><p class="lede">{topic.description}</p>{groups?.map(g=><section class="topic-section" aria-labelledby={`${g.subtopic.token}-heading`}><h2 id={`${g.subtopic.token}-heading`}>{g.subtopic.label}</h2><div class="lesson-list">{g.lessons.map(lesson=><LessonCard lesson={lesson} edition={edition}/>)}</div></section>)}</>}
+ </section>
+</BaseLayout>

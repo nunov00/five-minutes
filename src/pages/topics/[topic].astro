@@ -1,37 +1,9 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import LessonCard from '../../components/LessonCard.astro';
+import Chooser from '../../components/discovery/Chooser.astro';
 import { getBuildMetadata } from '../../lib/content/build-content';
-import type { LessonBundle } from '../../lib/content/schema';
-import { newestLessons } from '../../lib/discovery/catalogue';
-import { TAXONOMY, type TaxonomyTopic } from '../../lib/taxonomy';
-
-interface Props { topic: TaxonomyTopic; lessons: LessonBundle[]; }
-
-export async function getStaticPaths() {
-  const { lessons } = await getBuildMetadata();
-  return TAXONOMY.flatMap((topic) => {
-    const matching = newestLessons(lessons.filter((lesson) => lesson.metadata.topic === topic.token));
-    return matching.length > 0 ? [{ params: { topic: topic.token }, props: { topic, lessons: matching } }] : [];
-  });
-}
-
-const { topic, lessons } = Astro.props as Props;
-const groups = topic.subtopics.map((subtopic) => ({
-  subtopic,
-  lessons: lessons.filter((lesson) => lesson.metadata.subtopic === subtopic.token),
-})).filter((group) => group.lessons.length > 0);
+import { TAXONOMY } from '../../lib/taxonomy';
+export async function getStaticPaths(){const {lessons}=await getBuildMetadata();return TAXONOMY.filter(t=>lessons.some(l=>l.metadata.topic===t.token)).map(topic=>({params:{topic:topic.token},props:{topic}}));}
+const {topic}=Astro.props;
 ---
-<BaseLayout title={`${topic.label} · Topics · Five Minutes`} description={topic.description}>
-  <section aria-labelledby="topic-heading">
-    <p class="eyebrow"><a href="/topics">Topics</a> · {lessons.length} {lessons.length === 1 ? 'lesson' : 'lessons'}</p>
-    <h1 id="topic-heading">{topic.label}</h1>
-    <p class="lede">{topic.description}</p>
-    {groups.map(({ subtopic, lessons: groupLessons }) => (
-      <section class="topic-section" aria-labelledby={`${subtopic.token}-heading`}>
-        <h2 id={`${subtopic.token}-heading`}>{subtopic.label}</h2>
-        <div class="lesson-list">{groupLessons.map((lesson) => <LessonCard lesson={lesson} />)}</div>
-      </section>
-    ))}
-  </section>
-</BaseLayout>
+<BaseLayout title={`${topic.label} · Topics · Five Minutes`} neutralDiscovery><Chooser path={Astro.url.pathname} title={topic.label}/></BaseLayout>
