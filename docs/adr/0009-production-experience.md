@@ -2,7 +2,7 @@
 
 Status: Accepted
 Date: 2026-10-04
-Owner approval: design direction accepted after device review; production contracts D1-D4 approved explicitly on 2026-10-04 under #63. ADR-0005 and ADR-0006 are amended by the same decision.
+Owner approval: design direction accepted after device review; production contracts D1-D4 approved explicitly on 2026-10-04 under #63. The returning-reader Today refinement was approved during the M6.4 device review on 2026-10-04. ADR-0005 and ADR-0006 are amended by the same decision.
 
 ## Context
 
