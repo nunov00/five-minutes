@@ -7,7 +7,7 @@ import { buildDeliveryManifest } from '../../src/lib/delivery-manifest';
 import { lessonPath } from '../../src/lib/urls';
 
 function lesson(id: string, slug: string, aliases = ['old-' + slug]): LessonBundle {
- return { metadata:{schemaVersion:1,id,slug,aliases,publishedAt:'2026-10-02T20:00:00+02:00',topic:'science',subtopic:'physics',concepts:['test'],related:{manual:[],exclude:[]},sources:[],provenance:{createdAt:'2026-10-02T17:00:00Z',createdBy:{type:'human'},reviews:[]}},
+ return { metadata:{schemaVersion:2,id,slug,aliases,publishedAt:'2026-10-02T20:00:00+02:00',topic:'science',subtopic:'physics',concepts:['test'],related:{manual:[],exclude:[]},sources:[],provenance:{createdAt:'2026-10-02T17:00:00Z',createdBy:{type:'human'},reviews:[]}},
  adult:{title:'Adult '+slug,description:'d',takeaway:'t',question:'q',answer:'a',searchTerms:[]},
  teen:{title:'Teen '+slug,description:'d',takeaway:'t',question:'q',answer:'a',searchTerms:[]} };
 }

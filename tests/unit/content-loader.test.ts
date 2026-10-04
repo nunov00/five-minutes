@@ -24,7 +24,7 @@ describe('canonical content integration', () => {
     const dir = join(root, '2026', 'hostile');
     await mkdir(dir, { recursive: true });
     const id = '018f47a2-5d7b-7c31-9d4f-0d9a8b6c2e12';
-    await writeFile(join(dir, 'lesson.yaml'), `schemaVersion: 1
+    await writeFile(join(dir, 'lesson.yaml'), `schemaVersion: 2
 id: ${id}
 slug: hostile
 aliases: []
