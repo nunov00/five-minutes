@@ -20,13 +20,14 @@ const artifacts = buildDiscoveryArtifacts(lessons);
 const fallback = artifacts.catalogue.payload.find((entry) => entry.id !== today.id);
 if (!fallback) throw new Error('Today requires another lesson for Surprise Me.');
 ---
-<BaseLayout title="Today · Five Minutes" editionPaths={{adult:today.adult.path,teen:today.teen.path}}>
+<BaseLayout title="Today · Five Minutes" editionPaths={{adult:today.adult.path,teen:today.teen.path}} todaySurface>
   <section aria-labelledby="today-heading" data-lesson-id={today.id}>
     <p class="eyebrow"><time datetime={today.publishedAt}>{formatEditorialDate(today.publishedAt)}</time></p>
     <h1 id="today-heading">Today's idea</h1>
-    <p class="lede">One idea in two editions. Choose the one that suits you.</p>
+    <p class="lede" data-today-first-visit>One idea in two editions. Choose the one that suits you.</p>
+    <p class="lede" data-today-returning>Your chosen edition for today. Use the edition switch whenever you want the other version.</p>
     {editions.map(({ edition, path, presentation }) => (
-      <article class="card" data-edition={edition}>
+      <article class="card" data-today-edition={edition}>
         <p class="eyebrow">{EDITION_LABELS[edition]} edition</p>
         <h2>{presentation.title}</h2>
         <p>{presentation.description}</p>
