@@ -2,7 +2,7 @@ import { expect, test } from './support/fixtures';
 
 test.describe('M5 discovery', () => {
   test('browses the static Library and populated Topics', async ({ page }) => {
-    await page.goto('/library');
+    await page.goto('/editions/adult/library');
     await expect(page.getByRole('heading', { level: 1, name: 'Library' })).toBeVisible();
     const lessonIds: string[] = [];
     for (let pageNumber = 1; pageNumber <= 10; pageNumber += 1) {
@@ -14,11 +14,11 @@ test.describe('M5 discovery', () => {
     expect(lessonIds).toHaveLength(12);
     expect(new Set(lessonIds).size).toBe(12);
 
-    await page.goto('/library');
+    await page.goto('/editions/adult/library');
     await expect(page.getByRole('navigation', { name: 'Library topics' }).getByRole('link')).toHaveCount(6);
 
     await page.getByRole('link', { name: 'Human Mind' }).click();
-    await expect(page).toHaveURL('/topics/human-mind');
+    await expect(page).toHaveURL('/editions/adult/topics/human-mind');
     await expect(page.getByRole('heading', { level: 1, name: 'Human Mind' })).toBeVisible();
     await expect(page.getByRole('heading', { level: 2, name: 'Learning' })).toBeVisible();
     await expect(page.getByText('Why Testing Yourself Beats Another Reread')).toBeVisible();
@@ -30,6 +30,7 @@ test.describe('M5 discovery', () => {
       if (request.url().includes('/discovery/search-')) requested.push(request.url());
     });
     await page.goto('/search');
+    await page.getByRole('radio', { name: 'Adult', exact:true }).check();
     expect(requested).toEqual([]);
     await page.getByRole('searchbox').fill('marine chronometer');
     await expect(page.getByRole('status')).toContainText('1 lesson found');
@@ -52,6 +53,7 @@ test.describe('M5 discovery', () => {
       await route.continue();
     });
     await page.goto('/search');
+    await page.getByRole('radio', { name: 'Adult', exact:true }).check();
     const adultRequest = page.waitForRequest((request) => request.url().includes('/discovery/search-adult.'));
     await page.getByRole('searchbox').fill('clock');
     await adultRequest;
@@ -80,6 +82,7 @@ test.describe('M5 discovery', () => {
       else await route.continue();
     });
     await page.goto('/search');
+    await page.getByRole('radio', { name: 'Adult', exact:true }).check();
     await page.getByRole('searchbox').fill('clock');
     await expect(page.getByRole('status')).toContainText('Search could not load');
     await page.getByRole('searchbox').fill('marine chronometer');

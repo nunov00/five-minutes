@@ -34,7 +34,7 @@ describe('global delivery outputs', () => {
 
   it('produces deterministic sitemap paths from canonical routes only', () => {
     expect(buildGlobalDeliveryOutputs([lesson], { 'current-name': lesson.metadata.id }).sitemapPaths)
-      .toEqual(['/', '/adult/current-name', '/library', '/search', '/teen/current-name', '/topics', '/topics/science']);
+      .toEqual(['/', '/adult/current-name', '/editions/adult/library', '/editions/adult/topics', '/editions/adult/topics/science', '/editions/teen/library', '/editions/teen/topics', '/editions/teen/topics/science', '/search', '/teen/current-name']);
   });
 
   it('rejects malformed historical route names independently of the loader', () => {

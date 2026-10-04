@@ -1,43 +1,55 @@
 ---
 import '../styles/global.css';
-
-interface Props { title?: string; description?: string; }
-const { title = 'Five Minutes', description = 'One worthwhile idea, made easy to discover, understand and explore.' } = Astro.props;
+import { discoveryPath, editionDiscoveryPath, type LessonEdition } from '../lib/urls';
+import { getBuildMetadata } from '../lib/content/build-content';
+import { libraryPages } from '../lib/discovery/catalogue';
+import { TAXONOMY } from '../lib/taxonomy';
+interface Props { title?: string; description?: string; edition?: LessonEdition; editionPaths?: Record<LessonEdition,string>; neutralDiscovery?: boolean; noindex?: boolean; }
+const { title = 'Five Minutes', description = 'One worthwhile idea, made easy to discover, understand and explore.', edition, editionPaths, neutralDiscovery=false, noindex=false } = Astro.props;
 const pathname = Astro.url.pathname;
+const { lessons } = await getBuildMetadata();
+const bounds = { topics: TAXONOMY.filter(t=>lessons.some(l=>l.metadata.topic===t.token)).map(t=>t.token), libraryPages:libraryPages(lessons).length };
+const search = pathname==='/search';
+const discovery = editionDiscoveryPath(pathname,'adult')!==null;
+const discoveryLocation = pathname.replace(/^\/editions\/(adult|teen)/,'');
 const navigation = [
   { href: '/', label: 'Today', current: pathname === '/' },
-  { href: '/library', label: 'Library', current: pathname.startsWith('/library') },
-  { href: '/topics', label: 'Topics', current: pathname.startsWith('/topics') },
-  { href: '/search', label: 'Search', current: pathname.startsWith('/search') },
+  { href: discoveryPath(edition ?? null,'library'), label: 'Library', current: discovery && discoveryLocation.startsWith('/library') },
+  { href: discoveryPath(edition ?? null,'topics'), label: 'Topics', current: discovery && discoveryLocation.startsWith('/topics') },
+  { href: '/search', label: 'Search', current: search },
 ];
+const choices = editionPaths ?? { adult: editionDiscoveryPath(pathname,'adult') ?? '/search?edition=adult', teen: editionDiscoveryPath(pathname,'teen') ?? '/search?edition=teen' };
+const canonical = !neutralDiscovery && !noindex && Astro.site ? new URL(pathname,Astro.site).href : undefined;
 ---
 <!doctype html>
-<html lang="en">
+<html lang="en" data-edition={edition} data-neutral-discovery={neutralDiscovery ? 'true' : undefined} data-search={search?'true':undefined} data-discovery={discovery||search?'true':undefined} data-discovery-bounds={JSON.stringify(bounds)}>
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="color-scheme" content="light dark" />
-    <meta name="description" content={description} />
-    <title>{title}</title>
-    <link rel="manifest" href="/manifest.webmanifest" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <meta name="apple-mobile-web-app-title" content="Five Minutes" />
+    <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" /><meta name="description" content={description} /><title>{title}</title>
+    {(neutralDiscovery || noindex) && <meta name="robots" content="noindex,follow"/>}
+    {canonical && <link rel="canonical" href={canonical}/>}
+    <link rel="manifest" href="/manifest.webmanifest" /><link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" /><meta name="apple-mobile-web-app-title" content="Five Minutes" />
     <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fbfaf7" />
     <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#15171a" />
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
-    <header class="site-header">
-      <div class="container">
-        <a class="brand" href="/">Five Minutes</a>
-        <nav class="site-nav" aria-label="Main navigation">
-          {navigation.map((item) => (
-            <a href={item.href} aria-current={item.current ? 'page' : undefined}>{item.label}</a>
-          ))}
-        </nav>
-      </div>
-    </header>
+    <header class="site-header"><div class="container">
+      <a class="brand" href="/">Five Minutes</a>
+      <nav class="edition-switch" aria-label="Edition" data-global-selector>
+        {(['adult','teen'] as const).map(option=><a href={choices[option]} data-edition-choice={option} aria-current={option===edition?'page':undefined}>{option==='adult'?'Adult':'Teen'}</a>)}
+      </nav>
+      <nav class="site-nav" aria-label="Main navigation">{navigation.map(item=><a href={item.href} aria-current={item.current?'page':undefined}>{item.label}</a>)}</nav>
+    </div></header>
+    <p id="preference-note" class="container quiet-note" hidden>Your choice will not be remembered on this device.</p>
+    <details id="reader-recovery" class="container quiet-note" hidden>
+      <summary>Recover local reader data</summary>
+      <p>Resetting discards saved lessons, read history, recent reading, appearance and edition preferences on this device. A newer version of the app may be able to read this data; leave it unchanged if you want to keep it.</p>
+      <button id="reset-reader-state" class="button button-secondary" type="button">Discard local reader data and reset</button>
+    </details>
+    <p class="container quiet-note no-script-note">Edition links work, but your choice will not be remembered without JavaScript.</p>
     <main id="main" class="site-main container"><slot /></main>
+    <script>import '../lib/reader/enhance';</script>
   </body>
 </html>

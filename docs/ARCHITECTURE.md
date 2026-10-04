@@ -152,3 +152,7 @@ The following remain design work rather than accidental commitments:
 These decisions should be recorded in ADRs when they become significant.
 
 The initial controlled topic/subtopic vocabulary and related-content priority rules are defined by ADR-0008. Concept vocabulary remains editorially extensible and is not a public hierarchy.
+
+## M6.1 implementation boundary
+
+The production reader-state envelope, storage abstraction, edition discovery routing, neutral chooser/forwarding SEO policy and session Return validation are documented in [M6.1 implementation](implementation/m6.1-reader-foundation.md). They implement ADR-0005/0009 without introducing accounts, server code or prototype dependencies. Saved/Read/recent/appearance UI remains M6.3.

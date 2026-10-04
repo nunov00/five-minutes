@@ -449,3 +449,16 @@ summary {
   padding-top: var(--space-3);
   border-top: 1px solid var(--color-border);
 }
+
+/* Shared edition shell. Preferences beyond edition arrive in M6.3. */
+html[data-edition=adult]{--color-accent:#286146;--color-focus:#286146;--color-accent-soft:#e5eee7}
+html[data-edition=teen]{--color-accent:#6940ac;--color-focus:#6940ac;--color-accent-soft:#eee8f6}
+html[data-edition=adult] h1,html[data-edition=adult] h2{font-family:var(--font-serif)}
+html[data-edition=teen] .lesson-body{font-family:var(--font-sans)}
+@media(prefers-color-scheme:dark){html[data-edition=adult]{--color-accent:#a0d6ba;--color-focus:#a0d6ba;--color-accent-soft:#23362b;--color-accent-contrast:#17261d}html[data-edition=teen]{--color-accent:#c4b0ff;--color-focus:#c4b0ff;--color-accent-soft:#30253e;--color-accent-contrast:#24143b}}
+.site-header .container{gap:8px;justify-content:space-between}.site-header .edition-switch{margin:0;padding:0;border-radius:6px;gap:0}.site-header .edition-switch a{padding:0 10px;border-radius:4px}
+.site-nav{justify-content:space-between}.site-nav a{padding:0 8px}.quiet-note{font-size:var(--text-sm);color:var(--color-muted);padding-top:8px}.chooser{display:flex;flex-wrap:wrap;gap:16px}.lesson-card{background:transparent;border:0;border-top:1px solid var(--color-border);border-radius:0;padding:20px 0}.other-version{display:inline-block;min-height:44px;padding:10px 0}[hidden]{display:none!important}
+@media(max-width:639px){body{padding-bottom:76px}.site-nav{position:fixed;bottom:0;left:0;width:100%;z-index:10;padding:8px 8px calc(8px + env(safe-area-inset-bottom));background:var(--color-bg);border-top:1px solid var(--color-border);overflow:visible}.site-nav a{min-width:56px;font-size:14px;justify-content:center}.site-header .container{flex-wrap:nowrap}.brand{font-size:18px}.site-header .edition-switch a{font-size:14px;padding:0 8px}html{scroll-padding-bottom:96px}a,input,button,summary{scroll-margin-bottom:96px}.site-main{padding-top:24px}}
+@media(min-width:640px){.site-header .container{flex-wrap:wrap}.site-nav{width:auto;margin-left:0}}
+
+.reader-enhanced .no-script-note{display:none}
