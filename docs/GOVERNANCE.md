@@ -128,11 +128,11 @@ The Owner authorises the Manager to merge qualifying Pull Requests without a sep
 Before merging, the Manager must verify that:
 - all required automated checks have passed on the exact current PR head; required tests must actually run, not be skipped;
 - any preview/deployment verification required by the change's scope and risk has succeeded for that head;
-- the required independent review is complete for that head, with no unresolved BLOCKER or IMPORTANT findings;
+- the review required by section 9 for the PR's recorded classification is complete, with no unresolved BLOCKER or IMPORTANT findings;
 - remaining MINOR findings are explicitly non-blocking and are resolved or recorded as follow-up work;
 - the change stays within the Owner-authorised scope and does not introduce an unapproved product, major architecture, cost, privacy, security or destructive decision.
 
-Record the readiness evidence and use an expected-head SHA guard when merging. A changed head requires fresh checks and appropriate re-review. After merging, inform the Owner concisely of what merged, the validation result and any remaining follow-ups; verify the resulting production checks/deployment where applicable and report failures.
+Record the readiness evidence and use an expected-head SHA guard when merging. A changed head always requires fresh checks; section 9 determines whether independent re-review is also required. After merging, inform the Owner concisely of what merged, the validation result and any remaining follow-ups; verify the resulting production checks/deployment where applicable and report failures.
 
 This is standing authorisation for the final merge gate, not permission to bypass quality checks or expand project scope. Decisions reserved to the Owner still require approval before implementation unless already explicitly delegated. Once that decision or scope is authorised and the gates above pass, do not ask for the same approval again.
 
@@ -140,11 +140,11 @@ This is standing authorisation for the final merge gate, not permission to bypas
 
 Substantial development should normally follow:
 
-**Objective → Issue/Task → Implementation → Tests → Review → Preview → Merge authorisation → Merge → Production**
+**Objective → Issue/Task → Implementation → Tests → Risk-classified review → Preview → Merge authorisation → Merge → Production**
 
 Merge authorisation may come from the standing delegation in section 4; a separate Owner confirmation is needed only for a decision outside existing authorisation.
 
-Changes should normally be associated with a clearly defined task or GitHub Issue and implemented on a dedicated branch.
+Changes should normally be associated with a clearly defined task or GitHub Issue and implemented on a dedicated branch. Every Pull Request records one section 9 review classification and the reason it qualifies.
 
 Changes to `main` should normally happen through a Pull Request.
 
@@ -185,7 +185,7 @@ AI contributors are encouraged to challenge existing approaches when they identi
 
 For this rule, independence is defined at the provider/model-family level: OpenAI products (including ChatGPT and Codex) count as one reviewer family; Anthropic products (including Claude and Claude Code) count as another. Different products, models, sessions or sub-agents from the same provider do not qualify as independent from one another.
 
-When independent AI review is required, the Reviewer must use a different AI system from the implementer (for example, Claude reviews Codex work, or Codex reviews Claude work). A separate session, sub-agent or model within the same AI system does not by itself satisfy this requirement. See section 9 for the narrow exceptions. No AI-generated change is exempt from normal project quality requirements.
+When independent AI review is required by section 9, the Reviewer must use a different AI system from the implementer (for example, Claude reviews Codex work, or Codex reviews Claude work). A separate session, sub-agent or model within the same AI system does not by itself satisfy this requirement. Risk classification never exempts AI-generated work from normal project quality requirements.
 
 ## 8. Quality Gates
 
@@ -213,27 +213,74 @@ Reviews should evaluate the change rather than simply confirm that it runs.
 
 Reviewers should challenge unnecessary complexity, architecture violations, fragile implementations, undocumented behavioural changes, missing tests, unnecessary dependencies, and solutions that solve the immediate task while creating avoidable future constraints.
 
-Minor changes may use proportionally lighter review. Significant changes, including code, architecture/ADRs, governance and content rules, require independent review before merge; when AI systems implement and review the work, they must be different systems as defined in section 7.
+### Review classification
 
-### Different-AI review and exceptions (Owner instruction, 2026-10-03)
+Every Pull Request records exactly one classification in its description or as a repository label, together with a short reason:
 
-Use a different AI system from the implementer for any required independent AI review. The purpose is a different perspective, not another pass by the same system. Same-system verification can supplement this review but must be described accurately and cannot silently replace it.
+#### `review:routine`
 
-Exceptions are allowed only when a different AI system genuinely cannot perform the review, or the Owner explicitly requests an alternative. Record the implementer and reviewer systems, the reason for any exception, and any applicable Owner instruction on the PR before merging. Needing an Owner-relayed prompt or lacking a direct tool to invoke an available different AI system is not, by itself, evidence that review is impossible. In that case, prepare a self-contained review hand-off and keep the merge gate pending.
+Independent different-provider review is not required when all of the following are true:
 
-The reviewer must evaluate the exact current head independently, record actionable findings on the PR, and distinguish their own checks from evidence supplied by the implementer. After fixes, obtain appropriate re-review from the different AI system on the final head and pass the required checks before merging. The standing merge authorisation does not waive this requirement.
+- the change stays within approved architecture and product behaviour;
+- it is narrow, reversible and does not alter a public or stored-data contract;
+- it does not change a security/privacy boundary, content trust boundary, canonical routing, publication/deployment behaviour, significant dependency/service/cost, or material factual content;
+- focused tests and normal CI provide proportionate evidence.
+
+Typical examples are tests, documentation corrections, mechanical migrations with verified identical output, small regression fixes, internal refactors with unchanged behaviour, and styling/accessibility corrections within an approved design. The Manager performs a focused diff review, records the evidence and may merge under the standing authorisation without a second AI reviewer.
+
+#### `review:integration`
+
+Related work inside an Owner-approved feature or ADR may be implemented in stages and receive one different-provider review at the integration gate rather than one review per staging PR. An intermediate PR may use `review:routine` only when it is independently production-safe, behaviour-neutral or inactive, reversible, and does not cross a mandatory-review boundary. A PR that activates material user-facing behaviour is itself the integration gate.
+
+The integration Reviewer evaluates the cumulative feature range and the resulting system, not merely the final small diff. The review must complete before activation or milestone closure. This classification is useful for approved feature work whose individual scaffolding changes would otherwise create repetitive review ceremony.
+
+#### `review:mandatory`
+
+A different-provider review is required before merge for:
+
+- governance changes and new or materially amended architecture/ADRs;
+- security, privacy, authentication, authorisation or executable-content boundaries;
+- stored-data formats or migrations that could lose or reinterpret reader data;
+- canonical content parsing/validation, canonical URLs, redirects, publication automation or material deployment/infrastructure behaviour;
+- significant dependencies, external services, recurring costs, destructive operations or difficult-to-reverse changes;
+- material factual/editorial content or batches requiring review under `docs/EDITORIAL.md`;
+- any change the Owner or Manager explicitly elevates because uncertainty or impact warrants another perspective.
+
+Classification is based on the highest-risk part of the change. Splitting a high-risk change into small PRs does not turn it into routine work. When uncertain, elevate the classification or ask the Owner to resolve the boundary.
+
+### Different-AI review and exceptions
+
+When `review:integration` or `review:mandatory` requires independent AI review, use a different provider/model family from the implementer. The purpose is a genuinely different perspective, not another pass by the same system. Same-system verification may supplement the review but cannot silently replace it.
+
+Exceptions are allowed only when a different AI system genuinely cannot perform the required review, or the Owner explicitly requests an alternative. Record the implementer and reviewer systems, the reason and any applicable Owner instruction on the PR. Needing an Owner-relayed prompt or lacking direct reviewer tooling does not by itself make review impossible; prepare one self-contained hand-off and keep the gate pending.
+
+The independent Reviewer evaluates the relevant exact head or cumulative integration range, records actionable findings on the PR and distinguishes their own checks from implementer evidence.
+
+### Review remediation
+
+Every changed head must pass the required automated checks. Independent re-review is required when remediation:
+
+- resolves a BLOCKER or IMPORTANT finding;
+- changes security, privacy, factual/editorial, architecture, stored-data, content-validation, routing, publication or deployment behaviour; or
+- materially broadens or redesigns the implementation.
+
+The Manager may verify and merge a narrow MINOR-only remediation without returning it to the independent Reviewer when the fix is straightforward, covered by focused tests, introduces no new risk boundary and the PR records the verification. If the fix grows beyond those limits, reclassify it and obtain re-review on the final head.
+
+### Periodic integration audit
+
+At milestone integration gates, the different-provider Reviewer should sample recent `review:routine` PRs while evaluating the combined system. This is a check for classification drift and accumulated interactions, not a reason to replay every already-green routine review. Any actual defect or misclassification discovered is handled normally and may block milestone closure.
 
 ### Review communication and record
 
 For Pull Request work, technical review communication should be recorded directly on the Pull Request whenever practical. Reviewers should post actionable findings there, using inline comments for code-specific findings and a summary comment or review for the overall result. Findings should be classified consistently when useful (for example BLOCKER, IMPORTANT and MINOR).
 
-Workers should respond to review findings on the Pull Request, push fixes to the existing branch, and record enough context for a later contributor to understand how significant findings were resolved. Re-review results should likewise be recorded on the Pull Request.
+Workers should respond to review findings on the Pull Request, push fixes to the existing branch, and record enough context for a later contributor to understand how significant findings were resolved. When section 9 requires re-review, its result should likewise be recorded on the Pull Request.
 
 ### Risk-proportionate depth
 
-The requirement for independent review is unchanged, but review depth should match the likely impact. Architecture, security boundaries, content loading/validation, canonical URLs, deployment and publication changes require adversarial review: inspect the implementation and tests, exercise important failure modes and verify the exact head independently. Material lesson batches require factual and editorial review under `docs/EDITORIAL.md`.
+Review depth follows the classification and likely impact. Mandatory architecture, security, content loading/validation, canonical URL, deployment and publication changes receive adversarial review: inspect implementation and tests, exercise important failure modes and verify the relevant head independently. Material lesson batches receive factual and editorial review under `docs/EDITORIAL.md`.
 
-Routine bounded changes may use a lighter review that checks the focused diff, relevant tests and architectural fit. Reviewers should not repeat expensive unrelated checks merely to create ceremony. A lighter review does not permit a significant change to be self-reviewed or exempt it from the different-system requirement above.
+Routine review checks the focused diff, relevant tests and architectural fit. Integration review concentrates on cross-component behaviour and the cumulative feature. Reviewers should not repeat expensive unrelated checks merely to create ceremony.
 
 The Owner should receive concise summaries and make decisions that require Owner authority, but should not normally have to relay technical messages between Workers, Reviewers and the Manager. Repository discussion is the authoritative engineering record; chat conversations are coordination surfaces rather than a substitute for that record.
 
