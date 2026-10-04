@@ -1,124 +1,132 @@
 # ADR-0009: Production experience after the joint design prototype
 
-Status: Accepted
+Status: Proposed — Owner decisions required before implementation
 Date: 2026-10-04
-Owner approval: design direction accepted after device review of the joint prototype; production adoption remains subject to independently reviewed implementation.
+Owner-approved evidence: the joint prototype's readability/activity/figure direction was accepted during device review. This did **not** approve new production routing, first-visit/default-edition semantics, content-schema changes or Teen-only publication policy.
 
 ## Context
 
-M1-M5 established the production architecture and Discovery. A deliberately isolated joint design prototype then explored how the publication should feel once those capabilities are presented as one coherent product.
+M1-M5 established the production architecture and Discovery. A deliberately isolated joint design prototype then explored how those capabilities could feel as one coherent publication.
 
-The prototype was not production architecture and must not be merged wholesale. It used real canonical content plus clearly identified fixtures and intentionally left production routes, canonical schema and reader-state contracts unchanged. Its purpose was to settle presentation and interaction direction before M6 made local reader state visible throughout the interface.
+The prototype is design evidence, not production architecture and not a branch to merge wholesale. Owner device feedback established three useful product signals: both visual voices were comfortable to read, the collapsed prediction interaction was noticeable/useful, and the seasons figure earned its place. Claude/Anthropic independently reviewed prototype head `9ef92941bd9db3e81f761a1215b73c57e144b12a` and reported 0 BLOCKER / 0 IMPORTANT / 0 MINOR for the bounded prototype implementation. That review did not approve production contracts and explicitly left real Safari/bfcache, screen-reader behaviour, final fonts and production-scale performance unverified.
 
-Owner device review found both editions comfortable to read, the collapsed Teen activity noticeable/useful, and the seasons figure worthwhile. The final prototype head also passed independent different-provider review with no BLOCKER, IMPORTANT or MINOR findings. This ADR records the production direction selected from that work while preserving the accepted M1-M5 contracts.
+This ADR therefore separates **selected design direction** from **production contracts still requiring an Owner decision**. It must not be marked Accepted until the open decisions below are resolved and independently reviewed.
 
-## Decision
+## Direction already selected
 
 ### One publication, two visual voices
 
-Five Minutes remains one publication with one immutable lesson identity and mandatory Adult and Teen presentations.
+Five Minutes remains one publication with one immutable lesson identity and mandatory Adult and Teen presentations under ADR-0006.
 
-Adult and Teen keep the explicit public routes from ADR-0005:
+Adult and Teen retain the explicit canonical lesson routes from ADR-0005:
 
 - `/adult/<slug>`
 - `/teen/<slug>`
 
-The URL is authoritative for the edition of a lesson page. A stored edition preference never rewrites, redirects or hides an explicitly shared lesson URL.
+An explicit lesson URL remains authoritative for the presentation being requested. Shared publication chrome may give Adult and Teen materially different typography, density and activity treatment without turning them into separate products or identities.
 
-The application uses shared publication chrome/navigation, but Adult and Teen may have materially different presentation tokens, typography, density and activity treatment. The distinction is presentation, not separate products or separate lesson identities.
+The editorial rule remains unchanged while this ADR is Proposed: neither Adult nor Teen is the editorially “complete” or intrinsically default edition.
 
-### Edition preference and first visit
+### Recall-before-summary direction
 
-M6 owns a versioned local edition preference behind the reader-state storage abstraction.
+The selected lesson ending asks the reader to retrieve or consider the central idea **after the explanatory body and before the final takeaway/answer**. This is the intended meaning of “recall-first”; it does not move a quiz ahead of the lesson body.
 
-- With no stored preference, the publication default is Adult.
-- Choosing an edition from publication-level navigation stores that preference and uses it for subsequent neutral entry points such as Today, Library, Topics, Search, Saved and Surprise Me.
-- Following an explicit Adult or Teen lesson URL displays that requested edition without silently changing the stored preference.
-- The lesson-level alternate-edition bridge opens the corresponding presentation of the same immutable lesson without changing the stored preference merely because the reader inspected it.
-- A deliberate publication-level edition choice is the action that changes preference.
+Essential reading, the prompt, takeaway/reveal and navigation must remain understandable without JavaScript.
 
-These rules keep shared links deterministic while allowing the surrounding publication to remember a reader's normal voice.
+### Figures and lightweight activities are worth supporting
 
-### Navigation and history
+The prototype established that a reviewed explanatory figure can materially improve a lesson and that a lightweight prediction/choice can be useful. It did **not** approve their production schema or a Teen-only publication rule.
 
-Edition changes and Return/Back controls must respect ordinary browser history rather than manufacturing surprising navigation.
+Before either capability ships, ADR-0006 must be amended (or superseded by a content-contract ADR) and the canonical schema version must change. That decision must define ownership (shared lesson vs presentation-specific), validation, accessibility, asset/security policy and editorial review. SVG must not be accepted merely because it is an image format: active content, external references and other SVG attack surfaces require an explicit safe policy or SVG must be excluded.
 
-A same-lesson edition bridge navigates to the other canonical presentation URL. Returning from it should preserve the reader's meaningful lesson/discovery location and must not create preference side effects.
+Activities remain supplementary, progressively enhanced and non-persistent unless a later product decision says otherwise. Whether an activity may exist only in Teen, only in one presentation generally, or must have a paired equivalent is an **open Owner/content-contract decision**.
 
-Implementation must test browser Back/forward restoration, including Safari/WebKit behaviour. The prototype's Chromium protections are evidence, not a substitute for the production real-browser gate.
+## Open production contracts — Owner decision required
 
-### Reading flow
+Implementation of the production experience foundation must not start until these contracts are decided.
 
-The production lesson experience adopts a recall-first ending: prompt the reader to retrieve/consider the idea before presenting the final takeaway/explanation.
+### D1 — Neutral entry points and first visit
 
-The existing progressively enhanced contract remains: the lesson body, takeaway/reveal and essential navigation must remain usable without JavaScript. Enhancements must not make comprehension depend on client state.
+Today (`/`), Library, Topics and Search currently have neutral URLs. We need one deterministic rule for how a stored edition preference affects their content/links while preserving static delivery and no-JavaScript usefulness.
 
-### Reviewed figures
+The decision must explicitly define:
 
-A lesson may include an optional explanatory figure when it materially improves understanding. Figures are editorial content, not arbitrary executable embeds.
+- first visit when no preference exists — preserve the current edition choice, choose a publication default, or another specified behaviour;
+- whether neutral pages render neutral content with edition-aware links, render one edition and enhance after load, or use another static representation;
+- no-JavaScript behaviour;
+- whether client enhancement may ever cause a visible wrong-edition flash;
+- PWA `start_url` behaviour;
+- effects on generated routes/file count.
 
-Production adoption must define a safe structured figure contract within the canonical content model before figures are published. At minimum it must support accessible alternative text/captioning, deterministic placement and validation of locally controlled assets/data. Raw HTML, arbitrary scripts and remote executable embeds remain outside the safe Markdown contract.
+Until D1 is approved, **Adult is not declared the default** and current production semantics remain authoritative.
 
-Figures should appear early enough to support the explanation they clarify; responsive layouts may place them beside text on larger screens and in reading order on narrow screens.
+### D2 — Preference-writing actions
 
-### Optional Teen activities
+Define an explicit action matrix. At minimum it must distinguish:
 
-Teen presentations may include an optional lightweight prediction/choice activity such as the accepted “What do you think?” pattern.
+- publication-level Adult/Teen selection in shared navigation;
+- a header edition action while on a lesson;
+- the end-of-lesson same-identity alternate-presentation bridge;
+- an optional “use this edition normally” action while viewing an explicit/shared link;
+- navigation from an explicit Teen/Adult lesson to Today, Library, Topics, Search, Saved and Surprise Me.
 
-Activities are supplementary and lesson-specific, not mandatory gamification. They must:
+For every action the contract must say whether it writes preference and which edition neutral destinations use. Merely viewing or following an explicit/shared lesson URL must not silently write preference unless the Owner explicitly chooses otherwise.
 
-- remain understandable and revealable without JavaScript;
-- be keyboard accessible;
-- avoid persistent answer state unless a later product decision explicitly requires it;
-- reset ephemeral form/reveal state so browser restoration does not present stale answers as current;
-- use structured validated content rather than executable lesson markup.
+### D3 — History, Return and restoration
 
-The content/schema extension for activities is a production implementation decision within these boundaries and requires its normal review.
+Define testable navigation semantics before implementation:
 
-### Discovery and local reader state
+- which edition-changing actions use normal push navigation and whether any ever replace history;
+- what “Return” means (browser history, remembered discovery origin, Today fallback or another defined rule);
+- fallback when there is no useful same-origin history, including installed-app cold launch;
+- what a Back-restored neutral page does if edition preference changed after it was first visited;
+- expected form/reveal state after Back/forward-cache restoration.
 
-M5 Discovery remains the foundation: controlled taxonomy, static Library/Topics, compact catalogue, edition-specific lazy search, deterministic Related and Surprise Me remain accepted.
+Safari/WebKit and Chromium tests must assert these chosen outcomes; “respect browser history” alone is not an acceptance criterion.
 
-M6 adds local Saved, Read and edition preference through the existing storage abstraction. Production UI work should integrate these states into the accepted shared publication shell rather than first building them against an interface scheduled for replacement.
+### D4 — Figure/activity canonical contract
 
-Library/archive surfaces remain bounded/paginated; no screen should require loading or rendering the whole catalogue. Search remains lazy and edition-specific.
+Resolve the ADR-0006/schema questions described above before production content uses figures or activities. This includes editorial verification of factual labels/captions as well as technical validation. The prototype's corrected implementation does not substitute for content-level review.
 
-### Prototype boundary
+## Discovery and catalogue semantics
 
-The `/design-preview` implementation is reference material only. It is not merged wholesale and does not become a production dependency.
+M5 remains authoritative. Static Library/Topics, compact catalogue, edition-specific lazy search, deterministic Related and Surprise Me are preserved.
 
-Production work must be implemented against the current main architecture in focused PRs. Reuse of ideas or small code patterns is allowed only after assessing their effect on production bundling, progressive enhancement, accessibility, routes and tests.
-
-Ratings, reader feedback, monetisation and optional AI “Tell me more” experiences remain separate future modules/decisions.
+“Bounded” refers to **rendered/page presentation and payload purpose**, not a prohibition on loading the compact catalogue. ADR-0003 intentionally allows consumers such as Saved and Surprise Me to load the compact catalogue. Search indexes remain lazy and edition-specific.
 
 ## Delivery sequence
 
-Post-M5 production work is delivered in four stages:
+The sequence is aligned with the existing milestones rather than creating a competing four-stage programme:
 
-1. **Production experience foundation** — shared navigation/shell, Adult and Teen presentation systems, global edition selection/preference contract, route/history behaviour and bounded discovery integration while preserving existing URLs.
-2. **Reading enhancements** — recall-first ending plus the safe structured contracts and rendering for reviewed figures and optional Teen activities.
-3. **Local reader state** — versioned Saved/Read/preferences, migration and export/import, integrated into the production experience; no account/backend.
-4. **Integration and release hardening** — full CI/Playwright, different-provider exact-head review, Cloudflare preview, accessibility and real-device/browser verification before production adoption.
+1. **Post-M5 architecture gate (this ADR)** — resolve D1-D4, amend ADR-0006/schema design as required, reconcile docs, obtain Owner approval and different-provider review.
+2. **Production experience foundation** — shared shell/navigation and Adult/Teen presentation systems, implementing the approved D1-D3 contracts. If edition preference is introduced here, it must use the **final M6 versioned storage abstraction/format from its first production write**; do not create a temporary preference store.
+3. **M6 local reader state + reading enhancements** — Saved/Read/preferences, migration/export/import and approved recall/figure/activity capabilities. This may be split into focused PRs, but schema changes precede content/rendering that depends on them.
+4. **M6 integration gate** — verify the complete production experience and reader state as one system. M7 then remains Automated publication.
+5. **M8 production hardening** — remains the roadmap's production-readiness milestone. M6 verification must cover changed journeys but must not claim to replace M8's broader accessibility/security/performance/analytics/recovery gate.
 
-M7 automated publication and M8 production readiness remain subsequent roadmap milestones. Content automation must understand any new figure/activity schema before generating those fields.
+M7 generation/review must understand any new canonical schema fields before automated workers may author them.
 
-## Verification gates carried from the prototype
+## Prototype boundary and verification
 
-The production implementation must not claim the prototype verified what it did not. Before production adoption, verify as applicable:
+The `/design-preview` branch remains reference material only. Reusing an idea or small pattern requires production assessment; no prototype bundling, fixture, route or test result becomes a production dependency by implication.
+
+Production adoption must verify the relevant accepted contracts, including:
 
 - real Safari/WebKit Back/forward-cache and form-restoration behaviour;
-- installed-app cold launch and navigation;
-- screen-reader semantics and focus order;
-- narrow mobile layouts and enlarged text;
-- final production fonts/tokens;
-- realistic catalogue/search performance and asset/file capacity;
-- no-JavaScript essential reading and reveal behaviour.
+- installed-app cold launch/navigation and PWA start semantics;
+- screen-reader semantics, focus order, keyboard behaviour and enlarged-text layouts;
+- narrow mobile layouts and final production fonts/tokens;
+- no-JavaScript essential reading/reveal/navigation;
+- realistic catalogue/search performance and Cloudflare file/asset capacity;
+- safe-content/security-policy validation for any new figure/activity representation;
+- editorial/factual review of figures, captions, activity prompts and answers;
+- existing URL/static/redirect integrity and progressive-enhancement gates.
 
 ## Consequences
 
-- M1-M5 architecture remains valid; this ADR extends presentation/state delivery rather than replacing the system.
-- Existing lesson URLs and immutable identity are preserved.
-- Shared links remain deterministic and do not mutate preference.
-- M6 state work is sequenced with the production redesign to avoid implementing the same UI twice.
-- Figures and activities become controlled optional content capabilities rather than prototype-only markup.
-- The prototype branch can remain unmerged as design evidence.
+- M1-M5 remain authoritative while this ADR is Proposed.
+- The selected visual/readability direction can guide design work, but unresolved product contracts cannot be inferred from the prototype.
+- Existing explicit Adult/Teen lesson URLs and immutable identity are preserved.
+- M6 storage is designed once before the first production preference write.
+- Figures/activities cannot bypass ADR-0006 or schema versioning.
+- M8 remains the final production-hardening milestone rather than being duplicated here.
