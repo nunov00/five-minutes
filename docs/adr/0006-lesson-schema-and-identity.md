@@ -4,6 +4,7 @@ Status: Accepted
 Date: 2026-10-02
 Owner approval: approved 2026-10-02.
 Amended: 2026-10-03 — presentation heading contract (Owner-approved during M4.1, PR #39; recorded at the M4 gate, #45).
+Amended: 2026-10-04 — Owner-approved optional per-edition figures and Teen-only activities (ADR-0009 / #63). Schema version advances from 1 to 2 when these fields are implemented.
 
 ## Context
 
@@ -49,7 +50,7 @@ Reader state and internal relationships use `id`, never slug or URL.
 Proposed shape:
 
 ```yaml
-schemaVersion: 1
+schemaVersion: 2
 id: "018f..."
 slug: "why-gps-needs-einstein"
 aliases: []
@@ -110,6 +111,16 @@ Article body in plain Markdown...
 
 Audience-specific titles, descriptions, examples, body, takeaway and retrieval question/answer may differ substantially. Shared facts such as identity, publication date, taxonomy, relationships and research provenance do not get duplicated into presentation files.
 
+### Optional presentation media and activities
+
+Schema version 2 adds optional presentation-owned explanatory figures. Existing schemaVersion 1 lessons remain valid source during the M6.2 transition: the migration is deterministic and content-preserving—update each canonical lesson to schemaVersion 2 without inventing figure/activity fields, then validate the complete corpus as v2 before any v2-only content is merged. Once that corpus migration lands, production validation rejects schemaVersion 1; mixed published schema versions are not a steady state.
+
+Adult and Teen may have different figures and captions, or neither may have one. Lesson content never supplies SVG, HTML or executable drawing code. A diagram is an application-owned renderer selected from a closed type vocabulary and fed only validated structured data from the presentation. Raster figure assets are repository-local PNG or WebP only. Every figure requires non-empty alternative text and a caption; validation enforces configured image dimensions and per-asset byte-size limits. Aggregate deployment file-count/capacity remains a deployment-adapter/artifact gate under OPERATIONS.md, not canonical content validation.
+
+Teen presentations may additionally contain an optional structured activity. Activities are Teen-only, supplementary and non-persistent. Their prompt, choices, correct/recommended answer and explanation are validated data rendered by application components. Adult presentations must not contain the activity field. Essential lesson comprehension and the answer/reveal remain available without JavaScript.
+
+Raw SVG, raw HTML, remote image URLs, scriptable embeds and arbitrary component names are rejected as canonical lesson content. The application, not the lesson, owns diagram rendering code and its security boundary.
+
 #### Presentation heading contract
 
 The front-matter `title` of each presentation is the reading page's only level-1 heading (`<h1>`). The Markdown body therefore starts at level 2: it may use `##` and `###` headings and must not define a level-1 (`#`) heading. The content pipeline enforces this when it parses a presentation file and fails the build on a `#` heading in a body; rendered, sanitized body HTML is used unchanged, with no heading rewriting after sanitization.
@@ -160,6 +171,8 @@ CI/build validation must reject at least:
 - relationships to nonexistent IDs;
 - a published lesson missing either Adult or Teen presentation;
 - invalid presentation metadata;
+- schema-version mismatch or invalid figure/activity structured data;
+- Adult activity fields, non-local/unsupported figure assets, SVG/HTML/executable figure content, missing figure alt text/caption, or configured per-asset type/dimension/byte-size violations;
 - unsafe Markdown constructs;
 - a level-1 heading in a presentation body;
 - published content that violates the publication policy.

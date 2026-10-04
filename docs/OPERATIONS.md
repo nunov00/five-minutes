@@ -129,9 +129,13 @@ Accessibility and broken-link checks are CI concerns. Performance/mobile search 
 3. Static delivery: catalogue/URL manifest, shared route generation, normal static build, exact completeness/internal-link validation and clean deployment artifact. Add deterministic sharding only when measured build pressure justifies it.
 4. Core reading UX: Today, Adult/Teen lesson URLs, responsive reader, takeaway, Test Yourself and installable PWA shell/manifest/icons.
 5. Discovery: compact catalogue, Library, Topics, Search, Related and Surprise Me.
-6. Local reader state: Saved/Read/recent/edition/appearance with versioned storage abstraction.
-7. Automated publication: generation -> validation -> independent AI review -> eligible PR -> scheduled merge/deploy, with escalation on review failure/uncertainty.
-8. Production hardening: Playwright, accessibility, link checks, performance/mobile validation, analytics boundary and operational recovery test.
+6. Local reader state and production-experience integration:
+   - **M6.1 foundation:** shared production shell/navigation, ADR-0005 edition-specific discovery routes and ADR-0009 preference/history/Return behaviour. Before the first production preference write, create the final versioned reader-state envelope and storage abstraction. Version 1 reserves stable fields for `edition`, Saved lesson IDs, Read lesson IDs/recent reading and appearance, even where a field is not yet surfaced. Missing fields use documented defaults; readers must tolerate additive unknown fields. No temporary edition-only storage key is permitted.
+   - **M6.2 reading/content enhancements:** implement schemaVersion 2 validation and rendering for ADR-0006 figures and Teen activities plus the precisely ordered recall-before-takeaway experience.
+   - **M6.3 reader-state surfaces:** Saved/Read/recent/appearance, export/import and any required v1 migration from pre-M6 legacy local state, using the same envelope introduced in M6.1.
+   - **M6.4 integration gate:** verify the complete production experience and reader state together, including no-JS fallbacks, storage-blocked behaviour, explicit/neutral routes, Return/session-origin handling, Back/bfcache behaviour, installed-app navigation and changed accessibility journeys.
+7. Automated publication: generation -> validation -> independent AI review -> eligible PR -> scheduled merge/deploy, with escalation on review failure/uncertainty. Publication automation must understand schemaVersion 2 before it may author figure/activity fields.
+8. Production hardening: the existing broader M8 gate remains Playwright/accessibility/link/security/performance/mobile validation, analytics boundary and operational recovery test. M6.4 does not replace M8.
 
 ## Architecture acceptance checklist
 
