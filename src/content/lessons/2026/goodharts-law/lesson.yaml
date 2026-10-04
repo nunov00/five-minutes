@@ -25,7 +25,7 @@ sources:
   - title: Categorizing Variants of Goodhart's Law
     url: https://arxiv.org/abs/1803.04585
     publisher: arXiv
-    accessedAt: 2026-10-03
+    accessedAt: 2026-10-04
     note: A taxonomy of ways that optimising a proxy can break its relationship with the real goal.
 provenance:
   createdAt: 2026-10-03T14:23:24+02:00

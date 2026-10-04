@@ -1,3 +1,4 @@
+import { validatePresentationExtensions, type LessonFigure, type TeenActivity } from './presentation-extensions';
 import { lessonPath } from '../urls';
 import { isTaxonomyPair, taxonomyTopic } from '../taxonomy';
 import { relatedCandidateCount } from '../discovery/related';
@@ -46,6 +47,8 @@ export interface LessonMetadata {
 }
 
 export interface PresentationMetadata {
+  figure?: LessonFigure;
+  activity?: TeenActivity;
   title: string;
   description: string;
   takeaway: string;
@@ -76,7 +79,7 @@ const RFC3339_TIMESTAMP = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2})(?
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
 const TOKEN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-const PRESENTATION_KEYS = new Set(['title', 'description', 'takeaway', 'question', 'answer', 'searchTerms']);
+const PRESENTATION_KEYS = new Set(['title', 'description', 'takeaway', 'question', 'answer', 'searchTerms', 'figure', 'activity']);
 const METADATA_KEYS = new Set([
   'schemaVersion', 'id', 'slug', 'aliases', 'publishedAt', 'topic', 'subtopic',
   'concepts', 'related', 'sources', 'provenance',
@@ -139,7 +142,7 @@ function validateStringArray(
   });
 }
 
-export function validatePresentation(value: unknown, path = 'presentation'): ValidationResult {
+export function validatePresentation(value: unknown, path = 'presentation', edition: 'adult'|'teen' = 'adult'): ValidationResult {
   const issues: ValidationIssue[] = [];
   if (!isObject(value)) return { valid: false, issues: [{ path, code: 'type', message: 'Expected presentation metadata.' }] };
 
@@ -148,6 +151,7 @@ export function validatePresentation(value: unknown, path = 'presentation'): Val
     if (!nonEmpty(value[key])) issue(issues, `${path}.${key}`, 'required', 'Expected a non-empty string.');
   }
   validateStringArray(value.searchTerms, `${path}.searchTerms`, issues);
+  issues.push(...validatePresentationExtensions(value, path, edition));
   return { valid: issues.length === 0, issues };
 }
 
@@ -216,7 +220,7 @@ export function validateLessonBundle(bundle: unknown): ValidationResult {
 
   issues.push(...validateLessonMetadata(bundle.metadata).issues);
   if (bundle.adult !== undefined) issues.push(...validatePresentation(bundle.adult, 'adult').issues);
-  if (bundle.teen !== undefined) issues.push(...validatePresentation(bundle.teen, 'teen').issues);
+  if (bundle.teen !== undefined) issues.push(...validatePresentation(bundle.teen, 'teen', 'teen').issues);
 
   return { valid: issues.length === 0, issues };
 }

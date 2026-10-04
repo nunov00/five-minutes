@@ -5,6 +5,13 @@ takeaway: Seasons come mainly from axial tilt, which changes how concentrated su
 question: What two effects of Earth's tilt make a hemisphere warmer in summer?
 answer: Sunlight arrives more directly and the Sun remains above the horizon longer each day.
 searchTerms: [what causes seasons, earth tilt, summer and winter]
+figure:
+  type: seasons-orbit
+  data: { tiltDegrees: 23.4 }
+  afterParagraph: 1
+  alt: "Earth keeps the same axis direction: north tilts towards the Sun in June; south does in December."
+  caption: "Earth's axis keeps pointing towards nearly the same place in space throughout its orbit."
+  description: "In June the Northern Hemisphere tilts towards the Sun and receives more direct sunlight and longer days. In December the Southern Hemisphere does. Both drawings keep the axis pointing in the same direction. Sizes, positions and distances are schematic, not to scale."
 ---
 If distance caused the seasons, both hemispheres would warm and cool together. Instead, January brings winter to the Northern Hemisphere and summer to the Southern Hemisphere.
 
