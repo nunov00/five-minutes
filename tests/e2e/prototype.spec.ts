@@ -82,7 +82,7 @@ test('storage denial leaves readable content and honest ephemeral state',async({
 test('no-JavaScript edition navigation, recall, prediction and pagination work',async({browser})=>{
  const ctx=await browser.newContext({javaScriptEnabled:false,viewport:{width:320,height:800}});const page=await ctx.newPage();
  await page.goto('http://127.0.0.1:4321'+p+'/teen/why-earth-has-seasons');
- await expect(page.locator('.prediction-plain')).toHaveCount(2);await expect(page.locator('.prediction-choice').first()).toBeHidden();
+ await expect(page.locator('.prediction-plain li')).toHaveCount(2);await expect(page.locator('.prediction-choice').first()).toBeHidden();
  await page.locator('#prediction-module > summary').click();await expect(page.locator('.prediction-plain').first()).toBeVisible();await page.locator('#prediction-reveal summary').evaluate(el=>el.scrollIntoView({block:'center'}));await page.locator('#prediction-reveal summary').click();await expect(page.locator('#prediction-reveal')).toHaveAttribute('open','');
  await page.locator('.recall-reveal summary').click();await expect(page.locator('.takeaway')).toBeVisible();
  await page.locator('.edition-control').getByText('Adult',{exact:true}).click();await expect(page).toHaveURL(/\/adult\/why-earth-has-seasons$/);
@@ -151,3 +151,21 @@ test('preference return keeps discovery query and Surprise skips the featured id
  await expect(page).not.toHaveURL(/\/why-earth-has-seasons$/);
  await expect(page.locator('.lesson-ending')).toBeVisible();
 });
+
+ test('prediction uses unnumbered native radio choices and keeps selection ephemeral',async({page})=>{
+ await page.goto(p+'/teen/why-earth-has-seasons');
+ await page.locator('#prediction-module > summary').click();
+ await expect(page.locator('#prediction-module > summary')).toContainText('What do you think?');
+ await expect(page.locator('#prediction-module ol')).toHaveCount(0);
+ const north=page.getByRole('radio',{name:'The Northern Hemisphere',exact:true});
+ const south=page.getByRole('radio',{name:'The Southern Hemisphere',exact:true});
+ await north.check();await expect(north).toBeChecked();
+ await expect(page.locator('#prediction-reveal')).toHaveAttribute('open','');
+ await expect(page.locator('#prediction-selected')).toHaveText('You chose: The Northern Hemisphere');
+ await north.focus();await north.press('ArrowDown');
+ await expect(south).toBeChecked();await expect(north).not.toBeChecked();
+ await expect(page.locator('#prediction-selected')).toHaveText('You chose: The Southern Hemisphere');
+ await page.reload();await page.locator('#prediction-module > summary').click();
+ await expect(page.getByRole('radio').first()).not.toBeChecked();
+ await expect(page.getByRole('radio').last()).not.toBeChecked();
+ });
