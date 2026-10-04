@@ -11,6 +11,8 @@ test.describe('M6 integration in WebKit', () => {
     await expect(page).toHaveURL('/editions/teen/library/page/2?q=clock#main');
     await page.goBack();
     await expect(page).toHaveURL('/');
+    await expect(page.locator('[data-today-edition="teen"]')).toBeVisible();
+    await expect(page.locator('[data-today-edition="adult"]')).toBeHidden();
 
     await page.goto('/library');
     await page.goto('/adult/why-earth-has-seasons');
@@ -69,6 +71,7 @@ test.describe('M6 integration in WebKit', () => {
     await expect(plain.getByRole('region', { name: 'Takeaway', exact: true })).toBeVisible();
     await plain.getByRole('link', { name: 'Back to Today' }).click();
     await expect(plain.getByRole('heading', { level: 1, name: "Today's idea" })).toBeVisible();
+    await expect(plain.locator('[data-today-edition]')).toHaveCount(2);
     expect(await plain.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
     await noScript.close();
   });
