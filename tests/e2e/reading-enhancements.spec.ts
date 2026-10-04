@@ -14,7 +14,7 @@ test('recall follows the body and reveals answer and takeaway together in both e
  }
 });
 
-test('Teen choices are unnumbered accessible radios, with keyboard selection and no saved state',async({page})=>{
+test('Teen choices are unnumbered accessible radios, with keyboard selection and no stored answer',async({page})=>{
  await page.goto(seasons);const prompt=page.locator('[data-activity]');
  await expect(prompt).not.toHaveAttribute('open','');
  await prompt.getByText('What do you think?',{exact:true}).focus();await page.keyboard.press('Enter');
@@ -25,7 +25,7 @@ test('Teen choices are unnumbered accessible radios, with keyboard selection and
  await radios.first().focus();await page.keyboard.press('ArrowDown');await expect(radios.last()).toBeChecked();await expect(radios.first()).not.toBeChecked();
  await expect(prompt.locator('[data-activity-selection]')).toHaveText('You chose: The Southern Hemisphere');
  await expect(prompt.locator('[data-activity-reveal]')).toHaveAttribute('open','');
- expect(await page.evaluate(k=>localStorage.getItem(k),key)).toBeNull();
+ const state=await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!),key);expect(Object.keys(state).sort()).toEqual(['appearance','edition','read','recent','saved','version']);expect(state.saved).toEqual([]);
  await page.goto('/adult/why-earth-has-seasons');await expect(page.locator('[data-activity]')).toHaveCount(0);
 });
 
@@ -35,7 +35,7 @@ test('activities reset on reload, Back and the restoration handler without stori
  await page.goto(seasons);await choose();await page.reload();await reset();
  await choose();await page.getByRole('navigation',{name:'Main navigation'}).getByRole('link',{name:'Today',exact:true}).click();await page.goBack();await expect(page).toHaveURL(seasons);await reset();
  await choose();await page.evaluate(()=>window.dispatchEvent(new PageTransitionEvent('pageshow',{persisted:true})));await reset();
- expect(await page.evaluate(k=>localStorage.getItem(k),key)).toBeNull();
+ const state=await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!),key);expect(Object.keys(state).sort()).toEqual(['appearance','edition','read','recent','saved','version']);expect(state.saved).toEqual([]);
 });
 
 test('native figures, plain activity choices and answer/takeaway reveals work without JavaScript',async({browser})=>{

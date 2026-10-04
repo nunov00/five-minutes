@@ -4,8 +4,8 @@ import { discoveryPath, editionDiscoveryPath, type LessonEdition } from '../lib/
 import { getBuildMetadata } from '../lib/content/build-content';
 import { libraryPages } from '../lib/discovery/catalogue';
 import { TAXONOMY } from '../lib/taxonomy';
-interface Props { title?: string; description?: string; edition?: LessonEdition; editionPaths?: Record<LessonEdition,string>; neutralDiscovery?: boolean; noindex?: boolean; wide?: boolean; }
-const { title = 'Five Minutes', description = 'One worthwhile idea, made easy to discover, understand and explore.', edition, editionPaths, neutralDiscovery=false, noindex=false, wide=false } = Astro.props;
+interface Props { title?: string; description?: string; edition?: LessonEdition; editionPaths?: Record<LessonEdition,string>; neutralDiscovery?: boolean; noindex?: boolean; wide?: boolean; preferenceSurface?: boolean; }
+const { title = 'Five Minutes', description = 'One worthwhile idea, made easy to discover, understand and explore.', edition, editionPaths, neutralDiscovery=false, noindex=false, wide=false, preferenceSurface=false } = Astro.props;
 const pathname = Astro.url.pathname;
 const { lessons } = await getBuildMetadata();
 const bounds = { topics: TAXONOMY.filter(t=>lessons.some(l=>l.metadata.topic===t.token)).map(t=>t.token), libraryPages:libraryPages(lessons).length };
@@ -17,12 +17,13 @@ const navigation = [
   { href: discoveryPath(edition ?? null,'library'), label: 'Library', current: discovery && discoveryLocation.startsWith('/library') },
   { href: discoveryPath(edition ?? null,'topics'), label: 'Topics', current: discovery && discoveryLocation.startsWith('/topics') },
   { href: '/search', label: 'Search', current: search },
+  { href: '/saved', label: 'Saved', current: pathname === '/saved' },
 ];
 const choices = editionPaths ?? { adult: editionDiscoveryPath(pathname,'adult') ?? '/search?edition=adult', teen: editionDiscoveryPath(pathname,'teen') ?? '/search?edition=teen' };
 const canonical = !neutralDiscovery && !noindex && Astro.site ? new URL(pathname,Astro.site).href : undefined;
 ---
 <!doctype html>
-<html lang="en" data-edition={edition} data-neutral-discovery={neutralDiscovery ? 'true' : undefined} data-search={search?'true':undefined} data-discovery={discovery||search?'true':undefined} data-discovery-bounds={JSON.stringify(bounds)}>
+<html lang="en" data-edition={edition} data-neutral-discovery={neutralDiscovery ? 'true' : undefined} data-preference-surface={preferenceSurface?'true':undefined} data-search={search?'true':undefined} data-discovery={discovery||search?'true':undefined} data-discovery-bounds={JSON.stringify(bounds)}>
   <head>
     <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light dark" /><meta name="description" content={description} /><title>{title}</title>
@@ -32,6 +33,9 @@ const canonical = !neutralDiscovery && !noindex && Astro.site ? new URL(pathname
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" /><meta name="apple-mobile-web-app-title" content="Five Minutes" />
     <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fbfaf7" />
     <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#15171a" />
+    <script is:inline>
+      try { const s=JSON.parse(localStorage.getItem('five-minutes.reader-state')||'null'); if(s?.version===1&&['system','light','dark'].includes(s.appearance))document.documentElement.dataset.appearance=s.appearance; } catch {}
+    </script>
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
@@ -50,6 +54,6 @@ const canonical = !neutralDiscovery && !noindex && Astro.site ? new URL(pathname
     </details>
     <p class="container quiet-note no-script-note">Edition links work, but your choice will not be remembered without JavaScript.</p>
     <main id="main" class:list={["site-main", "container", {"reader-wide":wide}]}><slot /></main>
-    <script>import '../lib/reader/enhance';</script>
+    <script>import '../lib/reader/enhance'; import '../lib/reader/surfaces';</script>
   </body>
 </html>
