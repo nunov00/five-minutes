@@ -1,0 +1,13 @@
+---
+import { editionDiscoveryPath } from '../../lib/urls';
+interface Props { path: string; title: string; }
+const {path,title}=Astro.props;
+---
+<section aria-labelledby="chooser-heading">
+ <p class="eyebrow">Discovery</p><h1 id="chooser-heading">{title}</h1>
+ <p class="lede">Choose the edition you would like to explore.</p>
+ <nav class="chooser" aria-label={`${title} edition choice`}>
+  <a class="button" data-edition-choice="adult" href={editionDiscoveryPath(path,'adult')!}>Explore Adult</a>
+  <a class="button button-secondary" data-edition-choice="teen" href={editionDiscoveryPath(path,'teen')!}>Explore Teen</a>
+ </nav>
+</section>

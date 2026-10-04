@@ -2,22 +2,22 @@
 import type { LessonBundle } from '../lib/content/schema';
 import { taxonomySubtopic, taxonomyTopic } from '../lib/taxonomy';
 import { formatEditorialDate } from '../lib/today';
-import { lessonPath } from '../lib/urls';
+import { lessonPath, type LessonEdition } from '../lib/urls';
 
-interface Props { lesson: LessonBundle; }
-const { lesson } = Astro.props as Props;
+interface Props { lesson: LessonBundle; edition: LessonEdition; }
+const { lesson, edition } = Astro.props as Props;
 if (!lesson.adult || !lesson.teen) throw new Error(`Cannot render incomplete library lesson ${lesson.metadata.id}.`);
+const presentation = lesson[edition];
+if(!presentation)throw new Error(`Missing ${edition} presentation.`);
 const topic = taxonomyTopic(lesson.metadata.topic);
 const subtopic = taxonomySubtopic(lesson.metadata.topic, lesson.metadata.subtopic);
 if (!topic || !subtopic) throw new Error(`Cannot render unknown taxonomy for ${lesson.metadata.id}.`);
 ---
 <article class="card lesson-card" data-lesson-id={lesson.metadata.id}>
   <p class="eyebrow">{topic.label} · {subtopic.label}</p>
-  <h2><a href={lessonPath('adult', lesson.metadata.slug)}>{lesson.adult.title}</a></h2>
-  <p>{lesson.adult.description}</p>
-  <div class="card-actions" role="group" aria-label={`Editions for ${lesson.adult.title}`}>
-    <a href={lessonPath('adult', lesson.metadata.slug)}>Adult</a>
-    <a href={lessonPath('teen', lesson.metadata.slug)} aria-label={`Teen edition: ${lesson.teen.title}`}>Teen</a>
+  <h2><a href={lessonPath(edition, lesson.metadata.slug)}>{presentation.title}</a></h2>
+  <p>{presentation.description}</p>
+  <div class="card-actions" role="group" aria-label={`Editions for ${presentation.title}`}>
     <time datetime={lesson.metadata.publishedAt}>{formatEditorialDate(lesson.metadata.publishedAt)}</time>
   </div>
 </article>

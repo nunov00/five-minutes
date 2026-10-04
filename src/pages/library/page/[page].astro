@@ -1,28 +1,8 @@
 ---
 import BaseLayout from '../../../layouts/BaseLayout.astro';
-import LessonCard from '../../../components/LessonCard.astro';
-import LibraryPagination from '../../../components/LibraryPagination.astro';
+import Chooser from '../../../components/discovery/Chooser.astro';
 import { getBuildMetadata } from '../../../lib/content/build-content';
 import { libraryPages } from '../../../lib/discovery/catalogue';
-
-interface Props { lessons: Awaited<ReturnType<typeof getBuildMetadata>>['lessons']; pageNumber: number; pageCount: number; }
-
-export async function getStaticPaths() {
-  const { lessons } = await getBuildMetadata();
-  const pages = libraryPages(lessons);
-  return pages.slice(1).map((pageLessons, index) => ({
-    params: { page: String(index + 2) },
-    props: { lessons: pageLessons, pageNumber: index + 2, pageCount: pages.length },
-  }));
-}
-
-const { lessons, pageNumber, pageCount } = Astro.props as Props;
+export async function getStaticPaths(){const {lessons}=await getBuildMetadata();return libraryPages(lessons).slice(1).map((_,i)=>({params:{page:String(i+2)}}));}
 ---
-<BaseLayout title={`Library · Page ${pageNumber} · Five Minutes`}>
-  <section aria-labelledby="library-heading">
-    <p class="eyebrow">Discovery · Page {pageNumber} of {pageCount}</p>
-    <h1 id="library-heading">Library</h1>
-    <div class="lesson-list">{lessons.map((lesson) => <LessonCard lesson={lesson} />)}</div>
-    <LibraryPagination pageNumber={pageNumber} pageCount={pageCount} />
-  </section>
-</BaseLayout>
+<BaseLayout title={`Library · Page ${Astro.params.page} · Five Minutes`} neutralDiscovery><Chooser path={Astro.url.pathname} title="Library"/></BaseLayout>

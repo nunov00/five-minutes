@@ -41,16 +41,10 @@ const { lesson, edition, editionPaths, related } = Astro.props as Props & { rela
 const presentation = edition === 'adult' ? lesson.adult : lesson.teen;
 const html = edition === 'adult' ? lesson.adultHtml : lesson.teenHtml;
 if (!presentation) throw new Error(`Missing ${edition} presentation for ${lesson.metadata.id}.`);
-const editions: LessonEdition[] = ['adult', 'teen'];
 ---
-<BaseLayout title={`${presentation.title} · ${EDITION_LABELS[edition]} edition · Five Minutes`} description={presentation.description}>
+<BaseLayout title={`${presentation.title} · ${EDITION_LABELS[edition]} edition · Five Minutes`} description={presentation.description} edition={edition} editionPaths={editionPaths}>
   <article data-lesson-id={lesson.metadata.id} data-edition={edition}>
     <header class="reader-header">
-      <nav class="edition-switch" aria-label="Edition">
-        {editions.map((option) => (
-          <a href={editionPaths[option]} aria-current={option === edition ? 'page' : undefined}>{EDITION_LABELS[option]}</a>
-        ))}
-      </nav>
       <p class="eyebrow">{EDITION_LABELS[edition]} edition · <time datetime={lesson.metadata.publishedAt}>{formatEditorialDate(lesson.metadata.publishedAt)}</time></p>
       <h1>{presentation.title}</h1>
       <p class="lede">{presentation.description}</p>
@@ -80,6 +74,7 @@ const editions: LessonEdition[] = ['adult', 'teen'];
         ))}
       </div>
     </section>
-    <p class="lesson-section"><a href="/">Back to Today</a></p>
+    <p class="lesson-section"><a data-return href="/">Back to Today</a></p>
+    <p class="lesson-section"><a class="other-version" href={editionPaths[edition==='adult'?'teen':'adult']}>Read the other version →</a></p>
   </article>
 </BaseLayout>
