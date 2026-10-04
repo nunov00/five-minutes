@@ -53,6 +53,14 @@ const noindexPages = new Set();
 for (const file of files.filter((f) => f.endsWith('.html'))) {
   const html = await readFile(file, 'utf8');
   if (/<meta[^>]*name="robots"[^>]*content="noindex(?:,|\s)/.test(html)) noindexPages.add(webPath(file).replace(/\/index\.html$/, '') || '/');
+  if(expectedSet.has(webPath(file).replace(/\/index\.html$/, ''))) {
+    if((html.match(/<h1(?:\s|>)/g)??[]).length!==1)throw Error(`Reading page must have exactly one title: ${webPath(file)}`);
+    const body=html.indexOf('class="lesson-body'),recall=html.indexOf('data-recall'),reveal=html.indexOf('data-recall-reveal'),answer=html.indexOf('class="answer"'),takeaway=html.indexOf('id="takeaway-heading"');
+    if(body<0||recall<body||reveal<recall||answer<reveal||takeaway<answer)throw Error(`Recall/answer/takeaway order invalid: ${webPath(file)}`);
+    const ending=html.slice(reveal,html.indexOf('</details>',reveal));
+    if(!ending.includes('class="answer"')||!ending.includes('id="takeaway-heading"'))throw Error(`Answer/takeaway must share a reveal: ${webPath(file)}`);
+    if(html.slice(0,recall).includes('id="takeaway-heading"'))throw Error(`Takeaway appears before recall: ${webPath(file)}`);
+  }
   // Installed (standalone) display has no browser back button or address bar:
   // every page must declare the manifest and offer an in-page way back to Today,
   // and internal links must not escape the app window.
@@ -69,6 +77,10 @@ for (const file of files.filter((f) => f.endsWith('.html'))) {
     if (pathname !== '/' && pathname.endsWith('/')) throw new Error(`Internal link must use the slash-less canonical form in ${webPath(file)}: ${href}`);
     if (htmlTargets.has(pathname)) throw new Error(`Internal page link must not use an explicit .html path in ${webPath(file)}: ${href}`);
     if (!canonicalPagePaths.has(pathname) && !targets.has(pathname)) throw new Error(`Broken internal link in ${webPath(file)}: ${href}`);
+  }
+  for(const match of html.matchAll(/<img\b[^>]*src=["']([^"']+)["']/g)) {
+    const src=match[1];
+    if(src.startsWith('/lesson-media/')&&!targets.has(src))throw Error(`Figure image missing in ${webPath(file)}: ${src}`);
   }
   for (const match of html.matchAll(/\bdata-(?:catalogue|adult-index|teen-index)=["']([^"']+)["']/g)) {
     const path = match[1];

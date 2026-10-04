@@ -8,6 +8,11 @@ searchTerms:
   - goodharts law explained
   - gaming a metric
   - targets and incentives
+activity:
+  prompt: "A school starts rewarding students for the number of books they finish. What do you expect to happen?"
+  options: ["Students choose shorter books more often", "Students spend longer discussing each book", "Students choose more difficult books"]
+  answer: 0
+  explanation: "Choosing shorter books is the quickest way to raise the count without necessarily learning more. When rewards follow the score, people adapt to the score instead of the real goal."
 ---
 Imagine a school rewards reading by counting how many books each student finishes. That sounds sensible: people who read more books often do read more.
 
@@ -16,4 +21,3 @@ Then the count becomes the goal. Some students choose only the shortest books. O
 This is the idea commonly called Goodhart's law: when a measure becomes a target, it tends to stop being a good measure. The number began as a **proxy**, a stand-in for something harder to see. Once rewards depended on it, people changed their behaviour around the rule.
 
 The same trap appears in follower counts, test results, workplace targets and game rankings. It does not mean every score is bad. Useful systems check more than one signal and look at the result behind the score. A reading programme could combine the count with discussion, choice and evidence of understanding.
-
