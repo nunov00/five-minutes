@@ -3,7 +3,7 @@ import type { LessonBundle } from '../../src/lib/content/schema';
 export function validLesson(overrides: Partial<LessonBundle> = {}): LessonBundle {
   return {
     metadata: {
-      schemaVersion: 1,
+      schemaVersion: 2,
       id: '018f47a2-5d7b-7c31-8d4f-0d9a8b6c2e11',
       slug: 'why-gps-needs-einstein',
       aliases: ['gps-and-relativity'],
