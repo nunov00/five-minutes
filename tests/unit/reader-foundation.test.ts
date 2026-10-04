@@ -19,6 +19,17 @@ describe('reader v1 storage and discovery contracts',()=>{
   expect(readerStorage(()=>({getItem:()=>null,setItem:()=>{throw Error('quota');}})).chooseEdition('teen')).toBe(false);
   expect(parseReaderState(JSON.stringify({...emptyReaderState(),read:{[id]:'invalid'}}))).toBeNull();
  });
+ it('distinguishes unreadable data from storage failure and resets only explicitly',()=>{
+  let raw = '{';
+  const storage = readerStorage(()=>({getItem:()=>raw,setItem:(_key:string,value:string)=>{raw=value;}}));
+  expect(storage.inspect()).toEqual({kind:'invalid'});
+  expect(storage.chooseEdition('teen')).toBe(false); expect(raw).toBe('{');
+  expect(storage.reset()).toBe(true);
+  expect(storage.inspect()).toEqual({kind:'valid',state:emptyReaderState()});
+  expect(storage.chooseEdition('teen')).toBe(true);
+  expect(readerStorage(()=>{throw Error('blocked');}).inspect()).toEqual({kind:'unavailable'});
+  expect(readerStorage(()=>{throw Error('blocked');}).reset()).toBe(false);
+ });
  it('generates collision-free edition routes and preserves path meaning while forwarding',()=>{
   expect(discoveryPath('teen','library',2)).toBe('/editions/teen/library/page/2');
   expect(discoveryPath('adult','topics','science')).toBe('/editions/adult/topics/science');

@@ -3,19 +3,20 @@ import type { DiscoveryArtifacts } from '../lib/discovery/artifacts';
 import type { LessonEdition } from '../lib/urls';
 
 interface Props {
+  edition?: LessonEdition;
   catalogue: DiscoveryArtifacts['catalogue'];
   excludeId?: string;
   adultFallback: string;
   teenFallback: string;
 }
-const { catalogue, excludeId = '', adultFallback, teenFallback } = Astro.props as Props;
+const { edition: selectedEdition, catalogue, excludeId = '', adultFallback, teenFallback } = Astro.props as Props;
 const links: Array<{ edition: LessonEdition; fallback: string; label: string }> = [
   { edition: 'adult', fallback: adultFallback, label: 'Surprise me · Adult' },
   { edition: 'teen', fallback: teenFallback, label: 'Surprise me · Teen' },
 ];
 ---
 <div class="surprise-actions" data-surprise data-catalogue={catalogue.path} data-exclude-id={excludeId}>
-  {links.map(({ edition, fallback, label }) => (
+  {links.filter(link => !selectedEdition || link.edition === selectedEdition).map(({ edition, fallback, label }) => (
     <a class="button button-secondary" href={fallback} data-surprise-edition={edition}>{label}</a>
   ))}
 </div>

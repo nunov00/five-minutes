@@ -17,7 +17,7 @@ if (!topic || !subtopic) throw new Error(`Cannot render unknown taxonomy for ${l
   <p class="eyebrow">{topic.label} · {subtopic.label}</p>
   <h2><a href={lessonPath(edition, lesson.metadata.slug)}>{presentation.title}</a></h2>
   <p>{presentation.description}</p>
-  <div class="card-actions" role="group" aria-label={`Editions for ${presentation.title}`}>
+  <div class="card-actions">
     <time datetime={lesson.metadata.publishedAt}>{formatEditorialDate(lesson.metadata.publishedAt)}</time>
   </div>
 </article>

@@ -1,4 +1,6 @@
 ---
+import SurpriseLinks from '../../components/SurpriseLinks.astro';
+import { buildDiscoveryArtifacts } from '../../lib/discovery/artifacts';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import LessonCard from '../../components/LessonCard.astro';
 import LibraryPagination from '../../components/LibraryPagination.astro';
@@ -17,6 +19,9 @@ export async function getStaticPaths(){
  ]);
 }
 const {edition,kind,pageNumber,pageCount,lessons,topic,topics}=Astro.props as Props;
+const metadata = await getBuildMetadata();
+const artifacts = buildDiscoveryArtifacts(metadata.lessons);
+const fallback = artifacts.catalogue.payload[0];
 const heading=kind==='library'?'Library':topic?.label??'Topics';
 const groups=topic?.subtopics.map(subtopic=>({subtopic,lessons:lessons.filter(l=>l.metadata.subtopic===subtopic.token)})).filter(g=>g.lessons.length);
 ---
@@ -28,6 +33,7 @@ const groups=topic?.subtopics.map(subtopic=>({subtopic,lessons:lessons.filter(l=
    <p class="lede">The dated archive of every published idea.</p>
    <nav class="filter-links" aria-label="Library topics">{topics.map(t=><a href={discoveryPath(edition,'topics',t.token)}>{t.label}</a>)}</nav>
    <div class="lesson-list">{lessons.map(lesson=><LessonCard lesson={lesson} edition={edition}/>)}</div>
+   {fallback && <SurpriseLinks edition={edition} catalogue={artifacts.catalogue} adultFallback={fallback.adult.path} teenFallback={fallback.teen.path}/>}
    <LibraryPagination pageNumber={pageNumber} pageCount={pageCount} edition={edition}/>
   </>}
   {kind==='topics'&&!topic&&<><p class="lede">Start with a field, then follow the connections between ideas.</p><div class="topic-grid">{topics.map(t=><article class="card topic-card"><h2><a href={discoveryPath(edition,'topics',t.token)}>{t.label}</a></h2><p>{t.description}</p></article>)}</div></>}
