@@ -36,6 +36,8 @@ import { searchDocuments } from '../lib/discovery/search';
   if(target.hasAttribute('data-surprise')){event.preventDefault();try{const featured=document.querySelector('[data-featured-id]')?.dataset.featuredId;const docs=(await real()).filter(l=>l.id!==featured);if(docs.length)location.href=docs[Math.floor(Math.random()*docs.length)][edition].path;else location.href=target.href;}catch(_){location.href=target.href;}}
   if(target.hasAttribute('data-search-page')){event.preventDefault();history.pushState(null,'',target.href);search();$('search-form').scrollIntoView({block:'start'});}
  });
+ // Browser form restoration must not resurrect an ephemeral prediction on Back/reload.
+ window.addEventListener('pageshow',()=>{document.querySelectorAll('[data-prediction-id]').forEach(input=>{input.checked=false;});if($('prediction-selected'))$('prediction-selected').textContent='';if($('prediction-reveal'))$('prediction-reveal').open=false;});
  document.querySelectorAll('[data-prediction-id]').forEach(input=>input.addEventListener('change',()=>{if(!input.checked)return;$('prediction-selected').textContent='You chose: '+input.closest('label').querySelector('span').textContent;$('prediction-reveal').open=true;}));
  $('dismiss-first')?.addEventListener('click',()=>{state.dismissed=true;persist();firstVisit();});
  $('preferences-form')?.addEventListener('change',()=>{state.appearance=$('appearance').value;state.textSize=$('text-size').value;appearance();const ok=persist();$('preferences-status').textContent=ok?'Preferences saved on this device.':'Preferences changed for this visit only.';});

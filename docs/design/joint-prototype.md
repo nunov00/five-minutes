@@ -36,7 +36,7 @@ The static archive fixture has 1,000 synthetic records, 24 per page across 42 pa
 
 Measured initial artifact (uncompressed): CSS about 16.4 KB, main enhancement script about 14.3 KB, synchronous restore about 1.1 KB, real metadata catalogue about 18.7 KB. The 10,000-record fixture containing both presentations is about 6.67 MB. No font files are downloaded; system serif/sans stacks are provisional. The large JSON is fetched only when its search fixture is selected. These figures are prototype sizes, not an edition-sharded production search design or phone performance evidence.
 
-Normal build before final visual polish: 236 files / 8.96 MiB, including the unchanged site and this preview. This is not a 10,000-lesson delivery benchmark: it has 24 real lesson pages per namespace and synthetic discovery metadata/rows, not 20,000 real lesson pages. Cloudflare Free's 20,000-file boundary remains an Owner hosting decision at production scale.
+Normal build before final visual polish: 236 files / 8.96 MiB, including the existing site and this preview. This is not a 10,000-lesson delivery benchmark: it has 24 real lesson pages per namespace and synthetic discovery metadata/rows, not 20,000 real lesson pages. Cloudflare Free's 20,000-file boundary remains an Owner hosting decision at production scale.
 
 ## Verification and remaining work
 
@@ -90,3 +90,15 @@ Pinned-browser CI exposed the no-JavaScript answer control behind fixed bottom t
 The Owner finds both editions comfortable to read. The collapsed Teen activity is noticeable and useful, and the seasons diagram helps enough to justify its inclusion. Preserve the current edition voices, optional collapsed activity and explanatory figure direction. This is design feedback, not approval of production contracts or routing.
 
 Refinement: replace “Predict first” with the provisional, conversational “What do you think?”. Use native, mutually exclusive radio choices in compact unboxed rows, with no option numbers. A single-answer question uses radios rather than checkboxes. Selecting still reveals the explanation; keyboard arrow navigation follows native radio behaviour. Without JavaScript the unnumbered options remain plain text with a native answer reveal. Choices remain ephemeral. Claude’s review of 98dd2a0 predates this refinement; the updated head needs independent re-review before any production adoption.
+
+## Focused radio re-review remediation
+
+Claude reviewed 47227d4: 0 BLOCKER, 0 IMPORTANT, 4 MINOR. A pageshow handler clears radio choices, selected-answer text and the explanation on page entry, including Back and browser form restoration. Autocomplete is also disabled on the prediction radios. The enhanced instruction now says “Choose an option to see the explanation”; “Decide before you reveal” appears only in the plain no-JavaScript version.
+
+A compact Today treatment at widths up to 350px and heights up to 620px preserves the full Read action above fixed tabs at 320×568 in both editions. The Today action geometry regression now includes that size; the existing lesson-opening checks remain at 375×667 and 390×844. This does not promise every arbitrary title fits one viewport or replace physical Safari testing.
+
+Production output qualification: importing the existing search ranker causes production /search to emit an external script instead of its previous inline script. Search behaviour and routing are unchanged, but production HTML/assets are not byte-identical. The reviewed 47227d4 build had 238 files, compared with the initial prototype’s 236. This effect is already noted in PR #62 and must be assessed in any future partial adoption; the preview is not intended to merge wholesale.
+
+Future ratings, submitted feedback and advertising remain separate modules and Owner decisions. No service, server runtime, database, tracking or ad slot is added by this prototype.
+
+Remediation checks: zero typecheck diagnostics, 105 unit tests and 76 browser journeys pass. Phone captures at 320×568 confirm the complete Read button above tabs without horizontal overflow. The final-head independent re-review is pending.
