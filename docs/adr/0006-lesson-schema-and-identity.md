@@ -121,6 +121,8 @@ Teen presentations may additionally contain an optional structured activity. Act
 
 Raw SVG, raw HTML, remote image URLs, scriptable embeds and arbitrary component names are rejected as canonical lesson content. The application, not the lesson, owns diagram rendering code and its security boundary.
 
+The concrete M6.2 implementation contract is documented in [reading enhancements](../implementation/m6.2-reading-enhancements.md): `figure.type` is a closed union (`seasons-orbit` or `image`), positioning uses a validated prose-paragraph index, and Teen `activity.answer` is a zero-based option index. Fields and asset limits are enforced by the canonical loader. This specifies the accepted optional-field decision without changing lesson identity, Markdown safety or review requirements.
+
 #### Presentation heading contract
 
 The front-matter `title` of each presentation is the reading page's only level-1 heading (`<h1>`). The Markdown body therefore starts at level 2: it may use `##` and `###` headings and must not define a level-1 (`#`) heading. The content pipeline enforces this when it parses a presentation file and fails the build on a `#` heading in a body; rendered, sanitized body HTML is used unchanged, with no heading rewriting after sanitization.

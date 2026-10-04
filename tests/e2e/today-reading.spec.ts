@@ -60,18 +60,17 @@ test.describe('Today → lesson → edition switch → Takeaway → Test yoursel
     await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1);
     await expect(page.getByRole('heading', { level: 1 })).not.toHaveText(adultTitle ?? '');
 
-    const takeaway = page.getByRole('region', { name: 'Takeaway' });
-    await takeaway.scrollIntoViewIfNeeded();
-    await expect(takeaway).toBeVisible();
-    await expect(takeaway.getByRole('paragraph')).not.toBeEmpty();
-
-    const testYourself = page.getByRole('region', { name: 'Test yourself' });
-    const answer = testYourself.locator('.answer');
-    await expect(testYourself.getByRole('paragraph').first()).not.toBeEmpty();
+    const recall = page.getByRole('region', {name:'Recall',exact:true});
+    const answer = recall.locator('.answer');
+    const takeaway = page.getByRole('region', {name:'Takeaway',exact:true});
+    await recall.scrollIntoViewIfNeeded();
     await expect(answer).toBeHidden();
-    await testYourself.getByText('Show answer').click();
+    await expect(takeaway).toBeHidden();
+    await recall.getByText('Reveal answer and takeaway').click();
     await expect(answer).toBeVisible();
     await expect(answer).not.toBeEmpty();
+    await expect(takeaway).toBeVisible();
+    await expect(takeaway.getByRole('paragraph')).not.toBeEmpty();
     await expectNoHorizontalOverflow(page);
 
     await editionNav.getByRole('link', { name: 'Adult' }).click();
@@ -80,14 +79,16 @@ test.describe('Today → lesson → edition switch → Takeaway → Test yoursel
     await expect(page.getByRole('heading', { level: 1, name: "Today's idea" })).toBeVisible();
   });
 
-  test('every canonical lesson page has one title heading and both reading sections', async ({ page }) => {
-    for (const route of await deliveryRoutes(page)) {
+  test('sampled reading pages have one title heading and recall-before-takeaway', async ({ page }) => {
+    // Static verification checks every built lesson; sample one route per edition here.
+    const routes=await deliveryRoutes(page);
+    for (const route of [routes.find(r=>r.edition==='adult')!,routes.find(r=>r.edition==='teen')!]) {
       const response = await page.goto(route.path);
       expect(response?.ok(), route.path).toBe(true);
       await expect(page.locator('article[data-lesson-id]')).toHaveAttribute('data-edition', route.edition);
       await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1);
-      await expect(page.getByRole('region', { name: 'Takeaway' })).toBeVisible();
-      await expect(page.getByRole('region', { name: 'Test yourself' })).toBeVisible();
+      await expect(page.getByRole('region', { name: 'Recall',exact:true })).toBeVisible();
+      await expect(page.getByRole('region', { name: 'Takeaway',exact:true })).toBeHidden();
       await expectNoHorizontalOverflow(page);
     }
   });
@@ -95,7 +96,7 @@ test.describe('Today → lesson → edition switch → Takeaway → Test yoursel
   test('the answer can be revealed with the keyboard', async ({ page }) => {
     const [route] = await deliveryRoutes(page);
     await page.goto(route.path);
-    const summary = page.getByText('Show answer');
+    const summary = page.getByText('Reveal answer and takeaway');
     await summary.focus();
     await page.keyboard.press('Enter');
     await expect(page.locator('.answer')).toBeVisible();

@@ -156,3 +156,7 @@ The initial controlled topic/subtopic vocabulary and related-content priority ru
 ## M6.1 implementation boundary
 
 The production reader-state envelope, storage abstraction, edition discovery routing, neutral chooser/forwarding SEO policy and session Return validation are documented in [M6.1 implementation](implementation/m6.1-reader-foundation.md). They implement ADR-0005/0009 without introducing accounts, server code or prototype dependencies. Saved/Read/recent/appearance UI remains M6.3.
+
+## M6.2 implementation boundary
+
+The optional per-edition figure and Teen-only activity contracts, safe asset validation, progressive enhancement and shared recall-first ending are documented in [M6.2 reading enhancements](implementation/m6.2-reading-enhancements.md). The schema-v2 corpus migration must land before authored extensions. No persistent activity state or new service is introduced. Independent code and editorial review are required before publication.

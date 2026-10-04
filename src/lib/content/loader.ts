@@ -1,4 +1,6 @@
 import { lstat, readdir, readFile } from 'node:fs/promises';
+import { validateFigureAsset } from '../figures/assets';
+import { figurePosition } from '../figures/placement';
 import { basename, join } from 'node:path';
 import { parsePresentationFile, parseSafeYaml } from './safe-content';
 import {
@@ -46,7 +48,7 @@ async function requiredText(path: string): Promise<string> {
   catch (error) { throw new Error(`Cannot read required canonical lesson file ${basename(path)}: ${String(error)}`); }
 }
 
-export async function loadPublishedLessons(root: string, routeOwnership: RouteOwnershipRegistry): Promise<LoadedLesson[]> {
+export async function loadPublishedLessons(root: string, routeOwnership: RouteOwnershipRegistry, publicRoot = join(process.cwd(),'public')): Promise<LoadedLesson[]> {
   const dirs = await strictLessonDirectories(root);
   if (dirs.length === 0) throw new Error(`No canonical lessons found under ${root}.`);
   const loaded: LoadedLesson[] = [];
@@ -54,9 +56,12 @@ export async function loadPublishedLessons(root: string, routeOwnership: RouteOw
     const [yaml, adultSource, teenSource] = await Promise.all([
       requiredText(join(dir, 'lesson.yaml')), requiredText(join(dir, 'adult.md')), requiredText(join(dir, 'teen.md')),
     ]);
-    const metadata = parseSafeYaml(yaml);
-    const adult = parsePresentationFile(adultSource);
-    const teen = parsePresentationFile(teenSource);
+    let metadata, adult, teen;
+    try {
+      metadata = parseSafeYaml(yaml);
+      adult = parsePresentationFile(adultSource);
+      teen = parsePresentationFile(teenSource);
+    } catch(error) { throw new Error(`Lesson ${dir}: ${String(error)}`); }
     loaded.push({
       metadata: metadata as LessonBundle['metadata'],
       adult: adult.frontmatter as LessonBundle['adult'],
@@ -67,5 +72,12 @@ export async function loadPublishedLessons(root: string, routeOwnership: RouteOw
   const bundles: LessonBundle[] = loaded.map(({ metadata, adult, teen }) => ({ metadata, adult, teen }));
   const issues = [...validatePublicationCollection(bundles).issues, ...validateLessonReferences(bundles, routeOwnership).issues];
   if (issues.length) throw new Error(`Canonical lesson validation failed:\n${issues.map((x) => `- ${x.path} [${x.code}]: ${x.message}`).join('\n')}`);
+  for(const lesson of loaded) for(const edition of ['adult','teen'] as const) {
+    const figure=lesson[edition]?.figure;
+    try {
+      if(figure) figurePosition(edition==='adult'?lesson.adultHtml:lesson.teenHtml,figure.afterParagraph);
+      await validateFigureAsset(figure,publicRoot);
+    } catch(error) { throw new Error(`Lesson ${lesson.sourceDirectory}/${edition}.md figure: ${String(error)}`); }
+  }
   return loaded;
 }

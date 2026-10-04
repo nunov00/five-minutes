@@ -1,4 +1,7 @@
 ---
+import LessonFigure from '../../components/reading/LessonFigure.astro';
+import TeenActivity from '../../components/reading/TeenActivity.astro';
+import { figurePosition } from '../../lib/figures/placement';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import type { LoadedLesson } from '../../lib/content/loader';
 import { getBuildContent } from '../../lib/content/build-content';
@@ -41,25 +44,31 @@ const { lesson, edition, editionPaths, related } = Astro.props as Props & { rela
 const presentation = edition === 'adult' ? lesson.adult : lesson.teen;
 const html = edition === 'adult' ? lesson.adultHtml : lesson.teenHtml;
 if (!presentation) throw new Error(`Missing ${edition} presentation for ${lesson.metadata.id}.`);
+const positioned=presentation.figure?figurePosition(html,presentation.figure.afterParagraph):null;
 ---
-<BaseLayout title={`${presentation.title} · ${EDITION_LABELS[edition]} edition · Five Minutes`} description={presentation.description} edition={edition} editionPaths={editionPaths}>
-  <article data-lesson-id={lesson.metadata.id} data-edition={edition}>
+<BaseLayout title={`${presentation.title} · ${EDITION_LABELS[edition]} edition · Five Minutes`} description={presentation.description} edition={edition} editionPaths={editionPaths} wide={!!presentation.figure}>
+  <article class:list={['reading-article', {'has-figure': !!presentation.figure}]} data-lesson-id={lesson.metadata.id} data-edition={edition}>
     <header class="reader-header">
       <p class="eyebrow">{EDITION_LABELS[edition]} edition · <time datetime={lesson.metadata.publishedAt}>{formatEditorialDate(lesson.metadata.publishedAt)}</time></p>
       <h1>{presentation.title}</h1>
       <p class="lede">{presentation.description}</p>
     </header>
-    <div class="lesson-body" set:html={html} />
-    <section class="card lesson-section" aria-labelledby="takeaway-heading">
-      <h2 id="takeaway-heading">Takeaway</h2>
-      <p>{presentation.takeaway}</p>
-    </section>
-    <section class="card lesson-section" aria-labelledby="test-heading">
-      <h2 id="test-heading">Test yourself</h2>
+    {edition==='teen' && presentation.activity && <TeenActivity activity={presentation.activity} id={`activity-${lesson.metadata.id}`}/>}
+    {presentation.figure && positioned ? <div class="reading-with-figure">
+      <div class="lesson-body figure-opening" set:html={positioned.opening}/>
+      <LessonFigure figure={presentation.figure} id={`figure-${edition}-${lesson.metadata.id}`}/>
+      <div class="lesson-body figure-rest" set:html={positioned.rest}/>
+    </div> : <div class="lesson-body" set:html={html}/>}
+    <section class="card lesson-section recall-section" aria-labelledby="recall-heading" data-recall>
+      <h2 id="recall-heading">Recall</h2>
       <p>{presentation.question}</p>
-      <details>
-        <summary>Show answer</summary>
+      <details data-recall-reveal>
+        <summary><span class="reveal-marker" aria-hidden="true">▸</span>Reveal answer and takeaway</summary>
         <p class="answer">{presentation.answer}</p>
+        <section aria-labelledby="takeaway-heading">
+          <h3 id="takeaway-heading">Takeaway</h3>
+          <p>{presentation.takeaway}</p>
+        </section>
       </details>
     </section>
     <section class="lesson-section" aria-labelledby="related-heading">

@@ -30,7 +30,7 @@ A publishable lesson must meet every criterion below. Reviewers use judgement an
 
 ## Figures and Teen activities
 
-Optional figures are part of an individual presentation and are reviewed with the same factual standard as its prose. A figure must materially improve understanding; decorative imagery is not a reason to add one. Reviewers verify every label, scale, relationship and caption against the lesson's sources, and confirm that required alt text communicates the explanatory purpose rather than merely naming the picture. Adult and Teen may use different figures/captions.
+Optional figures are part of an individual presentation and are reviewed with the same factual standard as its prose. A figure must materially improve understanding; decorative imagery is not a reason to add one. Reviewers verify every label, scale, relationship and caption against the lesson's sources, and confirm that required alt text communicates the explanatory purpose rather than merely naming the picture. Adult and Teen may use different figures/captions. Review the full-text description as an equivalent explanation, and mark schematic drawings as not to scale where appropriate. The concrete field shapes and limits are in [M6.2 reading enhancements](implementation/m6.2-reading-enhancements.md).
 
 Only the safe representations defined by ADR-0006 are publishable: application-rendered diagrams from validated structured data or local PNG/WebP assets within configured size/file-count limits. Lesson-authored SVG, HTML, remote images and executable embeds are not accepted.
 
