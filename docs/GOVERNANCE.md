@@ -298,6 +298,8 @@ Documentation should describe the current system rather than preserve obsolete i
 
 `main` represents the authoritative production-ready state of the project.
 
+Routine automated lesson publication and its exceptional merge authority follow ADR-0007. That bounded path does not weaken this document's general classification, different-provider review, exact-head or required-check rules; it adds stricter writer, reviewer, same-run merge and fail-closed controls for publication candidates.
+
 Production deployments should originate from the repository rather than undocumented local changes. Cloudflare production should therefore be reproducible from the repository.
 
 Where practical, Pull Requests should receive preview deployments so changes can be evaluated before merging.

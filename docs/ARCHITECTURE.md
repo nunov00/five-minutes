@@ -87,17 +87,13 @@ Start with privacy-conscious infrastructure-level analytics. Product-event analy
 
 ### Publication pipeline
 
-Schedule/manual trigger
--> research
--> draft lesson + provenance
--> schema/content validation
--> automated quality checks
--> pull request
--> independent AI review (routine publication authority; fail closed/escalate on uncertainty)
--> merge
--> deployment
+Routine automated publication follows ADR-0007's subscription-based, fail-closed contract:
 
-Published production state derives from the repository. The publication system must support draft/reviewed/published lifecycle states.
+Schedule -> research -> Adult + Teen draft and provenance -> lesson-only Pull Request -> named automated checks -> same-run independent different-provider review and exact-head guarded merge -> deployment.
+
+The writer and reviewer currently act through the Owner's GitHub identity, so separation of powers is procedural and reinforced by the lesson-only guard, current-`main` base requirement, named-check verification and `expectedHeadSha` merge. Saved reviews, comments and labels never authorise a later merge. Auto-merge is not used.
+
+Published production state derives from the repository. Draft/reviewed/published lifecycle state remains Git/PR state rather than canonical lesson metadata. A candidate that misses its Europe/Zurich publication date, cannot be independently sourced or encounters infrastructure/allowance uncertainty does not publish; Today continues to show the latest published lesson.
 
 ### Testing and quality gates
 
