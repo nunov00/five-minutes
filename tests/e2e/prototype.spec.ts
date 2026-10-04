@@ -83,7 +83,7 @@ test('no-JavaScript edition navigation, recall, prediction and pagination work',
  const ctx=await browser.newContext({javaScriptEnabled:false,viewport:{width:320,height:800}});const page=await ctx.newPage();
  await page.goto('http://127.0.0.1:4321'+p+'/teen/why-earth-has-seasons');
  await expect(page.locator('.prediction-plain')).toHaveCount(2);await expect(page.locator('.prediction-choice').first()).toBeHidden();
- await page.locator('#prediction-reveal summary').click();await expect(page.locator('#prediction-reveal')).toHaveAttribute('open','');
+ await page.locator('#prediction-module > summary').click();await expect(page.locator('.prediction-plain').first()).toBeVisible();await page.locator('#prediction-reveal summary').click();await expect(page.locator('#prediction-reveal')).toHaveAttribute('open','');
  await page.locator('.recall-reveal summary').click();await expect(page.locator('.takeaway')).toBeVisible();
  await page.locator('.edition-control').getByText('Adult',{exact:true}).click();await expect(page).toHaveURL(/\/adult\/why-earth-has-seasons$/);
  await page.goto('http://127.0.0.1:4321'+p+'/editions/teen/library/page/7');await expect(page.locator('.lesson-row')).toHaveCount(24);
@@ -105,4 +105,49 @@ test('320px layout, 200% text, dark themes and reduced motion',async({page})=>{
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
   await expect(page.locator('.figure-column')).toBeVisible();
  }
+});
+
+test('cross-edition bridge preserves preference and returns to the same lesson',async({page})=>{
+ await prefer(page,'adult');await page.goto(p+'/adult/goodharts-law');
+ await page.locator('.cross-edition').click();await expect(page).toHaveURL(/\/teen\/goodharts-law$/);
+ expect(await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!).edition,key)).toBe('adult');
+ await expect(page.locator('#bridge-return')).toHaveAttribute('href',/\/adult\/goodharts-law$/);
+ await page.locator('#bridge-return').click();await expect(page).toHaveURL(/\/adult\/goodharts-law$/);
+});
+test('phone first viewport exposes reading action and lesson opening; figure follows opening',async({page})=>{
+ for(const viewport of [{width:375,height:667},{width:390,height:844}]){
+  await page.setViewportSize(viewport);
+  for(const edition of ['adult','teen']){
+   await page.goto(p+'/editions/'+edition);
+   const nav=await page.locator('.mobile-nav').boundingBox();const action=await page.locator('.primary-action').boundingBox();
+   expect(action!.y+action!.height).toBeLessThanOrEqual(nav!.y);
+   await page.locator('.primary-action').click();
+   const opening=await page.locator('.opening').boundingBox();const tabs=await page.locator('.mobile-nav').boundingBox();
+   expect(opening!.y+24).toBeLessThan(tabs!.y);
+   const figure=await page.locator('.figure-column').boundingBox();const continuation=await page.locator('.body-continuation').boundingBox();
+   expect(figure!.y).toBeGreaterThanOrEqual(opening!.y+opening!.height);
+   expect(continuation!.y).toBeGreaterThanOrEqual(figure!.y+figure!.height);
+   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+  }
+ }
+});
+test('skip link leads keyboard order and search reuses production word matching',async({page})=>{
+ await page.goto(p+'/editions/adult/search');await page.keyboard.press('Tab');await expect(page.locator('.skip-link')).toBeFocused();
+ await page.locator('#search-query').fill('art');await page.locator('#search-form button').click();
+ await expect(page.locator('#search-status')).toContainText('No ideas found.');
+ await page.locator('#search-query').fill('seasonx');await page.locator('#search-form button').click();
+ await expect(page.locator('#search-status')).toHaveText('1 idea found.');
+});
+test('preference return keeps discovery query and Surprise skips the featured idea',async({page})=>{
+ await prefer(page,'adult');await page.goto(p+'/editions/teen/search?q=seasons#main');
+ await expect(page.locator('#bridge-return')).toHaveAttribute('href',/\/editions\/adult\/search\?q=seasons#main$/);
+ await page.locator('#bridge-return').click();await expect(page).toHaveURL(/\/editions\/adult\/search\?q=seasons#main$/);
+ await page.goto(p+'/editions/adult');
+ const docs=await (await page.request.get(p+'/catalogue.json')).json();
+ const featured=await page.locator('[data-featured-id]').getAttribute('data-featured-id');
+ const index=docs.findIndex((l:{id:string})=>l.id===featured);
+ await page.evaluate(value=>{Math.random=()=>value;},(index+.1)/docs.length);
+ await page.locator('[data-surprise]').click();
+ await expect(page).not.toHaveURL(/\/why-earth-has-seasons$/);
+ await expect(page.locator('.lesson-ending')).toBeVisible();
 });

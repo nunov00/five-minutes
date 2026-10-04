@@ -40,7 +40,7 @@ Normal build before final visual polish: 236 files / 8.96 MiB, including the unc
 
 ## Verification and remaining work
 
-Local Astro/TypeScript check: zero diagnostics. Existing unit/integration suite: 105 tests. Browser suite including nine new prototype journeys per project: 62 passed, desktop and iPhone-class Chromium. The existing intentional page-error guard tests are expected failures and count as passed. Static completeness/link, Cloudflare redirect and capacity checks are retained unchanged. CI repeats the normal pinned-browser checks on the PR head.
+Local Astro/TypeScript check: zero diagnostics. Existing unit/integration suite: 105 tests. Initial browser suite including nine prototype journeys per project: 62 passed, desktop and iPhone-class Chromium. The existing intentional page-error guard tests are expected failures and count as passed. Static completeness/link, Cloudflare redirect and capacity checks are retained unchanged. CI repeats the normal pinned-browser checks on the PR head.
 
 The browser journeys cover explicit shared links, mismatch/adoption, neutral replace/query/hash/Back, page and query preservation, recall, Saved/Read identity, search history/no results/retry/overlap, 10,000-record bounded results, denied storage, no-JS navigation/reveals/pagination, 320px widths, 200% root text and four edition/appearance combinations. Local Chromium was temporarily obtained outside the repository because the standard browser download failed in the execution environment. No browser dependency was added to the project. Node 22 is used for final local checks. Environment proxy warnings are disabled only for local offline checks because an existing test asserts empty stderr.
 
@@ -62,3 +62,23 @@ Review the exact current PR head independently. Read AGENTS.md and governance be
 Inspect the actual preview on mobile and desktop in both editions, including seasons and Goodhart. Challenge the shared shell/two voices boundary, real long titles, figure geometry/accessibility, recall ordering, optional prediction, navigation visibility, archive/shelf scale and Search/Saved failure states. Review prototype source, not only screenshots. Exercise explicit URL versus preference, neutral restore/replace/query/hash/history, denial/corruption of storage, query persistence, asynchronous search and no-JS reading/reveals. Verify canonical source use and the safety boundary: no schema/sanitiser changes or arbitrary executable content.
 
 Report BLOCKER / IMPORTANT / MINOR findings with file evidence, required fixes, independently run checks and remaining uncertainty. Post findings on this PR where practical. Separate prototype defects from production work deliberately deferred above. Provide a design judgement and a short list of Owner decisions; do not require unrelated production features to call the isolated preview reviewable. Re-review any fixes on the final head. The Owner's design choice and actual-device test still precede the production implementation plan.
+
+
+## Remediation of Claude’s review (4 October)
+
+Claude/Anthropic reported 0 BLOCKER, 4 IMPORTANT and 8 MINOR on `2e190bdd`. The revised prototype addresses all twelve observations:
+
+- The end-of-lesson cross-edition bridge only opens the alternate presentation; it no longer sets a preferred edition. Header/preference choices and explicit adoption remain deliberate preference actions.
+- Return to the preferred edition follows the same lesson or discovery location, retaining query/hash instead of returning to Today.
+- Mobile chrome is one compact header row with 44px controls, plus a shorter review strip. Today headline/deck spacing and display size expose the complete Read action at 375×667 and 390×844. Lesson openings appear in the first viewport. The optional prediction is a collapsed native disclosure before the text, so it remains available without pushing reading below the fold; it opens and reveals without JavaScript.
+- The figure follows the opening paragraph in DOM and mobile reading order. Desktop uses explicit grid areas to retain the figure beside the text. Hiding figures still produces a centred text measure.
+- Search imports the actual production `searchDocuments` implementation through an Astro-bundled enhancement module, including exact/prefix/one-edit matching, weighting and ranking. Real metadata includes concepts. No duplicate ranker or runtime framework was added.
+- The figure caption now says the axis keeps pointing towards nearly the same place in space throughout the orbit.
+- Earlier this week is restricted to Monday through the day before the featured publication in the Zurich calendar. The fixed seasons fixture remains deliberate.
+- Surprise excludes the featured lesson; its ordinary link fallback still opens Goodhart.
+- Library copy describes the dated archive. The skip link is the first focusable element, before review controls. Edition detection checks its designated route segment.
+- Explicit light/dark colour tokens and media-query defaults replace `light-dark()`, retaining edition/theme colours on earlier Safari versions. Physical-device compatibility remains unverified.
+
+New browser regressions cover the preference-neutral cross-edition bridge, same-lesson return, first-viewport action/opening geometry on two phone sizes, mobile figure order, keyboard order and production word/fuzzy search. Existing no-JavaScript prediction checks open the outer disclosure before the answer. Re-review this final head; the earlier review is not approval of these fixes. Main and production content/schema remain unchanged.
+
+Remediation validation: Node 22 check has zero diagnostics; 105 unit tests and 70 browser journeys passed (26 prototype cases plus 44 existing cases). All 32 refreshed captures were generated with no horizontal overflow at the captured phone/desktop widths. Dedicated geometry checks also pass at 320px, 375×667 and 390×844. Static integrity, redirect and capacity gates are retained. Actual Safari/iPhone and screen-reader checks remain pending.
