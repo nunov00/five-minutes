@@ -59,6 +59,14 @@ MiniSearch is the initial candidate behind an application-owned interface. Brows
 
 A small storage abstraction owns Saved, Read/Unread, recent lessons, selected edition and appearance preferences. The first implementation uses browser-local storage. Components must not access storage directly where doing so would make future sync unnecessarily invasive.
 
+ADR-0009 sequences that state work with the accepted post-M5 production experience. Adult and Teen remain explicit canonical lesson URLs, while a deliberate publication-level edition choice stores the reader's default for neutral entry points. Explicit/shared lesson URLs and same-lesson edition bridges do not silently mutate that preference. Saved/Read and edition state are integrated into the shared publication shell rather than implemented against an interface scheduled for replacement.
+
+### Production experience
+
+The accepted post-M5 direction is **one publication, two visual voices**. Shared publication navigation may present Adult and Teen with materially different visual treatment while preserving one lesson identity, the ADR-0005 route contract and progressively enhanced reading.
+
+The reading experience may include a recall-first ending, reviewed explanatory figures and optional lightweight Teen prediction/choice activities. Figures and activities require safe structured canonical contracts before production publication; raw executable lesson content remains prohibited. The isolated design prototype is reference evidence only and is not a production dependency. See ADR-0009 for preference/history semantics, prototype boundaries and production verification gates.
+
 ### Hosting and runtime
 
 Cloudflare is the initial deployment target, not an application dependency.
