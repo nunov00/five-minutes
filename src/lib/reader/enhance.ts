@@ -44,7 +44,8 @@ function restore() {
     if (target) { location.replace(target); return; }
   }
   const pageEdition = root.dataset.edition;
-  if (pageEdition) reflectEdition(pageEdition);
+  if (root.dataset.preferenceSurface === 'true') reflectEdition(edition);
+  else if (pageEdition) reflectEdition(pageEdition);
   else if (root.dataset.search !== 'true') reflectEdition(null);
   const returnLink = document.querySelector<HTMLAnchorElement>('[data-return]');
   if (returnLink) {
