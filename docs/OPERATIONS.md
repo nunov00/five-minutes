@@ -95,6 +95,26 @@ Five Minutes is installable (iOS/iPadOS Add to Home Screen and supported Chromiu
 - Fork/untrusted workflows do not receive repository secrets.
 - Branch protection/required checks guard `main`.
 
+## Automated publication operations
+
+ADR-0007 is the authority for automated lesson publication. The initial subscription-based schedule is:
+
+- ChatGPT writer: once per Europe/Zurich day and no later than 14:00, after checking `publication-paused`, closing clearly stale automated new-lesson PRs, and checking today's slot and remaining automated PRs;
+- Claude Code reviewer: every two hours from approximately 06:00 through 20:00 Europe/Zurich;
+- named merge checks: `baseline`, `e2e` and `lesson-guard` after M7.2; only the latest completed result of each exact name on the current SHA counts, and it must be `success`;
+- stale boundary: an unmerged candidate closes when its intended Zurich date ends;
+- failure behaviour: no source access, no capacity, no successful check or any uncertainty means no publication.
+
+The reviewer begins editorial review only after all named checks succeed on the current head. Ready review and `expectedHeadSha` merge occur in that same routine run; immediately before merge, the reviewer re-checks the unchanged head, latest named results and that the base commit still equals current `main`. An earlier comment, review or label is never authority. Auto-merge is disabled for this flow.
+
+Any open issue labelled `publication-paused` is the shared off switch. Removing the label or closing the issue resumes future runs only. It never revives an ineligible or stale PR.
+
+The fixed writer and reviewer instructions are versioned in `docs/automation/publication-task-contracts.md` and read policy from current `main` before any untrusted data. Before activation, M7.3 records subscription capability, source access, actual GitHub identities and guarded-merge failure tests on a disposable non-production target branch. M7.4 records three shadow lessons. M7.5 records the exact repository protection settings and confirms that required checks apply to administrators, no approval-count rule blocks the shared identity, and force pushes, deletion and available bypass of `main` are disabled. Recheck these settings during the monthly publication audit because Claude cannot inspect them during each run.
+
+Corrections do not use the daily automation. The Manager or Owner initiates them through the normal `review:mandatory` workflow, and the Manager merges under GOVERNANCE.md after independent review.
+
+Operational records must distinguish routine infrastructure completion from publication success. A green scheduled session is not evidence that a lesson was reviewed or merged; the PR review, exact SHA, named check results and merge record are the durable evidence.
+
 ## Backup and recovery
 
 GitHub is the canonical source for code, lesson sources, metadata, provenance and architecture history. Production hosting is reproducible output, not the sole copy.
@@ -134,7 +154,7 @@ Accessibility and broken-link checks are CI concerns. Performance/mobile search 
    - **M6.2 reading/content enhancements:** implement schemaVersion 2 validation and rendering for ADR-0006 figures and Teen activities plus the precisely ordered recall-before-takeaway experience.
    - **M6.3 reader-state surfaces:** Saved/Read/recent/appearance and bounded export/import use the same envelope introduced in M6.1. No legacy migration is present because no genuine earlier reader-state format was published.
    - **M6.4 integration gate:** verify the complete production experience and reader state together, including no-JS fallbacks, storage-blocked behaviour, explicit/neutral routes, Return/session-origin handling, Back/bfcache behaviour, installed-app navigation and changed accessibility journeys. Focused Playwright WebKit coverage supplements the existing Chromium projects; the bounded physical-iPhone/Safari/standalone/VoiceOver checklist and evidence format live in `docs/implementation/m6.4-integration-gate.md`. WebKit emulation never substitutes for that device record.
-7. Automated publication: generation -> validation -> independent AI review -> eligible PR -> scheduled merge/deploy, with escalation on review failure/uncertainty. Publication automation must understand schemaVersion 2 before it may author figure/activity fields.
+7. Automated publication: implement ADR-0007 in five gates — contracts/threat model, lesson-only guard, subscription capability spike, three shadow lessons, then protected activation. The reviewer starts only after named checks pass and merges the exact reviewed head in the same run. Initial automation may author schema-v2 Teen activities but not new figures.
 8. Production hardening: the existing broader M8 gate remains Playwright/accessibility/link/security/performance/mobile validation, analytics boundary and operational recovery test. M6.4 does not replace M8.
 
 ## Architecture acceptance checklist
