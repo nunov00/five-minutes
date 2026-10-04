@@ -2,7 +2,19 @@ import { describe, expect, it } from 'vitest';
 import { buildRedirectManifest, updateRouteOwnershipRegistry, validateLessonBundle, validateLessonCollection, validateLessonReferences, validatePublicationCollection, validatePublicationEligibility, validateRouteOwnershipHistory, validateRouteOwnershipRegistry } from '../../src/lib/content/schema';
 import { validLesson } from '../fixtures/lesson-fixtures';
 
-describe('lesson schema v1', () => {
+describe('lesson schema v2', () => {
+  it.each([1, 3, null, undefined])('rejects unsupported/missing schema version %s', (version) => {
+    const lesson = validLesson();
+    const metadata = { ...lesson.metadata, schemaVersion: version };
+    expect(validateLessonBundle({ ...lesson, metadata }).issues).toContainEqual(expect.objectContaining({code:'schema-version'}));
+  });
+
+  it('rejects a mixed published corpus', () => {
+    const first = validLesson();
+    const second = { ...first, metadata: {...first.metadata, id:'018f47a2-5d7b-7c31-9d4f-0d9a8b6c2e12',slug:'second-lesson',aliases:[],schemaVersion:1} };
+    expect(validatePublicationCollection([first,second]).issues).toContainEqual(expect.objectContaining({path:'lessons[1].metadata.schemaVersion',code:'schema-version'}));
+  });
+
   it('accepts a complete canonical lesson', () => {
     expect(validateLessonBundle(validLesson())).toEqual({ valid: true, issues: [] });
   });
