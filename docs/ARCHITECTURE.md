@@ -59,7 +59,7 @@ MiniSearch is the initial candidate behind an application-owned interface. Brows
 
 A small storage abstraction owns Saved, Read/Unread, recent lessons, selected edition and appearance preferences. The first implementation uses browser-local storage. Components must not access storage directly where doing so would make future sync unnecessarily invasive.
 
-ADR-0009 and the 2026-10-04 ADR-0005/0006 amendments record the Owner-approved post-M5 production contracts. M6 introduces the final versioned reader-state envelope before its first edition-preference write, then reuses that same abstraction for Saved/Read/recent/appearance and export/import. Adult and Teen remain explicit canonical lesson URLs, while a deliberate publication-level edition choice stores the reader's default for neutral entry points. Explicit/shared lesson URLs and same-lesson edition bridges do not silently mutate that preference. Saved/Read and edition state are integrated into the shared publication shell rather than implemented against an interface scheduled for replacement.
+ADR-0009 and the 2026-10-04 ADR-0005/0006 amendments record the Owner-approved post-M5 production contracts. M6 introduces the final versioned reader-state envelope before its first edition-preference write, then reuses that same abstraction for Saved/Read/recent/appearance and export/import. Adult and Teen remain explicit canonical lesson URLs, while a deliberate publication-level edition choice stores the reader's default for neutral entry points. Explicit/shared lesson URLs and same-lesson edition bridges do not silently mutate that preference. Saved/Read and edition state are integrated into the shared publication shell rather than implemented against an interface scheduled for replacement. M6.3's `/saved` surface joins immutable stored IDs to the compact browser catalogue; missing catalogue entries are retained and reported, not deleted. Recent reading is bounded to 50 edition-specific visits.
 
 ### Production experience
 
@@ -155,7 +155,7 @@ The initial controlled topic/subtopic vocabulary and related-content priority ru
 
 ## M6.1 implementation boundary
 
-The production reader-state envelope, storage abstraction, edition discovery routing, neutral chooser/forwarding SEO policy and session Return validation are documented in [M6.1 implementation](implementation/m6.1-reader-foundation.md). They implement ADR-0005/0009 without introducing accounts, server code or prototype dependencies. Saved/Read/recent/appearance UI remains M6.3.
+The production reader-state envelope, storage abstraction, edition discovery routing, neutral chooser/forwarding SEO policy and session Return validation are documented in [M6.1 implementation](implementation/m6.1-reader-foundation.md). [M6.3 implementation](implementation/m6.3-reader-state-surfaces.md) documents Saved/Read/recent/appearance and local data portability. They implement ADR-0005/0009 without introducing accounts, server code or prototype dependencies.
 
 ## M6.2 implementation boundary
 
