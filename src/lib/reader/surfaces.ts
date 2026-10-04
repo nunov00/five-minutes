@@ -1,6 +1,6 @@
 import type { BrowserCatalogueEntry } from '../discovery/types';
 import type { LessonEdition } from '../urls';
-import { isAppearance, MAX_READER_STATE_CHARS, readerStorage, type ReaderAppearance, type ReaderStateV1 } from './state';
+import { isAppearance, MAX_READER_STATE_CHARS, parseReaderState, readerStorage, type ReaderAppearance, type ReaderStateV1 } from './state';
 
 const root = document.documentElement;
 const store = readerStorage(() => localStorage);
@@ -9,6 +9,11 @@ root.classList.add('reader-features');
 const emit = () => document.dispatchEvent(new Event('reader-state-change'));
 const current = () => store.read();
 const lesson = document.querySelector<HTMLElement>('[data-reader-lesson]');
+
+function showWriteFailure() {
+  const note = document.querySelector<HTMLElement>('#preference-note');
+  if (note) { note.textContent = 'This change could not be saved and will not be remembered on this device.'; note.hidden = false; }
+}
 
 function applyAppearance(appearance: ReaderAppearance) {
   root.dataset.appearance = appearance;
@@ -23,8 +28,8 @@ function reflectLessonControls(state: ReaderStateV1) {
   const read = Boolean(state.read[id]);
   const save = lesson.querySelector<HTMLButtonElement>('[data-save-lesson]');
   const readButton = lesson.querySelector<HTMLButtonElement>('[data-read-lesson]');
-  if (save) { save.hidden = false; save.setAttribute('aria-pressed', String(saved)); save.textContent = saved ? 'Saved' : 'Save'; }
-  if (readButton) { readButton.hidden = false; readButton.setAttribute('aria-pressed', String(!read)); readButton.textContent = read ? 'Mark unread' : 'Mark read'; }
+  if (save) { save.hidden = false; save.setAttribute('aria-pressed', String(saved)); save.textContent = 'Save lesson'; }
+  if (readButton) { readButton.hidden = false; readButton.removeAttribute('aria-pressed'); readButton.textContent = read ? 'Mark unread' : 'Mark read'; }
 }
 
 function reflectMarkers(state: ReaderStateV1) {
@@ -52,10 +57,9 @@ function renderPersonalLists(state: ReaderStateV1, catalogue: readonly BrowserCa
   state.saved.forEach(id => {
     const entry = byId.get(id); if (!entry) { missingSaved++; return; }
     const item = document.createElement('li'); item.dataset.lessonId = id;
-    const title = document.createElement('strong'); title.textContent = entry[state.edition ?? 'adult'].title;
-    const choices = document.createElement('span'); choices.className = 'personal-links';
-    choices.append(link('Adult', entry.adult.path), document.createTextNode(' · '), link('Teen', entry.teen.path));
-    item.append(title, choices); savedList?.append(item);
+    const choices = document.createElement('span'); choices.className = 'personal-editions';
+    choices.append(link(`Adult: ${entry.adult.title}`, entry.adult.path), link(`Teen: ${entry.teen.title}`, entry.teen.path));
+    item.append(choices); savedList?.append(item);
   });
   state.recent.forEach(recent => {
     const entry = byId.get(recent.id); if (!entry) { missingRecent++; return; }
@@ -67,7 +71,7 @@ function renderPersonalLists(state: ReaderStateV1, catalogue: readonly BrowserCa
   if (savedEmpty) { savedEmpty.hidden = state.saved.length > 0; savedEmpty.textContent = 'No saved lessons yet.'; }
   if (recentEmpty) { recentEmpty.hidden = state.recent.length > 0; recentEmpty.textContent = 'No recently read lessons yet.'; }
   const missing = document.querySelector<HTMLElement>('[data-missing-items]');
-  if (missing) { const count = missingSaved + missingRecent; missing.hidden = count === 0; missing.textContent = `${count} local ${count === 1 ? 'entry is' : 'entries are'} being kept, but its lesson is not in this catalogue.`; }
+  if (missing) { const count = missingSaved + missingRecent; missing.hidden = count === 0; missing.textContent = count === 1 ? '1 local entry is being kept, but its lesson is not in this catalogue.' : `${count} local entries are being kept, but their lessons are not in this catalogue.`; }
 }
 
 let catalogue: readonly BrowserCatalogueEntry[] | null = null;
@@ -98,17 +102,25 @@ async function refresh() {
 }
 
 if (lesson?.dataset.lessonId && (lesson.dataset.edition === 'adult' || lesson.dataset.edition === 'teen')) {
-  store.visitLesson(lesson.dataset.lessonId, lesson.dataset.edition as LessonEdition); emit();
+  if (!store.visitLesson(lesson.dataset.lessonId, lesson.dataset.edition as LessonEdition)) showWriteFailure();
+  emit();
 }
 
-lesson?.querySelector('[data-save-lesson]')?.addEventListener('click', () => { if (lesson.dataset.lessonId && store.toggleSaved(lesson.dataset.lessonId)) { emit(); void refresh(); } });
+lesson?.querySelector('[data-save-lesson]')?.addEventListener('click', () => {
+  if (!lesson.dataset.lessonId) return;
+  if (store.toggleSaved(lesson.dataset.lessonId)) emit(); else showWriteFailure();
+  void refresh();
+});
 lesson?.querySelector('[data-read-lesson]')?.addEventListener('click', () => {
   const state = current(), id = lesson.dataset.lessonId; if (!state || !id) return;
-  if (store.setRead(id, !state.read[id])) { emit(); void refresh(); }
+  if (store.setRead(id, !state.read[id])) emit(); else showWriteFailure();
+  void refresh();
 });
 
 document.querySelectorAll<HTMLInputElement>('input[name="appearance"]').forEach(input => input.addEventListener('change', () => {
-  if (isAppearance(input.value) && store.setAppearance(input.value)) { applyAppearance(input.value); emit(); }
+  if (!isAppearance(input.value)) return;
+  if (store.setAppearance(input.value)) { applyAppearance(input.value); emit(); }
+  else { showWriteFailure(); void refresh(); }
 }));
 
 document.querySelector<HTMLButtonElement>('[data-export-reader]')?.addEventListener('click', () => {
@@ -124,7 +136,8 @@ document.querySelector<HTMLButtonElement>('[data-import-reader]')?.addEventListe
   if (!file || !confirm?.checked) { if (status) status.textContent = 'Choose a file and confirm that it may replace this device’s reader data.'; return; }
   if (file.size > MAX_READER_STATE_CHARS) { if (status) status.textContent = 'That file is too large. Nothing was changed.'; return; }
   const raw = await file.text();
-  if (!store.replaceFromJson(raw)) { if (status) status.textContent = 'That file is not valid Five Minutes reader data. Nothing was changed.'; return; }
+  if (!parseReaderState(raw)) { if (status) status.textContent = 'That file is not valid Five Minutes reader data. Nothing was changed.'; return; }
+  if (!store.replaceFromJson(raw)) { if (status) status.textContent = 'Reader data could not be saved. Nothing was changed.'; showWriteFailure(); return; }
   if (status) status.textContent = 'Reader data imported.'; confirm.checked = false; emit(); await refresh();
 });
 
