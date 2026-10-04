@@ -2,7 +2,7 @@ import { lessonPath } from '../urls';
 import { isTaxonomyPair, taxonomyTopic } from '../taxonomy';
 import { relatedCandidateCount } from '../discovery/related';
 
-export const LESSON_SCHEMA_VERSION = 1 as const;
+export const LESSON_SCHEMA_VERSION = 2 as const;
 
 export type LessonId = string;
 
@@ -118,7 +118,7 @@ function validateExactKeys(
   issues: ValidationIssue[],
 ) {
   for (const key of Object.keys(value).sort()) {
-    if (!allowed.has(key)) issue(issues, `${path}.${key}`, 'unknown-field', 'Field is not part of schemaVersion 1.');
+    if (!allowed.has(key)) issue(issues, `${path}.${key}`, 'unknown-field', 'Field is not part of schemaVersion 2.');
   }
 }
 
@@ -157,7 +157,7 @@ export function validateLessonMetadata(value: unknown, path = 'metadata'): Valid
 
   validateExactKeys(value, METADATA_KEYS, path, issues);
 
-  if (value.schemaVersion !== LESSON_SCHEMA_VERSION) issue(issues, `${path}.schemaVersion`, 'schema-version', 'Expected schemaVersion 1.');
+  if (value.schemaVersion !== LESSON_SCHEMA_VERSION) issue(issues, `${path}.schemaVersion`, 'schema-version', 'Expected schemaVersion 2.');
   if (!nonEmpty(value.id) || !UUID.test(value.id)) issue(issues, `${path}.id`, 'uuid', 'Expected an RFC 4122-style UUID.');
   if (!nonEmpty(value.slug) || !SLUG.test(value.slug)) issue(issues, `${path}.slug`, 'slug', 'Expected a lowercase kebab-case slug.');
   validateStringArray(value.aliases, `${path}.aliases`, issues, SLUG);

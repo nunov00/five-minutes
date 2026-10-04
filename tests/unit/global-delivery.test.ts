@@ -4,7 +4,7 @@ import type { LessonBundle } from '../../src/lib/content/schema';
 
 const lesson: LessonBundle = {
   metadata: {
-    schemaVersion: 1, id: '0199a5b7-6e21-7a42-9c3d-8f1b2e4a6c70', slug: 'current-name', aliases: [],
+    schemaVersion: 2, id: '0199a5b7-6e21-7a42-9c3d-8f1b2e4a6c70', slug: 'current-name', aliases: [],
     publishedAt: '2026-10-02T18:00:00Z', topic: 'science', subtopic: 'physics', concepts: [],
     related: { manual: [], exclude: [] }, sources: [],
     provenance: { createdAt: '2026-10-02T18:00:00Z', createdBy: { type: 'human' }, reviews: [] },
