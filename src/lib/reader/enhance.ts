@@ -44,7 +44,12 @@ function restore() {
     if (target) { location.replace(target); return; }
   }
   const pageEdition = root.dataset.edition;
-  if (root.dataset.preferenceSurface === 'true') reflectEdition(edition);
+  if (root.dataset.today === 'true') {
+    if (edition) root.dataset.edition = edition;
+    else delete root.dataset.edition;
+    reflectEdition(edition);
+  }
+  else if (root.dataset.preferenceSurface === 'true') reflectEdition(edition);
   else if (pageEdition) reflectEdition(pageEdition);
   else if (root.dataset.search !== 'true') reflectEdition(null);
   const returnLink = document.querySelector<HTMLAnchorElement>('[data-return]');

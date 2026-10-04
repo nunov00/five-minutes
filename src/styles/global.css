@@ -468,6 +468,10 @@ html[data-edition=adult]{--color-accent:#286146;--color-focus:#286146;--color-ac
 html[data-edition=teen]{--color-accent:#6940ac;--color-focus:#6940ac;--color-accent-soft:#eee8f6}
 html[data-edition=adult] h1,html[data-edition=adult] h2{font-family:var(--font-serif)}
 html[data-edition=teen] .lesson-body{font-family:var(--font-sans)}
+html[data-today=true] [data-today-returning]{display:none}
+html[data-today=true][data-edition=adult] [data-today-edition=teen],html[data-today=true][data-edition=teen] [data-today-edition=adult],html[data-today=true][data-edition=adult] [data-surprise-edition=teen],html[data-today=true][data-edition=teen] [data-surprise-edition=adult]{display:none}
+html[data-today=true][data-edition] [data-today-first-visit]{display:none}
+html[data-today=true][data-edition] [data-today-returning]{display:block}
 @media(prefers-color-scheme:dark){html[data-edition=adult]:not([data-appearance=light]){--color-accent:#a0d6ba;--color-focus:#a0d6ba;--color-accent-soft:#23362b;--color-accent-contrast:#17261d}html[data-edition=teen]:not([data-appearance=light]){--color-accent:#c4b0ff;--color-focus:#c4b0ff;--color-accent-soft:#30253e;--color-accent-contrast:#24143b}}
 html[data-appearance=dark][data-edition=adult]{--color-accent:#a0d6ba;--color-focus:#a0d6ba;--color-accent-soft:#23362b;--color-accent-contrast:#17261d}html[data-appearance=dark][data-edition=teen]{--color-accent:#c4b0ff;--color-focus:#c4b0ff;--color-accent-soft:#30253e;--color-accent-contrast:#24143b}
 .site-header .container{gap:8px;justify-content:space-between}.site-header .edition-switch{margin:0;padding:0;border-radius:6px;gap:0}.site-header .edition-switch a{padding:0 10px;border-radius:4px}
