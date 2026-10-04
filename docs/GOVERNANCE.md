@@ -128,7 +128,7 @@ The Owner authorises the Manager to merge qualifying Pull Requests without a sep
 Before merging, the Manager must verify that:
 - all required automated checks have passed on the exact current PR head; required tests must actually run, not be skipped;
 - any preview/deployment verification required by the change's scope and risk has succeeded for that head;
-- the review required by section 9 for the PR's recorded classification is complete, with no unresolved BLOCKER or IMPORTANT findings;
+- the review required by section 9 for the PR's recorded classification is complete, with no unresolved BLOCKER or IMPORTANT findings; in particular, a `review:integration` activating PR cannot merge before its cumulative different-provider review;
 - remaining MINOR findings are explicitly non-blocking and are resolved or recorded as follow-up work;
 - the change stays within the Owner-authorised scope and does not introduce an unapproved product, major architecture, cost, privacy, security or destructive decision.
 
@@ -223,16 +223,17 @@ Independent different-provider review is not required when all of the following 
 
 - the change stays within approved architecture and product behaviour;
 - it is narrow, reversible and does not alter a public or stored-data contract;
-- it does not change a security/privacy boundary, content trust boundary, canonical routing, publication/deployment behaviour, significant dependency/service/cost, or material factual content;
+- it does not change a security/privacy boundary, content trust boundary or schema, canonical routing, publication/deployment behaviour, significant dependency/service/cost, material factual content, or the safeguards listed under `review:mandatory`;
+- it does not remove, skip or weaken relevant tests, required checks, verification scripts or workflow permissions;
 - focused tests and normal CI provide proportionate evidence.
 
-Typical examples are tests, documentation corrections, mechanical migrations with verified identical output, small regression fixes, internal refactors with unchanged behaviour, and styling/accessibility corrections within an approved design. The Manager performs a focused diff review, records the evidence and may merge under the standing authorisation without a second AI reviewer.
+Typical examples are new tests, documentation corrections, mechanical documentation or fixture updates with verified identical production output, small regression fixes, internal refactors with unchanged behaviour, and styling/accessibility corrections within an approved design. A pure typo correction in published content may be routine only when it changes no fact, meaning, source, answer, takeaway or figure. Schema migrations are never routine merely because current rendered output is identical. The Manager performs a focused diff review, records the evidence and may merge under the standing authorisation without a second AI reviewer.
 
 #### `review:integration`
 
-Related work inside an Owner-approved feature or ADR may be implemented in stages and receive one different-provider review at the integration gate rather than one review per staging PR. An intermediate PR may use `review:routine` only when it is independently production-safe, behaviour-neutral or inactive, reversible, and does not cross a mandatory-review boundary. A PR that activates material user-facing behaviour is itself the integration gate.
+Related work inside an Owner-approved feature or ADR may be implemented in stages and receive one different-provider review at the integration gate rather than one review per staging PR. An intermediate PR may use `review:routine` only when it is independently production-safe, reversible, crosses no mandatory-review boundary and is inactive in the strict deployment sense: compared with its base, the production build contains no new or changed deployed page, script or data asset; no sitemap, catalogue or search change; and no new reader-data read or write. Source-only scaffolding that the production build does not expose may qualify. A publicly reachable generated page is active even when navigation does not link to it.
 
-The integration Reviewer evaluates the cumulative feature range and the resulting system, not merely the final small diff. The review must complete before activation or milestone closure. This classification is useful for approved feature work whose individual scaffolding changes would otherwise create repetitive review ceremony.
+A PR that activates material user-facing behaviour is the integration gate and must not merge until its different-provider review is complete. The integration Reviewer evaluates the cumulative feature range and resulting system, not merely the final small diff. This classification is useful for approved feature work whose genuinely inactive scaffolding would otherwise create repetitive review ceremony.
 
 #### `review:mandatory`
 
@@ -240,10 +241,11 @@ A different-provider review is required before merge for:
 
 - governance changes and new or materially amended architecture/ADRs;
 - security, privacy, authentication, authorisation or executable-content boundaries;
-- stored-data formats or migrations that could lose or reinterpret reader data;
-- canonical content parsing/validation, canonical URLs, redirects, publication automation or material deployment/infrastructure behaviour;
+- stored-data formats, schema migrations, or migrations that could lose or reinterpret reader data;
+- canonical content schemas, parsing/validation, canonical URLs, redirects, publication automation or material deployment/infrastructure behaviour;
+- CI workflows, required-check configuration, verification scripts, workflow permissions, or test changes that remove, skip or weaken a quality gate (adding tests or tightening a gate may remain routine when it changes no other mandatory boundary);
 - significant dependencies, external services, recurring costs, destructive operations or difficult-to-reverse changes;
-- material factual/editorial content or batches requiring review under `docs/EDITORIAL.md`;
+- published lesson facts, sources, answers, takeaways or figures, and material factual/editorial content or batches requiring review under `docs/EDITORIAL.md` (pure typo fixes that do not change meaning may be routine);
 - any change the Owner or Manager explicitly elevates because uncertainty or impact warrants another perspective.
 
 Classification is based on the highest-risk part of the change. Splitting a high-risk change into small PRs does not turn it into routine work. When uncertain, elevate the classification or ask the Owner to resolve the boundary.
@@ -268,7 +270,7 @@ The Manager may verify and merge a narrow MINOR-only remediation without returni
 
 ### Periodic integration audit
 
-At milestone integration gates, the different-provider Reviewer should sample recent `review:routine` PRs while evaluating the combined system. This is a check for classification drift and accumulated interactions, not a reason to replay every already-green routine review. Any actual defect or misclassification discovered is handled normally and may block milestone closure.
+At each milestone integration gate, list every `review:routine` PR merged since the previous milestone. The different-provider Reviewer examines the combined system and closely samples at least two of those PRs, or all of them when fewer than two exist. Record the list, sampled PRs and any findings on the integration PR or milestone issue. This checks classification drift and accumulated interactions without replaying every already-green routine review. Any actual defect or misclassification discovered is handled normally and may block milestone closure.
 
 ### Review communication and record
 
