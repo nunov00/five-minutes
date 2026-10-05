@@ -15,7 +15,8 @@
     "cf:preview": "npm run cf:prepare && npm run cf:verify-capacity && wrangler preview --config deploy/cloudflare/wrangler.jsonc",
     "cf:prepare": "node deploy/cloudflare/compile-redirects.mjs",
     "cf:verify-capacity": "node deploy/cloudflare/verify-capacity.mjs",
-    "verify:static": "node scripts/verify-static-integrity.mjs"
+    "verify:static": "node scripts/verify-static-integrity.mjs",
+    "test:lesson-guard": "vitest run tests/unit/lesson-guard.test.ts"
   },
   "dependencies": {
     "astro": "7.3.5",

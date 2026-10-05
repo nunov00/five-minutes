@@ -1,0 +1,43 @@
+name: Lesson guard
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened, ready_for_review, labeled, unlabeled]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: lesson-guard-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  lesson-guard:
+    name: lesson-guard
+    if: ${{ github.event.pull_request.base.ref == github.event.repository.default_branch }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout trusted current default branch only
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          persist-credentials: false
+          fetch-depth: 1
+      - name: Set up Node.js (from trusted base)
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Install trusted base dependencies
+        run: npm ci --no-audit --no-fund
+      - name: Verify automated lesson boundary
+        run: node scripts/verify-lesson-pr.mjs
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          TRIGGER_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          TRIGGER_HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          TRIGGER_HAS_REVIEW_LABEL: ${{ contains(github.event.pull_request.labels.*.name, 'editorial-review-requested') }}

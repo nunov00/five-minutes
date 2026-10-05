@@ -35,6 +35,7 @@ Use Node.js 22 (see `.nvmrc`) and the committed lockfile:
 - `npm ci` — reproducible install;
 - `npm run check` — Astro/TypeScript diagnostics;
 - `npm test` — unit/integration tests (Vitest, `tests/**/*.test.ts`);
+- `npm run test:lesson-guard` — focused hostile-input tests for the M7 automated lesson boundary;
 - `npm run build` — production static build into `dist/`;
 - `npm run test:e2e` — Playwright browser journeys (`tests/e2e/**/*.spec.ts`) against the built site via `astro preview`; build the browser fixture with `FIVE_MINUTES_TEST_LIBRARY_PAGE_SIZE=5 npm run build` first (the pagination journeys require a second Library page), and install Chromium plus WebKit once with `npx playwright install chromium webkit`. Agents: Astro backgrounds `astro preview` for AI agents, so start `npm run preview` first (Playwright reuses it) and stop it afterwards with `npx astro preview stop`;
 - `npm run dist:count` — number of deployable files in `dist/` (run after `npm run build`);
@@ -42,5 +43,7 @@ Use Node.js 22 (see `.nvmrc`) and the committed lockfile:
 - `npm run cf:preview` / `npm run cf:deploy` — Cloudflare commands for Workers Builds, which holds the credentials: `cf:preview` creates a Worker Preview (`wrangler preview`) for branch/PR testing, and `cf:deploy` deploys production (`wrangler deploy`). Both use the pinned project Wrangler. See `deploy/cloudflare/README.md`. Do not run them from CI or with committed credentials, and do not use `wrangler versions upload` (Version URLs) for branch/PR testing.
 
 CI (`.github/workflows/ci.yml`) runs on every pull request and on `main`: check `baseline` runs `npm ci`, `npm run check`, `npm test`, `npm run build`, `npm run verify:static`, `npm run cf:prepare`, `node deploy/cloudflare/verify-redirects.mjs`, `npm run cf:verify-capacity` and `node scripts/count-dist-files.mjs --warn-at 16000` in that order; check `e2e` then runs `FIVE_MINUTES_TEST_LIBRARY_PAGE_SIZE=5 npm run build` and `npm run test:e2e` (desktop Chromium, iPhone-class Chromium and focused mobile WebKit projects). Run the same sequence locally before opening a PR. The `benchmark-*.yml` workflows are manual-only architecture evidence and are not part of CI.
+
+`.github/workflows/lesson-guard.yml` is a separate read-only `pull_request_target` check named `lesson-guard`. It checks out and executes only the current trusted default branch, never the PR head, and fetches candidate lesson blobs only as untrusted data through read-only GitHub APIs. It receives no repository secrets. M7.2 adds the check and tests; it is not a branch-protection requirement until M7.5. The first live automated-candidate exercise is M7.3.
 
 Canonical content validation is part of `npm test` and `npm run build`. Pull-request CI additionally supplies the base commit to the tests so `src/content/route-ownership.json` is proven append-only. Do not bypass `src/lib/content/loader.ts` when consuming canonical lessons.
