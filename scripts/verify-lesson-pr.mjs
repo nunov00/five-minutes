@@ -8,14 +8,19 @@ function configuration(env) {
   const token = env.GITHUB_TOKEN;
   const repository = env.GITHUB_REPOSITORY;
   const prNumber = Number(env.PR_NUMBER);
-  if (!token || !repository || !/^\d+$/.test(String(env.PR_NUMBER ?? ''))) {
+  const triggerHeadSha = env.TRIGGER_HEAD_SHA;
+  const triggerHeadRef = env.TRIGGER_HEAD_REF;
+  const triggerHasReviewLabel = env.TRIGGER_HAS_REVIEW_LABEL;
+  if (!token || !repository || !/^\d+$/.test(String(env.PR_NUMBER ?? '')) || !/^[0-9a-f]{40}$/.test(String(triggerHeadSha ?? ''))
+    || typeof triggerHeadRef !== 'string' || triggerHeadRef.length === 0
+    || !['true', 'false'].includes(String(triggerHasReviewLabel))) {
     throw new LessonGuardError('Guard environment is incomplete.');
   }
   const [owner, repo] = repository.split('/');
   if (!owner || !repo || repository.split('/').length !== 2 || !Number.isSafeInteger(prNumber) || prNumber < 1) {
     throw new LessonGuardError('Guard repository or Pull Request number is invalid.');
   }
-  return { owner, repo, token, prNumber };
+  return { owner, repo, token, prNumber, triggerHeadSha, triggerHeadRef, triggerHasReviewLabel: triggerHasReviewLabel === 'true' };
 }
 
 async function requestJson(path, fetchImpl, token) {
@@ -65,15 +70,9 @@ async function content(api, owner, repo, path, ref) {
   return strictBase64Text(await api(`/repos/${owner}/${repo}/contents/${encodedPath}?ref=${encodeURIComponent(ref)}`), path);
 }
 
-async function pullFiles(api, owner, repo, prNumber) {
-  const first = await api(`/repos/${owner}/${repo}/pulls/${prNumber}/files?per_page=100&page=1`);
-  if (!Array.isArray(first)) throw new LessonGuardError('Changed-file response is incomplete.');
-  if (first.length === 100) throw new LessonGuardError('Changed-file pagination exceeds the automated contract.');
-  return first;
-}
-
 export async function collectGuardInput({ env = process.env, fetchImpl = fetch, now = new Date().toISOString() } = {}) {
-  const { owner, repo, token, prNumber } = configuration(env);
+  const { owner, repo, token, prNumber, triggerHeadSha, triggerHeadRef, triggerHasReviewLabel } = configuration(env);
+  if (!triggerHeadRef.startsWith('lesson/') && !triggerHasReviewLabel) return { applicable: false };
   const api = (path) => requestJson(path, fetchImpl, token);
   const pr = await api(`/repos/${owner}/${repo}/pulls/${prNumber}`);
   if (!pr?.head?.sha || !pr?.head?.ref || !pr?.base?.sha || !pr?.base?.ref || !Array.isArray(pr.labels)) {
@@ -81,39 +80,46 @@ export async function collectGuardInput({ env = process.env, fetchImpl = fetch, 
   }
   const labels = pr.labels.map((label) => label?.name);
   if (labels.some((label) => typeof label !== 'string')) throw new LessonGuardError('Pull Request labels are incomplete.');
+  if (pr.head.ref !== triggerHeadRef) throw new LessonGuardError('Pull Request branch differs from the triggering event.');
+  if (pr.head.sha !== triggerHeadSha) throw new LessonGuardError('Pull Request head changed after this guard run was triggered.');
+
   const currentBase = await api(`/repos/${owner}/${repo}/git/ref/heads/${encodeURIComponent(pr.base.ref)}`);
   if (!currentBase?.object?.sha) throw new LessonGuardError('Current base reference is incomplete.');
-
-  const files = await pullFiles(api, owner, repo, prNumber);
-  const signalled = pr.head.ref.startsWith('lesson/') || labels.includes('editorial-review-requested');
-  if (!signalled) {
-    return { applicable: false };
+  const compare = await api(`/repos/${owner}/${repo}/compare/${encodeURIComponent(currentBase.object.sha)}...${encodeURIComponent(triggerHeadSha)}`);
+  if (!compare?.merge_base_commit?.sha || !Number.isSafeInteger(compare.behind_by) || !Array.isArray(compare.files)) {
+    throw new LessonGuardError('Pinned comparison response is incomplete.');
   }
+  const files = compare.files;
   if (files.length !== 4) throw new LessonGuardError('Automated lesson candidate must change exactly four files.');
 
   const matches = files.map((file) => /^src\/content\/lessons\/(\d{4})\/([^/]+)\/(adult\.md|lesson\.yaml|teen\.md)$/.exec(file.filename)).filter(Boolean);
   const candidatePaths = [...new Set(matches.map((match) => `src/content/lessons/${match[1]}/${match[2]}/${match[3]}`))];
-  const headTree = await api(`/repos/${owner}/${repo}/git/trees/${encodeURIComponent(pr.head.sha)}?recursive=1`);
+  const headTree = await api(`/repos/${owner}/${repo}/git/trees/${encodeURIComponent(triggerHeadSha)}?recursive=1`);
   if (!Array.isArray(headTree?.tree) || headTree.truncated) throw new LessonGuardError('Candidate tree response is incomplete or truncated.');
   const treeByPath = new Map(headTree.tree.map((entry) => [entry.path, entry]));
   const blobs = {};
   for (const path of candidatePaths) {
     const treeEntry = treeByPath.get(path);
-    const loaded = await content(api, owner, repo, path, pr.head.sha);
+    const loaded = await content(api, owner, repo, path, triggerHeadSha);
     blobs[path] = { mode: treeEntry?.mode, type: treeEntry?.type, size: loaded.size, text: loaded.text };
   }
 
+  const registryPath = 'src/content/route-ownership.json';
   const [baseRegistry, headRegistry] = await Promise.all([
-    content(api, owner, repo, 'src/content/route-ownership.json', pr.base.sha),
-    content(api, owner, repo, 'src/content/route-ownership.json', pr.head.sha),
+    content(api, owner, repo, registryPath, currentBase.object.sha),
+    content(api, owner, repo, registryPath, triggerHeadSha),
   ]);
+  const registryEntry = treeByPath.get(registryPath);
   return {
-    pr: { headRef: pr.head.ref, baseSha: pr.base.sha, labels },
+    pr: { headRef: pr.head.ref, headSha: pr.head.sha, labels },
+    triggerHeadSha,
     currentBaseSha: currentBase.object.sha,
+    mergeBaseSha: compare.merge_base_commit.sha,
+    behindBy: compare.behind_by,
     files: files.map(({ filename, status, additions, deletions, changes }) => ({ filename, status, additions, deletions, changes })),
     blobs,
     baseRegistryText: baseRegistry.text,
-    headRegistryText: headRegistry.text,
+    headRegistryBlob: { mode: registryEntry?.mode, type: registryEntry?.type, size: headRegistry.size, text: headRegistry.text },
     now,
   };
 }

@@ -78,10 +78,10 @@ For each eligible automated candidate it:
 
 1. checks the off switch;
 2. waits until the latest completed run of each named required check reports exactly `success` on the current head; `skipped`, `neutral`, `cancelled`, absent, pending or stale results are not success;
-3. records the head SHA and verifies the lesson-only diff, current-`main` base, daily slot and freshness rules, and that no other automated lesson or correction PR is open; an eligible candidate whose base is no longer current or whose intended date has passed is closed;
+3. records the head SHA and verifies the lesson-only diff, that a comparison from current `main` to that head has current `main` as its merge base with zero commits behind, daily slot and freshness rules, and that no other automated lesson or correction PR is open; an eligible candidate whose ancestry is no longer current or whose intended date has passed is closed;
 4. independently fetches and judges the sources and performs the complete EDITORIAL.md review for Adult and Teen, originality and any Teen activity;
 5. posts the review naming the exact SHA;
-6. if Ready, within that **same routine run**, re-fetches the head, verifies that the PR base commit still equals current `main`, re-checks the latest named results, and merges with `expectedHeadSha`;
+6. if Ready, within that **same routine run**, re-fetches the head, repeats the current-`main` merge-base/zero-behind check, re-checks the latest named results, and merges with `expectedHeadSha`;
 7. if BLOCKER or IMPORTANT findings exist, records the outcome and closes the PR;
 8. on infrastructure, network, source-access, scheduling or subscription-limit failure, publishes nothing.
 
@@ -89,7 +89,7 @@ The initial named checks are `baseline`, `e2e` and, after M7.2, `lesson-guard`. 
 
 A review, comment or label saved by an earlier run is information only. It is not authenticated approval and can never authorise a later merge. The reviewer may not create an `editorial-ready-awaiting-ci` state or enable auto-merge. Publication authority exists only inside the run that performs the independent review and guarded merge.
 
-`editorial-review-in-progress` is best-effort coordination, not a security lock. Duplicate or overlapping runs remain safe through idempotent eligibility checks, exact-current-base validation, the one-open-candidate rule and the expected-head merge guard.
+`editorial-review-in-progress` is best-effort coordination, not a security lock. Duplicate or overlapping runs remain safe through idempotent eligibility checks, pinned-head ancestry validation, the one-open-candidate rule and the expected-head merge guard.
 
 ### Prompt-injection boundary
 
@@ -111,7 +111,7 @@ M7.2 adds a fail-closed guard. Initially, an automated new-lesson PR:
 - stays within defined file and diff limits;
 - passes schema-v2 identity, route, source, safe-content, build, static and browser gates.
 
-Same-repository Pull Request checks use the branch's workflow definitions. The reviewer therefore also verifies the file list and requires the PR's base commit to equal the current `main` head. A candidate based on older `main` is closed, not rebased and trusted.
+Same-repository Pull Request checks use the branch's workflow definitions. The reviewer therefore also verifies the file list and compares the exact candidate head with current `main`: the common ancestor must be current `main` and the candidate must be zero commits behind. GitHub's mutable Pull Request base field is not accepted as proof of ancestry. A candidate based on older `main` is closed, not rebased and trusted.
 
 All AI-authored bodies remain subject to ADR-0006's validated safe-Markdown and structured-content rules. Fork and other untrusted workflows never receive repository or publication secrets.
 
@@ -147,9 +147,10 @@ No automated lesson publication is activated until:
 
 1. the lesson-only guard and hostile-input tests pass;
 2. a capability spike proves unattended PR creation, actual ChatGPT GitHub identity, scheduled discovery, access to representative authoritative sources, named-check inspection and same-run expected-head merge against a disposable non-production target branch;
-3. the spike proves that a changed head, forged Ready record, overlapping run, inaccessible source and exhausted allowance fail closed;
-4. three shadow lessons exercise Ready, rejection, inaccessible-source and stale/missed-run paths without merging;
-5. cumulative different-provider review is complete and repository protection, off switch and recovery are recorded.
+3. the spike also leaves an automated candidate unmerged against `main` to prove the guard result attaches to the event head SHA, and tries a candidate deliberately branched from older `main` to prove the ancestry gate fails;
+4. the spike proves that a changed head, forged Ready record, overlapping run, inaccessible source and exhausted allowance fail closed;
+5. three shadow lessons exercise Ready, rejection, inaccessible-source and stale/missed-run paths without merging;
+6. cumulative different-provider review is complete and repository protection, off switch and recovery are recorded.
 
 Usage limits and routine reliability are operational dependencies, not guarantees. Exhaustion or missed schedules results in no publication.
 
