@@ -38,3 +38,6 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           GITHUB_REPOSITORY: ${{ github.repository }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
+          TRIGGER_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          TRIGGER_HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          TRIGGER_HAS_REVIEW_LABEL: ${{ contains(github.event.pull_request.labels.*.name, 'editorial-review-requested') }}

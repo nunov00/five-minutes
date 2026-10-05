@@ -9,7 +9,7 @@ export const GUARD_LIMITS = Object.freeze({
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-const RFC3339 = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:\d{2})$/;
+const RFC3339 = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2})(?:\.(\d+))?)?(Z|[+-]\d{2}:\d{2})$/;
 const LESSON_PATH = /^src\/content\/lessons\/(\d{4})\/([a-z0-9]+(?:-[a-z0-9]+)*)\/(adult\.md|lesson\.yaml|teen\.md)$/;
 const REGISTRY_PATH = 'src/content/route-ownership.json';
 const REQUIRED_LABELS = ['editorial-review-requested', 'review:mandatory'];
@@ -40,11 +40,14 @@ function isPlainObject(value) {
 function parseYamlObject(source, label, allowedKeys) {
   let document;
   try {
-    document = parseDocument(source, { prettyErrors: false, strict: true, uniqueKeys: true });
+    document = parseDocument(source, {
+      schema: 'core', customTags: [], resolveKnownTags: false,
+      prettyErrors: false, strict: true, uniqueKeys: true,
+    });
   } catch {
     fail(`${label} is not valid YAML.`);
   }
-  if (document.errors.length > 0) fail(`${label} is not valid unambiguous YAML.`);
+  if (document.errors.length > 0 || document.warnings.length > 0) fail(`${label} is not valid unambiguous YAML.`);
   let value;
   try {
     value = document.toJS({ maxAliasCount: 0 });
@@ -92,6 +95,23 @@ function zurichDate(value) {
   return `${read('year')}-${read('month')}-${read('day')}`;
 }
 
+function isValidTimestamp(value) {
+  if (typeof value !== 'string') return false;
+  const match = RFC3339.exec(value);
+  if (!match) return false;
+  const [, year, month, day, hour, minute, second = '0', , offset] = match;
+  const y = Number(year), mo = Number(month), d = Number(day);
+  const h = Number(hour), mi = Number(minute), sec = Number(second);
+  if (mo < 1 || mo > 12 || h > 23 || mi > 59 || sec > 59) return false;
+  const daysInMonth = new Date(Date.UTC(y, mo, 0)).getUTCDate();
+  if (d < 1 || d > daysInMonth) return false;
+  if (offset !== 'Z') {
+    const [oh, om] = offset.slice(1).split(':').map(Number);
+    if (oh > 23 || om > 59) return false;
+  }
+  return !Number.isNaN(Date.parse(value));
+}
+
 function requireTextBlob(blobs, path, maxBytes) {
   const blob = blobs[path];
   if (!blob || blob.type !== 'blob' || blob.mode !== '100644') {
@@ -108,8 +128,8 @@ function requireTextBlob(blobs, path, maxBytes) {
 
 export function evaluateLessonPullRequest(input) {
   if (!isPlainObject(input) || !isPlainObject(input.pr)) fail('Guard input is incomplete.');
-  const { pr, currentBaseSha, files, blobs, baseRegistryText, headRegistryText, now } = input;
-  if (typeof pr.headRef !== 'string' || !Array.isArray(pr.labels)) fail('Pull Request metadata is incomplete.');
+  const { pr, triggerHeadSha, currentBaseSha, mergeBaseSha, behindBy, files, blobs, baseRegistryText, headRegistryBlob, now } = input;
+  if (typeof pr.headRef !== 'string' || typeof pr.headSha !== 'string' || !Array.isArray(pr.labels)) fail('Pull Request metadata is incomplete.');
   if (pr.labels.some((label) => typeof label !== 'string')) fail('Pull Request labels are malformed.');
 
   const branchSignal = pr.headRef.startsWith('lesson/');
@@ -122,7 +142,10 @@ export function evaluateLessonPullRequest(input) {
   for (const label of REQUIRED_LABELS) {
     if (!pr.labels.includes(label)) fail(`Automated lesson candidate is missing label ${label}.`);
   }
-  if (typeof pr.baseSha !== 'string' || typeof currentBaseSha !== 'string' || pr.baseSha !== currentBaseSha) {
+  if (typeof triggerHeadSha !== 'string' || pr.headSha !== triggerHeadSha) {
+    fail('Pull Request head changed after this guard run was triggered.');
+  }
+  if (typeof currentBaseSha !== 'string' || mergeBaseSha !== currentBaseSha || behindBy !== 0) {
     fail('Automated lesson candidate must be based on the current main head.');
   }
   if (!Array.isArray(files) || !isPlainObject(blobs)) fail('Changed-file data is incomplete.');
@@ -170,7 +193,7 @@ export function evaluateLessonPullRequest(input) {
   if (typeof metadata.id !== 'string' || !UUID.test(metadata.id)) fail('Automated lesson ID must be a canonical lowercase UUID.');
   if (metadata.slug !== slug || !SLUG.test(metadata.slug)) fail('Branch, directory and metadata slug must match.');
   if (!Array.isArray(metadata.aliases) || metadata.aliases.length !== 0) fail('Automated new lessons must start with no aliases.');
-  if (typeof metadata.publishedAt !== 'string' || !RFC3339.test(metadata.publishedAt)) {
+  if (!isValidTimestamp(metadata.publishedAt)) {
     fail('Automated lesson requires an unambiguous RFC 3339 publishedAt timestamp.');
   }
   const publishedAt = new Date(metadata.publishedAt);
@@ -185,6 +208,8 @@ export function evaluateLessonPullRequest(input) {
   parseFrontmatter(teenText, 'teen.md', TEEN_KEYS);
 
   const baseRegistry = parseRegistry(baseRegistryText, 'Base route ownership');
+  if (!isPlainObject(headRegistryBlob)) fail('Candidate route ownership file data is incomplete.');
+  const headRegistryText = requireTextBlob({ [REGISTRY_PATH]: headRegistryBlob }, REGISTRY_PATH, Number.MAX_SAFE_INTEGER);
   const headRegistry = parseRegistry(headRegistryText, 'Candidate route ownership');
   if (Object.hasOwn(baseRegistry, slug)) fail('Automated lesson slug already has a route owner.');
   if (Object.values(baseRegistry).includes(metadata.id)) fail('Automated lesson ID already exists in route ownership.');
