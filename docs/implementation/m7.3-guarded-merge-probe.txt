@@ -1,0 +1,3 @@
+Non-production M7.3 guarded-merge capability evidence.
+Initial head for stale-head and overlapping-run tests.
+No lesson or production branch is involved.
