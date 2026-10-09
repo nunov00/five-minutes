@@ -26,7 +26,7 @@ Five Minutes is a Git-backed, static learning publication. Read these before sub
 - Search is discovery-oriented initially and uses compact metadata, not full lesson bodies.
 - Reader state is local-first behind a storage abstraction.
 - AI workers may author changes but do not push directly to `main`.
-- Routine automated lesson publication follows ADR-0007: the writer cannot merge; named checks must pass before a different-provider review begins; Ready review and `expectedHeadSha` merge occur in the same reviewer run; prior comments/labels never authorise publication; failed, stale or uncertain candidates do not publish.
+- Routine automated lesson publication follows ADR-0007: the writer cannot merge; named checks must pass before an independent review in a separate reviewer run begins (same or different provider); Ready review and `expectedHeadSha` merge occur in the same reviewer run; prior comments/labels never authorise publication; failed, stale or uncertain candidates do not publish.
 - Prefer small, testable changes and update documentation/ADRs when architectural behaviour changes.
 - Keep commits atomic at the logical-change level where practical: prepare related code/configuration and documentation together before pushing. Avoid unnecessary sequential commits on CI/CD-connected branches because each push may trigger a full test, preview build or deployment.
 
