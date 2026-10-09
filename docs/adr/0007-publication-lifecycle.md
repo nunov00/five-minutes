@@ -2,8 +2,8 @@
 
 Status: Accepted
 Date: 2026-10-02
-Amended: 2026-10-04
-Owner approval: approved 2026-10-02; subscription-based automated publication direction approved 2026-10-04.
+Amended: 2026-10-04; 2026-10-09 (same-provider review permitted)
+Owner approval: approved 2026-10-02; subscription-based automated publication direction approved 2026-10-04; same-provider review permitted 2026-10-09.
 
 ## Context
 
@@ -11,7 +11,7 @@ Five Minutes needs automated lesson creation without allowing an AI writer to pu
 
 The Owner requires routine publication to be fully automatic, without per-lesson human approval and without separate OpenAI or Anthropic API accounts. The available subscription tools can write, review and merge through the Owner's GitHub identity, but they cannot provide separate authenticated writer/reviewer identities or a reviewer-owned required status check. Claude Code can inspect Pull Requests and named CI results and can merge with an expected-head guard. Its routines are schedule-based.
 
-The design therefore preserves independent different-provider editorial review before publication, while accepting that separation of authority is procedural until distinct machine credentials are introduced. A missed publication is preferable to publishing on doubt.
+The design therefore preserves an editorial review in a reviewer run separate from the writer before publication: an independent (different-provider) review, or since 2026-10-09 a same-provider separate-pass review as defined in GOVERNANCE.md §7, while accepting that separation of authority is procedural until distinct machine credentials are introduced. A missed publication is preferable to publishing on doubt.
 
 ## Decision
 
@@ -20,7 +20,7 @@ The design therefore preserves independent different-provider editorial review b
 Workflow state is represented by Git/PR state rather than a mutable `draft -> reviewed -> published` field inside lesson metadata:
 
 - **draft**: content exists on a branch/PR and may be previewed;
-- **reviewed**: the exact PR head has passed required validation plus independent review in the reviewer run that is authorised to merge it;
+- **reviewed**: the exact PR head has passed required validation plus the editorial review in the reviewer run that is authorised to merge it;
 - **published**: that exact reviewed head has been merged to `main` at or after its intended `publishedAt`.
 
 Production is built from `main`. Draft branch content cannot enter production discovery merely because of a metadata flag.
@@ -29,13 +29,13 @@ Production is built from `main`. Draft branch content cannot enter production di
 
 Normal automated lesson generation occurs on a `lesson/<slug>` branch created from the current `main` head and enters the repository through a Pull Request.
 
-The scheduled ChatGPT writer may create the bounded branch and PR. It must not merge, enable auto-merge, claim to be the independent reviewer or change repository settings.
+The scheduled writer (initially ChatGPT) may create the bounded branch and PR. It must not merge, enable auto-merge, claim to be the reviewer or change repository settings.
 
-The scheduled Claude Code reviewer may merge only under the exact same-run review contract below. It must not edit lesson content. Both assistants currently act through the Owner's GitHub identity, so GitHub cannot authenticate their separation. These restrictions are procedural and are backed by the lesson-only guard, explicit named-check verification, exact-base and expected-head checks, and periodic configuration audit.
+The scheduled reviewer (initially Claude Code) may merge only under the exact same-run review contract below. It must not edit lesson content. Since 2026-10-09 the writer and reviewer may use the same provider or different providers; in either case they are separate scheduled tasks, and review never happens in the run or session that authored the candidate. Both assistants currently act through the Owner's GitHub identity, so GitHub cannot authenticate their separation. These restrictions are procedural and are backed by the lesson-only guard, explicit named-check verification, exact-base and expected-head checks, and periodic configuration audit.
 
 ### Publication time and daily slot
 
-`publishedAt` is the intended/effective publication timestamp and is written before independent review. Automated lessons use Europe/Zurich as the editorial timezone.
+`publishedAt` is the intended/effective publication timestamp and is written before review. Automated lessons use Europe/Zurich as the editorial timezone.
 
 For the initial system:
 
@@ -68,11 +68,11 @@ The scheduled writer runs once per Zurich day and must start by 14:00 Europe/Zur
 7. creates `lesson/<slug>` from the current `main` head and applies `editorial-review-requested` plus `review:mandatory` only when the candidate is complete; the PR description records why publication requires mandatory review;
 8. abandons the topic when evidence or eligibility is uncertain.
 
-The writer never merges, enables auto-merge, creates a purported independent review or changes repository configuration. Automatic revision after editorial findings is not part of the initial system.
+The writer never merges, enables auto-merge, creates a purported review or changes repository configuration. Automatic revision after editorial findings is not part of the initial system.
 
 ### Reviewer and merge contract
 
-The Claude Code routine polls during the bounded daytime window documented in OPERATIONS.md. An eligible automated candidate must satisfy all four conditions: its branch starts with `lesson/`; it carries `editorial-review-requested`; it carries `review:mandatory`; and its diff satisfies the lesson-only boundary. The reviewer skips every ineligible PR and never closes it.
+The reviewer routine polls during the bounded daytime window documented in OPERATIONS.md. An eligible automated candidate must satisfy all four conditions: its branch starts with `lesson/`; it carries `editorial-review-requested`; it carries `review:mandatory`; and its diff satisfies the lesson-only boundary. The reviewer skips every ineligible PR and never closes it.
 
 For each eligible automated candidate it:
 
@@ -87,7 +87,7 @@ For each eligible automated candidate it:
 
 The initial named checks are `baseline`, `e2e` and, after M7.2, `lesson-guard`. They must all be successful on the exact head before review begins and again before merge.
 
-A review, comment or label saved by an earlier run is information only. It is not authenticated approval and can never authorise a later merge. The reviewer may not create an `editorial-ready-awaiting-ci` state or enable auto-merge. Publication authority exists only inside the run that performs the independent review and guarded merge.
+A review, comment or label saved by an earlier run is information only. It is not authenticated approval and can never authorise a later merge. The reviewer may not create an `editorial-ready-awaiting-ci` state or enable auto-merge. Publication authority exists only inside the run that performs the editorial review and guarded merge.
 
 `editorial-review-in-progress` is best-effort coordination, not a security lock. Duplicate or overlapping runs remain safe through idempotent eligibility checks, pinned-head ancestry validation, the one-open-candidate rule and the expected-head merge guard.
 
@@ -133,11 +133,11 @@ Any open repository issue carrying `publication-paused` stops both writer and re
 
 Before activation, the Owner configures repository protection so the named status checks apply to administrators, no approval-count rule blocks the shared Owner identity, force pushes and deletion of `main` are disabled, and bypass is disabled where GitHub permits it.
 
-Claude cannot inspect these settings. They are verified and recorded at M7.5 and during the monthly publication audit. GitHub enforcement is a second layer; the reviewer still checks every named result itself before acting.
+The reviewer cannot inspect these settings. They are verified and recorded at M7.5 and during the monthly publication audit. GitHub enforcement is a second layer; the reviewer still checks every named result itself before acting.
 
 ### Corrections
 
-Published lessons remain editable, but corrections are outside the daily writer/reviewer automation in the initial system. A correction is initiated by the Manager or Owner and follows the normal `review:mandatory` workflow and standing Manager merge rules in GOVERNANCE.md after different-provider review. The automated lesson guard, daily-slot/freshness rules and Claude publication merge authority do not apply.
+Published lessons remain editable, but corrections are outside the daily writer/reviewer automation in the initial system. A correction is initiated by the Manager or Owner and follows the normal `review:mandatory` workflow and standing Manager merge rules in GOVERNANCE.md after the review GOVERNANCE.md §9 requires, including its lesson-content exception. The automated lesson guard, daily-slot/freshness rules and the reviewer's publication merge authority do not apply.
 
 A correction changes exactly one existing lesson, preserves its immutable ID and original `publishedAt`, and retains an old slug as an alias if the slug changes. It never becomes Today's new lesson. Automatic correction detection, creation or merge is outside initial M7.
 
@@ -146,7 +146,7 @@ A correction changes exactly one existing lesson, preserves its immutable ID and
 No automated lesson publication is activated until:
 
 1. the lesson-only guard and hostile-input tests pass;
-2. a capability spike proves unattended PR creation, actual ChatGPT GitHub identity, scheduled discovery, access to representative authoritative sources, named-check inspection and same-run expected-head merge against a disposable non-production target branch;
+2. a capability spike proves unattended PR creation, the writer's actual GitHub identity, scheduled discovery, access to representative authoritative sources, named-check inspection and same-run expected-head merge against a disposable non-production target branch;
 3. the spike also leaves an automated candidate unmerged against `main` to prove the guard result attaches to the event head SHA, and tries a candidate deliberately branched from older `main` to prove the ancestry gate fails;
 4. the spike proves that a changed head, forged Ready record, overlapping run, inaccessible source and exhausted allowance fail closed;
 5. three shadow lessons exercise Ready, rejection, inaccessible-source and stale/missed-run paths without merging;
@@ -176,7 +176,7 @@ Review records name provider, model and exact SHA, but this is self-reported tex
 ## Consequences
 
 - Routine publication can be automatic without per-lesson Owner action or separate API billing.
-- Independent different-provider editorial review remains before publication.
+- Editorial review in a separate reviewer run remains before publication; it may be an independent review or a same-provider separate-pass review.
 - Static production continues to derive only from reviewed `main`.
 - A delayed review, inaccessible source or exhausted subscription may skip a day.
 - The same-day window avoids late publication and reviewed-metadata rewrites.
@@ -190,10 +190,10 @@ Review records name provider, model and exact SHA, but this is self-reported tex
 - **GitHub auto-merge after a saved Ready record:** a changed head or forged record could publish without the same review.
 - **API-backed writer/reviewer services:** require separate API accounts and billing that the Owner does not want initially.
 - **Custom merge bot or status relay:** adds machinery without creating real identity separation.
-- **Same-provider review:** retains correlated blind spots and conflicts with the independent-review policy.
+- **Mandatory different-provider review (superseded 2026-10-09):** originally required to avoid correlated blind spots. The Owner judged the cross-provider coordination too costly; same-provider review is now permitted, with the correlated-blind-spot risk mitigated by a separate reviewer run, independent source fetching and the full EDITORIAL.md review.
 - **Per-lesson human merge:** conflicts with the Owner's full-automation requirement.
 - **Automatic revision initially:** adds unproven states; a rejected candidate closes and a later day starts afresh.
 
 ## Owner decision
 
-Independent different-provider review is sufficient for routine lesson publication under this contract. Subscription-based shared-identity operation is accepted as a procedural limitation for the initial system. Activation remains gated by issue #76 and its M7.2–M7.5 evidence.
+Editorial review in a separate reviewer run is sufficient for routine lesson publication under this contract; since 2026-10-09 (Owner decision) it may be a same-provider separate-pass review rather than an independent review. Subscription-based shared-identity operation is accepted as a procedural limitation for the initial system. Activation remains gated by issue #76 and its M7.2–M7.5 evidence.

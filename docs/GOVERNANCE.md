@@ -146,7 +146,7 @@ Merge authorisation may come from the standing delegation in section 4; a separa
 
 Changes should normally be associated with a clearly defined task or GitHub Issue and implemented on a dedicated branch. Every Pull Request records one section 9 review classification and the reason it qualifies.
 
-Every Pull Request also records its implementing provider. Normally it carries exactly one label: `impl:openai` or `impl:anthropic`. If both providers contributed material changes, it carries both labels plus `review:manual`; each provider reviews the other provider's material changes, or the work is split into separate Pull Requests. Wording drafted by the reviewing provider and adopted by the implementer counts as a contribution: disclose it and apply `review:manual`.
+Every Pull Request also records its implementing provider. Normally it carries exactly one label: `impl:openai` or `impl:anthropic`. If both providers contributed material changes, it carries both labels; each provider reviews the other provider's material changes, or the work is split into separate Pull Requests. Wording drafted by the reviewing provider and adopted by the implementer counts as a contribution and is disclosed on the Pull Request.
 
 A Pull Request should be as small as safe reasoning and review require, but no smaller merely for process. Related work with one clear objective may share a Pull Request when the diff remains reviewable, tests validate the combined behaviour and rollback stays practical. Combining never lowers classification: the whole Pull Request takes the classification of its highest-risk part, and a mandatory-risk change should be split out rather than buried in a large diff. Staged work may instead merge into a short-lived feature branch whose single merge to `main` receives the review its cumulative classification requires.
 
@@ -189,7 +189,7 @@ AI contributors are encouraged to challenge existing approaches when they identi
 
 For this rule, independence is defined at the provider/model-family level: OpenAI products (including ChatGPT and Codex) count as one reviewer family; Anthropic products (including Claude and Claude Code) count as another. Different products, models, sessions or sub-agents from the same provider do not qualify as independent from one another.
 
-When independent AI review is required by section 9, the Reviewer must use a different AI system from the implementer (for example, Claude reviews Codex work, or Codex reviews Claude work). A separate session, sub-agent or model within the same AI system does not by itself satisfy this requirement. Risk classification never exempts AI-generated work from normal project quality requirements.
+When independent AI review is required by section 9, the Reviewer must use a different AI system from the implementer (for example, Claude reviews Codex work, or Codex reviews Claude work). A separate session, sub-agent or model within the same AI system does not by itself satisfy this requirement. Section 9 defines the permitted exceptions. Its lesson-content exception, and ADR-0007 for automated lesson candidates, may instead use a *separate-pass review* by the same provider; a separate-pass review is not an independent review. Risk classification never exempts AI-generated work from normal project quality requirements.
 
 ## 8. Quality Gates
 
@@ -258,13 +258,15 @@ Classification is based on the highest-risk part of the change. Splitting a high
 
 When `review:integration` or `review:mandatory` requires independent AI review, use a different provider/model family from the implementer. The purpose is a genuinely different perspective, not another pass by the same system. Same-system verification may supplement the review but cannot silently replace it.
 
-Exceptions are allowed only when a different AI system genuinely cannot perform the required review, or the Owner explicitly requests an alternative. Record the implementer and reviewer systems, the reason and any applicable Owner instruction on the PR. Needing an Owner-relayed prompt or lacking direct reviewer tooling does not by itself make review impossible; prepare one self-contained hand-off and keep the gate pending.
+Exceptions are allowed only when a different AI system genuinely cannot perform the required review, the Owner explicitly requests an alternative, or the lesson-content exception below applies. Record the implementer and reviewer systems, the reason and any applicable Owner instruction on the PR. Needing an Owner-relayed prompt or lacking direct reviewer tooling does not by itself make review impossible; prepare one self-contained hand-off and keep the gate pending.
 
 The independent Reviewer evaluates the relevant exact head or cumulative integration range, records actionable findings on the PR and distinguishes their own checks from implementer evidence.
 
-The required different-provider review may be performed by a scheduled review task operating under `docs/automation/review-task-contract.md`. Such a review meets the same standard as a manually requested one and is recorded on the Pull Request in the same way. The scheduled task only reviews: it never pushes, edits files, approves, merges, changes labels or changes repository settings. A manually requested different-provider review remains valid at any time, and a review marker never substitutes for the Manager's own merge-gate verification.
+#### Lesson content: separate-pass review (Owner instruction, 2026-10-09)
 
-ADR-0007 automated lesson candidates are reviewed and merged only under ADR-0007. They never use this scheduled-review contract or the section 4 standing merge authorisation.
+Pull Requests that change only lesson content — new lessons, lesson batches and corrections to published lessons under `src/content/lessons/`, plus their required route-ownership entries — may receive a separate-pass review by the same provider as the implementer instead of an independent review. The separate-pass review must be a separate pass from the authoring work, preferably in a fresh session, must re-check the material claims against their sources and complete the `docs/EDITORIAL.md` review for both editions, and is recorded on the Pull Request like any other review. Record on the PR that this exception was used.
+
+This exception covers lesson content only. Any code, schema, validation, taxonomy, tooling, CI, documentation or governance change in the same Pull Request still requires different-provider review, so keep lesson content in its own Pull Request. ADR-0007 automated lesson candidates are governed by ADR-0007, which likewise permits a same-provider separate-pass review in a separate reviewer run, and are never merged through the section 4 standing merge authorisation.
 
 ### Review remediation
 
@@ -306,7 +308,7 @@ Documentation should describe the current system rather than preserve obsolete i
 
 `main` represents the authoritative production-ready state of the project.
 
-Routine automated lesson publication and its exceptional merge authority follow ADR-0007. That bounded path does not weaken this document's general classification, different-provider review, exact-head or required-check rules; it adds stricter writer, reviewer, same-run merge and fail-closed controls for publication candidates.
+Routine automated lesson publication and its exceptional merge authority follow ADR-0007. That bounded path does not weaken this document's general classification, review, exact-head or required-check rules; it adds stricter writer, reviewer, same-run merge and fail-closed controls for publication candidates.
 
 Production deployments should originate from the repository rather than undocumented local changes. Cloudflare production should therefore be reproducible from the repository.
 
