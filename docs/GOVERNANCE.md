@@ -189,7 +189,7 @@ AI contributors are encouraged to challenge existing approaches when they identi
 
 For this rule, independence is defined at the provider/model-family level: OpenAI products (including ChatGPT and Codex) count as one reviewer family; Anthropic products (including Claude and Claude Code) count as another. Different products, models, sessions or sub-agents from the same provider do not qualify as independent from one another.
 
-When independent AI review is required by section 9, the Reviewer must use a different AI system from the implementer (for example, Claude reviews Codex work, or Codex reviews Claude work). A separate session, sub-agent or model within the same AI system does not by itself satisfy this requirement. Risk classification never exempts AI-generated work from normal project quality requirements.
+When independent AI review is required by section 9, the Reviewer must use a different AI system from the implementer (for example, Claude reviews Codex work, or Codex reviews Claude work). A separate session, sub-agent or model within the same AI system does not by itself satisfy this requirement. The only exceptions are lesson-content Pull Requests under section 9 and ADR-0007 automated lesson candidates, which may instead receive a *separate-pass review* by the same provider; a separate-pass review is not an independent review. Risk classification never exempts AI-generated work from normal project quality requirements.
 
 ## 8. Quality Gates
 
@@ -262,11 +262,11 @@ Exceptions are allowed only when a different AI system genuinely cannot perform 
 
 The independent Reviewer evaluates the relevant exact head or cumulative integration range, records actionable findings on the PR and distinguishes their own checks from implementer evidence.
 
-#### Lesson content: same-provider review (Owner instruction, 2026-10-09)
+#### Lesson content: separate-pass review (Owner instruction, 2026-10-09)
 
-Pull Requests that change only lesson content — new lessons, lesson batches and corrections to published lessons under `src/content/lessons/`, plus their required route-ownership entries — may be reviewed by the same provider as the implementer. The review must be a separate pass from the authoring work, preferably in a fresh session, must re-check the material claims against their sources and complete the `docs/EDITORIAL.md` review for both editions, and is recorded on the Pull Request like any other review. Record on the PR that this exception was used.
+Pull Requests that change only lesson content — new lessons, lesson batches and corrections to published lessons under `src/content/lessons/`, plus their required route-ownership entries — may receive a separate-pass review by the same provider as the implementer instead of an independent review. The separate-pass review must be a separate pass from the authoring work, preferably in a fresh session, must re-check the material claims against their sources and complete the `docs/EDITORIAL.md` review for both editions, and is recorded on the Pull Request like any other review. Record on the PR that this exception was used.
 
-This exception covers lesson content only. Any code, schema, validation, taxonomy, tooling, CI, documentation or governance change in the same Pull Request still requires different-provider review, so keep lesson content in its own Pull Request. ADR-0007 automated lesson candidates are governed by ADR-0007, which likewise permits a same-provider reviewer in a separate reviewer run, and are never merged through the section 4 standing merge authorisation.
+This exception covers lesson content only. Any code, schema, validation, taxonomy, tooling, CI, documentation or governance change in the same Pull Request still requires different-provider review, so keep lesson content in its own Pull Request. ADR-0007 automated lesson candidates are governed by ADR-0007, which likewise permits a same-provider separate-pass review in a separate reviewer run, and are never merged through the section 4 standing merge authorisation.
 
 ### Review remediation
 
