@@ -146,7 +146,7 @@ Merge authorisation may come from the standing delegation in section 4; a separa
 
 Changes should normally be associated with a clearly defined task or GitHub Issue and implemented on a dedicated branch. Every Pull Request records one section 9 review classification and the reason it qualifies.
 
-Every Pull Request also records its implementing provider with exactly one label: `impl:openai` or `impl:anthropic`. Work in one Pull Request should come from one implementing provider; if both contributed material changes, record both, apply `review:manual`, and arrange the required review by hand.
+Every Pull Request also records its implementing provider. Normally it carries exactly one label: `impl:openai` or `impl:anthropic`. If both providers contributed material changes, it carries both labels plus `review:manual`; each provider reviews the other provider's material changes, or the work is split into separate Pull Requests. Wording drafted by the reviewing provider and adopted by the implementer counts as a contribution: disclose it and apply `review:manual`.
 
 A Pull Request should be as small as safe reasoning and review require, but no smaller merely for process. Related work with one clear objective may share a Pull Request when the diff remains reviewable, tests validate the combined behaviour and rollback stays practical. Combining never lowers classification: the whole Pull Request takes the classification of its highest-risk part, and a mandatory-risk change should be split out rather than buried in a large diff. Staged work may instead merge into a short-lived feature branch whose single merge to `main` receives the review its cumulative classification requires.
 
@@ -263,6 +263,8 @@ Exceptions are allowed only when a different AI system genuinely cannot perform 
 The independent Reviewer evaluates the relevant exact head or cumulative integration range, records actionable findings on the PR and distinguishes their own checks from implementer evidence.
 
 The required different-provider review may be performed by a scheduled review task operating under `docs/automation/review-task-contract.md`. Such a review meets the same standard as a manually requested one and is recorded on the Pull Request in the same way. The scheduled task only reviews: it never pushes, edits files, approves, merges, changes labels or changes repository settings. A manually requested different-provider review remains valid at any time, and a review marker never substitutes for the Manager's own merge-gate verification.
+
+ADR-0007 automated lesson candidates are reviewed and merged only under ADR-0007. They never use this scheduled-review contract or the section 4 standing merge authorisation.
 
 ### Review remediation
 
