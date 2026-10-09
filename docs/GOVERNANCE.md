@@ -189,7 +189,7 @@ AI contributors are encouraged to challenge existing approaches when they identi
 
 For this rule, independence is defined at the provider/model-family level: OpenAI products (including ChatGPT and Codex) count as one reviewer family; Anthropic products (including Claude and Claude Code) count as another. Different products, models, sessions or sub-agents from the same provider do not qualify as independent from one another.
 
-When independent AI review is required by section 9, the Reviewer must use a different AI system from the implementer (for example, Claude reviews Codex work, or Codex reviews Claude work). A separate session, sub-agent or model within the same AI system does not by itself satisfy this requirement. The only exceptions are lesson-content Pull Requests under section 9 and ADR-0007 automated lesson candidates, which may instead receive a *separate-pass review* by the same provider; a separate-pass review is not an independent review. Risk classification never exempts AI-generated work from normal project quality requirements.
+When independent AI review is required by section 9, the Reviewer must use a different AI system from the implementer (for example, Claude reviews Codex work, or Codex reviews Claude work). A separate session, sub-agent or model within the same AI system does not by itself satisfy this requirement. Section 9 defines the permitted exceptions. Its lesson-content exception, and ADR-0007 for automated lesson candidates, may instead use a *separate-pass review* by the same provider; a separate-pass review is not an independent review. Risk classification never exempts AI-generated work from normal project quality requirements.
 
 ## 8. Quality Gates
 
