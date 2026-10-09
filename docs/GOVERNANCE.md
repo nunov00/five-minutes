@@ -266,7 +266,7 @@ The independent Reviewer evaluates the relevant exact head or cumulative integra
 
 Pull Requests that change only lesson content — new lessons, lesson batches and corrections to published lessons under `src/content/lessons/`, plus their required route-ownership entries — may be reviewed by the same provider as the implementer. The review must be a separate pass from the authoring work, preferably in a fresh session, must re-check the material claims against their sources and complete the `docs/EDITORIAL.md` review for both editions, and is recorded on the Pull Request like any other review. Record on the PR that this exception was used.
 
-This exception covers lesson content only. Any code, schema, validation, taxonomy, tooling, CI, documentation or governance change in the same Pull Request still requires different-provider review, so keep lesson content in its own Pull Request. ADR-0007 automated lesson candidates remain governed by ADR-0007 until it is amended, and are never merged through the section 4 standing merge authorisation.
+This exception covers lesson content only. Any code, schema, validation, taxonomy, tooling, CI, documentation or governance change in the same Pull Request still requires different-provider review, so keep lesson content in its own Pull Request. ADR-0007 automated lesson candidates are governed by ADR-0007, which likewise permits a same-provider reviewer in a separate reviewer run, and are never merged through the section 4 standing merge authorisation.
 
 ### Review remediation
 
@@ -308,7 +308,7 @@ Documentation should describe the current system rather than preserve obsolete i
 
 `main` represents the authoritative production-ready state of the project.
 
-Routine automated lesson publication and its exceptional merge authority follow ADR-0007. That bounded path does not weaken this document's general classification, different-provider review, exact-head or required-check rules; it adds stricter writer, reviewer, same-run merge and fail-closed controls for publication candidates.
+Routine automated lesson publication and its exceptional merge authority follow ADR-0007. That bounded path does not weaken this document's general classification, review, exact-head or required-check rules; it adds stricter writer, reviewer, same-run merge and fail-closed controls for publication candidates.
 
 Production deployments should originate from the repository rather than undocumented local changes. Cloudflare production should therefore be reproducible from the repository.
 
