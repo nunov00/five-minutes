@@ -89,7 +89,7 @@ Start with privacy-conscious infrastructure-level analytics. Product-event analy
 
 Routine automated publication follows ADR-0007's subscription-based, fail-closed contract:
 
-Schedule -> research -> Adult + Teen draft and provenance -> lesson-only Pull Request -> named automated checks -> same-run independent review (separate reviewer run, same or different provider) and exact-head guarded merge -> deployment.
+Schedule -> research -> Adult + Teen draft and provenance -> lesson-only Pull Request -> named automated checks -> same-run editorial review in a separate reviewer run (independent, or a same-provider separate-pass review) and exact-head guarded merge -> deployment.
 
 The writer and reviewer currently act through the Owner's GitHub identity, so separation of powers is procedural and reinforced by the lesson-only guard, current-`main` base requirement, named-check verification and `expectedHeadSha` merge. Saved reviews, comments and labels never authorise a later merge. Auto-merge is not used.
 
