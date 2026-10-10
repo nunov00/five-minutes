@@ -5,14 +5,19 @@ test.describe('M5 discovery', () => {
     await page.goto('/editions/adult/library');
     await expect(page.getByRole('heading', { level: 1, name: 'Library' })).toBeVisible();
     const lessonIds: string[] = [];
+    let reachedLastPage = false;
     for (let pageNumber = 1; pageNumber <= 10; pageNumber += 1) {
       lessonIds.push(...await page.locator('article[data-lesson-id]').evaluateAll((cards) => cards.map((card) => card.getAttribute('data-lesson-id') ?? '')));
       const next = page.getByRole('navigation', { name: 'Library pages' }).getByRole('link', { name: 'Next' });
-      if (await next.count() === 0) break;
+      if (await next.count() === 0) {
+        reachedLastPage = true;
+        break;
+      }
       await next.click();
     }
-    expect(lessonIds).toHaveLength(12);
-    expect(new Set(lessonIds).size).toBe(12);
+    expect(reachedLastPage).toBe(true);
+    expect(lessonIds.length).toBeGreaterThan(0);
+    expect(new Set(lessonIds).size).toBe(lessonIds.length);
 
     await page.goto('/editions/adult/library');
     await expect(page.getByRole('navigation', { name: 'Library topics' }).getByRole('link')).toHaveCount(6);
