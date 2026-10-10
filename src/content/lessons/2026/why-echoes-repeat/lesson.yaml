@@ -1,0 +1,26 @@
+schemaVersion: 2
+id: 9a1c62e4-8478-42c2-8b31-f8278512d4e6
+slug: why-echoes-repeat
+aliases: []
+publishedAt: 2026-10-10T12:05:00+02:00
+topic: science
+subtopic: physics
+concepts: [echoes, sound, reflection]
+related:
+  manual: []
+  exclude: []
+sources:
+  - title: Sound
+    url: https://www.nps.gov/subjects/sound/sound.htm
+    publisher: US National Park Service
+    accessedAt: 2026-10-10
+    note: Supports the basic description of sound travelling through an environment.
+  - title: Acoustics
+    url: https://www.britannica.com/science/acoustics
+    publisher: Encyclopaedia Britannica
+    accessedAt: 2026-10-10
+    note: Supports the description of reflected sound and echoes.
+provenance:
+  createdAt: 2026-10-10T11:20:00+02:00
+  createdBy: { type: ai, provider: openai, model: gpt-5, promptVersion: m7.3-stale-base-fixture }
+  reviews: []
