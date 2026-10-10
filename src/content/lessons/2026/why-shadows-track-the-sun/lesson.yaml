@@ -1,0 +1,26 @@
+schemaVersion: 2
+id: d9b47a0a-6d45-4c33-a9d8-1c84ea17f702
+slug: why-shadows-track-the-sun
+aliases: []
+publishedAt: 2026-10-10T18:00:00+02:00
+topic: science
+subtopic: astronomy
+concepts: [shadows, sunlight, solar-elevation]
+related:
+  manual: []
+  exclude: []
+sources:
+  - title: The Sun
+    url: https://science.nasa.gov/sun/
+    publisher: NASA Science
+    accessedAt: 2026-10-10
+    note: Supports the role of the Sun as the source of direct illumination.
+  - title: NOAA Solar Calculator
+    url: https://gml.noaa.gov/grad/solcalc/
+    publisher: NOAA Global Monitoring Laboratory
+    accessedAt: 2026-10-10
+    note: Supports how solar position changes with time and location.
+provenance:
+  createdAt: 2026-10-10T18:25:00+02:00
+  createdBy: { type: ai, provider: openai, model: gpt-5, promptVersion: m7.3-final-live-guard-fixture }
+  reviews: []
