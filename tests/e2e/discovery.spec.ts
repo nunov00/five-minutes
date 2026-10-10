@@ -4,9 +4,20 @@ test.describe('M5 discovery', () => {
   test('browses the static Library and populated Topics', async ({ page }) => {
     await page.goto('/editions/adult/library');
     await expect(page.getByRole('heading', { level: 1, name: 'Library' })).toBeVisible();
+    const manifestResponse = await page.request.get('/delivery.json');
+    expect(manifestResponse.ok()).toBe(true);
+    const manifest = await manifestResponse.json() as {
+      routes: Array<{ edition: string; lessonId: string }>;
+    };
+    const expectedIds = manifest.routes
+      .filter((route) => route.edition === 'adult')
+      .map((route) => route.lessonId)
+      .sort();
+    expect(expectedIds.length).toBeGreaterThan(0);
+
     const lessonIds: string[] = [];
     let reachedLastPage = false;
-    for (let pageNumber = 1; pageNumber <= 10; pageNumber += 1) {
+    for (let visitedPages = 0; visitedPages < expectedIds.length; visitedPages += 1) {
       lessonIds.push(...await page.locator('article[data-lesson-id]').evaluateAll((cards) => cards.map((card) => card.getAttribute('data-lesson-id') ?? '')));
       const next = page.getByRole('navigation', { name: 'Library pages' }).getByRole('link', { name: 'Next' });
       if (await next.count() === 0) {
@@ -16,8 +27,8 @@ test.describe('M5 discovery', () => {
       await next.click();
     }
     expect(reachedLastPage).toBe(true);
-    expect(lessonIds.length).toBeGreaterThan(0);
     expect(new Set(lessonIds).size).toBe(lessonIds.length);
+    expect([...lessonIds].sort()).toEqual(expectedIds);
 
     await page.goto('/editions/adult/library');
     await expect(page.getByRole('navigation', { name: 'Library topics' }).getByRole('link')).toHaveCount(6);
