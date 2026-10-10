@@ -6,7 +6,7 @@ question: Why is a vertical object's shadow usually shortest near local solar no
 answer: The Sun is then near its highest point in the sky, so its light reaches the object at a steeper angle and casts a shorter shadow.
 searchTerms: [changing shadows, sun position, solar noon]
 ---
-Place a vertical stick in sunlight and mark the end of its shadow every hour. The marks will not stay together: they trace a curve across the ground.
+Place a vertical stick in sunlight and mark the end of its shadow every hour. The marks do not stay together: they trace a curve across the ground.
 
 A shadow points away from the Sun because the object blocks light travelling from the Sun. As Earth rotates, the Sun appears to move across the sky, so the incoming light changes direction and the shadow turns.
 
