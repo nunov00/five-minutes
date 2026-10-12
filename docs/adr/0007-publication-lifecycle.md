@@ -31,7 +31,7 @@ Normal automated lesson generation occurs on a `lesson/<slug>` branch created fr
 
 The scheduled writer (initially ChatGPT) may create the bounded branch and PR. It must not merge, enable auto-merge, claim to be the reviewer or change repository settings.
 
-The scheduled reviewer (initially Claude Code) may merge only under the exact same-run review contract below. It must not edit lesson content. Since 2026-10-09 the writer and reviewer may use the same provider or different providers; in either case they are separate scheduled tasks, and review never happens in the run or session that authored the candidate. Both assistants currently act through the Owner's GitHub identity, so GitHub cannot authenticate their separation. These restrictions are procedural and are backed by the lesson-only guard, explicit named-check verification, exact-base and expected-head checks, and periodic configuration audit.
+The scheduled reviewer (ChatGPT/OpenAI at M7.5 activation) may merge only under the exact same-run review contract below. It must not edit lesson content. Since 2026-10-09 the writer and reviewer may use the same provider or different providers; in either case they are separate scheduled tasks, and review never happens in the run or session that authored the candidate. Both assistants currently act through the Owner's GitHub identity, so GitHub cannot authenticate their separation. These restrictions are procedural and are backed by the lesson-only guard, explicit named-check verification, exact-base and expected-head checks, and periodic configuration audit.
 
 ### Publication time and daily slot
 
