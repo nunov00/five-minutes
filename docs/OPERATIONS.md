@@ -100,7 +100,7 @@ Five Minutes is installable (iOS/iPadOS Add to Home Screen and supported Chromiu
 ADR-0007 is the authority for automated lesson publication. The initial subscription-based schedule is:
 
 - writer task (initially ChatGPT): once per Europe/Zurich day and no later than 14:00, after checking `publication-paused`, closing clearly stale automated new-lesson PRs, and checking today's slot and remaining automated PRs;
-- reviewer task (initially Claude Code; may be the same provider as the writer under ADR-0007): every two hours from approximately 06:00 through 20:00 Europe/Zurich;
+- reviewer task (ChatGPT/OpenAI at M7.5 activation; same-provider separate-pass review is permitted under ADR-0007): every two hours from approximately 06:00 through 20:00 Europe/Zurich;
 - named merge checks: `baseline`, `e2e` and `lesson-guard` after M7.2; only the latest completed result of each exact name on the current SHA counts, and it must be `success`;
 - stale boundary: an unmerged candidate closes when its intended Zurich date ends;
 - failure behaviour: no source access, no capacity, no successful check or any uncertainty means no publication.
