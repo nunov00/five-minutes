@@ -2,14 +2,14 @@
 
 Status: Accepted
 Date: 2026-10-02
-Amended: 2026-10-04; 2026-10-09 (same-provider review permitted)
+Amended: 2026-10-04; 2026-10-09 (same-provider review permitted); 2026-10-12 (activation configuration wording)
 Owner approval: approved 2026-10-02; subscription-based automated publication direction approved 2026-10-04; same-provider review permitted 2026-10-09.
 
 ## Context
 
 Five Minutes needs automated lesson creation without allowing an AI writer to publish arbitrary output directly to production. Draft/review/publish semantics must be unambiguous for pages, catalogue/search, sitemaps and Today.
 
-The Owner requires routine publication to be fully automatic, without per-lesson human approval and without separate OpenAI or Anthropic API accounts. The available subscription tools can write, review and merge through the Owner's GitHub identity, but they cannot provide separate authenticated writer/reviewer identities or a reviewer-owned required status check. Claude Code can inspect Pull Requests and named CI results and can merge with an expected-head guard. Its routines are schedule-based.
+The Owner requires routine publication to be fully automatic, without per-lesson human approval and without separate OpenAI or Anthropic API accounts. The available subscription tools can write, review and merge through the Owner's GitHub identity, but they cannot provide separate authenticated writer/reviewer identities or a reviewer-owned required status check. The configured ChatGPT/OpenAI reviewer task can inspect Pull Requests and named CI results and can merge with an expected-head guard. Its routine is schedule-based.
 
 The design therefore preserves an editorial review in a reviewer run separate from the writer before publication: an independent (different-provider) review, or since 2026-10-09 a same-provider separate-pass review as defined in GOVERNANCE.md §7, while accepting that separation of authority is procedural until distinct machine credentials are introduced. A missed publication is preferable to publishing on doubt.
 
@@ -31,7 +31,7 @@ Normal automated lesson generation occurs on a `lesson/<slug>` branch created fr
 
 The scheduled writer (initially ChatGPT) may create the bounded branch and PR. It must not merge, enable auto-merge, claim to be the reviewer or change repository settings.
 
-The scheduled reviewer (initially Claude Code) may merge only under the exact same-run review contract below. It must not edit lesson content. Since 2026-10-09 the writer and reviewer may use the same provider or different providers; in either case they are separate scheduled tasks, and review never happens in the run or session that authored the candidate. Both assistants currently act through the Owner's GitHub identity, so GitHub cannot authenticate their separation. These restrictions are procedural and are backed by the lesson-only guard, explicit named-check verification, exact-base and expected-head checks, and periodic configuration audit.
+The scheduled reviewer (ChatGPT/OpenAI at M7.5 activation) may merge only under the exact same-run review contract below. It must not edit lesson content. Since 2026-10-09 the writer and reviewer may use the same provider or different providers; in either case they are separate scheduled tasks, and review never happens in the run or session that authored the candidate. Both assistants currently act through the Owner's GitHub identity, so GitHub cannot authenticate their separation. These restrictions are procedural and are backed by the lesson-only guard, explicit named-check verification, exact-base and expected-head checks, and periodic configuration audit.
 
 ### Publication time and daily slot
 
