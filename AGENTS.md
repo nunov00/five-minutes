@@ -48,4 +48,6 @@ CI (`.github/workflows/ci.yml`) runs on every pull request and on `main`: check 
 
 `.github/workflows/lesson-guard.yml` is a separate read-only `pull_request_target` check named `lesson-guard`. It checks out and executes only the current trusted default branch, never the PR head, and fetches candidate lesson blobs only as untrusted data through read-only GitHub APIs. It receives no repository secrets. M7.2 adds the check and tests; it is not a branch-protection requirement until M7.5. The first live automated-candidate exercise is M7.3.
 
+`.github/workflows/branch-cleanup.yml` automatically deletes `lesson/` and `capability/` branches when their PR closes (merged or not), using the same trusted-base `pull_request_target` pattern; do not leave disposable-branch deletion as a manual step. See OPERATIONS.md.
+
 Canonical content validation is part of `npm test` and `npm run build`. Pull-request CI additionally supplies the base commit to the tests so `src/content/route-ownership.json` is proven append-only. Do not bypass `src/lib/content/loader.ts` when consuming canonical lessons.
