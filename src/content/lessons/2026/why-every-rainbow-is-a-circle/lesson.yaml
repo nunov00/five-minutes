@@ -18,13 +18,13 @@ sources:
     url: https://www.nesdis.noaa.gov/about/k-12-education/optical-phenomena/what-causes-rainbow
     publisher: NOAA National Environmental Satellite, Data, and Information Service
     accessedAt: 2026-10-12
-    note: Explains refraction, internal reflection, color separation, the observer-dependent view, the roughly 42-degree primary bow, and why a full rainbow is a circle.
+    note: Explains refraction, internal reflection, color separation, the observer-dependent view, the roughly 42-degree primary bow, color ordering, and why a full rainbow is a circle.
   - title: Primary Rainbow Observer Geometry
     url: https://m7-4-source-unavailable.invalid/
     publisher: Atmospheric Optics Reference
     accessedAt: 2026-10-12
     note: Material reference for the observer-centered cone geometry that makes equal viewing angles trace a circle around the antisolar direction.
 provenance:
-  createdAt: 2026-10-12T13:00:55+02:00
+  createdAt: 2026-10-11T13:00:55+02:00
   createdBy: { type: ai, provider: openai, model: gpt-5, promptVersion: m7.4-shadow-writer-v1 }
   reviews: []
