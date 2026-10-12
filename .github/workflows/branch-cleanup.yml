@@ -1,0 +1,71 @@
+name: Branch cleanup
+
+# Deletes disposable lesson/ and capability/ branches once their Pull Request is
+# closed (merged or not). Runs trusted default-branch code only: it never checks
+# out or executes Pull Request content and uses event metadata plus the GitHub API.
+on:
+  pull_request_target:
+    types: [closed]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: read
+
+concurrency:
+  group: branch-cleanup
+  cancel-in-progress: false
+
+jobs:
+  cleanup:
+    name: branch-cleanup
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Delete closed disposable branches
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const PREFIXES = ['lesson/', 'capability/'];
+            const { owner, repo } = context.repo;
+            const disposable = (ref) => PREFIXES.some((prefix) => ref.startsWith(prefix));
+
+            async function branchSha(ref) {
+              try {
+                const { data } = await github.rest.git.getRef({ owner, repo, ref: `heads/${ref}` });
+                return data.object.sha;
+              } catch (error) {
+                if (error.status === 404) return null;
+                throw error;
+              }
+            }
+
+            // Delete only when the branch still points at the closed PR's head
+            // and no open PR uses it; anything else is left alone.
+            async function cleanup(ref, closedHeadSha) {
+              if (!disposable(ref)) return core.info(`skip ${ref}: not a disposable prefix`);
+              const open = await github.paginate(github.rest.pulls.list, { owner, repo, state: 'open', head: `${owner}:${ref}`, per_page: 100 });
+              if (open.length > 0) return core.info(`skip ${ref}: open PR #${open[0].number}`);
+              const sha = await branchSha(ref);
+              if (sha === null) return core.info(`skip ${ref}: already deleted`);
+              if (sha !== closedHeadSha) return core.info(`skip ${ref}: head moved to ${sha}`);
+              await github.rest.git.deleteRef({ owner, repo, ref: `heads/${ref}` });
+              core.info(`deleted ${ref} at ${sha}`);
+            }
+
+            if (context.eventName === 'pull_request_target') {
+              const pr = context.payload.pull_request;
+              if (pr.head.repo?.full_name !== `${owner}/${repo}`) return core.info('skip: head branch is not in this repository');
+              await cleanup(pr.head.ref, pr.head.sha);
+              return;
+            }
+
+            // Manual sweep: branches whose most recent PR is closed.
+            const branches = await github.paginate(github.rest.repos.listBranches, { owner, repo, per_page: 100 });
+            for (const branch of branches.filter((b) => disposable(b.name))) {
+              const prs = await github.paginate(github.rest.pulls.list, { owner, repo, state: 'all', head: `${owner}:${branch.name}`, per_page: 100 });
+              const latest = prs.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))[0];
+              if (!latest) { core.info(`skip ${branch.name}: no PR`); continue; }
+              if (latest.state !== 'closed') { core.info(`skip ${branch.name}: PR #${latest.number} open`); continue; }
+              await cleanup(branch.name, latest.head.sha);
+            }
