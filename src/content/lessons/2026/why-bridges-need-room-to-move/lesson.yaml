@@ -1,0 +1,30 @@
+schemaVersion: 2
+id: 856d1862-6ee2-41b5-831d-36aa2c198c27
+slug: why-bridges-need-room-to-move
+aliases: []
+publishedAt: 2026-10-12T09:00:00+02:00
+topic: technology
+subtopic: engineering
+concepts: [thermal-expansion, bridge-joints, bearings, structural-movement]
+related:
+  manual:
+    - id: e38e6794-fa4d-466c-9aa8-b6c6f6e386e1
+      reason: Both lessons show how engineered systems respond to changing conditions instead of resisting every change.
+    - id: 037395c2-7035-4e44-bf37-2e9c5c542da1
+      reason: Both lessons explain how apparently simple infrastructure depends on carefully managing physical forces.
+  exclude: []
+sources:
+  - title: Long-Term Bridge Performance High Priority Bridge Performance Issues
+    url: https://www.fhwa.dot.gov/publications/research/infrastructure/structures/ltbp/14052/004.cfm
+    publisher: Federal Highway Administration
+    accessedAt: 2026-10-12
+    note: Describes thermal movement, expansion and rotation at bearings, joint maintenance, and jointless bridge alternatives.
+  - title: Engineering Metrology Toolbox — Frequently Asked Questions
+    url: https://emtoolbox.nist.gov/faq/faq.asp
+    publisher: National Institute of Standards and Technology
+    accessedAt: 2026-10-12
+    note: Explains linear thermal expansion of steel and how dimensional change scales with length and temperature.
+provenance:
+  createdAt: 2026-10-12T09:06:38+02:00
+  createdBy: { type: ai, provider: openai, model: gpt-5, promptVersion: m7.4-shadow-writer-v1 }
+  reviews: []
