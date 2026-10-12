@@ -1,6 +1,6 @@
 # Automated publication task contracts
 
-Status: proposed by M7.1; inactive until the M7.5 activation gate.
+Status: accepted for production activation through M7.5; task enablement and operational evidence are recorded on issue #93.
 
 These are the repository-owned fixed instructions for the subscription tasks described by ADR-0007. They are operational entry points, not a replacement for ADR-0007, EDITORIAL.md or the automated gates. Any material change to these instructions is a `review:mandatory` publication change.
 
