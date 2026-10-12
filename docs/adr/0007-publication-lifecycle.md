@@ -2,7 +2,7 @@
 
 Status: Accepted
 Date: 2026-10-02
-Amended: 2026-10-04; 2026-10-09 (same-provider review permitted)
+Amended: 2026-10-04; 2026-10-09 (same-provider review permitted); 2026-10-12 (activation configuration wording)
 Owner approval: approved 2026-10-02; subscription-based automated publication direction approved 2026-10-04; same-provider review permitted 2026-10-09.
 
 ## Context
