@@ -1,0 +1,30 @@
+schemaVersion: 2
+id: 5a6e9db0-63d5-4f28-8973-86f55ca8d81d
+slug: why-lakes-freeze-from-the-top-down
+aliases: []
+publishedAt: 2026-10-12T18:06:00+02:00
+topic: nature
+subtopic: earth-science
+concepts: [water-density, freezing, convection, lake-ice]
+related:
+  manual:
+    - id: c50774ec-4593-4557-b8df-ecc65e504566
+      reason: Both lessons show how seasonal energy changes create large patterns in the natural world.
+    - id: 3cebf076-45ac-49ea-9b01-bd0917fb1c13
+      reason: Both lessons explain how physical conditions shape the survival of an ecosystem.
+  exclude: []
+sources:
+  - title: Water Density
+    url: https://www.usgs.gov/water-science-school/science/water-density
+    publisher: U.S. Geological Survey
+    accessedAt: 2026-10-12
+    note: Explains how water density changes with temperature, why ice floats, and how these properties affect lakes.
+  - title: Black Rock Forest Hike — Aleck Meadow Pond
+    url: https://www.giss.nasa.gov/edu/icp/education/modules/carbon/topic1/common/stop4.html
+    publisher: NASA Goddard Institute for Space Studies
+    accessedAt: 2026-10-12
+    note: Describes seasonal pond circulation, surface freezing, insulation and overwintering aquatic life.
+provenance:
+  createdAt: 2026-10-12T18:05:00+02:00
+  createdBy: { type: ai, provider: openai, model: gpt-6.1-sol, promptVersion: m7.4-shadow-writer-v2 }
+  reviews: []
