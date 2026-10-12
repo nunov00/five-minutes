@@ -9,7 +9,7 @@ Owner approval: approved 2026-10-02; subscription-based automated publication di
 
 Five Minutes needs automated lesson creation without allowing an AI writer to publish arbitrary output directly to production. Draft/review/publish semantics must be unambiguous for pages, catalogue/search, sitemaps and Today.
 
-The Owner requires routine publication to be fully automatic, without per-lesson human approval and without separate OpenAI or Anthropic API accounts. The available subscription tools can write, review and merge through the Owner's GitHub identity, but they cannot provide separate authenticated writer/reviewer identities or a reviewer-owned required status check. Claude Code can inspect Pull Requests and named CI results and can merge with an expected-head guard. Its routines are schedule-based.
+The Owner requires routine publication to be fully automatic, without per-lesson human approval and without separate OpenAI or Anthropic API accounts. The available subscription tools can write, review and merge through the Owner's GitHub identity, but they cannot provide separate authenticated writer/reviewer identities or a reviewer-owned required status check. The configured ChatGPT/OpenAI reviewer task can inspect Pull Requests and named CI results and can merge with an expected-head guard. Its routine is schedule-based.
 
 The design therefore preserves an editorial review in a reviewer run separate from the writer before publication: an independent (different-provider) review, or since 2026-10-09 a same-provider separate-pass review as defined in GOVERNANCE.md §7, while accepting that separation of authority is procedural until distinct machine credentials are introduced. A missed publication is preferable to publishing on doubt.
 
