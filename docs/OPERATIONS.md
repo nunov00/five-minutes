@@ -158,7 +158,7 @@ Removal requires a reviewed deploy that first stops reads/writes and then adds a
 
 ADR-0007 is the authority for automated lesson publication. The initial subscription-based schedule is:
 
-- writer task (initially ChatGPT): once per Europe/Zurich day and no later than 14:00, after checking `publication-paused`, closing clearly stale automated new-lesson PRs, and checking today's slot and remaining automated PRs;
+- writer task (initially ChatGPT): once per Europe/Zurich day and no later than 14:00, after checking `publication-paused`, closing clearly stale automated new-lesson PRs, and checking today's slot and remaining automated PRs; each candidate records the required Adult figure, Teen figure and Teen activity decisions, includes a useful schema-valid activity, and records useful figure opportunities that the initial automation cannot yet implement;
 - reviewer task (ChatGPT/OpenAI at M7.5 activation; same-provider separate-pass review is permitted under ADR-0007): every two hours from approximately 06:00 through 20:00 Europe/Zurich;
 - named merge checks: `baseline`, `e2e` and `lesson-guard` after M7.2; only the latest completed result of each exact name on the current SHA counts, and it must be `success`;
 - stale boundary: an unmerged candidate closes when its intended Zurich date ends;
@@ -273,7 +273,7 @@ Accessibility and broken-link checks are CI concerns. Performance/mobile search 
    - **M6.2 reading/content enhancements:** implement schemaVersion 2 validation and rendering for ADR-0006 figures and Teen activities plus the precisely ordered recall-before-takeaway experience.
    - **M6.3 reader-state surfaces:** Saved/Read/recent/appearance and bounded export/import use the same envelope introduced in M6.1. No legacy migration is present because no genuine earlier reader-state format was published.
    - **M6.4 integration gate:** verify the complete production experience and reader state together, including no-JS fallbacks, storage-blocked behaviour, explicit/neutral routes, Return/session-origin handling, Back/bfcache behaviour, installed-app navigation and changed accessibility journeys. Focused Playwright WebKit coverage supplements the existing Chromium projects; the bounded physical-iPhone/Safari/standalone/VoiceOver checklist and evidence format live in `docs/implementation/m6.4-integration-gate.md`. WebKit emulation never substitutes for that device record.
-7. Automated publication: implement ADR-0007 in five gates — contracts/threat model, lesson-only guard, subscription capability spike, three shadow lessons, then protected activation. The reviewer starts only after named checks pass and merges the exact reviewed head in the same run. Initial automation may author schema-v2 Teen activities but not new figures.
+7. Automated publication: implement ADR-0007 in five gates — contracts/threat model, lesson-only guard, subscription capability spike, three shadow lessons, then protected activation. The reviewer starts only after named checks pass and merges the exact reviewed head in the same run. Initial automation assesses both enhancements, may author schema-v2 Teen activities when useful, and records material figure opportunities but does not add new figures.
 8. Production hardening: the existing broader M8 gate remains Playwright/accessibility/link/security/performance/mobile validation, analytics boundary and operational recovery test. M6.4 does not replace M8.
 
 ## Architecture acceptance checklist
