@@ -45,8 +45,8 @@ const earlier = selectEarlierLessons(manifest.catalogue, today.id).map((entry) =
           <li data-earlier-id={entry.id}>
             <p class="earlier-meta"><time datetime={entry.publishedAt}>{formatEditorialDate(entry.publishedAt)}</time> · {entry.topicLabel}</p>
             <div class="earlier-links">
-              <a data-earlier-edition="adult" href={entry.adult.path}><span>Adult</span>{entry.adult.title}</a>
-              <a data-earlier-edition="teen" href={entry.teen.path}><span>Teen</span>{entry.teen.title}</a>
+              <a data-earlier-edition="adult" href={entry.adult.path} aria-label={`Adult edition: ${entry.adult.title}`}><span>Adult</span>{entry.adult.title}</a>
+              <a data-earlier-edition="teen" href={entry.teen.path} aria-label={`Teen edition: ${entry.teen.title}`}><span>Teen</span>{entry.teen.title}</a>
             </div>
           </li>
         ))}
