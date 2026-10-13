@@ -5,6 +5,11 @@ takeaway: Exponential growth feels surprising because equal steps in time create
 question: After five of ten doublings, why are you nowhere near half the final amount?
 answer: Each later doubling acts on a larger base, so the final few steps add far more than all the early steps.
 searchTerms: [exponential growth explained, doubling numbers, compounding]
+activity:
+  prompt: "A quantity doubles each step and reaches its final amount after step 10. When was it half that amount?"
+  options: ["After step 5", "After step 8", "After step 9"]
+  answer: 2
+  explanation: "It was half the final amount only one step earlier. The tenth doubling turns that half into the full amount, which is why so much exponential growth appears near the end."
 ---
 Imagine a video has 1,000 views and its audience doubles every hour. Five hours later it has 32,000 views. That sounds large—until hour ten, when it passes one million. Half the hours produced only about three per cent of the final count.
 

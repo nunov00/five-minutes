@@ -8,6 +8,11 @@ searchTerms:
   - why power lines are high voltage
   - electricity grid explained
   - power loss in wires
+activity:
+  prompt: "A line carries the same power after its voltage doubles. What happens to current and heating loss?"
+  options: ["Current halves; heating falls to one quarter", "Current and heating both halve", "Current doubles; heating quadruples"]
+  answer: 0
+  explanation: "For the same power, doubling voltage halves current. Because wire heating depends on current squared, half the current produces one quarter of the heating loss, assuming the wire's resistance stays the same."
 ---
 The small brick on a phone charger changes voltage before electricity reaches the phone. The grid does something related on a much larger scale: it changes voltage several times between a power station and the device in your hand.
 

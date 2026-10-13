@@ -5,6 +5,11 @@ takeaway: A precise travelling clock turns the difference between two local time
 question: Why was an ordinary accurate clock on land not enough to solve longitude at sea?
 answer: The clock had to preserve reference time despite a ship's motion, changing temperature and a voyage lasting weeks or months.
 searchTerms: [longitude problem, ship navigation clock, marine chronometer]
+activity:
+  prompt: "At your local noon, the reference clock reads 4 p.m. How far apart are the two longitudes?"
+  options: ["15 degrees", "60 degrees", "240 degrees"]
+  answer: 1
+  explanation: "Earth turns 15 degrees each hour. A four-hour difference therefore represents 60 degrees of longitude. The clock comparison gives the distance east or west; other observations tell the sailor which direction."
 ---
 A clock cannot see the ocean, so how could it tell a sailor where the ship was?
 
