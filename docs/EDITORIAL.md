@@ -30,11 +30,15 @@ A publishable lesson must meet every criterion below. Reviewers use judgement an
 
 ## Figures and Teen activities
 
-Optional figures are part of an individual presentation and are reviewed with the same factual standard as its prose. A figure must materially improve understanding; decorative imagery is not a reason to add one. Reviewers verify every label, scale, relationship and caption against the lesson's sources, and confirm that required alt text communicates the explanatory purpose rather than merely naming the picture. Adult and Teen may use different figures/captions. Review the full-text description as an equivalent explanation, and mark schematic drawings as not to scale where appropriate. The concrete field shapes and limits are in [M6.2 reading enhancements](implementation/m6.2-reading-enhancements.md).
+Every new lesson, migrated lesson and substantial editorial pass must explicitly assess whether each presentation would become clearer with a figure. Add one when a spatial, sequential, comparative, quantitative or causal relationship is materially easier to understand visually. Omit it when prose is already clearer, the image would be decorative, or no safe supported representation can explain the idea faithfully; record that decision and its reason in the Pull Request. Figures remain conditional rather than a quota, but they must not be skipped by default.
+
+A figure is part of an individual presentation and is reviewed with the same factual standard as its prose. Reviewers verify every label, scale, relationship and caption against the lesson's sources, and confirm that required alt text communicates the explanatory purpose rather than merely naming the picture. Adult and Teen may use different figures/captions. Review the full-text description as an equivalent explanation, and mark schematic drawings as not to scale where appropriate. The concrete field shapes and limits are in [M6.2 reading enhancements](implementation/m6.2-reading-enhancements.md).
 
 Only the safe representations defined by ADR-0006 are publishable: application-rendered diagrams from validated structured data or local PNG/WebP assets within configured size/file-count limits. Lesson-authored SVG, HTML, remote images and executable embeds are not accepted.
 
-Teen may include an optional lightweight activity when prediction or choice helps the reader engage with the mechanism. It is not a quota or mandatory gamification. Reviewers verify that the prompt is unambiguous, every option is plausible in context, the marked/recommended answer is correct, and the explanation follows from the lesson without introducing unsupported claims. The activity must remain understandable and revealable without JavaScript and must not patronise the reader.
+Every new or migrated Teen presentation and substantial Teen editorial pass must explicitly assess whether a lightweight prediction or choice would help the reader engage with the mechanism. Include an activity when committing to an answer, ordering possibilities or choosing between plausible explanations makes the subsequent explanation more effective. Omit it, with the reason recorded in the Pull Request, when it would merely repeat **Test yourself**, interrupt the flow or force artificial gamification.
+
+Reviewers verify that the prompt is unambiguous, every option is plausible in context, the marked/recommended answer is correct, and the explanation follows from the lesson without introducing unsupported claims. The activity must remain understandable and revealable without JavaScript and must not patronise the reader.
 
 ## Research and source practice
 
@@ -72,6 +76,7 @@ For factual and editorial review, record:
 6. a separate judgement for Adult and Teen, including whether their approaches are meaningfully adapted;
 7. attention evidence for each edition: the title promise, opening hook or tension, points where momentum or comprehension may drop, and whether the payoff fulfils the promise;
 8. the catalogue comparison used for originality and duplication.
+9. the figure decision for each edition and the Teen activity decision, including the reason for any omission.
 
 Do not report a numeric quality score, an averaged rubric percentage or a precision-style confidence number. Descriptive confidence is useful only when it explains what is uncertain and what evidence would resolve it.
 
@@ -90,6 +95,7 @@ Before requesting review:
 - read each edition independently for flow and voice;
 - verify that the takeaway and retrieval answer express the same durable insight;
 - compare the proposed lesson with the existing catalogue for overlap;
+- assess a useful figure for each edition and a prediction activity for Teen; include supported additions when they improve understanding, otherwise record why they were omitted;
 - run the canonical content, build and static validation gates.
 
 ## Calibration corpus
