@@ -18,6 +18,7 @@ type FeedbackCategory = keyof typeof categories;
 
 export interface FeedbackEnv {
   ASSETS: { fetch(request: Request): Promise<Response> };
+  FEEDBACK_ALLOWED_HOSTNAME?: string;
   FEEDBACK_GITHUB_REPOSITORY?: string;
   FEEDBACK_GITHUB_TOKEN?: string;
   TURNSTILE_SECRET_KEY?: string;
@@ -40,10 +41,15 @@ function json(body: unknown, status = 200): Response {
 function isConfigured(env: FeedbackEnv): boolean {
   return Boolean(
     env.FEEDBACK_GITHUB_REPOSITORY
+    && env.FEEDBACK_ALLOWED_HOSTNAME
     && env.FEEDBACK_GITHUB_TOKEN
     && env.TURNSTILE_SECRET_KEY
     && env.TURNSTILE_SITE_KEY,
   );
+}
+
+function feedbackAvailable(request: Request, env: FeedbackEnv): boolean {
+  return isConfigured(env) && new URL(request.url).hostname === env.FEEDBACK_ALLOWED_HOSTNAME;
 }
 
 function sameOrigin(request: Request): boolean {
@@ -59,6 +65,33 @@ function validRepository(value: string): boolean {
 
 function escapeHtml(value: string): string {
   return value.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+}
+
+async function readBodyWithinLimit(request: Request): Promise<string | null> {
+  if (!request.body) return '';
+
+  const reader = request.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let total = 0;
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    total += value.byteLength;
+    if (total > MAX_REQUEST_BYTES) {
+      await reader.cancel().catch(() => undefined);
+      return null;
+    }
+    chunks.push(value);
+  }
+
+  const body = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) {
+    body.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  return new TextDecoder().decode(body);
 }
 
 function parseFeedback(value: unknown):
@@ -149,7 +182,7 @@ async function createPrivateIssue(
 }
 
 async function submitFeedback(request: Request, env: FeedbackEnv, fetcher: Fetcher): Promise<Response> {
-  if (!isConfigured(env)) return json({ error: 'Feedback is temporarily unavailable.' }, 503);
+  if (!feedbackAvailable(request, env)) return json({ error: 'Feedback is temporarily unavailable.' }, 503);
   if (!sameOrigin(request)) return json({ error: 'Request origin was not accepted.' }, 403);
   if (!request.headers.get('Content-Type')?.toLowerCase().startsWith('application/json')) {
     return json({ error: 'Expected a JSON request.' }, 415);
@@ -159,8 +192,8 @@ async function submitFeedback(request: Request, env: FeedbackEnv, fetcher: Fetch
   if (Number.isFinite(declaredLength) && declaredLength > MAX_REQUEST_BYTES) {
     return json({ error: 'Feedback is too large.' }, 413);
   }
-  const raw = await request.text();
-  if (new TextEncoder().encode(raw).byteLength > MAX_REQUEST_BYTES) {
+  const raw = await readBodyWithinLimit(request);
+  if (raw === null) {
     return json({ error: 'Feedback is too large.' }, 413);
   }
   const parsedJson = await Promise.resolve().then(() => JSON.parse(raw)).catch(() => null);
@@ -170,10 +203,14 @@ async function submitFeedback(request: Request, env: FeedbackEnv, fetcher: Fetch
   // A filled honeypot is treated as accepted but is never sent to a provider.
   if (feedback.honeypot) return json({ ok: true }, 202);
 
-  const hostname = new URL(request.url).hostname;
   let verified = false;
   try {
-    verified = await verifyTurnstile(feedback.token, hostname, env.TURNSTILE_SECRET_KEY!, fetcher);
+    verified = await verifyTurnstile(
+      feedback.token,
+      env.FEEDBACK_ALLOWED_HOSTNAME!,
+      env.TURNSTILE_SECRET_KEY!,
+      fetcher,
+    );
   } catch {
     return json({ error: 'Verification is temporarily unavailable.' }, 502);
   }
@@ -199,7 +236,7 @@ export async function handleRequest(request: Request, env: FeedbackEnv, fetcher:
   const { pathname } = new URL(request.url);
   if (pathname === CONFIG_PATH) {
     if (request.method !== 'GET') return json({ error: 'Method not allowed.' }, 405);
-    if (!isConfigured(env)) return json({ error: 'Feedback is temporarily unavailable.' }, 503);
+    if (!feedbackAvailable(request, env)) return json({ error: 'Feedback is temporarily unavailable.' }, 503);
     return json({ siteKey: env.TURNSTILE_SITE_KEY });
   }
   if (pathname === SUBMIT_PATH) {

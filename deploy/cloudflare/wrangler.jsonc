@@ -16,6 +16,9 @@
   // across repository-driven deploys rather than replacing them from config.
   "keep_vars": true,
   "vars": {
+    // This production-only guard keeps feedback disabled on branch Preview URLs,
+    // even if a Preview is accidentally given the other bindings.
+    "FEEDBACK_ALLOWED_HOSTNAME": "five-minutes-v2.vitoria-nuno.workers.dev",
     "FEEDBACK_GITHUB_REPOSITORY": "nunov00/five-minutes-feedback"
   },
   "assets": {
@@ -36,6 +39,7 @@
   // this for `wrangler preview` deployments to have an active URL.
   "preview_urls": true,
   // Worker Previews (`wrangler preview`, used by `npm run cf:preview` for
-  // branch/PR testing). Secrets are never committed here.
+  // branch/PR testing). Production vars and secrets are not inherited; keep
+  // this empty so feedback fails closed on every Preview.
   "previews": {}
 }
