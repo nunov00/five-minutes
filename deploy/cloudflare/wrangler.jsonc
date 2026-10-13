@@ -1,7 +1,8 @@
 // Cloudflare deployment adapter for Five Minutes.
 //
 // Deploys the provider-neutral static build (`npm run build` -> dist/) with
-// Workers Static Assets. The small Worker adapter handles only `/api/feedback`;
+// Workers Static Assets. The small Worker adapter handles feedback and aggregate
+// analytics API routes;
 // lesson rendering and every other application route remain static. Nothing in
 // src/ imports Cloudflare APIs. See deploy/cloudflare/README.md.
 {
@@ -16,11 +17,26 @@
   // across repository-driven deploys rather than replacing them from config.
   "keep_vars": true,
   "vars": {
+    "ANALYTICS_ALLOWED_HOSTNAME": "five-minutes-v2.vitoria-nuno.workers.dev",
     // This production-only guard keeps feedback disabled on branch Preview URLs,
     // even if a Preview is accidentally given the other bindings.
     "FEEDBACK_ALLOWED_HOSTNAME": "five-minutes-v2.vitoria-nuno.workers.dev",
     "FEEDBACK_GITHUB_REPOSITORY": "nunov00/five-minutes-feedback"
   },
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "ANALYTICS",
+        "class_name": "AnalyticsCounter"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "analytics-v1",
+      "new_sqlite_classes": ["AnalyticsCounter"]
+    }
+  ],
   "assets": {
     // Relative to this file.
     "directory": "../../dist",
@@ -40,6 +56,6 @@
   "preview_urls": true,
   // Worker Previews (`wrangler preview`, used by `npm run cf:preview` for
   // branch/PR testing). Production vars and secrets are not inherited; keep
-  // this empty so feedback fails closed on every Preview.
+  // this empty so feedback and analytics fail closed on every Preview.
   "previews": {}
 }

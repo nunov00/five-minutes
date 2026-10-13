@@ -1,9 +1,11 @@
 import { isEdition, readerStorage } from './state';
 import { forwardDestination, RETURN_ORIGIN_KEY, validatedOrigin, type DiscoveryBounds } from './navigation';
+import { analyticsStorage } from '../analytics/storage';
 
 const root = document.documentElement;
 root.classList.add('reader-enhanced');
 const store = readerStorage(() => localStorage);
+const analyticsStore = analyticsStorage(() => localStorage);
 const bounds: DiscoveryBounds = JSON.parse(root.dataset.discoveryBounds ?? '{"topics":[],"libraryPages":1}');
 const note = document.querySelector<HTMLElement>('#preference-note');
 const selector = document.querySelector<HTMLElement>('[data-global-selector]');
@@ -86,7 +88,7 @@ document.addEventListener('click', event => {
   if (root.dataset.neutralDiscovery === 'true') { event.preventDefault(); location.replace(link.href); }
 });
 document.querySelector('#reset-reader-state')?.addEventListener('click', () => {
-  if (store.reset()) location.reload();
+  if (store.reset()) { analyticsStore.reset(); location.reload(); }
   else showNote();
 });
 window.addEventListener('pageshow', () => { keepContext(); restore(); });
