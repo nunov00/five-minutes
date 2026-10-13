@@ -1,0 +1,37 @@
+schemaVersion: 2
+id: 6bd86c0f-7cde-467c-abd1-ef6c8a2b51b1
+slug: how-heat-pumps-move-heat
+aliases: []
+publishedAt: 2026-10-13T10:00:00+02:00
+topic: technology
+subtopic: engineering
+concepts:
+  - heat-pump
+  - refrigeration-cycle
+  - heat-transfer
+related:
+  manual:
+    - id: e38e6794-fa4d-466c-9aa8-b6c6f6e386e1
+      reason: A thermostat uses feedback to tell a heat pump when to run and when to stop.
+    - id: 037395c2-7035-4e44-bf37-2e9c5c542da1
+      reason: Heat pumps turn electrical work into a practical way to move thermal energy.
+  exclude: []
+sources:
+  - title: How a heat pump works
+    url: https://www.iea.org/reports/the-future-of-heat-pumps/how-a-heat-pump-works
+    publisher: International Energy Agency
+    accessedAt: 2026-10-13
+    note: Explains heat transfer, the refrigeration cycle, the compressor and why heat output can exceed electrical input.
+  - title: "Heat pumps explained: experts answer your questions"
+    url: https://www.gov.uk/government/news/heat-pumps-explained-experts-answer-your-questions
+    publisher: UK Department for Energy Security and Net Zero
+    accessedAt: 2026-10-13
+    note: Describes the refrigerant, compressor and heat-exchanger sequence and operation in cold weather.
+provenance:
+  createdAt: 2026-10-13T09:00:00+02:00
+  createdBy:
+    type: ai
+    provider: openai
+    model: gpt-5-codex
+    promptVersion: automated-writer-v1
+  reviews: []
