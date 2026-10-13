@@ -1,0 +1,30 @@
+---
+title: How Can Cold Air Heat a House?
+description: A heat pump changes a refrigerant's pressure so it can collect heat outside and release it indoors.
+takeaway: A heat pump does not make all its heat from electricity; it uses electricity to move heat from one place to another.
+question: Why is a compressor essential to a heat pump?
+answer: Compressing the refrigerant raises its pressure and temperature, making it hot enough to release the collected heat indoors.
+searchTerms:
+  - heat pumps explained
+  - heat from cold air
+  - refrigeration cycle
+---
+On a cold day, an outdoor heat-pump unit can warm a house. That sounds impossible: how can something cold contain useful heat?
+
+Cold is not the same as having no thermal energy. The trick is to make part of the heat pump even colder than the outdoor air. Heat can then flow from the air into the machine.
+
+## The refrigerant makes the trip
+
+Inside the pipes is a fluid called a **refrigerant**. On the outdoor side, it is kept at low pressure and a low temperature, so it can absorb heat from the air, ground or water.
+
+A compressor then squeezes the refrigerant. Its pressure and temperature rise. Once it is hotter than the indoor heating system, heat flows from the refrigerant into the building through a heat exchanger.
+
+Next, an expansion device drops the pressure. The refrigerant cools, returns to the outdoor side and starts another lap.
+
+## It moves heat instead of making all of it
+
+The heat arriving indoors comes partly from outside and partly from the electrical work done by the machine. Because the electricity is used to move heat, the amount of heat delivered can be several times the electrical energy used.
+
+This does not create energy from nowhere. Imagine paying for a delivery van: the fuel powers the trip, but the van also brings a load that already existed somewhere else. The compressor's electricity powers the trip; the refrigerant carries the heat.
+
+Reverse the direction of the cycle and the same machine can collect heat indoors and release it outside. In that mode, it works like an air conditioner.
