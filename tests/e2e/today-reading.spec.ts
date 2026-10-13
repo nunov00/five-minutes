@@ -37,6 +37,8 @@ test.describe('Today → lesson → edition switch → Takeaway → Test yoursel
     await expect(earlier.locator('[data-earlier-id]')).toHaveCount(3);
     await expect(earlier.locator('[data-earlier-edition="adult"]:visible')).toHaveCount(3);
     await expect(earlier.locator('[data-earlier-edition="teen"]:visible')).toHaveCount(3);
+    await expect(earlier.getByRole('link', { name: /^Adult edition: / })).toHaveCount(3);
+    await expect(earlier.getByRole('link', { name: /^Teen edition: / })).toHaveCount(3);
   });
 
   test('Today shows only the deliberately saved edition on later visits', async ({ page }) => {
