@@ -67,7 +67,26 @@ async function render() {
     if (status) status.textContent = `Showing ${summary.range.from} to ${summary.range.to}. Updated ${new Intl.DateTimeFormat('en-GB', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(summary.generatedAt))}.`;
   } catch {
     if (status) status.textContent = 'Analytics totals are temporarily unavailable. Reading the site is unaffected.';
-    setText('[data-top-lessons]', 'Analytics totals are temporarily unavailable.');
+    for (const key of ['views', 'lessonViews', 'pageViews', 'interactions'] as const) {
+      setText(`[data-metric="${key}"]`, 'Unavailable');
+    }
+    setText('[data-edition-metric="adult"]', 'Unavailable');
+    setText('[data-edition-metric="teen"]', 'Unavailable');
+
+    const top = dashboard.querySelector<HTMLOListElement>('[data-top-lessons]');
+    top?.replaceChildren(Object.assign(document.createElement('li'), { textContent: 'Analytics totals are temporarily unavailable.' }));
+
+    const interactions = dashboard.querySelector<HTMLElement>('[data-interactions]');
+    interactions?.replaceChildren();
+    const group = document.createElement('div');
+    const term = document.createElement('dt'); term.textContent = 'Interaction totals';
+    const value = document.createElement('dd'); value.textContent = 'Unavailable';
+    group.append(term, value); interactions?.append(group);
+
+    const series = dashboard.querySelector<HTMLTableSectionElement>('[data-daily-series]');
+    const row = document.createElement('tr');
+    const empty = document.createElement('td'); empty.colSpan = 3; empty.textContent = 'Analytics totals are temporarily unavailable.';
+    row.append(empty); series?.replaceChildren(row);
   }
 }
 

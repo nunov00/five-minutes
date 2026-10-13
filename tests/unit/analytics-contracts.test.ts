@@ -5,10 +5,33 @@ import {
   summarizeAnalyticsRows,
   type AnalyticsRow,
 } from '../../src/lib/analytics/contracts';
+import { ANALYTICS_SEEN_KEY, analyticsCollectionAllowed, analyticsStorage } from '../../src/lib/analytics/storage';
 
 const lessonId = '018f47a2-5d7b-7c31-9d4f-0d9a8b6c2e10';
 
 describe('analytics contracts', () => {
+  it('honours privacy signals and owns its bounded local marker', () => {
+    expect(analyticsCollectionAllowed({})).toBe(true);
+    expect(analyticsCollectionAllowed({ doNotTrack: '1' })).toBe(false);
+    expect(analyticsCollectionAllowed({ globalPrivacyControl: true })).toBe(false);
+
+    const values = new Map<string, string>();
+    const storage = {
+      getItem: (key: string) => values.get(key) ?? null,
+      setItem: (key: string, value: string) => { values.set(key, value); },
+      removeItem: (key: string) => { values.delete(key); },
+    };
+    const marker = analyticsStorage(() => storage);
+    const event = { event: 'page_view', dimension: 'home' } as const;
+    const today = new Date('2026-10-13T18:00:00Z');
+    expect(marker.firstToday(event, today)).toBe(true);
+    expect(marker.firstToday(event, today)).toBe(false);
+    expect(marker.firstToday(event, new Date('2026-10-14T00:00:00Z'))).toBe(true);
+    expect(values.has(ANALYTICS_SEEN_KEY)).toBe(true);
+    expect(marker.reset()).toBe(true);
+    expect(values.has(ANALYTICS_SEEN_KEY)).toBe(false);
+  });
+
   it('accepts only bounded public event shapes', () => {
     expect(parseAnalyticsEvent({ event: 'page_view', page: 'home' })).toEqual({ event: 'page_view', dimension: 'home' });
     expect(parseAnalyticsEvent({ event: 'lesson_view', edition: 'adult', lessonId: lessonId.toUpperCase() }))

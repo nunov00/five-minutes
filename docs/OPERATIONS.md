@@ -140,7 +140,7 @@ Production configuration for `five-minutes-v2`:
 
 The first deployment provisions the Durable Object namespace. Worker Previews deliberately receive no analytics variable or binding through the empty `previews` configuration, so both API paths return `503` there. Never import or add the production Durable Object binding to Previews Base or an individual Preview.
 
-Storage schema version 1 contains only daily aggregate counters and the current global minute ceiling. A write deletes daily rows older than 400 days and minute rows older than the current minute. The public response is cached for 60 seconds. Analytics errors are swallowed by the browser client and never block navigation or reader-state actions.
+Storage schema version 1 contains only daily aggregate counters and a daily accepted-event counter. The 3,000-event minute ceiling exists only in the global object's memory; the stored 10,000-event UTC-day ceiling is the durable cost bound. A write deletes daily aggregate rows older than 400 days and obsolete daily-limit rows. The route validates lesson dimensions against the build's route-ownership registry before the Durable Object is called. `Cache-Control: public, max-age=60` permits a browser to reuse its own summary response for 60 seconds; it is not a shared edge cache, so a first dashboard view still calls the Worker and Durable Object. Analytics errors are swallowed by the browser client and never block navigation or reader-state actions. The local-data reset also removes the bounded analytics de-duplication marker.
 
 Production verification after deployment:
 
@@ -152,7 +152,7 @@ Production verification after deployment:
 
 If ingestion abuse or unexplained inflation is observed, do not add IP tracking. Pause the client or lower the global ceiling in a mandatory-reviewed change, preserve reading availability, and assess a privacy-preserving challenge or sampling design. The figures are not an audit log.
 
-Removal requires a reviewed deploy that stops reads/writes followed by explicit deletion of the Durable Object namespace/storage in Cloudflare. Removing the class or source alone is not evidence that stored data was erased.
+Removal requires a reviewed deploy that first stops reads/writes and then adds a new Wrangler migration with `deleted_classes: ["AnalyticsCounter"]`. That migration is the concrete deletion of the class and its stored data; removing the source or binding alone is not evidence that stored data was erased. Verify the migration in deployment logs before removing the obsolete configuration.
 
 ## Automated publication operations
 
@@ -199,6 +199,23 @@ Verified against Cloudflare documentation on 2 October 2026 ([limits](https://de
 - Workers Builds has its own per-plan build allowances. They are not yet recorded; check them if publication frequency grows.
 - Workers Builds runs on Cloudflare and uses no GitHub Actions minutes.
 - The production artefact was 69 deployable files (0.43 MiB) at the M7.5 recovery drill.
+
+### Cloudflare Durable Objects and Worker requests
+
+Verified against Cloudflare's [Durable Objects pricing](https://developers.cloudflare.com/durable-objects/platform/pricing/), [Durable Objects limits](https://developers.cloudflare.com/durable-objects/platform/limits/) and [Workers limits](https://developers.cloudflare.com/workers/platform/limits/) on 13 October 2026.
+
+| Workers Free allowance | Limit |
+| --- | --- |
+| Worker requests | 100,000/day |
+| Durable Object requests | 100,000/day |
+| SQLite rows read | 5 million/day |
+| SQLite rows written (including deletes) | 100,000/day |
+| SQLite Durable Object storage | 5 GB/account |
+
+- Daily free limits reset at 00:00 UTC. When one is exceeded, further operations of that type fail until reset; static-asset requests remain free and unlimited.
+- Analytics accepts at most 10,000 events per UTC day. Each accepted event invokes the Worker and global Durable Object and updates the daily limit plus one aggregate row; SQLite index work may also count as row writes. The ceiling therefore leaves substantial request and row-write headroom for anonymous feedback, Worker-handled 404s, retention deletes and platform accounting.
+- This is an explicit bounded sharing decision, not a dedicated feedback reservation. Rejected or malformed analytics requests still consume outer Worker requests, so application limits cannot prevent request-level denial of service. If the shared allowance becomes material, pause analytics collection or adopt a separately reviewed challenge/sampling/provider plan; do not silently move to a paid plan.
+- Summary reads scan only the bounded 7-, 30- or 90-day aggregate rows. Lesson dimensions must exist in the build's route-ownership registry, preventing arbitrary UUID rows.
 
 ### GitHub
 

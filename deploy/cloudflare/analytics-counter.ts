@@ -5,7 +5,13 @@ import {
   type AnalyticsRow,
 } from '../../src/lib/analytics/contracts';
 
-const MAX_EVENTS_PER_MINUTE = 3_000;
+export const MAX_EVENTS_PER_MINUTE = 3_000;
+export const MAX_EVENTS_PER_DAY = 10_000;
+
+interface AnalyticsLimits {
+  perMinute: number;
+  perDay: number;
+}
 
 interface SqlCursor<T> { toArray(): T[] }
 interface SqlStorage {
@@ -28,9 +34,16 @@ function daysBefore(days: number, date = new Date()) {
 /** One global object stores bounded daily aggregates, never individual events or request metadata. */
 export class AnalyticsCounter {
   private readonly sql: SqlStorage;
+  private readonly limits: AnalyticsLimits;
+  private currentMinute = '';
+  private currentMinuteCount = 0;
 
-  constructor(ctx: DurableObjectStatePort) {
+  constructor(ctx: DurableObjectStatePort, _env?: unknown, limits: AnalyticsLimits = {
+    perMinute: MAX_EVENTS_PER_MINUTE,
+    perDay: MAX_EVENTS_PER_DAY,
+  }) {
     this.sql = ctx.storage.sql;
+    this.limits = limits;
     this.sql.exec(`
       CREATE TABLE IF NOT EXISTS daily_counts (
         day TEXT NOT NULL,
@@ -39,8 +52,8 @@ export class AnalyticsCounter {
         count INTEGER NOT NULL CHECK (count >= 0),
         PRIMARY KEY (day, event, dimension)
       );
-      CREATE TABLE IF NOT EXISTS minute_limits (
-        minute TEXT PRIMARY KEY,
+      CREATE TABLE IF NOT EXISTS daily_limits (
+        day TEXT PRIMARY KEY,
         count INTEGER NOT NULL CHECK (count >= 0)
       );
     `);
@@ -55,16 +68,24 @@ export class AnalyticsCounter {
 
       const now = new Date();
       const minute = utcMinute(now);
-      this.sql.exec('DELETE FROM minute_limits WHERE minute < ?', minute);
-      const current = this.sql.exec<{ count: number }>('SELECT count FROM minute_limits WHERE minute = ?', minute).toArray()[0]?.count ?? 0;
-      if (current >= MAX_EVENTS_PER_MINUTE) return json({ error: 'Analytics capacity reached.' }, 429);
-      this.sql.exec(
-        `INSERT INTO minute_limits (minute, count) VALUES (?, 1)
-         ON CONFLICT(minute) DO UPDATE SET count = count + 1`,
-        minute,
-      );
+      if (this.currentMinute !== minute) {
+        this.currentMinute = minute;
+        this.currentMinuteCount = 0;
+      }
+      if (this.currentMinuteCount >= this.limits.perMinute) return json({ error: 'Analytics capacity reached.' }, 429);
 
       const day = utcDay(now);
+      const dailyCount = this.sql.exec<{ count: number }>('SELECT count FROM daily_limits WHERE day = ?', day).toArray()[0]?.count ?? 0;
+      if (dailyCount >= this.limits.perDay) return json({ error: 'Analytics capacity reached.' }, 429);
+
+      this.currentMinuteCount += 1;
+      this.sql.exec('DELETE FROM daily_limits WHERE day < ?', day);
+      this.sql.exec(
+        `INSERT INTO daily_limits (day, count) VALUES (?, 1)
+         ON CONFLICT(day) DO UPDATE SET count = count + 1`,
+        day,
+      );
+
       this.sql.exec('DELETE FROM daily_counts WHERE day < ?', daysBefore(ANALYTICS_RETENTION_DAYS - 1, now));
       this.sql.exec(
         `INSERT INTO daily_counts (day, event, dimension, count) VALUES (?, ?, ?, 1)

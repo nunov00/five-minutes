@@ -1,33 +1,15 @@
-import { parseAnalyticsEvent, type AnalyticsEvent } from './contracts';
+import { parseAnalyticsEvent } from './contracts';
+import { analyticsCollectionAllowed, analyticsStorage } from './storage';
 
 const ENDPOINT = '/api/analytics/event';
-const SEEN_KEY = 'five-minutes.analytics-seen.v1';
-const MAX_SEEN = 512;
 const root = document.documentElement;
-const privacySignal = navigator.doNotTrack === '1'
-  || (navigator as Navigator & { globalPrivacyControl?: boolean }).globalPrivacyControl === true;
-
-function day() { return new Date().toISOString().slice(0, 10); }
-function eventKey(event: AnalyticsEvent) { return `${day()}:${event.event}:${event.dimension}`; }
-
-function firstToday(event: AnalyticsEvent): boolean {
-  try {
-    const current = JSON.parse(localStorage.getItem(SEEN_KEY) ?? '[]');
-    const seen = Array.isArray(current) ? current.filter((value): value is string => typeof value === 'string') : [];
-    const key = eventKey(event);
-    if (seen.includes(key)) return false;
-    const today = `${day()}:`;
-    localStorage.setItem(SEEN_KEY, JSON.stringify([...seen.filter((value) => value.startsWith(today)), key].slice(-MAX_SEEN)));
-  } catch {
-    // Analytics must never make reading or navigation fail when storage is unavailable.
-  }
-  return true;
-}
+const store = analyticsStorage(() => localStorage);
+const privacySignal = !analyticsCollectionAllowed(navigator as Navigator & { globalPrivacyControl?: boolean });
 
 function send(value: unknown, onceToday = false) {
   if (privacySignal) return;
   const event = parseAnalyticsEvent(value);
-  if (!event || (onceToday && !firstToday(event))) return;
+  if (!event || (onceToday && !store.firstToday(event))) return;
   const body = JSON.stringify(value);
   void fetch(ENDPOINT, {
     method: 'POST',

@@ -1,4 +1,5 @@
 import { analyticsDays, parseAnalyticsEvent } from '../../src/lib/analytics/contracts';
+import routeOwnership from '../../src/content/route-ownership.json';
 export { AnalyticsCounter } from './analytics-counter';
 
 const CONFIG_PATH = '/api/feedback/config';
@@ -12,6 +13,7 @@ const MAX_MESSAGE_LENGTH = 2_000;
 const MIN_MESSAGE_LENGTH = 10;
 const MAX_TURNSTILE_TOKEN_LENGTH = 2_048;
 const MAX_ANALYTICS_BYTES = 1_024;
+const PUBLISHED_LESSON_IDS = new Set(Object.values(routeOwnership).map((id) => id.toLowerCase()));
 
 interface AnalyticsNamespace {
   idFromName(name: string): unknown;
@@ -93,6 +95,10 @@ async function recordAnalytics(request: Request, env: FeedbackEnv): Promise<Resp
   if (raw === null) return json({ error: 'Event is too large.' }, 413);
   const event = parseAnalyticsEvent(await Promise.resolve().then(() => JSON.parse(raw)).catch(() => null));
   if (!event) return json({ error: 'Invalid event.' }, 400);
+  if ((event.event === 'lesson_view' || event.event === 'save' || event.event === 'related')
+    && !PUBLISHED_LESSON_IDS.has(event.dimension.split(':')[1] ?? '')) {
+    return json({ error: 'Invalid event.' }, 400);
+  }
   try {
     const response = await analyticsStub(env).fetch(new Request('https://analytics.internal/event', {
       method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(event),
