@@ -119,6 +119,45 @@ Corrections do not use the daily automation. The Manager or Owner initiates them
 
 Operational records must distinguish routine infrastructure completion from publication success. A green scheduled session is not evidence that a lesson was reviewed or merged; the PR review, exact SHA, named check results and merge record are the durable evidence.
 
+## Platform limits
+
+This is the single reference for known hosting, CI and subscription limits. Providers change limits without notice: re-check the linked sources before relying on a number, and update this section when a limit is re-verified or newly observed. Enforcement code and adapter detail stay in `deploy/cloudflare/`.
+
+### Cloudflare Workers Static Assets
+
+Verified against Cloudflare documentation on 2 October 2026 ([limits](https://developers.cloudflare.com/workers/platform/limits/), [static-asset billing](https://developers.cloudflare.com/workers/static-assets/billing-and-limitations/)).
+
+| Limit | Workers Free | Workers Paid |
+| --- | --- | --- |
+| Files per Worker version | 20,000 | 100,000 |
+| Maximum size of one file | 25 MiB | 25 MiB |
+| Static `_redirects` rules | 2,000 | 2,000 |
+| Requests to static assets | free, unlimited | free, unlimited |
+
+- The 100,000-file limit requires Wrangler 4.34.0 or later; Worker Previews require 4.135.0 or later. The project pins Wrangler 4.147.0.
+- `CI / baseline` warns at 16,000 deployable files (80% of the Free limit). `npm run cf:verify-capacity` fails above 100,000 files, 25 MiB per file or 2,000 static redirects, and warns between 20,001 and 100,000 files because moving to a paid plan is an Owner cost decision.
+- Serving static assets on Workers Free costs nothing; there is no Worker script to bill.
+- Workers Builds has its own per-plan build allowances. They are not yet recorded; check them if publication frequency grows.
+- Workers Builds runs on Cloudflare and uses no GitHub Actions minutes.
+- The production artefact was 69 deployable files (0.43 MiB) at the M7.5 recovery drill.
+
+### GitHub
+
+- **Actions runner memory** is the practical build ceiling (see "Scale evidence" in ARCHITECTURE.md). On the standard runner, 2,000 pages built in about 25 s at about 0.94 GiB peak RSS and 10,000 pages in about 1 m 45 s at about 2.93 GiB. 20,000 pages failed at about 4.29 GiB, whereas four 5,000-page shards used about 1.78 GiB each. A 15 GB machine built 20,000 pages monolithically in about 260 s at about 5.9 GiB.
+- **Branch protection** is configured with repository ruleset 24837817 ("Protect main"), which is readable through the REST API. The legacy branch-protection endpoint returned 403 to the AI integration.
+- The ruleset's `require_extra_approval_for_unattributed_changes` setting has not yet been exercised by a connector-authored commit merged by the automated Reviewer. Record the outcome of the first automated merge.
+- `pull_request_target` workflows run from the default branch, so they cannot run on the Pull Request that introduces them.
+- Workflows that hold write permissions pin third-party actions to a full commit SHA.
+
+### AI subscriptions
+
+- ChatGPT scheduled tasks are limited to **5 active automations** per plan. A sixth was refused with `too_many_active_automations`. Production uses 4 (two standing unrelated tasks plus the Writer and Reviewer), leaving 1 spare. Any new recurring task must fit this budget.
+- Neither subscription exposes a usage or allowance meter. Run duration and the absence of surfaced throttling are the recorded proxies. The Owner declined to test exhaustion deliberately; exhaustion is accepted residual risk, and publication fails closed.
+- Scheduled tasks can start late or fail to dispatch promptly. Every scheduled job must be idempotent and safe when late or missed.
+- All agents act through the Owner's single GitHub identity, so provider or model attribution is self-reported.
+- Neither the ChatGPT GitHub connector nor a default Claude Code session could delete branches. `branch-cleanup.yml` performs disposable-branch deletion instead.
+- A Claude Code routine created through the API had no repository access. Routines that need the repository must be created from the claude.ai Routines UI with the repository attached.
+
 ## Backup and recovery
 
 GitHub is the canonical source for code, lesson sources, metadata, provenance and architecture history. Production hosting is reproducible output, not the sole copy.
