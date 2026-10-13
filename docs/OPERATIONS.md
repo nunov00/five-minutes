@@ -95,6 +95,32 @@ Five Minutes is installable (iOS/iPadOS Add to Home Screen and supported Chromiu
 - Fork/untrusted workflows do not receive repository secrets.
 - Branch protection/required checks guard `main`.
 
+### Private feedback runtime
+
+ADR-0010 adds a narrowly scoped Cloudflare Worker endpoint while leaving publication pages static. The private destination is `nunov00/five-minutes-feedback`; its access list is limited to the Owner and explicitly authorised AI workers.
+
+Required production bindings for `five-minutes-v2`:
+
+| Name | Cloudflare type | Value/source |
+| --- | --- | --- |
+| `FEEDBACK_GITHUB_REPOSITORY` | Plaintext variable committed in the adapter | `nunov00/five-minutes-feedback` |
+| `FEEDBACK_GITHUB_TOKEN` | Secret | Fine-grained GitHub token restricted to that repository, Issues read/write only |
+| `TURNSTILE_SITE_KEY` | Plaintext variable | Public site key for the `Five Minutes feedback` Managed widget |
+| `TURNSTILE_SECRET_KEY` | Secret | Secret key for the same widget |
+
+The first Worker-script deployment may safely precede secret setup: both feedback API paths fail closed with `503`, and the form remains disabled. After that deployment, add the three dashboard-managed values under **Workers & Pages → five-minutes-v2 → Settings → Variables and Secrets**, then deploy. `keep_vars` preserves dashboard-managed values during later repository-driven deployments.
+
+The Turnstile widget hostname is `five-minutes-v2.vitoria-nuno.workers.dev`; add any future public custom hostname before serving the form there. The Worker validates the hostname and `feedback` action returned by Siteverify. It intentionally omits Turnstile's optional `remoteip` field and never includes request IP, user agent, referrer or history in the private issue.
+
+Rotation/recovery:
+
+1. Create a replacement least-privilege GitHub token or rotate the Turnstile secret.
+2. Replace the corresponding Cloudflare secret and deploy.
+3. Submit a non-sensitive test message and confirm exactly one issue appears in the private repository.
+4. Revoke the old credential.
+
+If submission fails, check that all bindings exist, the widget contains the current production hostname, and the GitHub token can create issues in only the private feedback repository. Do not log or paste secret values, Turnstile response tokens or feedback bodies while diagnosing. Deleting or triaging old feedback is an Owner-requested action, not an automated task.
+
 ## Automated publication operations
 
 ADR-0007 is the authority for automated lesson publication. The initial subscription-based schedule is:
@@ -136,7 +162,7 @@ Verified against Cloudflare documentation on 2 October 2026 ([limits](https://de
 
 - The 100,000-file limit requires Wrangler 4.34.0 or later; Worker Previews require 4.135.0 or later. The project pins Wrangler 4.147.0.
 - `CI / baseline` warns at 16,000 deployable files (80% of the Free limit). `npm run cf:verify-capacity` fails above 100,000 files, 25 MiB per file or 2,000 static redirects, and warns between 20,001 and 100,000 files because moving to a paid plan is an Owner cost decision.
-- Serving static assets on Workers Free costs nothing; there is no Worker script to bill.
+- Serving static assets on Workers Free remains free and unlimited. Anonymous feedback calls execute the small Worker script and therefore consume the active Workers request allowance; re-check the current allowance if traffic becomes material.
 - Workers Builds has its own per-plan build allowances. They are not yet recorded; check them if publication frequency grows.
 - Workers Builds runs on Cloudflare and uses no GitHub Actions minutes.
 - The production artefact was 69 deployable files (0.43 MiB) at the M7.5 recovery drill.

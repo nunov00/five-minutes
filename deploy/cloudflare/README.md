@@ -1,19 +1,22 @@
 # Cloudflare deployment adapter
 
-Cloudflare is the initial host for Five Minutes. It is **not** part of the application architecture (ADR-0004). This directory is the only place for Cloudflare-specific configuration.
+Cloudflare is the initial host for Five Minutes. It is **not** a core application dependency (ADR-0004). This directory is the only place for Cloudflare-specific configuration and runtime adapters.
 
 ## Boundary
 
 ```text
 src/ (Astro, provider-neutral) --npm run build--> dist/ (plain static files)
                                                      |
-                     any static host  <--------------+-------------->  Cloudflare (this adapter)
-                     e.g. npm run preview                              deploy/cloudflare/wrangler.jsonc
+                     any static host  <--------------+-------------->  Cloudflare static assets
+                                                                            |
+                                                /api/feedback only --> Worker adapter
+                                                                       (Turnstile + GitHub)
 ```
 
 - `npm run build` produces ordinary static HTML/assets in `dist/`. Nothing in `src/` imports Cloudflare APIs, and the build does not use a Cloudflare adapter.
-- `wrangler.jsonc` deploys `dist/` as **Workers Static Assets** with no Worker script (`main`), so there is no server-side runtime. It sets `assets.html_handling` to `drop-trailing-slash` so Cloudflare serves Astro's directory-style `index.html` output at the provider-neutral slash-less canonical URL. `preview_urls` is enabled only at this Cloudflare boundary so Worker Preview deployments receive testable `workers.dev` URLs.
-- Replacing Cloudflare means deploying the same `dist/` elsewhere and deleting this directory plus the `cf:*` npm scripts.
+- `wrangler.jsonc` deploys `dist/` as **Workers Static Assets** plus the narrow `worker.ts` adapter. Static assets are still served without running Worker code; `run_worker_first` is limited to `/api/*`. The adapter implements only ADR-0010 feedback and does not render lessons.
+- `assets.html_handling` remains `drop-trailing-slash`, so Cloudflare serves Astro's directory-style `index.html` output at the provider-neutral slash-less canonical URL. `preview_urls` is enabled only at this Cloudflare boundary so Worker Preview deployments receive testable `workers.dev` URLs.
+- Replacing Cloudflare means deploying the same `dist/` elsewhere and reimplementing the two-path feedback contract, or disabling that optional feature. Lesson/content code does not change.
 
 ## Why Workers Static Assets
 
@@ -124,7 +127,7 @@ Use this only if Workers Builds is unsuitable. It needs:
 
 ## Cost
 
-On the Workers Free plan, serving static assets costs nothing: asset requests are free and unlimited, and there is no Worker script to bill.
+On the Workers Free plan, static-asset requests remain free and unlimited. Feedback API calls execute the Worker and count against the active Workers request allowance; the expected initial volume does not require a paid service.
 
 - **Current usage:** CI reports the actual assembled build on every change; the repository does not hard-code a stale current count in documentation.
 - **Builds:** Workers Builds has its own per-plan build allowances. Check Cloudflare's Builds limits if publication frequency grows.

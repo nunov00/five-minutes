@@ -15,6 +15,7 @@ describe('app shell', () => {
     expect(html).toMatch(/<h1[^>]*>Today's idea<\/h1>/);
     expect(html).toMatch(/<a[^>]*class="brand"[^>]*href="\/"/);
     expect(html).toMatch(/<a[^>]*href="#main"/);
+    expect(html).toMatch(/<a[^>]*href="\/feedback"[^>]*>Send anonymous feedback<\/a>/);
   });
 
   it('offers both editions of the newest lesson on Today using manifest paths', async () => {
