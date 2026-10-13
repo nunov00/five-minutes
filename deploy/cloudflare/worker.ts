@@ -1,11 +1,22 @@
+import { analyticsDays, parseAnalyticsEvent } from '../../src/lib/analytics/contracts';
+export { AnalyticsCounter } from './analytics-counter';
+
 const CONFIG_PATH = '/api/feedback/config';
 const SUBMIT_PATH = '/api/feedback';
+const ANALYTICS_PATH = '/api/analytics';
+const ANALYTICS_EVENT_PATH = '/api/analytics/event';
 const TURNSTILE_VERIFY_URL = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
 const GITHUB_API_VERSION = '2022-11-28';
 const MAX_REQUEST_BYTES = 8_192;
 const MAX_MESSAGE_LENGTH = 2_000;
 const MIN_MESSAGE_LENGTH = 10;
 const MAX_TURNSTILE_TOKEN_LENGTH = 2_048;
+const MAX_ANALYTICS_BYTES = 1_024;
+
+interface AnalyticsNamespace {
+  idFromName(name: string): unknown;
+  get(id: unknown): { fetch(request: Request): Promise<Response> };
+}
 
 const categories = {
   bug: 'Bug report',
@@ -18,6 +29,8 @@ type FeedbackCategory = keyof typeof categories;
 
 export interface FeedbackEnv {
   ASSETS: { fetch(request: Request): Promise<Response> };
+  ANALYTICS?: AnalyticsNamespace;
+  ANALYTICS_ALLOWED_HOSTNAME?: string;
   FEEDBACK_ALLOWED_HOSTNAME?: string;
   FEEDBACK_GITHUB_REPOSITORY?: string;
   FEEDBACK_GITHUB_TOKEN?: string;
@@ -59,6 +72,54 @@ function sameOrigin(request: Request): boolean {
   return fetchSite === null || fetchSite === 'same-origin';
 }
 
+function analyticsAvailable(request: Request, env: FeedbackEnv): env is FeedbackEnv & Required<Pick<FeedbackEnv, 'ANALYTICS' | 'ANALYTICS_ALLOWED_HOSTNAME'>> {
+  return Boolean(env.ANALYTICS && env.ANALYTICS_ALLOWED_HOSTNAME
+    && new URL(request.url).hostname === env.ANALYTICS_ALLOWED_HOSTNAME);
+}
+
+function analyticsStub(env: FeedbackEnv & Required<Pick<FeedbackEnv, 'ANALYTICS'>>) {
+  return env.ANALYTICS.get(env.ANALYTICS.idFromName('global'));
+}
+
+async function recordAnalytics(request: Request, env: FeedbackEnv): Promise<Response> {
+  if (!analyticsAvailable(request, env)) return json({ error: 'Analytics is temporarily unavailable.' }, 503);
+  if (!sameOrigin(request)) return json({ error: 'Request origin was not accepted.' }, 403);
+  if (!request.headers.get('Content-Type')?.toLowerCase().startsWith('application/json')) {
+    return json({ error: 'Expected a JSON request.' }, 415);
+  }
+  const declaredLength = Number(request.headers.get('Content-Length'));
+  if (Number.isFinite(declaredLength) && declaredLength > MAX_ANALYTICS_BYTES) return json({ error: 'Event is too large.' }, 413);
+  const raw = await readBodyWithinLimit(request, MAX_ANALYTICS_BYTES);
+  if (raw === null) return json({ error: 'Event is too large.' }, 413);
+  const event = parseAnalyticsEvent(await Promise.resolve().then(() => JSON.parse(raw)).catch(() => null));
+  if (!event) return json({ error: 'Invalid event.' }, 400);
+  try {
+    const response = await analyticsStub(env).fetch(new Request('https://analytics.internal/event', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(event),
+    }));
+    return response.ok ? json({ ok: true }, 202) : json({ error: 'Analytics is temporarily unavailable.' }, response.status === 429 ? 429 : 503);
+  } catch {
+    return json({ error: 'Analytics is temporarily unavailable.' }, 503);
+  }
+}
+
+async function readAnalytics(request: Request, env: FeedbackEnv): Promise<Response> {
+  if (!analyticsAvailable(request, env)) return json({ error: 'Analytics is temporarily unavailable.' }, 503);
+  const days = analyticsDays(new URL(request.url).searchParams.get('days'));
+  try {
+    const response = await analyticsStub(env).fetch(new Request(`https://analytics.internal/summary?days=${days}`));
+    if (!response.ok) return json({ error: 'Analytics is temporarily unavailable.' }, 503);
+    return new Response(response.body, { status: 200, headers: {
+      'Cache-Control': 'public, max-age=60',
+      'Content-Type': 'application/json; charset=utf-8',
+      'Referrer-Policy': 'no-referrer',
+      'X-Content-Type-Options': 'nosniff',
+    } });
+  } catch {
+    return json({ error: 'Analytics is temporarily unavailable.' }, 503);
+  }
+}
+
 function validRepository(value: string): boolean {
   return /^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(value);
 }
@@ -67,7 +128,7 @@ function escapeHtml(value: string): string {
   return value.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
 }
 
-async function readBodyWithinLimit(request: Request): Promise<string | null> {
+async function readBodyWithinLimit(request: Request, limit = MAX_REQUEST_BYTES): Promise<string | null> {
   if (!request.body) return '';
 
   const reader = request.body.getReader();
@@ -78,7 +139,7 @@ async function readBodyWithinLimit(request: Request): Promise<string | null> {
     const { done, value } = await reader.read();
     if (done) break;
     total += value.byteLength;
-    if (total > MAX_REQUEST_BYTES) {
+    if (total > limit) {
       await reader.cancel().catch(() => undefined);
       return null;
     }
@@ -234,6 +295,14 @@ async function submitFeedback(request: Request, env: FeedbackEnv, fetcher: Fetch
 
 export async function handleRequest(request: Request, env: FeedbackEnv, fetcher: Fetcher = fetch): Promise<Response> {
   const { pathname } = new URL(request.url);
+  if (pathname === ANALYTICS_PATH) {
+    if (request.method !== 'GET') return json({ error: 'Method not allowed.' }, 405);
+    return readAnalytics(request, env);
+  }
+  if (pathname === ANALYTICS_EVENT_PATH) {
+    if (request.method !== 'POST') return json({ error: 'Method not allowed.' }, 405);
+    return recordAnalytics(request, env);
+  }
   if (pathname === CONFIG_PATH) {
     if (request.method !== 'GET') return json({ error: 'Method not allowed.' }, 405);
     if (!feedbackAvailable(request, env)) return json({ error: 'Feedback is temporarily unavailable.' }, 503);

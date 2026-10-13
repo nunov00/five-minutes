@@ -1,0 +1,63 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getBuildMetadata } from '../lib/content/build-content';
+import { buildDiscoveryArtifacts } from '../lib/discovery/artifacts';
+
+const { lessons } = await getBuildMetadata();
+const catalogue = buildDiscoveryArtifacts(lessons).catalogue.path;
+---
+<BaseLayout title="Analytics · Five Minutes" description="Privacy-preserving aggregate readership statistics for Five Minutes.">
+  <article class="analytics-page" data-analytics-dashboard data-catalogue={catalogue}>
+    <header>
+      <p class="eyebrow">Public statistics</p>
+      <h1>Analytics</h1>
+      <p class="lede">Real aggregate activity from the last 30 days. Counting began when this feature was activated; earlier visits cannot be reconstructed.</p>
+    </header>
+
+    <p class="quiet-note" data-analytics-status role="status">Loading current totals…</p>
+    <section aria-labelledby="overview-heading">
+      <h2 id="overview-heading">Overview</h2>
+      <dl class="analytics-grid">
+        <div class="card"><dt>All views</dt><dd data-metric="views">—</dd></div>
+        <div class="card"><dt>Lesson views</dt><dd data-metric="lessonViews">—</dd></div>
+        <div class="card"><dt>Other page views</dt><dd data-metric="pageViews">—</dd></div>
+        <div class="card"><dt>Interactions</dt><dd data-metric="interactions">—</dd></div>
+      </dl>
+    </section>
+
+    <section aria-labelledby="editions-heading">
+      <h2 id="editions-heading">Lesson editions</h2>
+      <dl class="analytics-grid analytics-grid-small">
+        <div class="card"><dt>Adult</dt><dd data-edition-metric="adult">—</dd></div>
+        <div class="card"><dt>Teen</dt><dd data-edition-metric="teen">—</dd></div>
+      </dl>
+    </section>
+
+    <section aria-labelledby="popular-heading">
+      <h2 id="popular-heading">Most viewed lessons</h2>
+      <ol class="analytics-list" data-top-lessons><li>Loading lessons…</li></ol>
+    </section>
+
+    <section aria-labelledby="activity-heading">
+      <h2 id="activity-heading">Interactions</h2>
+      <dl class="analytics-breakdown" data-interactions></dl>
+    </section>
+
+    <section aria-labelledby="daily-heading">
+      <h2 id="daily-heading">Daily activity</h2>
+      <div class="table-scroll"><table>
+        <thead><tr><th scope="col">Date</th><th scope="col">Views</th><th scope="col">Interactions</th></tr></thead>
+        <tbody data-daily-series><tr><td colspan="3">Loading activity…</td></tr></tbody>
+      </table></div>
+    </section>
+
+    <section class="card analytics-privacy" aria-labelledby="privacy-heading">
+      <h2 id="privacy-heading">What is—and is not—counted</h2>
+      <p>A page or lesson view is counted at most once per browser per UTC day when local storage is available. Buttons and links listed above are counted when used.</p>
+      <p>The browser keeps only today’s bounded de-duplication keys locally; they are never transmitted. The server does not create a visitor ID or store names, email addresses, raw IP addresses, user agents, precise locations, referrers, browsing histories or individual event records. Only daily totals are retained, for up to 400 days. Do Not Track and Global Privacy Control signals disable collection.</p>
+      <p>These figures are directional: blocking JavaScript prevents counting, while deliberate automated requests could inflate totals.</p>
+    </section>
+    <noscript><p class="quiet-note">JavaScript is required to retrieve the current totals. The privacy explanation remains available without it.</p></noscript>
+  </article>
+  <script>import '../lib/analytics/dashboard';</script>
+</BaseLayout>

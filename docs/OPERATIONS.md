@@ -127,6 +127,33 @@ Rotation/recovery:
 
 If submission fails, check that all bindings exist, the widget contains the current production hostname, and the GitHub token can create issues in only the private feedback repository. Do not log or paste secret values, Turnstile response tokens or feedback bodies while diagnosing. Deleting or triaging old feedback is an Owner-requested action, not an automated task.
 
+### Public aggregate analytics runtime
+
+ADR-0011 adds a public `/analytics` page and two Cloudflare adapter routes. `POST /api/analytics/event` accepts only fixed event shapes; `GET /api/analytics` exposes only a bounded 7-, 30- or 90-day aggregate summary. No secret is required.
+
+Production configuration for `five-minutes-v2`:
+
+| Name | Cloudflare type | Value/source |
+| --- | --- | --- |
+| `ANALYTICS_ALLOWED_HOSTNAME` | Plaintext variable committed in the adapter | `five-minutes-v2.vitoria-nuno.workers.dev` |
+| `ANALYTICS` | SQLite Durable Object binding | Class `AnalyticsCounter`, created by migration `analytics-v1` |
+
+The first deployment provisions the Durable Object namespace. Worker Previews deliberately receive no analytics variable or binding through the empty `previews` configuration, so both API paths return `503` there. Never import or add the production Durable Object binding to Previews Base or an individual Preview.
+
+Storage schema version 1 contains only daily aggregate counters and the current global minute ceiling. A write deletes daily rows older than 400 days and minute rows older than the current minute. The public response is cached for 60 seconds. Analytics errors are swallowed by the browser client and never block navigation or reader-state actions.
+
+Production verification after deployment:
+
+1. Open `/analytics`; confirm the page needs no login and reports that counting began at activation.
+2. Open a lesson once, reload it, then return to `/analytics` after the 60-second cache window. Confirm the lesson gains at most one view for that browser/UTC day.
+3. Use one bounded interaction such as Save or Surprise Me and confirm its aggregate increases.
+4. Confirm a current branch Preview returns `503` from `/api/analytics` and `/api/analytics/event` while its static pages still render.
+5. Inspect the public response and verify it contains no request headers, URLs, referrers, IPs, visitor/session IDs or individual timestamps.
+
+If ingestion abuse or unexplained inflation is observed, do not add IP tracking. Pause the client or lower the global ceiling in a mandatory-reviewed change, preserve reading availability, and assess a privacy-preserving challenge or sampling design. The figures are not an audit log.
+
+Removal requires a reviewed deploy that stops reads/writes followed by explicit deletion of the Durable Object namespace/storage in Cloudflare. Removing the class or source alone is not evidence that stored data was erased.
+
 ## Automated publication operations
 
 ADR-0007 is the authority for automated lesson publication. The initial subscription-based schedule is:
