@@ -44,6 +44,8 @@ Official documentation:
 
 ## Relevant limits (check before relying on them; Cloudflare can change them)
 
+The consolidated cross-platform limits reference is the "Platform limits" section of `docs/OPERATIONS.md`; keep both in step when a limit is re-verified.
+
 | Limit (Workers Static Assets) | Workers Free | Workers Paid |
 |---|---|---|
 | Files per Worker version | 20,000 | 100,000 |
