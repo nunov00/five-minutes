@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { CatalogueEntry } from '../../src/lib/delivery-manifest';
-import { formatEditorialDate, selectTodayLesson } from '../../src/lib/today';
+import { formatEditorialDate, selectEarlierLessons, selectTodayLesson } from '../../src/lib/today';
 
 const entry = (id: string, publishedAt: string): CatalogueEntry => ({
   id, slug: `lesson-${id}`, aliases: [], publishedAt, topic: 'science', subtopic: 'physics',
@@ -35,6 +35,18 @@ describe('Today selection (ADR-0007)', () => {
 
   it('fails closed without published lessons', () => {
     expect(() => selectTodayLesson([])).toThrow(/without published lessons/);
+  });
+
+  it('selects a bounded deterministic Earlier list without Today', () => {
+    const catalogue = [
+      entry('a', '2026-10-01T08:00:00.000Z'),
+      entry('b', '2026-10-02T08:00:00.000Z'),
+      entry('c', '2026-10-02T08:00:00.000Z'),
+      entry('d', '2026-10-03T08:00:00.000Z'),
+      entry('e', '2026-10-04T08:00:00.000Z'),
+    ];
+    expect(selectEarlierLessons(catalogue, 'e', 3).map(({ id }) => id)).toEqual(['d', 'c', 'b']);
+    expect(() => selectEarlierLessons(catalogue, 'e', -1)).toThrow(/non-negative integer/);
   });
 });
 

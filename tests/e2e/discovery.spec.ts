@@ -33,6 +33,19 @@ test.describe('M5 discovery', () => {
     await page.goto('/editions/adult/library');
     await expect(page.getByRole('navigation', { name: 'Library topics' }).getByRole('link')).toHaveCount(6);
 
+    await page.goto('/editions/adult/topics');
+    const topicCards = page.locator('[data-topic][data-lesson-count]');
+    await expect(topicCards).toHaveCount(6);
+    let topicLessonTotal = 0;
+    for (const card of await topicCards.all()) {
+      const lessonCount = Number(await card.getAttribute('data-lesson-count'));
+      expect(lessonCount).toBeGreaterThan(0);
+      topicLessonTotal += lessonCount;
+      await expect(card.locator('.topic-count')).toHaveText(/^\d+ lessons?$/);
+      await expect(card.locator('.topic-subtopics')).not.toBeEmpty();
+    }
+    expect(topicLessonTotal).toBe(expectedIds.length);
+
     await page.getByRole('link', { name: 'Human Mind' }).click();
     await expect(page).toHaveURL('/editions/adult/topics/human-mind');
     await expect(page.getByRole('heading', { level: 1, name: 'Human Mind' })).toBeVisible();

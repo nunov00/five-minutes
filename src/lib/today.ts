@@ -17,6 +17,22 @@ export function selectTodayLesson(catalogue: readonly CatalogueEntry[]): Catalog
   return today;
 }
 
+/** Returns the newest lessons before Today, using the same deterministic ordering. */
+export function selectEarlierLessons(
+  catalogue: readonly CatalogueEntry[],
+  todayId: string,
+  limit = 3,
+): CatalogueEntry[] {
+  if (!Number.isInteger(limit) || limit < 0) throw new Error('Earlier lesson limit must be a non-negative integer.');
+  return catalogue
+    .filter((entry) => entry.id !== todayId)
+    .sort((a, b) => {
+      const newer = Date.parse(b.publishedAt) - Date.parse(a.publishedAt);
+      return newer || (a.id < b.id ? 1 : a.id > b.id ? -1 : 0);
+    })
+    .slice(0, limit);
+}
+
 const editorialDate = new Intl.DateTimeFormat('en-GB', {
   timeZone: EDITORIAL_TIMEZONE,
   day: 'numeric',
