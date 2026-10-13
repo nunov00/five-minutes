@@ -48,7 +48,7 @@ test('native figures, plain activity choices and answer/takeaway reveals work wi
    await activity.getByText('Reveal the explanation',{exact:true}).click();await expect(activity.locator('[data-activity-reveal]')).toHaveAttribute('open','');
   }
   await page.locator('[data-recall-reveal] > summary').click();await expect(page.getByRole('region',{name:'Takeaway',exact:true})).toBeVisible();
-  if(path.includes('seasons')){await page.getByText('Text explanation of this figure',{exact:true}).click();await expect(page.locator('.figure-description p')).toBeVisible();}
+  if(path.includes('seasons')){await page.getByText('Explanation of this figure',{exact:true}).click();await expect(page.locator('.figure-description p')).toBeVisible();}
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
  }
  await context.close();
