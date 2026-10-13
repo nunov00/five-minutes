@@ -5,6 +5,11 @@ takeaway: Maps are tools with trade-offs, not miniature versions of Earth.
 question: What should you ask before using a map to compare two countries?
 answer: Which projection it uses and whether that projection preserves the property—such as area—that you want to compare.
 searchTerms: [why maps are distorted, mercator explained, map projections]
+activity:
+  prompt: "You want to compare the true land areas of Greenland and Africa. Which map is the better tool?"
+  options: ["An equal-area projection", "The Mercator projection", "Any rectangular world map"]
+  answer: 0
+  explanation: "An equal-area projection preserves relative area, so the comparison is meaningful. Mercator preserves local angles and directions instead, making high-latitude places look much larger."
 ---
 Try flattening the peel of an orange without ripping or stretching it. That is the problem behind every flat world map.
 

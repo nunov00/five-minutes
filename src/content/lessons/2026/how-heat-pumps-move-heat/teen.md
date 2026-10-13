@@ -8,6 +8,11 @@ searchTerms:
   - heat pumps explained
   - heat from cold air
   - refrigeration cycle
+activity:
+  prompt: "The refrigerant reaches the outdoor coil colder than the winter air. What happens next?"
+  options: ["Heat flows from the air into the refrigerant", "The refrigerant gives heat to the colder air", "No heat can move when the air feels cold"]
+  answer: 0
+  explanation: "Heat flows from the warmer outdoor air into the even colder refrigerant. The compressor can then raise the refrigerant's temperature enough for it to release that collected heat indoors."
 ---
 On a cold day, an outdoor heat-pump unit can warm a house. That sounds impossible: how can something cold contain useful heat?
 
