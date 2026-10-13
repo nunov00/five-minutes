@@ -71,7 +71,9 @@ The reading experience uses a recall-before-summary ending: after the explanator
 
 Cloudflare is the initial deployment target, not an application dependency.
 
-The initial site is a static deployment artifact: generated lesson HTML, stable application assets and compact discovery data. No lesson-rendering runtime or application database is required initially. Provider-specific build/deployment configuration remains at the boundary so another static host can replace Cloudflare.
+The site remains a static deployment artifact for all publication and discovery content: generated lesson HTML, stable application assets and compact discovery data. No lesson-rendering runtime or application database is required. Provider-specific build/deployment configuration remains at the boundary so another static host can replace Cloudflare.
+
+ADR-0010 adds one narrow exception at that boundary: a Cloudflare Worker handles `/api/feedback/config` and `/api/feedback` for private anonymous reader feedback. The static application owns the small same-origin client contract; the adapter owns Turnstile verification and private GitHub issue creation. It neither reads nor renders lesson content, and every non-feedback route remains a static asset.
 
 ### Installable app / PWA
 
@@ -84,6 +86,10 @@ Installability does not require a service worker on the target platforms, and th
 ### Analytics
 
 Start with privacy-conscious infrastructure-level analytics. Product-event analytics must be justified separately and should avoid requiring accounts or unnecessary personal data.
+
+### Reader feedback
+
+The optional feedback surface collects only a category and bounded message. It has no account, name, email, application database or product-event tracking. The current delivery adapter validates abuse-prevention tokens and writes the message to a separate private repository without forwarding reader IP, browser headers, referrer or history. The Owner and authorised AI workers review feedback on request; there is no scheduled ingestion or automatic product change. See ADR-0010.
 
 ### Publication pipeline
 

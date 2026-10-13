@@ -1,19 +1,22 @@
 # Cloudflare deployment adapter
 
-Cloudflare is the initial host for Five Minutes. It is **not** part of the application architecture (ADR-0004). This directory is the only place for Cloudflare-specific configuration.
+Cloudflare is the initial host for Five Minutes. It is **not** a core application dependency (ADR-0004). This directory is the only place for Cloudflare-specific configuration and runtime adapters.
 
 ## Boundary
 
 ```text
 src/ (Astro, provider-neutral) --npm run build--> dist/ (plain static files)
                                                      |
-                     any static host  <--------------+-------------->  Cloudflare (this adapter)
-                     e.g. npm run preview                              deploy/cloudflare/wrangler.jsonc
+                     any static host  <--------------+-------------->  Cloudflare static assets
+                                                                            |
+                                                /api/feedback only --> Worker adapter
+                                                                       (Turnstile + GitHub)
 ```
 
 - `npm run build` produces ordinary static HTML/assets in `dist/`. Nothing in `src/` imports Cloudflare APIs, and the build does not use a Cloudflare adapter.
-- `wrangler.jsonc` deploys `dist/` as **Workers Static Assets** with no Worker script (`main`), so there is no server-side runtime. It sets `assets.html_handling` to `drop-trailing-slash` so Cloudflare serves Astro's directory-style `index.html` output at the provider-neutral slash-less canonical URL. `preview_urls` is enabled only at this Cloudflare boundary so Worker Preview deployments receive testable `workers.dev` URLs.
-- Replacing Cloudflare means deploying the same `dist/` elsewhere and deleting this directory plus the `cf:*` npm scripts.
+- `wrangler.jsonc` deploys `dist/` as **Workers Static Assets** plus the narrow `worker.ts` adapter. Matching static assets are served without running Worker code; `run_worker_first` is limited to `/api/*`. Requests with no matching asset do invoke the Worker and then delegate to `ASSETS`, as Cloudflare's routing documentation specifies. The adapter implements only ADR-0010 feedback and does not render lessons.
+- `assets.html_handling` remains `drop-trailing-slash`, so Cloudflare serves Astro's directory-style `index.html` output at the provider-neutral slash-less canonical URL. `preview_urls` is enabled only at this Cloudflare boundary so Worker Preview deployments receive testable `workers.dev` URLs.
+- Replacing Cloudflare means deploying the same `dist/` elsewhere and reimplementing the two-path feedback contract, or disabling that optional feature. Lesson/content code does not change.
 
 ## Why Workers Static Assets
 
@@ -88,6 +91,14 @@ Use **Workers Builds** (Cloudflare's GitHub integration) rather than a GitHub Ac
 - Per Cloudflare's docs, only the final deploy step receives secrets, so preview builds also work safely for fork PRs.
 - Cloudflare creates a Worker Preview per branch and posts the Preview URL as a PR comment and a check run.
 
+Cloudflare's current Worker Preview model does **not** inherit production settings. Variables and resource bindings must be declared under `previews`, while Preview secrets must be added separately to Previews Base or an individual Preview. This repository deliberately keeps `previews` empty: feedback configuration is absent, `/api/feedback/config` and `/api/feedback` return `503`, and ordinary static Preview pages still work. A second production-only hostname guard means an unmodified Preview cannot enable feedback merely by receiving the other bindings; because Preview code comes from the branch, that guard does not protect secrets from deliberately modified branch code. The primary control is therefore never placing production secrets in Previews Base or an individual Preview. Never import the production GitHub token, Turnstile secret, site key, repository or allowed hostname into Preview configuration.
+
+Re-verify that isolation after any preview-model or build-command change against:
+
+- https://developers.cloudflare.com/workers/previews/
+- https://developers.cloudflare.com/workers/previews/configuration/
+- https://developers.cloudflare.com/workers/ci-cd/builds/build-branches/
+
 ### One-time Owner setup
 
 Nothing below changes DNS, billing or the existing public Five Minutes site.
@@ -124,7 +135,7 @@ Use this only if Workers Builds is unsuitable. It needs:
 
 ## Cost
 
-On the Workers Free plan, serving static assets costs nothing: asset requests are free and unlimited, and there is no Worker script to bill.
+On the Workers Free plan, matching static-asset requests remain free and unlimited. Feedback API calls and requests with no matching asset execute the Worker and count against the active Workers request allowance; the expected initial volume does not require a paid service. If that allowance is exhausted, matching assets continue to serve while feedback and Worker-handled 404s fail.
 
 - **Current usage:** CI reports the actual assembled build on every change; the repository does not hard-code a stale current count in documentation.
 - **Builds:** Workers Builds has its own per-plan build allowances. Check Cloudflare's Builds limits if publication frequency grows.

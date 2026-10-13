@@ -1,0 +1,41 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Anonymous feedback · Five Minutes" description="Send private, anonymous feedback about Five Minutes.">
+  <article class="feedback-page">
+    <p class="eyebrow">Private reader feedback</p>
+    <h1>Send anonymous feedback</h1>
+    <p class="lede">Report a problem or suggest an improvement. Your message is saved privately for the site owner and authorised AI workers to consider.</p>
+
+    <form class="feedback-form card" data-feedback-form>
+      <label for="feedback-category">What is this about?</label>
+      <select id="feedback-category" name="category" required>
+        <option value="bug">Something is broken</option>
+        <option value="enhancement">An improvement or new idea</option>
+        <option value="content">A lesson or its content</option>
+        <option value="other">Something else</option>
+      </select>
+
+      <label for="feedback-message">Your message</label>
+      <textarea id="feedback-message" name="message" minlength="10" maxlength="2000" rows="8" required aria-describedby="feedback-help"></textarea>
+      <p id="feedback-help" class="form-help">10–2,000 characters. Please do not include personal or confidential information.</p>
+
+      <div class="feedback-honeypot" aria-hidden="true">
+        <label for="feedback-website">Website</label>
+        <input id="feedback-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+      </div>
+
+      <div class="turnstile-slot" data-turnstile-widget aria-label="Abuse-prevention verification"></div>
+      <button class="button" type="submit" data-feedback-submit disabled>Send feedback</button>
+      <p class="feedback-status" data-feedback-status role="status" aria-live="polite">Preparing secure feedback…</p>
+      <noscript><p class="feedback-status" data-kind="error">JavaScript is required to verify and send feedback.</p></noscript>
+    </form>
+
+    <section aria-labelledby="feedback-privacy">
+      <h2 id="feedback-privacy">What is saved</h2>
+      <p>Five Minutes asks only for a category and message. It does not ask for your name or email address, add analytics, or attach your IP address, browser details or reading history to the saved feedback.</p>
+      <p>Cloudflare processes the request and abuse-prevention check. GitHub stores the resulting message as a private issue. Infrastructure providers may process normal connection metadata under their own policies.</p>
+    </section>
+  </article>
+  <script>import '../lib/feedback';</script>
+</BaseLayout>

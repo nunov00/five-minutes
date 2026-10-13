@@ -69,7 +69,7 @@ The application produces standard static output in `dist/`. Hosting-provider con
 
 ## Deployment
 
-Cloudflare is the initial host. Its configuration lives only in `deploy/cloudflare/`. That directory deploys the unchanged `dist/` as Workers Static Assets, with production from `main` (`npm run cf:deploy`) and Worker Previews for pull requests (`npm run cf:preview`) through Cloudflare Workers Builds. See [`deploy/cloudflare/README.md`](deploy/cloudflare/README.md) for the setup, limits and commands. Wrangler is a pinned dev dependency. Any other static host can serve the same `dist/`.
+Cloudflare is the initial host. Its configuration lives only in `deploy/cloudflare/`. That directory deploys the unchanged `dist/` as Workers Static Assets plus ADR-0010's narrow private-feedback adapter, with production from `main` (`npm run cf:deploy`) and Worker Previews for pull requests (`npm run cf:preview`) through Cloudflare Workers Builds. See [`deploy/cloudflare/README.md`](deploy/cloudflare/README.md) for the setup, limits, secrets and commands. Wrangler is a pinned dev dependency. Any other static host can serve the same `dist/`; feedback requires an equivalent two-path adapter.
 
 ## Repository areas
 
