@@ -4,7 +4,8 @@ import SurpriseLinks from '../components/SurpriseLinks.astro';
 import { getBuildMetadata } from '../lib/content/build-content';
 import { buildDiscoveryArtifacts } from '../lib/discovery/artifacts';
 import { EDITION_LABELS } from '../lib/reading';
-import { formatEditorialDate, selectTodayLesson } from '../lib/today';
+import { taxonomyTopic } from '../lib/taxonomy';
+import { formatEditorialDate, selectEarlierLessons, selectTodayLesson } from '../lib/today';
 
 const { lessons, manifest } = await getBuildMetadata();
 const today = selectTodayLesson(manifest.catalogue);
@@ -19,13 +20,16 @@ const editions = [
 const artifacts = buildDiscoveryArtifacts(lessons);
 const fallback = artifacts.catalogue.payload.find((entry) => entry.id !== today.id);
 if (!fallback) throw new Error('Today requires another lesson for Surprise Me.');
+const earlier = selectEarlierLessons(manifest.catalogue, today.id).map((entry) => {
+  const topic = taxonomyTopic(entry.topic);
+  if (!topic) throw new Error(`Earlier lesson ${entry.id} has an unknown topic.`);
+  return { ...entry, topicLabel: topic.label };
+});
 ---
 <BaseLayout title="Today · Five Minutes" editionPaths={{adult:today.adult.path,teen:today.teen.path}} todaySurface>
   <section aria-labelledby="today-heading" data-lesson-id={today.id}>
     <p class="eyebrow"><time datetime={today.publishedAt}>{formatEditorialDate(today.publishedAt)}</time></p>
     <h1 id="today-heading">Today's idea</h1>
-    <p class="lede" data-today-first-visit>One idea in two editions. Choose the one that suits you.</p>
-    <p class="lede" data-today-returning>Your chosen edition for today. Use the edition switch whenever you want the other version.</p>
     {editions.map(({ edition, path, presentation }) => (
       <article class="card" data-today-edition={edition}>
         <p class="eyebrow">{EDITION_LABELS[edition]} edition</p>
@@ -34,6 +38,21 @@ if (!fallback) throw new Error('Today requires another lesson for Surprise Me.')
         <a class="button" data-edition-choice={edition} href={path} aria-label={`Read the ${EDITION_LABELS[edition]} edition: ${presentation.title}`}>Read the {EDITION_LABELS[edition]} edition</a>
       </article>
     ))}
+    <section class="earlier-section" aria-labelledby="earlier-heading">
+      <h2 id="earlier-heading">Earlier</h2>
+      <ol class="earlier-list">
+        {earlier.map((entry) => (
+          <li data-earlier-id={entry.id}>
+            <p class="earlier-meta"><time datetime={entry.publishedAt}>{formatEditorialDate(entry.publishedAt)}</time> · {entry.topicLabel}</p>
+            <div class="earlier-links">
+              <a data-earlier-edition="adult" href={entry.adult.path}><span>Adult</span>{entry.adult.title}</a>
+              <a data-earlier-edition="teen" href={entry.teen.path}><span>Teen</span>{entry.teen.title}</a>
+            </div>
+          </li>
+        ))}
+      </ol>
+      <p class="earlier-all"><a href="/library">See all lessons</a></p>
+    </section>
     <section class="discovery-callout" aria-labelledby="discover-heading">
       <p class="eyebrow">A different direction</p>
       <h2 id="discover-heading">Follow your curiosity</h2>

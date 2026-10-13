@@ -32,7 +32,11 @@ test.describe('Today → lesson → edition switch → Takeaway → Test yoursel
     const expected = routes.filter((route) => route.lessonId === lessonId);
     expect(await adult.getAttribute('href')).toBe(expected.find((route) => route.edition === 'adult')?.path);
     expect(await teen.getAttribute('href')).toBe(expected.find((route) => route.edition === 'teen')?.path);
-    await expect(page.getByRole('main').locator('time')).toHaveText(/^\d{1,2} [A-Z][a-z]+ \d{4}$/);
+    await expect(today.locator(':scope > .eyebrow time')).toHaveText(/^\d{1,2} [A-Z][a-z]+ \d{4}$/);
+    const earlier = page.getByRole('region', { name: 'Earlier' });
+    await expect(earlier.locator('[data-earlier-id]')).toHaveCount(3);
+    await expect(earlier.locator('[data-earlier-edition="adult"]:visible')).toHaveCount(3);
+    await expect(earlier.locator('[data-earlier-edition="teen"]:visible')).toHaveCount(3);
   });
 
   test('Today shows only the deliberately saved edition on later visits', async ({ page }) => {
@@ -47,7 +51,8 @@ test.describe('Today → lesson → edition switch → Takeaway → Test yoursel
     await expect(page.getByRole('link', { name: /^Read the Teen edition/ })).toBeVisible();
     await expect(page.getByRole('link', { name: /^Read the Adult edition/ })).toBeHidden();
     await expect(page.getByRole('navigation', { name: 'Edition' }).getByRole('link', { name: 'Teen' })).toHaveAttribute('aria-current', 'page');
-    await expect(page.locator('[data-today-returning]')).toBeVisible();
+    await expect(page.locator('[data-earlier-edition="teen"]:visible')).toHaveCount(3);
+    await expect(page.locator('[data-earlier-edition="adult"]:visible')).toHaveCount(0);
 
     await page.getByRole('navigation', { name: 'Edition' }).getByRole('link', { name: 'Adult' }).click();
     await expect(page).toHaveURL(/\/adult\//);
