@@ -73,7 +73,7 @@ Cloudflare is the initial deployment target, not an application dependency.
 
 The site remains a static deployment artifact for all publication and discovery content: generated lesson HTML, stable application assets and compact discovery data. No lesson-rendering runtime or application database is required. Provider-specific build/deployment configuration remains at the boundary so another static host can replace Cloudflare.
 
-ADR-0010 adds one narrow exception at that boundary: a Cloudflare Worker handles `/api/feedback/config` and `/api/feedback` for private anonymous reader feedback. The static application owns the small same-origin client contract; the adapter owns Turnstile verification and private GitHub issue creation. It neither reads nor renders lesson content, and every non-feedback route remains a static asset.
+ADR-0010 adds one narrow exception at that boundary: a Cloudflare Worker handles `/api/feedback/config` and `/api/feedback` for private anonymous reader feedback. ADR-0011 adds a public aggregate-analytics API backed by one SQLite Durable Object. The static application owns both small same-origin client contracts; the adapter owns provider integrations and storage. It neither reads nor renders lesson content, and every non-API route remains a static asset.
 
 ### Installable app / PWA
 
@@ -85,7 +85,7 @@ Installability does not require a service worker on the target platforms, and th
 
 ### Analytics
 
-Start with privacy-conscious infrastructure-level analytics. Product-event analytics must be justified separately and should avoid requiring accounts or unnecessary personal data.
+ADR-0011 records the Owner-approved product-event boundary. `/analytics` is public without a login and reports only bounded daily aggregates. The browser creates no visitor identifier; the Worker does not forward IP, user-agent, referrer or history metadata; storage contains no individual event records. Page/lesson views, edition switches, save actions, Surprise Me, related clicks and outbound clicks are directional product signals rather than unique-reader measurements. The provider-specific store remains inside `deploy/cloudflare/`.
 
 ### Reader feedback
 
@@ -147,7 +147,7 @@ The following remain design work rather than accidental commitments:
 
 - search-index sharding threshold;
 - realistic mobile search performance thresholds;
-- analytics product-event requirements;
+- any expansion beyond ADR-0011's aggregate analytics contract;
 - future cross-device state synchronization;
 - final Cloudflare production/custom-domain activation and cutover configuration.
 
