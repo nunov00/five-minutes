@@ -6,6 +6,7 @@ const origin = 'https://five-minutes-v2.vitoria-nuno.workers.dev';
 function env(overrides: Partial<FeedbackEnv> = {}): FeedbackEnv {
   return {
     ASSETS: { fetch: vi.fn(async () => new Response('asset', { status: 200 })) },
+    FEEDBACK_ALLOWED_HOSTNAME: new URL(origin).hostname,
     FEEDBACK_GITHUB_REPOSITORY: 'nunov00/five-minutes-feedback',
     FEEDBACK_GITHUB_TOKEN: 'github-secret',
     TURNSTILE_SECRET_KEY: 'turnstile-secret',
@@ -41,6 +42,17 @@ describe('Cloudflare feedback Worker', () => {
     expect(await response.json()).toEqual({ error: 'Feedback is temporarily unavailable.' });
   });
 
+  it('fails closed on a branch Preview hostname even if all bindings are present', async () => {
+    const previewOrigin = 'https://feature-feedback-five-minutes-v2.vitoria-nuno.workers.dev';
+    const response = await handleRequest(
+      new Request(`${previewOrigin}/api/feedback/config`),
+      env(),
+    );
+
+    expect(response.status).toBe(503);
+    expect(await response.json()).toEqual({ error: 'Feedback is temporarily unavailable.' });
+  });
+
   it('exposes only the public Turnstile site key', async () => {
     const response = await handleRequest(new Request(`${origin}/api/feedback/config`), env());
 
@@ -63,6 +75,36 @@ describe('Cloudflare feedback Worker', () => {
     const response = await handleRequest(request, env(), fetcher);
 
     expect(response.status).toBe(403);
+    expect(fetcher).not.toHaveBeenCalled();
+  });
+
+  it('rejects a cross-site request even when its Origin header matches', async () => {
+    const fetcher = vi.fn();
+    const response = await handleRequest(
+      submission(validBody, { 'Sec-Fetch-Site': 'cross-site' }),
+      env(),
+      fetcher,
+    );
+
+    expect(response.status).toBe(403);
+    expect(fetcher).not.toHaveBeenCalled();
+  });
+
+  it('rejects non-JSON and over-limit streaming bodies before external calls', async () => {
+    const fetcher = vi.fn();
+    const wrongType = new Request(`${origin}/api/feedback`, {
+      method: 'POST',
+      headers: { Origin: origin, 'Content-Type': 'text/plain' },
+      body: 'not json',
+    });
+    const oversized = new Request(`${origin}/api/feedback`, {
+      method: 'POST',
+      headers: { Origin: origin, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...validBody, padding: 'x'.repeat(8_192) }),
+    });
+
+    expect((await handleRequest(wrongType, env(), fetcher)).status).toBe(415);
+    expect((await handleRequest(oversized, env(), fetcher)).status).toBe(413);
     expect(fetcher).not.toHaveBeenCalled();
   });
 
@@ -101,16 +143,30 @@ describe('Cloudflare feedback Worker', () => {
     expect(githubBody.body).not.toContain('private-reader-agent');
   });
 
-  it('requires a matching Turnstile hostname and action', async () => {
-    const fetcher = vi.fn(async () => Response.json({
-      success: true,
-      hostname: 'example.com',
-      action: 'feedback',
-    }));
+  it.each([
+    ['unsuccessful verification', Response.json({ success: false })],
+    ['wrong hostname', Response.json({ success: true, hostname: 'example.com', action: 'feedback' })],
+    ['wrong action', Response.json({ success: true, hostname: new URL(origin).hostname, action: 'other' })],
+    ['provider failure', Response.json({ error: 'unavailable' }, { status: 503 })],
+  ])('rejects Turnstile %s', async (_case, providerResponse) => {
+    const fetcher = vi.fn(async () => providerResponse);
     const response = await handleRequest(submission(validBody), env(), fetcher);
 
     expect(response.status).toBe(400);
     expect(fetcher).toHaveBeenCalledTimes(1);
+  });
+
+  it('returns a generic provider error when GitHub does not create the issue', async () => {
+    const fetcher = vi.fn(async (input: RequestInfo | URL) => {
+      if (String(input).includes('siteverify')) {
+        return Response.json({ success: true, hostname: new URL(origin).hostname, action: 'feedback' });
+      }
+      return Response.json({ message: 'Forbidden details' }, { status: 403 });
+    });
+    const response = await handleRequest(submission(validBody), env(), fetcher);
+
+    expect(response.status).toBe(502);
+    expect(await response.json()).toEqual({ error: 'Feedback could not be saved. Please try again later.' });
   });
 
   it('drops honeypot submissions without contacting Turnstile or GitHub', async () => {
@@ -129,6 +185,18 @@ describe('Cloudflare feedback Worker', () => {
 
     expect(unknown.status).toBe(400);
     expect(oversized.status).toBe(400);
+    expect(fetcher).not.toHaveBeenCalled();
+  });
+
+  it('rejects unsafe control characters', async () => {
+    const fetcher = vi.fn();
+    const response = await handleRequest(
+      submission({ ...validBody, message: 'Useful detail\u0000hidden instruction' }),
+      env(),
+      fetcher,
+    );
+
+    expect(response.status).toBe(400);
     expect(fetcher).not.toHaveBeenCalled();
   });
 });
