@@ -9,14 +9,16 @@ src/ (Astro, provider-neutral) --npm run build--> dist/ (plain static files)
                                                      |
                      any static host  <--------------+-------------->  Cloudflare static assets
                                                                             |
-                                                /api/feedback only --> Worker adapter
+                                                /api/feedback -------> Worker adapter
                                                                        (Turnstile + GitHub)
+                                                /api/analytics ------> Worker adapter
+                                                                       (daily aggregate DO)
 ```
 
 - `npm run build` produces ordinary static HTML/assets in `dist/`. Nothing in `src/` imports Cloudflare APIs, and the build does not use a Cloudflare adapter.
-- `wrangler.jsonc` deploys `dist/` as **Workers Static Assets** plus the narrow `worker.ts` adapter. Matching static assets are served without running Worker code; `run_worker_first` is limited to `/api/*`. Requests with no matching asset do invoke the Worker and then delegate to `ASSETS`, as Cloudflare's routing documentation specifies. The adapter implements only ADR-0010 feedback and does not render lessons.
+- `wrangler.jsonc` deploys `dist/` as **Workers Static Assets** plus the narrow `worker.ts` adapter. Matching static assets are served without running Worker code; `run_worker_first` is limited to `/api/*`. Requests with no matching asset do invoke the Worker and then delegate to `ASSETS`, as Cloudflare's routing documentation specifies. The adapter implements ADR-0010 feedback and ADR-0011 aggregate analytics; it does not render lessons.
 - `assets.html_handling` remains `drop-trailing-slash`, so Cloudflare serves Astro's directory-style `index.html` output at the provider-neutral slash-less canonical URL. `preview_urls` is enabled only at this Cloudflare boundary so Worker Preview deployments receive testable `workers.dev` URLs.
-- Replacing Cloudflare means deploying the same `dist/` elsewhere and reimplementing the two-path feedback contract, or disabling that optional feature. Lesson/content code does not change.
+- Replacing Cloudflare means deploying the same `dist/` elsewhere and reimplementing the small feedback and aggregate-analytics contracts, or disabling either optional feature. Lesson/content code does not change.
 
 ## Why Workers Static Assets
 
