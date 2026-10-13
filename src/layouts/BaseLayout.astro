@@ -54,6 +54,7 @@ const canonical = !neutralDiscovery && !noindex && Astro.site ? new URL(pathname
     </details>
     <p class="container quiet-note no-script-note">Edition links work, but your choice will not be remembered without JavaScript.</p>
     <main id="main" class:list={["site-main", "container", {"reader-wide":wide}]}><slot /></main>
+    <footer class="site-footer"><div class="container"><a href="/feedback">Send anonymous feedback</a></div></footer>
     <script>import '../lib/reader/enhance'; import '../lib/reader/surfaces';</script>
   </body>
 </html>
