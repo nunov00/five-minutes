@@ -57,4 +57,20 @@ test.describe('public aggregate analytics', () => {
     expect(save).toEqual({ event: 'save', edition: 'adult', lessonId: lesson.lessonId });
     expect(JSON.stringify(events)).not.toContain(lesson.path);
   });
+
+  test('replaces every loading placeholder with an accessible failure state', async ({ page }) => {
+    await page.route('**/api/analytics?days=30', (route) => route.fulfill({
+      status: 503,
+      contentType: 'application/json',
+      body: JSON.stringify({ error: 'Analytics is temporarily unavailable.' }),
+    }));
+    await page.goto('/analytics');
+
+    await expect(page.locator('[data-analytics-status]')).toContainText('temporarily unavailable');
+    await expect(page.locator('[data-metric="views"]')).toHaveText('Unavailable');
+    await expect(page.locator('[data-top-lessons] > li')).toHaveText('Analytics totals are temporarily unavailable.');
+    await expect(page.locator('[data-interactions] dd')).toHaveText('Unavailable');
+    await expect(page.locator('[data-daily-series] td')).toHaveText('Analytics totals are temporarily unavailable.');
+    await expect(page.getByText(/Loading (current totals|lessons|activity)/)).toHaveCount(0);
+  });
 });

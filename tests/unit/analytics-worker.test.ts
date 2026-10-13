@@ -2,7 +2,8 @@ import { describe, expect, it, vi } from 'vitest';
 import { handleRequest, type FeedbackEnv } from '../../deploy/cloudflare/worker';
 
 const origin = 'https://five-minutes-v2.vitoria-nuno.workers.dev';
-const lessonId = '018f47a2-5d7b-7c31-9d4f-0d9a8b6c2e10';
+const lessonId = 'c50774ec-4593-4557-b8df-ecc65e504566';
+const unknownLessonId = '018f47a2-5d7b-7c31-9d4f-0d9a8b6c2e10';
 
 function analyticsEnv(fetch: (request: Request) => Promise<Response>, overrides: Partial<FeedbackEnv> = {}): FeedbackEnv {
   return {
@@ -53,6 +54,7 @@ describe('Cloudflare analytics boundary', () => {
     expect((await handleRequest(event({ event: 'page_view', page: 'home' }, { Origin: 'https://example.com' }), binding)).status).toBe(403);
     expect((await handleRequest(event({ event: 'page_view', page: '/private/path' }), binding)).status).toBe(400);
     expect((await handleRequest(event({ event: 'outbound', url: 'https://private.example' }), binding)).status).toBe(400);
+    expect((await handleRequest(event({ event: 'lesson_view', edition: 'adult', lessonId: unknownLessonId }), binding)).status).toBe(400);
     expect((await handleRequest(event({ event: 'page_view', page: 'home', padding: 'x'.repeat(1_100) }), binding)).status).toBe(413);
     expect(fetch).not.toHaveBeenCalled();
   });
