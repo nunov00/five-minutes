@@ -55,6 +55,7 @@ const comparisonFigure = `figure:
     style: doubling-growth
     unit: units
     items:
+      - { label: Start, value: 1, display: "1" }
       - { label: Earlier, value: 2, display: "2" }
       - { label: Later, value: 8, display: "8" }
 `;

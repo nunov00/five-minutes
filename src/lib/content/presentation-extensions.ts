@@ -38,7 +38,7 @@ function validateSteps(value: unknown, path: string, type: 'process-flow'|'cycle
   value.steps.forEach((step,index)=>{
     if(!object(step)) { fail(`figure.data.steps.${index}`,'Expected one structured flow step.'); return; }
     keys(step,['label','detail'],`${path}.figure.data.steps.${index}`,issues);
-    if(!plain(step.label,60)) fail(`figure.data.steps.${index}.label`,'Expected a plain-text label of at most 60 characters.');
+    if(!plain(step.label,36)) fail(`figure.data.steps.${index}.label`,'Expected a concise plain-text label of at most 36 characters.');
     else labels.push(normalise(step.label));
     if(step.detail!==undefined&&!plain(step.detail,120)) fail(`figure.data.steps.${index}.detail`,'Expected plain-text detail of at most 120 characters.');
   });
@@ -70,16 +70,16 @@ export function validatePresentationExtensions(value: Record<string,unknown>, pa
           keys(f.data,['style','items','unit'],`${path}.figure.data`,issues);
           if(f.data.style!=='doubling-growth') fail('figure.data.style','Expected the approved doubling-growth visual style.');
           if(f.data.unit!==undefined&&!plain(f.data.unit,40)) fail('figure.data.unit','Expected a plain-text unit of at most 40 characters.');
-          if(!Array.isArray(f.data.items)||f.data.items.length<2||f.data.items.length>6) fail('figure.data.items','Expected 2–6 comparison items.');
+          if(!Array.isArray(f.data.items)||f.data.items.length!==3) fail('figure.data.items','The doubling-growth visual requires exactly three stages.');
           else {
             const labels:string[]=[];
             f.data.items.forEach((item,index)=>{
               if(!object(item)) { fail(`figure.data.items.${index}`,'Expected one structured comparison item.'); return; }
               keys(item,['label','value','display'],`${path}.figure.data.items.${index}`,issues);
-              if(!plain(item.label,60)) fail(`figure.data.items.${index}.label`,'Expected a plain-text label of at most 60 characters.');
+              if(!plain(item.label,24)) fail(`figure.data.items.${index}.label`,'Expected a concise plain-text label of at most 24 characters.');
               else labels.push(normalise(item.label));
               if(typeof item.value!=='number'||!Number.isFinite(item.value)||item.value<0||item.value>1_000_000_000) fail(`figure.data.items.${index}.value`,'Expected a finite value from 0 to 1,000,000,000.');
-              if(!plain(item.display,40)) fail(`figure.data.items.${index}.display`,'Expected a plain-text display value of at most 40 characters.');
+              if(!plain(item.display,16)) fail(`figure.data.items.${index}.display`,'Expected a plain-text display value of at most 16 characters.');
             });
             if(labels.length===f.data.items.length&&new Set(labels).size!==labels.length) fail('figure.data.items','Comparison labels must be unique.');
             if(f.data.items.every(item=>object(item)&&item.value===0)) fail('figure.data.items','At least one comparison value must be greater than zero.');
