@@ -69,8 +69,10 @@ function validateAutomatedFigure(figure, label) {
     return;
   }
   if (figure.type === 'process-flow' || figure.type === 'cycle-flow') {
-    if (!hasOnlyKeys(figure.data, ['steps']) || !Array.isArray(figure.data.steps) || figure.data.steps.length < 2 || figure.data.steps.length > 6) {
-      fail(`${label} flow figure must contain 2–6 steps.`);
+    const styles = figure.type === 'process-flow' ? ['filter-reclaim'] : ['feedback-loop', 'heat-transfer'];
+    if (!hasOnlyKeys(figure.data, ['style', 'steps']) || !styles.includes(figure.data.style)
+      || !Array.isArray(figure.data.steps) || figure.data.steps.length !== 4) {
+      fail(`${label} flow figure must select an approved style and contain exactly four steps.`);
     }
     const labels = [];
     for (const step of figure.data.steps) {
@@ -82,7 +84,8 @@ function validateAutomatedFigure(figure, label) {
     return;
   }
   if (figure.type === 'comparison-bars') {
-    if (!hasOnlyKeys(figure.data, ['items', 'unit']) || (figure.data.unit !== undefined && !isPlainText(figure.data.unit, 40))
+    if (!hasOnlyKeys(figure.data, ['style', 'items', 'unit']) || figure.data.style !== 'doubling-growth'
+      || (figure.data.unit !== undefined && !isPlainText(figure.data.unit, 40))
       || !Array.isArray(figure.data.items) || figure.data.items.length < 2 || figure.data.items.length > 6) {
       fail(`${label} comparison figure data is outside the automated contract.`);
     }

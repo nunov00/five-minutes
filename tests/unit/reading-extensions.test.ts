@@ -11,9 +11,9 @@ import {loadPublishedLessons} from '../../src/lib/content/loader';
 import routeOwnership from '../../src/content/route-ownership.json';
 import {renderSafeMarkdown} from '../../src/lib/content/safe-content';
 const diagram:LessonFigure={type:'seasons-orbit',data:{tiltDegrees:23.4},alt:'Opposite hemispheres tilt towards the Sun.',caption:'The axis keeps its direction.',description:'In June the north tilts towards the Sun; in December the south does.'};
-const processDiagram:LessonFigure={type:'process-flow',data:{steps:[{label:'Filter',detail:'Small material leaves blood.'},{label:'Reclaim',detail:'Useful material returns.'}]},alt:'Filter then reclaim.',caption:'A two-step path.',description:'Material is filtered and then useful material is reclaimed.'};
-const cycle:LessonFigure={type:'cycle-flow',data:{steps:[{label:'Sense'},{label:'Compare'},{label:'Correct'}]},alt:'Sense, compare and correct in a loop.',caption:'A feedback loop.',description:'The result is sensed again after each correction.'};
-const comparison:LessonFigure={type:'comparison-bars',data:{unit:'units',items:[{label:'Earlier',value:2,display:'2'},{label:'Later',value:8,display:'8'}]},alt:'Later is four times earlier.',caption:'A bounded comparison.',description:'The later value is eight compared with two earlier.'};
+const processDiagram:LessonFigure={type:'process-flow',data:{style:'filter-reclaim',steps:[{label:'Filter',detail:'Small material leaves blood.'},{label:'Reclaim',detail:'Useful material returns.'},{label:'Adjust',detail:'Extra waste enters.'},{label:'Output',detail:'The remainder leaves.'}]},alt:'Filter then reclaim.',caption:'A filter-and-reclaim path.',description:'Material is filtered and then useful material is reclaimed.'};
+const cycle:LessonFigure={type:'cycle-flow',data:{style:'feedback-loop',steps:[{label:'Sense'},{label:'Compare'},{label:'Correct'},{label:'Repeat'}]},alt:'Sense, compare and correct in a loop.',caption:'A feedback loop.',description:'The result is sensed again after each correction.'};
+const comparison:LessonFigure={type:'comparison-bars',data:{style:'doubling-growth',unit:'units',items:[{label:'Earlier',value:2,display:'2'},{label:'Later',value:8,display:'8'}]},alt:'Later is four times earlier.',caption:'A bounded comparison.',description:'The later value is eight compared with two earlier.'};
 const activity={prompt:'Which hemisphere has summer in January?',options:['North','South'],answer:1,explanation:'The south tilts towards the Sun.'};
 function issues(figure:unknown,teenActivity:unknown=undefined){const b=validLesson();return validateLessonBundle({...b,adult:{...b.adult,figure},teen:{...b.teen,...(teenActivity===undefined?{}:{activity:teenActivity})}}).issues;}
 async function assetRoot(){const root=await mkdtemp(join(tmpdir(),'five-minutes-media-'));await mkdir(join(root,'lesson-media'));return root;}
@@ -39,6 +39,9 @@ describe('safe v2 presentation extensions',()=>{
   {...comparison,data:{items:[{label:'A',value:Number.NaN,display:'n/a'},{label:'B',value:2,display:'2'}]}},
   {...comparison,data:{items:[{label:'A',value:1,display:'1',script:'x'},{label:'B',value:2,display:'2'}]}},
   {...comparison,data:{unit:'<svg>',items:[{label:'A',value:1,display:'1'},{label:'B',value:2,display:'2'}]}},
+  {...processDiagram,data:{...processDiagram.data,style:'generic'}},
+  {...cycle,data:{...cycle.data,style:'filter-reclaim'}},
+  {...comparison,data:{...comparison.data,style:'plain-bars'}},
  ])('rejects unsafe reusable diagram data %#',figure=>expect(issues(figure).length).toBeGreaterThan(0));
  it.each([
   {...activity,options:['one']},{...activity,options:['north',' North ']},{...activity,options:['a','b','c','d','e']},{...activity,answer:-1},{...activity,answer:2},{...activity,answer:0.5},

@@ -15,6 +15,7 @@ figure:
   description: Outside, cold refrigerant absorbs heat. The compressor squeezes it so its temperature rises. Indoors, it releases heat. The expansion device then drops its pressure and temperature, ready for another lap.
   afterParagraph: 2
   data:
+    style: heat-transfer
     steps:
       - label: Collect heat outside
         detail: The refrigerant is colder than the outdoor air.

@@ -15,6 +15,7 @@ figure:
   description: The thermostat measures the room temperature and compares it with the chosen target. It turns the heating on or off, which changes the room. Then it measures the new temperature and repeats the cycle.
   afterParagraph: 2
   data:
+    style: feedback-loop
     steps:
       - label: Check the room
         detail: The sensor measures the current temperature.

@@ -12,6 +12,7 @@ figure:
   description: Begin at one. After five doublings the amount is 32, but after ten it is 1,024. Step five is only about three per cent of the final amount because each later jump starts from a bigger number.
   afterParagraph: 1
   data:
+    style: doubling-growth
     unit: units after repeated doubling
     items:
       - label: Start

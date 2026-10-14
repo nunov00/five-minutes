@@ -15,6 +15,7 @@ figure:
   description: The cycle begins with cold, low-pressure refrigerant absorbing outdoor heat. A compressor raises its pressure and temperature. Indoors it releases heat, then an expansion device lowers its pressure and temperature so the cycle can repeat.
   afterParagraph: 2
   data:
+    style: heat-transfer
     steps:
       - label: Absorb outside heat
         detail: Cold, low-pressure refrigerant warms.
