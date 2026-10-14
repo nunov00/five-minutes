@@ -8,6 +8,22 @@ searchTerms:
   - how kidneys work
   - kidney filtration
   - nephron function
+figure:
+  type: process-flow
+  alt: Blood is broadly filtered, useful material is reclaimed and the remaining fluid becomes urine.
+  caption: Kidney precision comes after the first filter, during selective reclamation and adjustment.
+  description: Pressure first moves water and small dissolved substances out of the blood. As this fluid travels through a tubule, needed water, glucose and salts return to the bloodstream and some additional wastes enter the fluid. The remainder becomes urine.
+  afterParagraph: 2
+  data:
+    steps:
+      - label: Filter broadly
+        detail: Water and small dissolved substances leave the blood.
+      - label: Reclaim what is needed
+        detail: Water, glucose and salts return to the bloodstream.
+      - label: Adjust the fluid
+        detail: Additional wastes and excess ions can enter it.
+      - label: Form urine
+        detail: The much smaller remainder leaves the kidney.
 ---
 A kitchen sieve keeps large pieces on one side and lets small ones pass. A kidney begins in a similar way, but the important work comes next: it takes much of the filtered material back.
 

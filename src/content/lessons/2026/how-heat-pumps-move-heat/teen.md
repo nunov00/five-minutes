@@ -8,6 +8,22 @@ searchTerms:
   - heat pumps explained
   - heat from cold air
   - refrigeration cycle
+figure:
+  type: cycle-flow
+  alt: The refrigerant goes around a four-step loop that moves heat from outdoors into the house.
+  caption: The refrigerant keeps circulating; pressure changes make it colder outside and hotter inside.
+  description: Outside, cold refrigerant absorbs heat. The compressor squeezes it so its temperature rises. Indoors, it releases heat. The expansion device then drops its pressure and temperature, ready for another lap.
+  afterParagraph: 2
+  data:
+    steps:
+      - label: Collect heat outside
+        detail: The refrigerant is colder than the outdoor air.
+      - label: Squeeze it
+        detail: The compressor raises its pressure and temperature.
+      - label: Warm the house
+        detail: The hot refrigerant releases heat indoors.
+      - label: Drop the pressure
+        detail: The refrigerant cools for another lap.
 activity:
   prompt: "The refrigerant reaches the outdoor coil colder than the winter air. What happens next?"
   options: ["Heat flows from the air into the refrigerant", "The refrigerant gives heat to the colder air", "No heat can move when the air feels cold"]

@@ -5,6 +5,24 @@ takeaway: Exponential growth feels surprising because equal steps in time create
 question: After five of ten doublings, why are you nowhere near half the final amount?
 answer: Each later doubling acts on a larger base, so the final few steps add far more than all the early steps.
 searchTerms: [exponential growth explained, doubling numbers, compounding]
+figure:
+  type: comparison-bars
+  alt: A quantity that doubles grows from 1 to 32 in five steps and to 1,024 in ten steps.
+  caption: The last five doublings add far more than the first five.
+  description: Begin at one. After five doublings the amount is 32, but after ten it is 1,024. Step five is only about three per cent of the final amount because each later jump starts from a bigger number.
+  afterParagraph: 1
+  data:
+    unit: units after repeated doubling
+    items:
+      - label: Start
+        value: 1
+        display: "1"
+      - label: Step 5
+        value: 32
+        display: "32"
+      - label: Step 10
+        value: 1024
+        display: "1,024"
 activity:
   prompt: "A quantity doubles each step and reaches its final amount after step 10. When was it half that amount?"
   options: ["After step 5", "After step 8", "After step 9"]
