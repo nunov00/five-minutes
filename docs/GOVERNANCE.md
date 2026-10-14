@@ -128,7 +128,7 @@ The Owner authorises the Manager to merge qualifying Pull Requests without a sep
 Before merging, the Manager must verify that:
 - all required automated checks have passed on the exact current PR head; required tests must actually run, not be skipped;
 - any preview/deployment verification required by the change's scope and risk has succeeded for that head;
-- the review required by section 9 for the PR's recorded classification is complete, with no unresolved BLOCKER or IMPORTANT findings; in particular, a `review:integration` activating PR cannot merge before its cumulative different-provider review;
+- the review required by section 9 for the PR's recorded classification is complete, with no unresolved BLOCKER or IMPORTANT findings; in particular, a `review:integration` activating PR cannot merge before its cumulative qualifying independent review under section 9;
 - remaining MINOR findings are explicitly non-blocking and are resolved or recorded as follow-up work;
 - the change stays within the Owner-authorised scope and does not introduce an unapproved product, major architecture, cost, privacy, security or destructive decision.
 
@@ -187,9 +187,9 @@ AI contributors must not silently reinterpret project requirements. When ambigui
 
 AI contributors are encouraged to challenge existing approaches when they identify genuine problems, but architectural or product changes should be proposed before being introduced.
 
-For this rule, independence is defined at the provider/model-family level: OpenAI products (including ChatGPT and Codex) count as one reviewer family; Anthropic products (including Claude and Claude Code) count as another. Different products, models, sessions or sub-agents from the same provider do not qualify as independent from one another.
+For this rule, provider/model-family independence is preferred for high-risk reviews: OpenAI products (including ChatGPT and Codex) count as one family; Anthropic products (including Claude and Claude Code) count as another. Separate products, sessions or sub-agents from the same provider do not establish provider independence. A GitHub Copilot automatic PR review can instead provide an independent *review execution* for eligible mandatory and integration changes under section 9, without claiming a different model provider.
 
-When independent AI review is required by section 9, the Reviewer must use a different AI system from the implementer (for example, Claude reviews Codex work, or Codex reviews Claude work). A separate session, sub-agent or model within the same AI system does not by itself satisfy this requirement. Section 9 defines the permitted exceptions. Its lesson-content exception, and ADR-0007 for automated lesson candidates, may instead use a *separate-pass review* by the same provider; a separate-pass review is not an independent review. Risk classification never exempts AI-generated work from normal project quality requirements.
+When independent AI review is required by section 9, use a different provider/model family or an eligible independent Copilot PR review as specified there. A separate session, sub-agent or model within the implementing system does not by itself satisfy this requirement. Section 9 defines the permitted exceptions. Its lesson-content exception, and ADR-0007 for automated lesson candidates, may instead use a *separate-pass review* by the same provider; a separate-pass review is not an independent review. Risk classification never exempts AI-generated work from normal project quality requirements.
 
 ## 8. Quality Gates
 
@@ -235,13 +235,13 @@ Typical examples are new tests, documentation corrections, mechanical documentat
 
 #### `review:integration`
 
-Related work inside an Owner-approved feature or ADR may be implemented in stages and receive one different-provider review at the integration gate rather than one review per staging PR. An intermediate PR may use `review:routine` only when it is independently production-safe, reversible, crosses no mandatory-review boundary and is inactive in the strict deployment sense: compared with its base, the production build contains no new or changed deployed page, script or data asset; no sitemap, catalogue or search change; and no new reader-data read or write. Source-only scaffolding that the production build does not expose may qualify. A publicly reachable generated page is active even when navigation does not link to it.
+Related work inside an Owner-approved feature or ADR may be implemented in stages and receive one qualifying independent review at the integration gate rather than one review per staging PR. An intermediate PR may use `review:routine` only when it is independently production-safe, reversible, crosses no mandatory-review boundary and is inactive in the strict deployment sense: compared with its base, the production build contains no new or changed deployed page, script or data asset; no sitemap, catalogue or search change; and no new reader-data read or write. Source-only scaffolding that the production build does not expose may qualify. A publicly reachable generated page is active even when navigation does not link to it.
 
-A PR that activates material user-facing behaviour is the integration gate and must not merge until its different-provider review is complete. The integration Reviewer evaluates the cumulative feature range and resulting system, not merely the final small diff. This classification is useful for approved feature work whose genuinely inactive scaffolding would otherwise create repetitive review ceremony.
+A PR that activates material user-facing behaviour is the integration gate and must not merge until its qualifying independent review is complete. The integration Reviewer evaluates the cumulative feature range and resulting system, not merely the final small diff. This classification is useful for approved feature work whose genuinely inactive scaffolding would otherwise create repetitive review ceremony.
 
 #### `review:mandatory`
 
-A different-provider review is required before merge for:
+A qualifying independent review is required before merge for:
 
 - governance changes and new or materially amended architecture/ADRs;
 - security, privacy, authentication, authorisation or executable-content boundaries;
@@ -254,11 +254,15 @@ A different-provider review is required before merge for:
 
 Classification is based on the highest-risk part of the change. Splitting a high-risk change into small PRs does not turn it into routine work. When uncertain, elevate the classification or ask the Owner to resolve the boundary.
 
-### Different-AI review and exceptions
+### Independent AI review and exceptions
 
-When `review:integration` or `review:mandatory` requires independent AI review, use a different provider/model family from the implementer. The purpose is a genuinely different perspective, not another pass by the same system. Same-system verification may supplement the review but cannot silently replace it.
+For `review:integration` and `review:mandatory`, prefer a different provider/model family from the implementer. For ordinary mandatory changes and integration gates, GitHub Copilot's automatic PR review may instead count as an independent review *execution* when it did not author the change, reviews the actual diff and relevant context, reports actionable findings or an explicit no-findings outcome, and reviews the final head (or the Manager verifies narrowly scoped MINOR-only remediation under the rule below). Its model provider may overlap with the implementer's; never claim provider independence merely because the review is delivered by Copilot. Copilot's `COMMENTED` review is evidence of a review, not GitHub approval.
 
-Exceptions are allowed only when a different AI system genuinely cannot perform the required review, the Owner explicitly requests an alternative, or the lesson-content exception below applies. Record the implementer and reviewer systems, the reason and any applicable Owner instruction on the PR. Needing an Owner-relayed prompt or lacking direct reviewer tooling does not by itself make review impossible; prepare one self-contained hand-off and keep the gate pending.
+**High-risk exception to Copilot eligibility:** changes to governance or reviewer eligibility, security/privacy/authentication/authorisation, secrets, CI/required-check protections or permissions, executable-content trust boundaries, or changes to publication safeguards still require a different-provider review or explicit Owner approval of the exact change after the review evidence is presented. A Copilot review alone cannot authorise changes to the rules that govern Copilot's own eligibility. The Owner approved this eligibility policy direction on 2026-10-14; the implementing PR still requires review and its exact changes to be reported before merge.
+
+For an eligible Copilot review, the Manager must independently check the review's applicability to the current head, resolve or explicitly disposition every finding, verify the required checks and record the review evidence on the PR before merging. A missing, pending, inconclusive or stale Copilot review does not count as independent review for these changes; use a different provider or hold the merge. This rule does not modify the separate scheduled reviewer and fail-closed publication checks for automated lesson candidates under ADR-0007.
+
+Exceptions to the independent-review requirement are allowed only when another AI reviewer genuinely cannot perform the required review, the Owner explicitly requests an alternative, or the lesson-content exception below applies. Record the implementer, reviewer, rationale and any applicable Owner instruction on the PR. Needing an Owner-relayed prompt does not by itself make review impossible.
 
 The independent Reviewer evaluates the relevant exact head or cumulative integration range, records actionable findings on the PR and distinguishes their own checks from implementer evidence.
 
@@ -266,7 +270,7 @@ The independent Reviewer evaluates the relevant exact head or cumulative integra
 
 Pull Requests that change only lesson content — new lessons, lesson batches and corrections to published lessons under `src/content/lessons/`, plus their required route-ownership entries — may receive a separate-pass review by the same provider as the implementer instead of an independent review. The separate-pass review must be a separate pass from the authoring work, preferably in a fresh session, must re-check the material claims against their sources and complete the `docs/EDITORIAL.md` review for both editions, and is recorded on the Pull Request like any other review. Record on the PR that this exception was used.
 
-This exception covers lesson content only. Any code, schema, validation, taxonomy, tooling, CI, documentation or governance change in the same Pull Request still requires different-provider review, so keep lesson content in its own Pull Request. ADR-0007 automated lesson candidates are governed by ADR-0007, which likewise permits a same-provider separate-pass review in a separate reviewer run, and are never merged through the section 4 standing merge authorisation.
+This exception covers lesson content only. Any code, schema, validation, taxonomy, tooling, CI, documentation or governance change in the same Pull Request still requires qualifying independent review under the rules above, so keep lesson content in its own Pull Request. ADR-0007 automated lesson candidates are governed by ADR-0007, which likewise permits a same-provider separate-pass review in a separate reviewer run, and are never merged through the section 4 standing merge authorisation.
 
 ### Review remediation
 
@@ -280,7 +284,7 @@ The Manager may verify and merge a narrow MINOR-only remediation without returni
 
 ### Periodic integration audit
 
-At each milestone integration gate, list every `review:routine` PR merged since the previous milestone. The different-provider Reviewer examines the combined system and closely samples at least two of those PRs, or all of them when fewer than two exist. Record the list, sampled PRs and any findings on the integration PR or milestone issue. This checks classification drift and accumulated interactions without replaying every already-green routine review. Any actual defect or misclassification discovered is handled normally and may block milestone closure.
+At each milestone integration gate, list every `review:routine` PR merged since the previous milestone. The independent Reviewer examines the combined system and closely samples at least two of those PRs, or all of them when fewer than two exist. Record the list, sampled PRs and any findings on the integration PR or milestone issue. This checks classification drift and accumulated interactions without replaying every already-green routine review. Any actual defect or misclassification discovered is handled normally and may block milestone closure.
 
 ### Review communication and record
 
