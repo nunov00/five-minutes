@@ -11,6 +11,9 @@ import {loadPublishedLessons} from '../../src/lib/content/loader';
 import routeOwnership from '../../src/content/route-ownership.json';
 import {renderSafeMarkdown} from '../../src/lib/content/safe-content';
 const diagram:LessonFigure={type:'seasons-orbit',data:{tiltDegrees:23.4},alt:'Opposite hemispheres tilt towards the Sun.',caption:'The axis keeps its direction.',description:'In June the north tilts towards the Sun; in December the south does.'};
+const processDiagram:LessonFigure={type:'process-flow',data:{steps:[{label:'Filter',detail:'Small material leaves blood.'},{label:'Reclaim',detail:'Useful material returns.'}]},alt:'Filter then reclaim.',caption:'A two-step path.',description:'Material is filtered and then useful material is reclaimed.'};
+const cycle:LessonFigure={type:'cycle-flow',data:{steps:[{label:'Sense'},{label:'Compare'},{label:'Correct'}]},alt:'Sense, compare and correct in a loop.',caption:'A feedback loop.',description:'The result is sensed again after each correction.'};
+const comparison:LessonFigure={type:'comparison-bars',data:{unit:'units',items:[{label:'Earlier',value:2,display:'2'},{label:'Later',value:8,display:'8'}]},alt:'Later is four times earlier.',caption:'A bounded comparison.',description:'The later value is eight compared with two earlier.'};
 const activity={prompt:'Which hemisphere has summer in January?',options:['North','South'],answer:1,explanation:'The south tilts towards the Sun.'};
 function issues(figure:unknown,teenActivity:unknown=undefined){const b=validLesson();return validateLessonBundle({...b,adult:{...b.adult,figure},teen:{...b.teen,...(teenActivity===undefined?{}:{activity:teenActivity})}}).issues;}
 async function assetRoot(){const root=await mkdtemp(join(tmpdir(),'five-minutes-media-'));await mkdir(join(root,'lesson-media'));return root;}
@@ -18,6 +21,7 @@ const image:LessonFigure={type:'image',src:'/lesson-media/test.png',width:192,he
 describe('safe v2 presentation extensions',()=>{
  it('allows optional per-edition diagrams and a Teen-only activity',()=>{
   expect(issues(diagram,activity)).toEqual([]);
+  for(const figure of [processDiagram,cycle,comparison]) expect(issues(figure)).toEqual([]);
   const b=validLesson();expect(validateLessonBundle({...b,adult:{...b.adult,activity}}).issues).toContainEqual(expect.objectContaining({path:'adult.activity'}));
  });
  it.each([
@@ -26,6 +30,16 @@ describe('safe v2 presentation extensions',()=>{
   {...image,src:'https://example.test/x.png'},{...image,src:'/lesson-media/../x.png'}, {...image,src:'/lesson-media/x.svg'}, {...image,src:'/lesson-media/%2e%2e.png'},
   {...image,width:2401},{...image,width:2200,height:2200},
  ])('rejects hostile or invalid figure data %#',figure=>expect(issues(figure).length).toBeGreaterThan(0));
+ it.each([
+  {...processDiagram,data:{steps:[{label:'Only one'}]}},
+  {...processDiagram,data:{steps:[{label:'Same'},{label:' same '}]}} ,
+  {...processDiagram,data:{steps:[{label:'Safe',html:'<b>x</b>'},{label:'Other'}]}},
+  {...cycle,data:{steps:[{label:'One'},{label:'Two',detail:'[remote](https://example.test)'}]}},
+  {...comparison,data:{items:[{label:'A',value:0,display:'0'},{label:'B',value:0,display:'0'}]}},
+  {...comparison,data:{items:[{label:'A',value:Number.NaN,display:'n/a'},{label:'B',value:2,display:'2'}]}},
+  {...comparison,data:{items:[{label:'A',value:1,display:'1',script:'x'},{label:'B',value:2,display:'2'}]}},
+  {...comparison,data:{unit:'<svg>',items:[{label:'A',value:1,display:'1'},{label:'B',value:2,display:'2'}]}},
+ ])('rejects unsafe reusable diagram data %#',figure=>expect(issues(figure).length).toBeGreaterThan(0));
  it.each([
   {...activity,options:['one']},{...activity,options:['north',' North ']},{...activity,options:['a','b','c','d','e']},{...activity,answer:-1},{...activity,answer:2},{...activity,answer:0.5},
   {...activity,prompt:'<script>x</script>'},{...activity,explanation:'`execute`'},{...activity,options:['a','b'.repeat(81)]},{...activity,score:true},

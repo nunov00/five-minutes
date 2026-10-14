@@ -8,6 +8,22 @@ searchTerms:
   - feedback loop explained
   - how thermostats work
   - control systems
+figure:
+  type: cycle-flow
+  alt: A thermostat keeps measuring the room, comparing it with the target, acting and checking again.
+  caption: Feedback turns one correction into a repeating check-and-adjust loop.
+  description: The thermostat measures the room temperature and compares it with the chosen target. It turns the heating on or off, which changes the room. Then it measures the new temperature and repeats the cycle.
+  afterParagraph: 2
+  data:
+    steps:
+      - label: Check the room
+        detail: The sensor measures the current temperature.
+      - label: Compare with the target
+        detail: The thermostat finds the temperature gap.
+      - label: Act
+        detail: It calls for heat or stops heating.
+      - label: Check again
+        detail: The new temperature becomes the next measurement.
 ---
 Suppose a heater tried to warm a room by running for exactly twenty minutes. That might work once. On a colder day, or with a window open, the room would end up at a different temperature.
 

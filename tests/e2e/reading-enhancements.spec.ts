@@ -40,7 +40,7 @@ test('activities reset on reload, Back and the restoration handler without stori
 
 test('native figures, plain activity choices and answer/takeaway reveals work without JavaScript',async({browser})=>{
  const context=await browser.newContext({javaScriptEnabled:false,viewport:{width:320,height:568}});const page=await context.newPage();
- for(const path of ['/adult/why-earth-has-seasons',seasons,'/teen/goodharts-law']){
+ for(const path of ['/adult/why-earth-has-seasons',seasons,'/teen/goodharts-law','/teen/how-heat-pumps-move-heat','/teen/how-kidneys-filter-blood','/teen/why-exponential-growth-feels-sudden']){
   await page.goto('http://127.0.0.1:4321'+path);
   const activity=page.locator('[data-activity]');
   if(await activity.count()){
@@ -48,10 +48,25 @@ test('native figures, plain activity choices and answer/takeaway reveals work wi
    await activity.getByText('Reveal the explanation',{exact:true}).click();await expect(activity.locator('[data-activity-reveal]')).toHaveAttribute('open','');
   }
   await page.locator('[data-recall-reveal] > summary').click();await expect(page.getByRole('region',{name:'Takeaway',exact:true})).toBeVisible();
-  if(path.includes('seasons')){await page.getByText('Explanation of this figure',{exact:true}).click();await expect(page.locator('.figure-description p')).toBeVisible();}
+  if(await page.locator('.lesson-figure').count()){await page.getByText('Explanation of this figure',{exact:true}).click();await expect(page.locator('.figure-description p')).toBeVisible();}
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
  }
  await context.close();
+});
+
+test('reusable structured diagrams are accessible, bounded and responsive',async({page})=>{
+ const examples=[
+  ['/teen/how-heat-pumps-move-heat','cycle-flow',4,/four-step loop/],
+  ['/teen/how-kidneys-filter-blood','process-flow',4,/rough draft of fluid/],
+  ['/teen/why-exponential-growth-feels-sudden','comparison-bars',3,/grows from 1 to 32/],
+ ] as const;
+ for(const width of [320,393,1440])for(const [path,type,count,label] of examples){
+  await page.setViewportSize({width,height:width<1000?700:900});await page.goto(path);
+  const figure=page.locator(`.lesson-figure[data-figure-type="${type}"]`);await expect(figure).toHaveCount(1);
+  await expect(figure.locator('[role="img"]')).toHaveAttribute('aria-label',label);
+  await expect(figure.locator(type==='comparison-bars'?'li':'.flow-step')).toHaveCount(count);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+ }
 });
 
 test('figure follows the opening on phones and sits alongside desktop prose in both themes',async({page})=>{
