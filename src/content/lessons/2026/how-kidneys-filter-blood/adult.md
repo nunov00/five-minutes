@@ -15,6 +15,7 @@ figure:
   description: Pressure first moves water and small dissolved substances out of the blood. As this fluid travels through a tubule, needed water, glucose and salts return to the bloodstream and some additional wastes enter the fluid. The remainder becomes urine.
   afterParagraph: 2
   data:
+    style: filter-reclaim
     steps:
       - label: Filter broadly
         detail: Water and small dissolved substances leave the blood.

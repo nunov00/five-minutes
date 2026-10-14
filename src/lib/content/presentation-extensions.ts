@@ -11,9 +11,9 @@ export interface FlowStep { label: string; detail?: string; }
 export interface ComparisonItem { label: string; value: number; display: string; }
 export type LessonFigure = FigureText & (
   | { type: 'seasons-orbit'; data: { tiltDegrees: 23.4 | 23.5 } }
-  | { type: 'process-flow'; data: { steps: FlowStep[] } }
-  | { type: 'cycle-flow'; data: { steps: FlowStep[] } }
-  | { type: 'comparison-bars'; data: { items: ComparisonItem[]; unit?: string } }
+  | { type: 'process-flow'; data: { style: 'filter-reclaim'; steps: FlowStep[] } }
+  | { type: 'cycle-flow'; data: { style: 'feedback-loop' | 'heat-transfer'; steps: FlowStep[] } }
+  | { type: 'comparison-bars'; data: { style: 'doubling-growth'; items: ComparisonItem[]; unit?: string } }
   | { type: 'image'; src: string; width: number; height: number }
 );
 export interface TeenActivity { prompt: string; options: string[]; answer: number; explanation: string; }
@@ -26,17 +26,19 @@ const normalise = (v: string) => v.trim().toLocaleLowerCase('en').replace(/\s+/g
 function keys(v: Record<string,unknown>, allowed: string[], path: string, issues: ValidationIssue[]) {
   for(const key of Object.keys(v)) if(!allowed.includes(key)) issues.push({path:`${path}.${key}`,code:'unknown-field',message:'Unknown structured presentation field.'});
 }
-function validateSteps(value: unknown, path: string, issues: ValidationIssue[], fail: (name:string,message:string)=>void) {
+function validateSteps(value: unknown, path: string, type: 'process-flow'|'cycle-flow', issues: ValidationIssue[], fail: (name:string,message:string)=>void) {
   if(!object(value)) { fail('figure.data','Expected structured flow data.'); return; }
-  keys(value,['steps'],`${path}.figure.data`,issues);
-  if(!Array.isArray(value.steps)||value.steps.length<2||value.steps.length>6) {
-    fail('figure.data.steps','Expected 2–6 flow steps.'); return;
+  keys(value,['style','steps'],`${path}.figure.data`,issues);
+  const styles=type==='process-flow'?['filter-reclaim']:['feedback-loop','heat-transfer'];
+  if(!styles.includes(String(value.style))) fail('figure.data.style',`Expected one approved ${type} visual style.`);
+  if(!Array.isArray(value.steps)||value.steps.length!==4) {
+    fail('figure.data.steps','Approved flow visuals require exactly four concise steps.'); return;
   }
   const labels:string[]=[];
   value.steps.forEach((step,index)=>{
     if(!object(step)) { fail(`figure.data.steps.${index}`,'Expected one structured flow step.'); return; }
     keys(step,['label','detail'],`${path}.figure.data.steps.${index}`,issues);
-    if(!plain(step.label,60)) fail(`figure.data.steps.${index}.label`,'Expected a plain-text label of at most 60 characters.');
+    if(!plain(step.label,36)) fail(`figure.data.steps.${index}.label`,'Expected a concise plain-text label of at most 36 characters.');
     else labels.push(normalise(step.label));
     if(step.detail!==undefined&&!plain(step.detail,120)) fail(`figure.data.steps.${index}.detail`,'Expected plain-text detail of at most 120 characters.');
   });
@@ -61,22 +63,23 @@ export function validatePresentationExtensions(value: Record<string,unknown>, pa
           if(f.data.tiltDegrees!==23.4 && f.data.tiltDegrees!==23.5) fail('figure.data.tiltDegrees','Earth diagram tilt must be 23.4 or 23.5 degrees.');
         }
       } else if(f.type==='process-flow'||f.type==='cycle-flow') {
-        validateSteps(f.data,path,issues,fail);
+        validateSteps(f.data,path,f.type,issues,fail);
       } else if(f.type==='comparison-bars') {
         if(!object(f.data)) fail('figure.data','Expected structured comparison data.');
         else {
-          keys(f.data,['items','unit'],`${path}.figure.data`,issues);
+          keys(f.data,['style','items','unit'],`${path}.figure.data`,issues);
+          if(f.data.style!=='doubling-growth') fail('figure.data.style','Expected the approved doubling-growth visual style.');
           if(f.data.unit!==undefined&&!plain(f.data.unit,40)) fail('figure.data.unit','Expected a plain-text unit of at most 40 characters.');
-          if(!Array.isArray(f.data.items)||f.data.items.length<2||f.data.items.length>6) fail('figure.data.items','Expected 2–6 comparison items.');
+          if(!Array.isArray(f.data.items)||f.data.items.length!==3) fail('figure.data.items','The doubling-growth visual requires exactly three stages.');
           else {
             const labels:string[]=[];
             f.data.items.forEach((item,index)=>{
               if(!object(item)) { fail(`figure.data.items.${index}`,'Expected one structured comparison item.'); return; }
               keys(item,['label','value','display'],`${path}.figure.data.items.${index}`,issues);
-              if(!plain(item.label,60)) fail(`figure.data.items.${index}.label`,'Expected a plain-text label of at most 60 characters.');
+              if(!plain(item.label,24)) fail(`figure.data.items.${index}.label`,'Expected a concise plain-text label of at most 24 characters.');
               else labels.push(normalise(item.label));
               if(typeof item.value!=='number'||!Number.isFinite(item.value)||item.value<0||item.value>1_000_000_000) fail(`figure.data.items.${index}.value`,'Expected a finite value from 0 to 1,000,000,000.');
-              if(!plain(item.display,40)) fail(`figure.data.items.${index}.display`,'Expected a plain-text display value of at most 40 characters.');
+              if(!plain(item.display,16)) fail(`figure.data.items.${index}.display`,'Expected a plain-text display value of at most 16 characters.');
             });
             if(labels.length===f.data.items.length&&new Set(labels).size!==labels.length) fail('figure.data.items','Comparison labels must be unique.');
             if(f.data.items.every(item=>object(item)&&item.value===0)) fail('figure.data.items','At least one comparison value must be greater than zero.');
