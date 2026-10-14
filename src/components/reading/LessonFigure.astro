@@ -43,7 +43,7 @@ const barMaximum=Math.max(1,...bars.map(item=>item.value));
  </div> : <div class="structured-figure comparison-bars" role="img" aria-label={figure.alt} aria-describedby={`${id}-description`}>
   <ul aria-hidden="true">
    {bars.map(item=><li>
-    <span class="bar-label">{item.label}</span><span class="bar-track"><span class="bar-fill" style={`--bar-size:${(item.value/barMaximum)*100}%`}></span></span><strong>{item.display}</strong>
+    <span class="bar-label">{item.label}</span><span class="bar-track"><span class:list={["bar-fill",{"is-positive":item.value>0}]} style={`--bar-size:${(item.value/barMaximum)*100}%`}></span></span><strong>{item.display}</strong>
    </li>)}
   </ul>
   {figure.data.unit&&<p class="diagram-key" aria-hidden="true">Unit: {figure.data.unit}</p>}
