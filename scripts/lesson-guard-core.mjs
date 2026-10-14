@@ -76,7 +76,7 @@ function validateAutomatedFigure(figure, label) {
     }
     const labels = [];
     for (const step of figure.data.steps) {
-      if (!isPlainObject(step) || !hasOnlyKeys(step, ['label', 'detail']) || !isPlainText(step.label, 60)
+      if (!isPlainObject(step) || !hasOnlyKeys(step, ['label', 'detail']) || !isPlainText(step.label, 36)
         || (step.detail !== undefined && !isPlainText(step.detail, 120))) fail(`${label} flow step is outside the automated contract.`);
       labels.push(normalise(step.label));
     }
@@ -86,15 +86,15 @@ function validateAutomatedFigure(figure, label) {
   if (figure.type === 'comparison-bars') {
     if (!hasOnlyKeys(figure.data, ['style', 'items', 'unit']) || figure.data.style !== 'doubling-growth'
       || (figure.data.unit !== undefined && !isPlainText(figure.data.unit, 40))
-      || !Array.isArray(figure.data.items) || figure.data.items.length < 2 || figure.data.items.length > 6) {
+      || !Array.isArray(figure.data.items) || figure.data.items.length !== 3) {
       fail(`${label} comparison figure data is outside the automated contract.`);
     }
     const labels = [];
     let positive = false;
     for (const item of figure.data.items) {
-      if (!isPlainObject(item) || !hasOnlyKeys(item, ['label', 'value', 'display']) || !isPlainText(item.label, 60)
+      if (!isPlainObject(item) || !hasOnlyKeys(item, ['label', 'value', 'display']) || !isPlainText(item.label, 24)
         || typeof item.value !== 'number' || !Number.isFinite(item.value) || item.value < 0 || item.value > 1_000_000_000
-        || !isPlainText(item.display, 40)) fail(`${label} comparison item is outside the automated contract.`);
+        || !isPlainText(item.display, 16)) fail(`${label} comparison item is outside the automated contract.`);
       labels.push(normalise(item.label));
       positive ||= item.value > 0;
     }
