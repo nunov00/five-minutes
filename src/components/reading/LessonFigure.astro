@@ -41,7 +41,7 @@ const cycleCentre=visualStyle==='heat-transfer'?'Heat moves':visualStyle==='feed
      <marker id={`${id}-waste-arrow`} viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="10" markerHeight="10" orient="auto"><path d="M0 0l10 5-10 5z" /></marker>
     </defs>
     <text data-visual-label x="18" y="19">BLOOD FILTER</text><text data-visual-label x="252" y="19">TUBULE</text>
-    <text data-visual-label x="18" y="237">BLOODSTREAM</text><text data-visual-label x="298" y="237">URINE</text>
+    <text data-visual-label x="18" y="237">BLOODSTREAM</text><text data-visual-label x="300" y="244">URINE</text>
     <path class="nephron-capsule" d="M39 77c0-36 29-55 64-55 38 0 67 24 67 59 0 31-23 53-54 59" />
     <path class="nephron-glomerulus" d="M18 73c26-7 29-35 61-31 31 4 48 28 35 48-11 18-42 15-42-6 0-15 21-21 31-10" />
     <path class="nephron-tubule" marker-end={`url(#${id}-flow-arrow)`} d="M116 140c46 2 51-35 93-35 37 0 54 27 40 50-17 28-72 8-80 40-7 26 42 27 83 22 31-4 51 1 73 0" />
@@ -49,10 +49,11 @@ const cycleCentre=visualStyle==='heat-transfer'?'Heat moves':visualStyle==='feed
     <path class="return-path return-path-one" marker-end={`url(#${id}-return-arrow)`} d="M207 124c-9 30-23 48-48 72" />
     <path class="return-path return-path-two" marker-end={`url(#${id}-return-arrow)`} d="M226 173c2 17-5 28-18 38" />
     <path class="waste-path" marker-end={`url(#${id}-waste-arrow)`} d="M271 194c-12-12-20-23-23-36" />
-    <g class="figure-stage figure-stage-1"><circle cx="58" cy="111" r="15"/><text x="58" y="116">1</text></g>
-    <g class="figure-stage figure-stage-2"><circle cx="180" cy="151" r="15"/><text x="180" y="156">2</text></g>
-    <g class="figure-stage figure-stage-3"><circle cx="274" cy="169" r="15"/><text x="274" y="174">3</text></g>
-    <g class="figure-stage figure-stage-4"><circle cx="326" cy="217" r="15"/><text x="326" y="222">4</text></g>
+    <g data-visual-label class="figure-stage figure-stage-1"><circle cx="58" cy="111" r="15"/><text x="58" y="116">1</text></g>
+    <g data-visual-label class="figure-stage figure-stage-2"><circle cx="180" cy="151" r="15"/><text x="180" y="156">2</text></g>
+    <g data-visual-label class="figure-stage figure-stage-3"><circle cx="274" cy="169" r="15"/><text x="274" y="174">3</text></g>
+    <path class="stage-leader" d="M326 200v12" />
+    <g data-visual-label class="figure-stage figure-stage-4"><circle cx="326" cy="184" r="15"/><text x="326" y="189">4</text></g>
    </svg>
   </div>
   <ol class="filter-legend" aria-hidden="true">
