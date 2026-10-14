@@ -2,7 +2,7 @@
 
 Status: Accepted
 Date: 2026-10-02
-Amended: 2026-10-04; 2026-10-09 (same-provider review permitted); 2026-10-12 (activation configuration wording); 2026-10-14 (figure/activity assessment and safe structured figures)
+Amended: 2026-10-04; 2026-10-09 (same-provider review permitted); 2026-10-12 (activation configuration wording); 2026-10-14 (figure/activity assessment and safe structured figures); 2026-10-14 (optional Copilot review evidence)
 Owner approval: approved 2026-10-02; subscription-based automated publication direction approved 2026-10-04; same-provider review permitted 2026-10-09; conditional figures and Teen activities approved 2026-10-14.
 
 ## Context
@@ -79,11 +79,12 @@ For each eligible automated candidate it:
 1. checks the off switch;
 2. waits until the latest completed run of each named required check reports exactly `success` on the current head; `skipped`, `neutral`, `cancelled`, absent, pending or stale results are not success;
 3. records the head SHA and verifies the lesson-only diff, that a comparison from current `main` to that head has current `main` as its merge base with zero commits behind, daily slot and freshness rules, and that no other automated lesson or correction PR is open; an eligible candidate whose ancestry is no longer current or whose intended date has passed is closed;
-4. independently fetches and judges the sources and performs the complete EDITORIAL.md review for Adult and Teen, originality, the recorded figure decisions and the Teen activity decision, including any activity present;
-5. posts the review naming the exact SHA;
-6. if Ready, within that **same routine run**, re-fetches the head, repeats the current-`main` merge-base/zero-behind check, re-checks the latest named results, and merges with `expectedHeadSha`;
-7. if BLOCKER or IMPORTANT findings exist, records the outcome and closes the PR;
-8. on infrastructure, network, source-access, scheduling or subscription-limit failure, publishes nothing.
+4. checks any available automatic GitHub Copilot review on the exact head, independently verifies substantive findings, and documents dispositions; confirmed unresolved BLOCKER/IMPORTANT findings prevent Ready, but absent/pending Copilot review is recorded rather than becoming a new gate. Copilot does not replace the separate editorial review;
+5. independently fetches and judges the sources and performs the complete EDITORIAL.md review for Adult and Teen, originality, the recorded figure decisions and the Teen activity decision, including any activity present;
+6. posts the review naming the exact SHA and the Copilot review availability/finding dispositions;
+7. if Ready, within that **same routine run**, re-fetches the head, repeats the current-`main` merge-base/zero-behind check, re-checks the latest named results, and merges with `expectedHeadSha`;
+8. if BLOCKER or IMPORTANT findings exist, records the outcome and closes the PR;
+9. on infrastructure, network, source-access, scheduling or subscription-limit failure, publishes nothing.
 
 The initial named checks are `baseline`, `e2e` and, after M7.2, `lesson-guard`. They must all be successful on the exact head before review begins and again before merge.
 
