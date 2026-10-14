@@ -8,7 +8,6 @@ const axes=(cx:number)=>({northX:cx+56*Math.sin(angle),southX:cx-56*Math.sin(ang
 const panels=[{key:'june',month:'June',earth:78,sun:242,hemisphere:'North'},{key:'december',month:'December',earth:222,sun:58,hemisphere:'South'}];
 const flow=figure.type==='process-flow'||figure.type==='cycle-flow'?figure.data.steps:[];
 const bars=figure.type==='comparison-bars'?figure.data.items:[];
-const barMaximum=Math.max(1,...bars.map(item=>item.value));
 const visualStyle=figure.type==='process-flow'||figure.type==='cycle-flow'||figure.type==='comparison-bars'?figure.data.style:'';
 const cycleCentre=visualStyle==='heat-transfer'?'Heat moves':visualStyle==='feedback-loop'?'Check · adjust':'';
 ---
@@ -67,7 +66,7 @@ const cycleCentre=visualStyle==='heat-transfer'?'Heat moves':visualStyle==='feed
   </div>
  </div> : <div class:list={["structured-figure","comparison-bars",`visual-${visualStyle}`]} role="img" aria-label={figure.alt} aria-describedby={`${id}-description`}>
   <ol class="growth-map" aria-hidden="true">
-   {bars.map((item,index)=><li style={`--growth-stage:${index};--growth-share:${(item.value/barMaximum)*100}%`}>
+   {bars.map((item,index)=><li style={`--growth-stage:${index}`}>
     <span class="growth-label">{item.label}</span><strong>{item.display}</strong>
     {index<bars.length-1&&<span class="growth-arrow">↗</span>}
    </li>)}
