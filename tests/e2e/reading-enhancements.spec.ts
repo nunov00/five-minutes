@@ -54,20 +54,36 @@ test('native figures, plain activity choices and answer/takeaway reveals work wi
  await context.close();
 });
 
-test('reusable structured diagrams are accessible, bounded and responsive',async({page})=>{
+test('reusable structured diagrams are accessible, bounded and responsive',async({page},testInfo)=>{
  const examples=[
-  ['/teen/how-heat-pumps-move-heat','cycle-flow','heat-transfer',4,/four-step loop/],
-  ['/teen/how-kidneys-filter-blood','process-flow','filter-reclaim',4,/rough draft of fluid/],
-  ['/teen/why-exponential-growth-feels-sudden','comparison-bars','doubling-growth',3,/grows from 1 to 32/],
+  ['how-heat-pumps-move-heat','cycle-flow','heat-transfer',4],
+  ['how-kidneys-filter-blood','process-flow','filter-reclaim',4],
+  ['why-exponential-growth-feels-sudden','comparison-bars','doubling-growth',3],
  ] as const;
- for(const width of [320,393,1440])for(const [path,type,style,count,label] of examples){
-  await page.setViewportSize({width,height:width<1000?700:900});await page.goto(path);
+ for(const width of [320,393,1440])for(const edition of ['adult','teen'] as const)for(const [slug,type,style,count] of examples){
+  await page.setViewportSize({width,height:width<1000?700:900});await page.goto(`/${edition}/${slug}`);
   const figure=page.locator(`.lesson-figure[data-figure-type="${type}"]`);await expect(figure).toHaveCount(1);
   await expect(figure).toHaveAttribute('data-figure-style',style);
-  await expect(figure.locator('[role="img"]')).toHaveAttribute('aria-label',label);
+  await expect(figure.locator('[role="img"]')).toHaveAttribute('aria-label',/\S/);
   await expect(figure.locator(type==='comparison-bars'?'.growth-map li':type==='cycle-flow'?'.cycle-step':'.filter-step')).toHaveCount(count);
+  if(style==='filter-reclaim')await expect(figure.locator('.figure-stage')).toHaveCount(count);
   const box=await figure.boundingBox();expect(box?.height).toBeLessThan(width<1000?620:700);
-  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+  if(testInfo.project.name==='desktop-chromium')await figure.screenshot({path:testInfo.outputPath(`visual-${edition}-${style}-${width}.png`),animations:'disabled'});
+  const visual=await figure.evaluate(root=>{
+   const bounds=root.getBoundingClientRect();
+   const labels=[...root.querySelectorAll<HTMLElement>('[data-visual-label]')].map((element,index)=>{
+    const box=element.getBoundingClientRect();return {index,left:box.left,top:box.top,right:box.right,bottom:box.bottom};
+   });
+   const collisions:string[]=[];
+   for(let first=0;first<labels.length;first++)for(let second=first+1;second<labels.length;second++){
+    const a=labels[first],b=labels[second];
+    if(Math.min(a.right,b.right)-Math.max(a.left,b.left)>1&&Math.min(a.bottom,b.bottom)-Math.max(a.top,b.top)>1)collisions.push(`${a.index}:${b.index}`);
+   }
+   const outside=labels.filter(box=>box.left<bounds.left-1||box.right>bounds.right+1||box.top<bounds.top-1||box.bottom>bounds.bottom+1).map(box=>box.index);
+   const clipped=[...root.querySelectorAll<HTMLElement>('[data-visual-copy]')].filter(element=>element.scrollWidth>element.clientWidth+1||element.scrollHeight>element.clientHeight+1).length;
+   return {collisions,outside,clipped,pageOverflow:document.documentElement.scrollWidth>innerWidth};
+  });
+  expect(visual,{message:`${style} at ${width}px must contain every label without collisions, clipping or page overflow`}).toEqual({collisions:[],outside:[],clipped:0,pageOverflow:false});
  }
 });
 

@@ -34,6 +34,8 @@ Every new lesson, migrated lesson and substantial editorial pass must explicitly
 
 A figure is part of an individual presentation and is reviewed with the same factual standard as its prose. Reviewers verify every label, scale, relationship and caption against the lesson's sources, and confirm that required alt text communicates the explanatory purpose rather than merely naming the picture. Adult and Teen may use different figures/captions. Review the full-text description as an equivalent explanation, and mark schematic drawings as not to scale where appropriate. The concrete field shapes and limits are in [M6.2 reading enhancements](implementation/m6.2-reading-enhancements.md).
 
+Figure review is performed on the exact-head rendered page at phone and wide viewports, not from front matter or component source alone. Before its description is expanded, the figure must communicate its basic relationship; labels must remain legible, unclipped and clear of meaningful artwork; numbered stages must visibly correspond to the mechanism; and the visual must earn the space it occupies. Automated containment, collision, clipping and overflow checks are necessary but cannot establish explanatory quality. Record `FIGURE: PASS`, `FIGURE: OMIT` or `FIGURE: REWORK` for each edition with the inspected route, viewports and reason. An included figure that needs its prose description merely to decode the drawing is `REWORK`, normally an IMPORTANT finding.
+
 Only the safe representations defined by ADR-0006 are publishable: application-rendered diagrams from validated structured data or local PNG/WebP assets within configured size/file-count limits. Structured figures must select a named, vetted visual style whose semantics match the lesson; the Writer cannot request generic layouts, colours, coordinates or drawing instructions. Lesson-authored SVG, HTML, remote images and executable embeds are not accepted.
 
 Every new or migrated Teen presentation and substantial Teen editorial pass must explicitly assess whether a lightweight prediction or choice would help the reader engage with the mechanism. Include an activity when committing to an answer, ordering possibilities or choosing between plausible explanations makes the subsequent explanation more effective. Omit it, with the reason recorded in the Pull Request, when it would merely repeat **Test yourself**, interrupt the flow or force artificial gamification. Activities are invitations to think, not a quota or decoration.
@@ -76,7 +78,7 @@ For factual and editorial review, record:
 6. a separate judgement for Adult and Teen, including whether their approaches are meaningfully adapted;
 7. attention evidence for each edition: the title promise, opening hook or tension, points where momentum or comprehension may drop, and whether the payoff fulfils the promise;
 8. the catalogue comparison used for originality and duplication.
-9. the figure decision for each edition and the Teen activity decision, including the reason for any omission.
+9. the figure decision for each edition and the Teen activity decision, including the reason for any omission; for an included figure, record `FIGURE: PASS` or `FIGURE: REWORK`, the exact-head rendered route and the phone/wide viewports inspected.
 
 Do not report a numeric quality score, an averaged rubric percentage or a precision-style confidence number. Descriptive confidence is useful only when it explains what is uncertain and what evidence would resolve it.
 
@@ -96,6 +98,7 @@ Before requesting review:
 - verify that the takeaway and retrieval answer express the same durable insight;
 - compare the proposed lesson with the existing catalogue for overlap;
 - assess a useful figure for each edition and a prediction activity for Teen; include supported additions when they improve understanding, otherwise record why they were omitted;
+- inspect every included figure on the rendered page at phone and wide widths, checking meaning before expansion, collisions, clipping, hierarchy and connection between labels/stages and artwork;
 - run the canonical content, build and static validation gates.
 
 ## Calibration corpus
