@@ -54,7 +54,7 @@ test('native figures, plain activity choices and answer/takeaway reveals work wi
  await context.close();
 });
 
-test('reusable structured diagrams are accessible, bounded and responsive',async({page})=>{
+test('reusable structured diagrams are accessible, bounded and responsive',async({page},testInfo)=>{
  const examples=[
   ['/teen/how-heat-pumps-move-heat','cycle-flow','heat-transfer',4,/four-step loop/],
   ['/teen/how-kidneys-filter-blood','process-flow','filter-reclaim',4,/rough draft of fluid/],
@@ -68,6 +68,7 @@ test('reusable structured diagrams are accessible, bounded and responsive',async
   await expect(figure.locator(type==='comparison-bars'?'.growth-map li':type==='cycle-flow'?'.cycle-step':'.filter-step')).toHaveCount(count);
   if(style==='filter-reclaim')await expect(figure.locator('.figure-stage')).toHaveCount(count);
   const box=await figure.boundingBox();expect(box?.height).toBeLessThan(width<1000?620:700);
+  if(testInfo.project.name==='desktop-chromium')await figure.screenshot({path:testInfo.outputPath(`visual-${style}-${width}.png`),animations:'disabled'});
   const visual=await figure.evaluate(root=>{
    const bounds=root.getBoundingClientRect();
    const labels=[...root.querySelectorAll<HTMLElement>('[data-visual-label]')].map((element,index)=>{

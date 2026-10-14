@@ -6,7 +6,7 @@ Closes #
 
 ## Evidence and checks
 
-For lesson work with a figure, include the exact rendered routes and record phone/wide visual evidence. Final review must state `FIGURE: PASS`, `FIGURE: OMIT` or `FIGURE: REWORK` for Adult and Teen.
+For lesson work with a figure, include the exact rendered routes and the `figure-renders-<head>` CI artifact. Final review must inspect its phone/wide renders and state `FIGURE: PASS`, `FIGURE: OMIT` or `FIGURE: REWORK` for Adult and Teen.
 
 ## Owner attention
 
