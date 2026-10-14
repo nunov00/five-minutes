@@ -12,6 +12,7 @@ figure:
   description: Starting from one, five doublings produce 32 and ten doublings produce 1,024. The first half of the time therefore accounts for only 32 of the final 1,024 units because every later doubling acts on a larger base.
   afterParagraph: 1
   data:
+    style: doubling-growth
     unit: units after repeated doubling
     items:
       - label: Start

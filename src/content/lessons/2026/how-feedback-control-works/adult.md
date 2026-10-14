@@ -15,6 +15,7 @@ figure:
   description: A sensor measures the current result. The controller compares it with the target to find the error, chooses a corrective action and changes the system. The new result is measured and the cycle repeats.
   afterParagraph: 2
   data:
+    style: feedback-loop
     steps:
       - label: Measure the result
         detail: A sensor observes the current state.

@@ -15,6 +15,7 @@ figure:
   description: Water and many small substances first leave the blood. The tubule then returns useful water, glucose and salts to the bloodstream and can add more waste to the fluid. What remains becomes urine.
   afterParagraph: 2
   data:
+    style: filter-reclaim
     steps:
       - label: Make a rough draft
         detail: Water and small substances leave the blood.
