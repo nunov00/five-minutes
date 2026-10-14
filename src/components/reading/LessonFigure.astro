@@ -33,45 +33,50 @@ const cycleCentre=visualStyle==='heat-transfer'?'Heat moves':visualStyle==='feed
   </div>
   <p class="diagram-key">Axis tilt: about {tilt}°. N = north; S = south. Schematic, not to scale.</p>
  </> : figure.type==='process-flow' ? <div class:list={["structured-figure","process-flow",`visual-${visualStyle}`]} role="img" aria-label={figure.alt} aria-describedby={`${id}-description`}>
-  <div class="filter-illustration" aria-hidden="true">
-   <svg viewBox="0 0 360 220" focusable="false">
+  <div class="filter-illustration" data-visual-canvas aria-hidden="true">
+   <svg viewBox="0 0 360 250" focusable="false">
     <defs>
-     <marker id={`${id}-fluid-arrow`} viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="14" markerHeight="14" orient="auto-start-reverse"><path d="M0 0l10 5-10 5z" /></marker>
-     <marker id={`${id}-return-arrow`} viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto-start-reverse"><path d="M0 0l10 5-10 5z" /></marker>
-     <marker id={`${id}-waste-arrow`} viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="14" markerHeight="14" orient="auto-start-reverse"><path d="M0 0l10 5-10 5z" /></marker>
+     <marker id={`${id}-flow-arrow`} viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto"><path d="M0 0l10 5-10 5z" /></marker>
+     <marker id={`${id}-return-arrow`} viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="10" markerHeight="10" orient="auto"><path d="M0 0l10 5-10 5z" /></marker>
+     <marker id={`${id}-waste-arrow`} viewBox="0 0 10 10" refX="8" refY="5" markerUnits="userSpaceOnUse" markerWidth="10" markerHeight="10" orient="auto"><path d="M0 0l10 5-10 5z" /></marker>
     </defs>
-    <path class="blood-vessel" d="M30 42H146c22 0 34 12 34 31s-12 31-34 31H72" />
-    <path class="filter-membrane" d="M178 64v55M190 64v55M202 64v55" />
-    <path class="fluid-path" marker-end={`url(#${id}-fluid-arrow)`} d="M190 119c0 38 39 25 39 59h72" />
-    <path class="return-path" marker-end={`url(#${id}-return-arrow)`} d="M211 136c-34 4-54 25-78 25-26 0-38-17-38-39" />
-    <path class="waste-path" marker-end={`url(#${id}-waste-arrow)`} d="M301 178h28" />
-    <circle class="blood-cell" cx="70" cy="73" r="12" /><circle class="blood-cell" cx="112" cy="73" r="8" />
-    <circle class="small-solute" cx="166" cy="74" r="4" /><circle class="small-solute" cx="166" cy="91" r="4" />
-    <text x="30" y="27">BLOOD</text><text x="220" y="106">FILTERED FLUID</text><text x="36" y="151">USEFUL MATERIAL RETURNS</text><text x="276" y="209">URINE</text>
+    <text data-visual-label x="18" y="19">BLOOD FILTER</text><text data-visual-label x="252" y="19">TUBULE</text>
+    <text data-visual-label x="18" y="237">BLOODSTREAM</text><text data-visual-label x="298" y="237">URINE</text>
+    <path class="nephron-capsule" d="M39 77c0-36 29-55 64-55 38 0 67 24 67 59 0 31-23 53-54 59" />
+    <path class="nephron-glomerulus" d="M18 73c26-7 29-35 61-31 31 4 48 28 35 48-11 18-42 15-42-6 0-15 21-21 31-10" />
+    <path class="nephron-tubule" marker-end={`url(#${id}-flow-arrow)`} d="M116 140c46 2 51-35 93-35 37 0 54 27 40 50-17 28-72 8-80 40-7 26 42 27 83 22 31-4 51 1 73 0" />
+    <path class="nephron-bloodstream" d="M20 211c51-40 105-27 145-5 48 26 91 21 141-15" />
+    <path class="return-path return-path-one" marker-end={`url(#${id}-return-arrow)`} d="M207 124c-9 30-23 48-48 72" />
+    <path class="return-path return-path-two" marker-end={`url(#${id}-return-arrow)`} d="M226 173c2 17-5 28-18 38" />
+    <path class="waste-path" marker-end={`url(#${id}-waste-arrow)`} d="M271 194c-12-12-20-23-23-36" />
+    <g class="figure-stage figure-stage-1"><circle cx="58" cy="111" r="15"/><text x="58" y="116">1</text></g>
+    <g class="figure-stage figure-stage-2"><circle cx="180" cy="151" r="15"/><text x="180" y="156">2</text></g>
+    <g class="figure-stage figure-stage-3"><circle cx="274" cy="169" r="15"/><text x="274" y="174">3</text></g>
+    <g class="figure-stage figure-stage-4"><circle cx="326" cy="217" r="15"/><text x="326" y="222">4</text></g>
    </svg>
   </div>
   <ol class="filter-legend" aria-hidden="true">
-   {flow.map((step,index)=><li class={`filter-step filter-step-${index+1}`}>
+   {flow.map((step,index)=><li data-visual-label data-visual-copy class={`filter-step filter-step-${index+1}`}>
     <span class="visual-number">{index+1}</span>
     <strong>{step.label}</strong>
    </li>)}
   </ol>
  </div> : figure.type==='cycle-flow' ? <div class:list={["structured-figure","cycle-flow",`visual-${visualStyle}`]} role="img" aria-label={figure.alt} aria-describedby={`${id}-description`}>
-  <div class="cycle-canvas" aria-hidden="true">
+  <div class="cycle-canvas" data-visual-canvas aria-hidden="true">
    <svg class="cycle-track" viewBox="0 0 300 300" focusable="false">
     <circle cx="150" cy="150" r="100" pathLength="100" />
     <path d="M145 45l12 5-9 9M255 145l-5 12-9-9M155 255l-12-5 9-9M45 155l5-12 9 9" />
    </svg>
    <span class="cycle-centre">{cycleCentre}</span>
    <ol>
-    {flow.map((step,index)=><li class={`cycle-step cycle-step-${index+1}`}>
+    {flow.map((step,index)=><li data-visual-label data-visual-copy class={`cycle-step cycle-step-${index+1}`}>
      <span class="visual-number">{index+1}</span><strong>{step.label}</strong>
     </li>)}
    </ol>
   </div>
  </div> : <div class:list={["structured-figure","comparison-bars",`visual-${visualStyle}`]} role="img" aria-label={figure.alt} aria-describedby={`${id}-description`}>
-  <ol class="growth-map" aria-hidden="true">
-   {bars.map((item,index)=><li style={`--growth-stage:${index}`}>
+  <ol class="growth-map" data-visual-canvas aria-hidden="true">
+   {bars.map((item,index)=><li data-visual-label data-visual-copy style={`--growth-stage:${index}`}>
     <span class="growth-label">{item.label}</span><strong>{item.display}</strong>
     {index<bars.length-1&&<span class="growth-arrow">↗</span>}
    </li>)}

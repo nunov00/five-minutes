@@ -66,8 +66,23 @@ test('reusable structured diagrams are accessible, bounded and responsive',async
   await expect(figure).toHaveAttribute('data-figure-style',style);
   await expect(figure.locator('[role="img"]')).toHaveAttribute('aria-label',label);
   await expect(figure.locator(type==='comparison-bars'?'.growth-map li':type==='cycle-flow'?'.cycle-step':'.filter-step')).toHaveCount(count);
+  if(style==='filter-reclaim')await expect(figure.locator('.figure-stage')).toHaveCount(count);
   const box=await figure.boundingBox();expect(box?.height).toBeLessThan(width<1000?620:700);
-  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+  const visual=await figure.evaluate(root=>{
+   const bounds=root.getBoundingClientRect();
+   const labels=[...root.querySelectorAll<HTMLElement>('[data-visual-label]')].map((element,index)=>{
+    const box=element.getBoundingClientRect();return {index,left:box.left,top:box.top,right:box.right,bottom:box.bottom};
+   });
+   const collisions:string[]=[];
+   for(let first=0;first<labels.length;first++)for(let second=first+1;second<labels.length;second++){
+    const a=labels[first],b=labels[second];
+    if(Math.min(a.right,b.right)-Math.max(a.left,b.left)>1&&Math.min(a.bottom,b.bottom)-Math.max(a.top,b.top)>1)collisions.push(`${a.index}:${b.index}`);
+   }
+   const outside=labels.filter(box=>box.left<bounds.left-1||box.right>bounds.right+1||box.top<bounds.top-1||box.bottom>bounds.bottom+1).map(box=>box.index);
+   const clipped=[...root.querySelectorAll<HTMLElement>('[data-visual-copy]')].filter(element=>element.scrollWidth>element.clientWidth+1||element.scrollHeight>element.clientHeight+1).length;
+   return {collisions,outside,clipped,pageOverflow:document.documentElement.scrollWidth>innerWidth};
+  });
+  expect(visual,{message:`${style} at ${width}px must contain every label without collisions, clipping or page overflow`}).toEqual({collisions:[],outside:[],clipped:0,pageOverflow:false});
  }
 });
 
