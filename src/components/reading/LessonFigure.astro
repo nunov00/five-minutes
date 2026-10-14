@@ -77,8 +77,8 @@ const cycleCentre=visualStyle==='heat-transfer'?'Heat moves':visualStyle==='feed
   </div>
  </div> : <div class:list={["structured-figure","comparison-bars",`visual-${visualStyle}`]} role="img" aria-label={figure.alt} aria-describedby={`${id}-description`}>
   <ol class="growth-map" data-visual-canvas aria-hidden="true">
-   {bars.map((item,index)=><li data-visual-label data-visual-copy style={`--growth-stage:${index}`}>
-    <span class="growth-label">{item.label}</span><strong>{item.display}</strong>
+   {bars.map((item,index)=><li data-visual-label style={`--growth-stage:${index}`}>
+    <span class="growth-label" data-visual-copy>{item.label}</span><strong data-visual-copy>{item.display}</strong>
     {index<bars.length-1&&<span class="growth-arrow">↗</span>}
    </li>)}
   </ol>
