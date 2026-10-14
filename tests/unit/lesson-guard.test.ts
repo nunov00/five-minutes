@@ -39,10 +39,12 @@ const processFigure = `figure:
   caption: A simple path.
   description: The object blocks some of the light, producing a shadow behind it.
   data:
+    style: filter-reclaim
     steps:
       - { label: Light source, detail: Light travels outwards. }
       - { label: Object, detail: Some light is blocked. }
       - { label: Shadow, detail: Less light reaches the surface. }
+      - { label: Surface, detail: The shadow becomes visible. }
 `;
 const comparisonFigure = `figure:
   type: comparison-bars
@@ -50,8 +52,10 @@ const comparisonFigure = `figure:
   caption: A bounded comparison.
   description: The later value is eight and the earlier value is two.
   data:
+    style: doubling-growth
     unit: units
     items:
+      - { label: Start, value: 1, display: "1" }
       - { label: Earlier, value: 2, display: "2" }
       - { label: Later, value: 8, display: "8" }
 `;
@@ -100,7 +104,7 @@ describe('lesson-only publication guard', () => {
     expect(evaluateLessonPullRequest(value)).toEqual({ applicable: false, message: 'Not an automated lesson candidate.' });
   });
   it('accepts a valid bounded candidate', () => expect(evaluateLessonPullRequest(fixture())).toMatchObject({ applicable: true, slug, lessonId: id }));
-  it.each([processFigure,processFigure.replace('process-flow','cycle-flow'),comparisonFigure])('accepts an app-owned structured figure without adding files', (figure) => {
+ it.each([processFigure,processFigure.replace('type: process-flow','type: cycle-flow').replace('style: filter-reclaim','style: feedback-loop'),comparisonFigure])('accepts an app-owned structured figure without adding files', (figure) => {
     const value=fixture();const blob=value.blobs[`${root}/adult.md`];blob.text=blob.text.replace('searchTerms:', `${figure}searchTerms:`);blob.size=Buffer.byteLength(blob.text);
     expect(evaluateLessonPullRequest(value)).toMatchObject({ applicable:true,slug,lessonId:id });
   });

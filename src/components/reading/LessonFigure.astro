@@ -8,9 +8,10 @@ const axes=(cx:number)=>({northX:cx+56*Math.sin(angle),southX:cx-56*Math.sin(ang
 const panels=[{key:'june',month:'June',earth:78,sun:242,hemisphere:'North'},{key:'december',month:'December',earth:222,sun:58,hemisphere:'South'}];
 const flow=figure.type==='process-flow'||figure.type==='cycle-flow'?figure.data.steps:[];
 const bars=figure.type==='comparison-bars'?figure.data.items:[];
-const barMaximum=Math.max(1,...bars.map(item=>item.value));
+const visualStyle=figure.type==='process-flow'||figure.type==='cycle-flow'||figure.type==='comparison-bars'?figure.data.style:'';
+const cycleCentre=visualStyle==='heat-transfer'?'Heat moves':visualStyle==='feedback-loop'?'Check · adjust':'';
 ---
-<figure class="lesson-figure" data-figure-type={figure.type} aria-labelledby={`${id}-caption`}>
+<figure class="lesson-figure" data-figure-type={figure.type} data-figure-style={visualStyle||undefined} aria-labelledby={`${id}-caption`}>
  {figure.type==='image' ? <img src={figure.src} width={figure.width} height={figure.height} alt={figure.alt} loading="lazy" decoding="async"/> : figure.type==='seasons-orbit' ? <>
   <div class="season-panels" role="img" aria-label={figure.alt} aria-describedby={`${id}-description`}>
    {panels.map(panel=>{
@@ -31,22 +32,51 @@ const barMaximum=Math.max(1,...bars.map(item=>item.value));
    })}
   </div>
   <p class="diagram-key">Axis tilt: about {tilt}°. N = north; S = south. Schematic, not to scale.</p>
- </> : figure.type==='process-flow'||figure.type==='cycle-flow' ? <div class:list={["structured-figure",figure.type]} role="img" aria-label={figure.alt} aria-describedby={`${id}-description`}>
-  <ol aria-hidden="true">
-   {flow.map((step,index)=><li>
-    <span class="flow-step"><strong>{step.label}</strong>{step.detail&&<small>{step.detail}</small>}</span>
-    {index<flow.length-1&&<span class="flow-arrow">→</span>}
+ </> : figure.type==='process-flow' ? <div class:list={["structured-figure","process-flow",`visual-${visualStyle}`]} role="img" aria-label={figure.alt} aria-describedby={`${id}-description`}>
+  <div class="filter-illustration" aria-hidden="true">
+   <svg viewBox="0 0 360 220" focusable="false">
+    <defs>
+     <marker id={`${id}-fluid-arrow`} viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0l10 5-10 5z" /></marker>
+     <marker id={`${id}-return-arrow`} viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0l10 5-10 5z" /></marker>
+     <marker id={`${id}-waste-arrow`} viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0l10 5-10 5z" /></marker>
+    </defs>
+    <path class="blood-vessel" d="M30 42H146c22 0 34 12 34 31s-12 31-34 31H72" />
+    <path class="filter-membrane" d="M178 64v55M190 64v55M202 64v55" />
+    <path class="fluid-path" marker-end={`url(#${id}-fluid-arrow)`} d="M190 119c0 38 39 25 39 59h72" />
+    <path class="return-path" marker-end={`url(#${id}-return-arrow)`} d="M211 136c-34 4-54 25-78 25-26 0-38-17-38-39" />
+    <path class="waste-path" marker-end={`url(#${id}-waste-arrow)`} d="M301 178h28" />
+    <circle class="blood-cell" cx="70" cy="73" r="12" /><circle class="blood-cell" cx="112" cy="73" r="8" />
+    <circle class="small-solute" cx="166" cy="74" r="4" /><circle class="small-solute" cx="166" cy="91" r="4" />
+    <text x="30" y="27">BLOOD</text><text x="220" y="106">FILTERED FLUID</text><text x="36" y="151">USEFUL MATERIAL RETURNS</text><text x="276" y="209">URINE</text>
+   </svg>
+  </div>
+  <ol class="filter-legend" aria-hidden="true">
+   {flow.map((step,index)=><li class={`filter-step filter-step-${index+1}`}>
+    <span class="visual-number">{index+1}</span>
+    <strong>{step.label}</strong>
    </li>)}
   </ol>
-  {figure.type==='cycle-flow'&&<p class="cycle-return" aria-hidden="true">Returns to the first step ↺</p>}
-  <p class="diagram-key" aria-hidden="true">Schematic, not to scale.</p>
- </div> : <div class="structured-figure comparison-bars" role="img" aria-label={figure.alt} aria-describedby={`${id}-description`}>
-  <ul aria-hidden="true">
-   {bars.map(item=><li>
-    <span class="bar-label">{item.label}</span><span class="bar-track"><span class:list={["bar-fill",{"is-positive":item.value>0}]} style={`--bar-size:${(item.value/barMaximum)*100}%`}></span></span><strong>{item.display}</strong>
+ </div> : figure.type==='cycle-flow' ? <div class:list={["structured-figure","cycle-flow",`visual-${visualStyle}`]} role="img" aria-label={figure.alt} aria-describedby={`${id}-description`}>
+  <div class="cycle-canvas" aria-hidden="true">
+   <svg class="cycle-track" viewBox="0 0 300 300" focusable="false">
+    <circle cx="150" cy="150" r="100" pathLength="100" />
+    <path d="M145 45l12 5-9 9M255 145l-5 12-9-9M155 255l-12-5 9-9M45 155l5-12 9 9" />
+   </svg>
+   <span class="cycle-centre">{cycleCentre}</span>
+   <ol>
+    {flow.map((step,index)=><li class={`cycle-step cycle-step-${index+1}`}>
+     <span class="visual-number">{index+1}</span><strong>{step.label}</strong>
+    </li>)}
+   </ol>
+  </div>
+ </div> : <div class:list={["structured-figure","comparison-bars",`visual-${visualStyle}`]} role="img" aria-label={figure.alt} aria-describedby={`${id}-description`}>
+  <ol class="growth-map" aria-hidden="true">
+   {bars.map((item,index)=><li style={`--growth-stage:${index}`}>
+    <span class="growth-label">{item.label}</span><strong>{item.display}</strong>
+    {index<bars.length-1&&<span class="growth-arrow">↗</span>}
    </li>)}
-  </ul>
-  {figure.data.unit&&<p class="diagram-key" aria-hidden="true">Unit: {figure.data.unit}</p>}
+  </ol>
+  {figure.data.unit&&<p class="growth-unit" aria-hidden="true">{figure.data.unit}</p>}
  </div>}
  <figcaption id={`${id}-caption`}>{figure.caption}</figcaption>
  <details class="figure-description"><summary>Explanation of this figure</summary><p id={`${id}-description`}>{figure.description}</p></details>
