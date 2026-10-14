@@ -56,19 +56,19 @@ test('native figures, plain activity choices and answer/takeaway reveals work wi
 
 test('reusable structured diagrams are accessible, bounded and responsive',async({page},testInfo)=>{
  const examples=[
-  ['/teen/how-heat-pumps-move-heat','cycle-flow','heat-transfer',4,/four-step loop/],
-  ['/teen/how-kidneys-filter-blood','process-flow','filter-reclaim',4,/rough draft of fluid/],
-  ['/teen/why-exponential-growth-feels-sudden','comparison-bars','doubling-growth',3,/grows from 1 to 32/],
+  ['how-heat-pumps-move-heat','cycle-flow','heat-transfer',4,/four-step loop/],
+  ['how-kidneys-filter-blood','process-flow','filter-reclaim',4,/rough draft of fluid/],
+  ['why-exponential-growth-feels-sudden','comparison-bars','doubling-growth',3,/grows from 1 to 32/],
  ] as const;
- for(const width of [320,393,1440])for(const [path,type,style,count,label] of examples){
-  await page.setViewportSize({width,height:width<1000?700:900});await page.goto(path);
+ for(const width of [320,393,1440])for(const edition of ['adult','teen'] as const)for(const [slug,type,style,count,label] of examples){
+  await page.setViewportSize({width,height:width<1000?700:900});await page.goto(`/${edition}/${slug}`);
   const figure=page.locator(`.lesson-figure[data-figure-type="${type}"]`);await expect(figure).toHaveCount(1);
   await expect(figure).toHaveAttribute('data-figure-style',style);
   await expect(figure.locator('[role="img"]')).toHaveAttribute('aria-label',label);
   await expect(figure.locator(type==='comparison-bars'?'.growth-map li':type==='cycle-flow'?'.cycle-step':'.filter-step')).toHaveCount(count);
   if(style==='filter-reclaim')await expect(figure.locator('.figure-stage')).toHaveCount(count);
   const box=await figure.boundingBox();expect(box?.height).toBeLessThan(width<1000?620:700);
-  if(testInfo.project.name==='desktop-chromium')await figure.screenshot({path:testInfo.outputPath(`visual-${style}-${width}.png`),animations:'disabled'});
+  if(testInfo.project.name==='desktop-chromium')await figure.screenshot({path:testInfo.outputPath(`visual-${edition}-${style}-${width}.png`),animations:'disabled'});
   const visual=await figure.evaluate(root=>{
    const bounds=root.getBoundingClientRect();
    const labels=[...root.querySelectorAll<HTMLElement>('[data-visual-label]')].map((element,index)=>{
