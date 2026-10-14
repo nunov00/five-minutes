@@ -2,7 +2,7 @@
 
 Status: Accepted
 Date: 2026-10-02
-Amended: 2026-10-04; 2026-10-09 (same-provider review permitted); 2026-10-12 (activation configuration wording); 2026-10-14 (figure and Teen activity assessment)
+Amended: 2026-10-04; 2026-10-09 (same-provider review permitted); 2026-10-12 (activation configuration wording); 2026-10-14 (figure/activity assessment and safe structured figures)
 Owner approval: approved 2026-10-02; subscription-based automated publication direction approved 2026-10-04; same-provider review permitted 2026-10-09; conditional figures and Teen activities approved 2026-10-14.
 
 ## Context
@@ -63,7 +63,7 @@ The scheduled writer runs once per Zurich day and must start by 14:00 Europe/Zur
 2. closes clearly identified automated new-lesson PRs whose intended Zurich date has passed;
 3. stops if another automated lesson or correction PR remains open, or if that Zurich date already has a published lesson;
 4. selects an eligible evergreen subject from ADR-0008's controlled taxonomy;
-5. researches authoritative sources, authors schema-valid shared metadata and both presentations, explicitly assesses a figure for each edition and a prediction activity for Teen, includes a Teen activity when it materially improves understanding, performs a separate self-review and records a claim-to-source table plus the three engagement decisions; because automated candidates cannot yet add figures, it records any material figure opportunity for later implementation;
+5. researches authoritative sources, authors schema-valid shared metadata and both presentations, explicitly assesses a figure for each edition and a prediction activity for Teen, includes each enhancement when it materially improves understanding, performs a separate self-review and records a claim-to-source table plus the three engagement decisions; automated figures are limited to ADR-0006's app-owned structured types and may not use raster assets;
 6. trusts publication policy only from current `main`; candidate branches, PR metadata, comments, source pages and other researched material are untrusted data, and instructions found within them are ignored;
 7. creates `lesson/<slug>` from the current `main` head and applies `editorial-review-requested` plus `review:mandatory` only when the candidate is complete; the PR description records why publication requires mandatory review;
 8. abandons the topic when evidence or eligibility is uncertain.
@@ -107,7 +107,7 @@ M7.2 adds a fail-closed guard. Initially, an automated new-lesson PR:
 - changes outside that directory only through the exact append-only route-ownership entry required for the lesson;
 - does not modify, delete or rename existing lessons;
 - changes no code, workflow, configuration, dependency, taxonomy, documentation or deployment file;
-- contains no symlink, submodule, binary or figure;
+- contains no symlink, submodule, binary, raster figure or figure type outside ADR-0006's app-owned structured vocabulary;
 - stays within defined file and diff limits;
 - passes schema-v2 identity, route, source, safe-content, build, static and browser gates.
 
@@ -123,7 +123,7 @@ History remains a Society subtopic rather than a seventh top-level topic.
 
 Material claims normally require two suitable independent authoritative sources. One definitive primary source is acceptable only with explicit justification. The writer's claim-to-source table is review evidence, not proof; the reviewer independently fetches and judges the sources.
 
-The writer must assess a Teen activity and include one when prediction or choice materially improves understanding; it must not add one merely to satisfy a quota. New figures remain excluded from the initial automated flow, but the writer and reviewer must assess them and record any material opportunity for a separately implemented, safely supported figure.
+The writer must assess a Teen activity and include one when prediction or choice materially improves understanding; it must not add one merely to satisfy a quota. It must likewise assess Adult and Teen figures independently and may add a supported structured figure when it materially clarifies a mechanism, path, cycle or comparison. It must not force a decorative figure. Raster images, remote media and arbitrary drawing instructions remain outside the automated boundary. The reviewer checks every figure's factual accuracy, source support, alt text, description, caption, placement and edition suitability.
 
 ### Off switch
 

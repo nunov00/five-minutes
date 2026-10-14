@@ -8,6 +8,22 @@ searchTerms:
   - feedback control
   - control loop
   - thermostat engineering
+figure:
+  type: cycle-flow
+  alt: A feedback controller repeatedly measures the result, compares it with the target and applies a correction.
+  caption: Each correction changes the next measurement, so the loop can respond to disturbances.
+  description: A sensor measures the current result. The controller compares it with the target to find the error, chooses a corrective action and changes the system. The new result is measured and the cycle repeats.
+  afterParagraph: 2
+  data:
+    steps:
+      - label: Measure the result
+        detail: A sensor observes the current state.
+      - label: Compare with the target
+        detail: The difference is the error.
+      - label: Choose a correction
+        detail: The controller uses the error to decide what to do.
+      - label: Change the system
+        detail: The action produces a new result to measure.
 ---
 Set an oven to 180°C and its heater does not run at one fixed power forever. A sensor measures the temperature, a controller compares that measurement with the setting, and the heater changes in response.
 

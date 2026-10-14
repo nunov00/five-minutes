@@ -8,6 +8,22 @@ searchTerms:
   - how heat pumps work
   - refrigeration cycle
   - heat pump efficiency
+figure:
+  type: cycle-flow
+  alt: The refrigerant repeatedly absorbs heat outside, is compressed, releases heat inside and expands to cool again.
+  caption: Pressure changes let the same refrigerant collect heat on one side and release it on the other.
+  description: The cycle begins with cold, low-pressure refrigerant absorbing outdoor heat. A compressor raises its pressure and temperature. Indoors it releases heat, then an expansion device lowers its pressure and temperature so the cycle can repeat.
+  afterParagraph: 2
+  data:
+    steps:
+      - label: Absorb outside heat
+        detail: Cold, low-pressure refrigerant warms.
+      - label: Compress
+        detail: Pressure and temperature rise.
+      - label: Release indoor heat
+        detail: Hot refrigerant transfers heat to the building.
+      - label: Expand and cool
+        detail: Pressure falls before the next lap.
 ---
 Moving heat from a warm room into a colder outdoors feels natural: leave a door open in winter and it happens by itself. A heat pump makes heat travel the other way. It does so by spending electrical energy, much as a water pump spends energy to move water uphill.
 

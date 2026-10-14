@@ -8,6 +8,22 @@ searchTerms:
   - kidneys explained
   - how urine is made
   - nephrons
+figure:
+  type: process-flow
+  alt: A nephron makes a rough draft of fluid, returns useful material to the blood and leaves urine.
+  caption: Kidneys filter first, then edit the filtered fluid.
+  description: Water and many small substances first leave the blood. The tubule then returns useful water, glucose and salts to the bloodstream and can add more waste to the fluid. What remains becomes urine.
+  afterParagraph: 2
+  data:
+    steps:
+      - label: Make a rough draft
+        detail: Water and small substances leave the blood.
+      - label: Take useful things back
+        detail: Needed water, glucose and salts return to the blood.
+      - label: Add extra waste
+        detail: The tubule can move more waste into the fluid.
+      - label: Leave as urine
+        detail: Only the much smaller remainder continues out.
 ---
 After exercise, your body may need to conserve water. After a salty meal, it has a different balancing problem. Your kidneys respond to both situations using the same surprising method: they first make far too much filtered fluid, then edit it.
 
