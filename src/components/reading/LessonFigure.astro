@@ -6,9 +6,12 @@ const tilt=figure.type==='seasons-orbit'?figure.data.tiltDegrees:0;
 const angle=tilt*Math.PI/180;
 const axes=(cx:number)=>({northX:cx+56*Math.sin(angle),southX:cx-56*Math.sin(angle),northY:92-56*Math.cos(angle),southY:92+56*Math.cos(angle)});
 const panels=[{key:'june',month:'June',earth:78,sun:242,hemisphere:'North'},{key:'december',month:'December',earth:222,sun:58,hemisphere:'South'}];
+const flow=figure.type==='process-flow'||figure.type==='cycle-flow'?figure.data.steps:[];
+const bars=figure.type==='comparison-bars'?figure.data.items:[];
+const barMaximum=Math.max(1,...bars.map(item=>item.value));
 ---
 <figure class="lesson-figure" data-figure-type={figure.type} aria-labelledby={`${id}-caption`}>
- {figure.type==='image' ? <img src={figure.src} width={figure.width} height={figure.height} alt={figure.alt} loading="lazy" decoding="async"/> : <>
+ {figure.type==='image' ? <img src={figure.src} width={figure.width} height={figure.height} alt={figure.alt} loading="lazy" decoding="async"/> : figure.type==='seasons-orbit' ? <>
   <div class="season-panels" role="img" aria-label={figure.alt} aria-describedby={`${id}-description`}>
    {panels.map(panel=>{
     const axis=axes(panel.earth);
@@ -28,7 +31,23 @@ const panels=[{key:'june',month:'June',earth:78,sun:242,hemisphere:'North'},{key
    })}
   </div>
   <p class="diagram-key">Axis tilt: about {tilt}°. N = north; S = south. Schematic, not to scale.</p>
- </>}
+ </> : figure.type==='process-flow'||figure.type==='cycle-flow' ? <div class:list={["structured-figure",figure.type]} role="img" aria-label={figure.alt} aria-describedby={`${id}-description`}>
+  <ol aria-hidden="true">
+   {flow.map((step,index)=><li>
+    <span class="flow-step"><strong>{step.label}</strong>{step.detail&&<small>{step.detail}</small>}</span>
+    {index<flow.length-1&&<span class="flow-arrow">→</span>}
+   </li>)}
+  </ol>
+  {figure.type==='cycle-flow'&&<p class="cycle-return" aria-hidden="true">Returns to the first step ↺</p>}
+  <p class="diagram-key" aria-hidden="true">Schematic, not to scale.</p>
+ </div> : <div class="structured-figure comparison-bars" role="img" aria-label={figure.alt} aria-describedby={`${id}-description`}>
+  <ul aria-hidden="true">
+   {bars.map(item=><li>
+    <span class="bar-label">{item.label}</span><span class="bar-track"><span class:list={["bar-fill",{"is-positive":item.value>0}]} style={`--bar-size:${(item.value/barMaximum)*100}%`}></span></span><strong>{item.display}</strong>
+   </li>)}
+  </ul>
+  {figure.data.unit&&<p class="diagram-key" aria-hidden="true">Unit: {figure.data.unit}</p>}
+ </div>}
  <figcaption id={`${id}-caption`}>{figure.caption}</figcaption>
  <details class="figure-description"><summary>Explanation of this figure</summary><p id={`${id}-description`}>{figure.description}</p></details>
 </figure>

@@ -7,8 +7,13 @@ export interface FigureText {
   /** Insert after this top-level prose paragraph; omitted means the opening. */
   afterParagraph?: number;
 }
+export interface FlowStep { label: string; detail?: string; }
+export interface ComparisonItem { label: string; value: number; display: string; }
 export type LessonFigure = FigureText & (
   | { type: 'seasons-orbit'; data: { tiltDegrees: 23.4 | 23.5 } }
+  | { type: 'process-flow'; data: { steps: FlowStep[] } }
+  | { type: 'cycle-flow'; data: { steps: FlowStep[] } }
+  | { type: 'comparison-bars'; data: { items: ComparisonItem[]; unit?: string } }
   | { type: 'image'; src: string; width: number; height: number }
 );
 export interface TeenActivity { prompt: string; options: string[]; answer: number; explanation: string; }
@@ -21,6 +26,22 @@ const normalise = (v: string) => v.trim().toLocaleLowerCase('en').replace(/\s+/g
 function keys(v: Record<string,unknown>, allowed: string[], path: string, issues: ValidationIssue[]) {
   for(const key of Object.keys(v)) if(!allowed.includes(key)) issues.push({path:`${path}.${key}`,code:'unknown-field',message:'Unknown structured presentation field.'});
 }
+function validateSteps(value: unknown, path: string, issues: ValidationIssue[], fail: (name:string,message:string)=>void) {
+  if(!object(value)) { fail('figure.data','Expected structured flow data.'); return; }
+  keys(value,['steps'],`${path}.figure.data`,issues);
+  if(!Array.isArray(value.steps)||value.steps.length<2||value.steps.length>6) {
+    fail('figure.data.steps','Expected 2–6 flow steps.'); return;
+  }
+  const labels:string[]=[];
+  value.steps.forEach((step,index)=>{
+    if(!object(step)) { fail(`figure.data.steps.${index}`,'Expected one structured flow step.'); return; }
+    keys(step,['label','detail'],`${path}.figure.data.steps.${index}`,issues);
+    if(!plain(step.label,60)) fail(`figure.data.steps.${index}.label`,'Expected a plain-text label of at most 60 characters.');
+    else labels.push(normalise(step.label));
+    if(step.detail!==undefined&&!plain(step.detail,120)) fail(`figure.data.steps.${index}.detail`,'Expected plain-text detail of at most 120 characters.');
+  });
+  if(labels.length===value.steps.length&&new Set(labels).size!==labels.length) fail('figure.data.steps','Flow-step labels must be unique.');
+}
 export function validatePresentationExtensions(value: Record<string,unknown>, path: string, edition: 'adult'|'teen'): ValidationIssue[] {
   const issues: ValidationIssue[] = [];
   const fail = (name:string,message:string) => issues.push({path:`${path}.${name}`,code:'presentation-extension',message});
@@ -29,7 +50,8 @@ export function validatePresentationExtensions(value: Record<string,unknown>, pa
     if (!object(f)) fail('figure','Expected one structured figure.');
     else {
       const common = ['type','alt','caption','description','afterParagraph'];
-      keys(f,[...common,...(f.type==='seasons-orbit'?['data']:f.type==='image'?['src','width','height']:[])],`${path}.figure`,issues);
+      const structured=['seasons-orbit','process-flow','cycle-flow','comparison-bars'].includes(String(f.type));
+      keys(f,[...common,...(structured?['data']:f.type==='image'?['src','width','height']:[])],`${path}.figure`,issues);
       for(const [key,max] of [['alt',200],['caption',240],['description',900]] as const) if(!plain(f[key],max)) fail(`figure.${key}`,`Expected non-empty plain text (maximum ${max} characters).`);
       if(f.afterParagraph!==undefined && (!Number.isInteger(f.afterParagraph) || Number(f.afterParagraph)<1 || Number(f.afterParagraph)>50)) fail('figure.afterParagraph','Expected a prose paragraph position from 1 to 50.');
       if(f.type==='seasons-orbit') {
@@ -37,6 +59,28 @@ export function validatePresentationExtensions(value: Record<string,unknown>, pa
         else {
           keys(f.data,['tiltDegrees'],`${path}.figure.data`,issues);
           if(f.data.tiltDegrees!==23.4 && f.data.tiltDegrees!==23.5) fail('figure.data.tiltDegrees','Earth diagram tilt must be 23.4 or 23.5 degrees.');
+        }
+      } else if(f.type==='process-flow'||f.type==='cycle-flow') {
+        validateSteps(f.data,path,issues,fail);
+      } else if(f.type==='comparison-bars') {
+        if(!object(f.data)) fail('figure.data','Expected structured comparison data.');
+        else {
+          keys(f.data,['items','unit'],`${path}.figure.data`,issues);
+          if(f.data.unit!==undefined&&!plain(f.data.unit,40)) fail('figure.data.unit','Expected a plain-text unit of at most 40 characters.');
+          if(!Array.isArray(f.data.items)||f.data.items.length<2||f.data.items.length>6) fail('figure.data.items','Expected 2–6 comparison items.');
+          else {
+            const labels:string[]=[];
+            f.data.items.forEach((item,index)=>{
+              if(!object(item)) { fail(`figure.data.items.${index}`,'Expected one structured comparison item.'); return; }
+              keys(item,['label','value','display'],`${path}.figure.data.items.${index}`,issues);
+              if(!plain(item.label,60)) fail(`figure.data.items.${index}.label`,'Expected a plain-text label of at most 60 characters.');
+              else labels.push(normalise(item.label));
+              if(typeof item.value!=='number'||!Number.isFinite(item.value)||item.value<0||item.value>1_000_000_000) fail(`figure.data.items.${index}.value`,'Expected a finite value from 0 to 1,000,000,000.');
+              if(!plain(item.display,40)) fail(`figure.data.items.${index}.display`,'Expected a plain-text display value of at most 40 characters.');
+            });
+            if(labels.length===f.data.items.length&&new Set(labels).size!==labels.length) fail('figure.data.items','Comparison labels must be unique.');
+            if(f.data.items.every(item=>object(item)&&item.value===0)) fail('figure.data.items','At least one comparison value must be greater than zero.');
+          }
         }
       } else if(f.type==='image') {
         if(typeof f.src!=='string' || !LOCAL_FIGURE_PATH.test(f.src)) fail('figure.src','Expected a local /lesson-media/<name>.png or .webp path.');

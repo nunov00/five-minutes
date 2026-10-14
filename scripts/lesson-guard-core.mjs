@@ -17,7 +17,7 @@ const METADATA_KEYS = new Set([
   'schemaVersion', 'id', 'slug', 'aliases', 'publishedAt', 'topic', 'subtopic',
   'concepts', 'related', 'sources', 'provenance',
 ]);
-const ADULT_KEYS = new Set(['title', 'description', 'takeaway', 'question', 'answer', 'searchTerms']);
+const ADULT_KEYS = new Set(['title', 'description', 'takeaway', 'question', 'answer', 'searchTerms', 'figure']);
 const TEEN_KEYS = new Set([...ADULT_KEYS, 'activity']);
 
 export class LessonGuardError extends Error {
@@ -35,6 +35,70 @@ function isPlainObject(value) {
   if (value === null || typeof value !== 'object' || Array.isArray(value)) return false;
   const prototype = Object.getPrototypeOf(value);
   return prototype === Object.prototype || prototype === null;
+}
+
+function hasOnlyKeys(value, allowed) {
+  return Object.keys(value).every((key) => allowed.includes(key));
+}
+
+function isPlainText(value, max) {
+  return typeof value === 'string' && value.trim().length > 0 && value.length <= max
+    && !/[<>`]|!\[|\[[^\]]*\]\(|\*\*|(?:^|\n)\s*(?:#|[-*]\s)/.test(value)
+    && !/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/.test(value);
+}
+
+function normalise(value) {
+  return value.trim().toLocaleLowerCase('en').replace(/\s+/g, ' ');
+}
+
+function validateAutomatedFigure(figure, label) {
+  if (!isPlainObject(figure)) fail(`${label} figure must be a structured mapping.`);
+  const common = ['type', 'alt', 'caption', 'description', 'afterParagraph', 'data'];
+  if (!hasOnlyKeys(figure, common)) fail(`${label} figure contains fields outside the automated contract.`);
+  for (const [key, max] of [['alt', 200], ['caption', 240], ['description', 900]]) {
+    if (!isPlainText(figure[key], max)) fail(`${label} figure ${key} must be bounded plain text.`);
+  }
+  if (figure.afterParagraph !== undefined && (!Number.isInteger(figure.afterParagraph) || figure.afterParagraph < 1 || figure.afterParagraph > 50)) {
+    fail(`${label} figure afterParagraph must be from 1 to 50.`);
+  }
+  if (!isPlainObject(figure.data)) fail(`${label} figure data must be a structured mapping.`);
+  if (figure.type === 'seasons-orbit') {
+    if (!hasOnlyKeys(figure.data, ['tiltDegrees']) || (figure.data.tiltDegrees !== 23.4 && figure.data.tiltDegrees !== 23.5)) {
+      fail(`${label} seasons figure data is invalid.`);
+    }
+    return;
+  }
+  if (figure.type === 'process-flow' || figure.type === 'cycle-flow') {
+    if (!hasOnlyKeys(figure.data, ['steps']) || !Array.isArray(figure.data.steps) || figure.data.steps.length < 2 || figure.data.steps.length > 6) {
+      fail(`${label} flow figure must contain 2–6 steps.`);
+    }
+    const labels = [];
+    for (const step of figure.data.steps) {
+      if (!isPlainObject(step) || !hasOnlyKeys(step, ['label', 'detail']) || !isPlainText(step.label, 60)
+        || (step.detail !== undefined && !isPlainText(step.detail, 120))) fail(`${label} flow step is outside the automated contract.`);
+      labels.push(normalise(step.label));
+    }
+    if (new Set(labels).size !== labels.length) fail(`${label} flow-step labels must be unique.`);
+    return;
+  }
+  if (figure.type === 'comparison-bars') {
+    if (!hasOnlyKeys(figure.data, ['items', 'unit']) || (figure.data.unit !== undefined && !isPlainText(figure.data.unit, 40))
+      || !Array.isArray(figure.data.items) || figure.data.items.length < 2 || figure.data.items.length > 6) {
+      fail(`${label} comparison figure data is outside the automated contract.`);
+    }
+    const labels = [];
+    let positive = false;
+    for (const item of figure.data.items) {
+      if (!isPlainObject(item) || !hasOnlyKeys(item, ['label', 'value', 'display']) || !isPlainText(item.label, 60)
+        || typeof item.value !== 'number' || !Number.isFinite(item.value) || item.value < 0 || item.value > 1_000_000_000
+        || !isPlainText(item.display, 40)) fail(`${label} comparison item is outside the automated contract.`);
+      labels.push(normalise(item.label));
+      positive ||= item.value > 0;
+    }
+    if (!positive || new Set(labels).size !== labels.length) fail(`${label} comparison items must be unique and include a positive value.`);
+    return;
+  }
+  fail(`${label} figure type is not allowed for automated publication.`);
 }
 
 function parseYamlObject(source, label, allowedKeys) {
@@ -65,7 +129,7 @@ function parseFrontmatter(source, label, allowedKeys) {
   const end = source.indexOf('\n---\n', 4);
   if (end < 0) fail(`${label} has unterminated YAML front matter.`);
   const value = parseYamlObject(source.slice(4, end), `${label} front matter`, allowedKeys);
-  if (Object.hasOwn(value, 'figure')) fail(`${label} must not define a figure.`);
+  if (Object.hasOwn(value, 'figure')) validateAutomatedFigure(value.figure, label);
   return value;
 }
 

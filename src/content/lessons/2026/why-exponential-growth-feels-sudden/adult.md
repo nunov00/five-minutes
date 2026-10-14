@@ -5,6 +5,24 @@ takeaway: Constant doubling time means the largest absolute changes arrive near 
 question: What distinguishes exponential growth from linear growth?
 answer: Linear growth adds the same amount each period; exponential growth multiplies by the same factor, so each increase builds on a larger base.
 searchTerms: [exponential growth, doubling time, compounding]
+figure:
+  type: comparison-bars
+  alt: Repeated doubling grows from 1 to 32 in five steps, then from 32 to 1,024 in the next five steps.
+  caption: Half the doubling steps produce only about three per cent of the final amount.
+  description: Starting from one, five doublings produce 32 and ten doublings produce 1,024. The first half of the time therefore accounts for only 32 of the final 1,024 units because every later doubling acts on a larger base.
+  afterParagraph: 1
+  data:
+    unit: units after repeated doubling
+    items:
+      - label: Start
+        value: 1
+        display: "1"
+      - label: Step 5
+        value: 32
+        display: "32"
+      - label: Step 10
+        value: 1024
+        display: "1,024"
 ---
 Start with one unit and double it ten times. After five doublings you have 32—only about three per cent of the final 1,024. Half the time has passed, but almost all the growth is still ahead.
 

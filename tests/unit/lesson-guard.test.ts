@@ -33,6 +33,28 @@ searchTerms: [shadows]
 Body.
 `;
 const teen = adult.replace('Why Shadows Change', 'Your Shadow Is a Clock');
+const processFigure = `figure:
+  type: process-flow
+  alt: Light travels from the source to an object and then a shadow appears.
+  caption: A simple path.
+  description: The object blocks some of the light, producing a shadow behind it.
+  data:
+    steps:
+      - { label: Light source, detail: Light travels outwards. }
+      - { label: Object, detail: Some light is blocked. }
+      - { label: Shadow, detail: Less light reaches the surface. }
+`;
+const comparisonFigure = `figure:
+  type: comparison-bars
+  alt: Eight is four times two.
+  caption: A bounded comparison.
+  description: The later value is eight and the earlier value is two.
+  data:
+    unit: units
+    items:
+      - { label: Earlier, value: 2, display: "2" }
+      - { label: Later, value: 8, display: "8" }
+`;
 
 function file(filename: string, status: string, additions = 10, deletions = 0) {
   return { filename, status, additions, deletions, changes: additions + deletions };
@@ -78,6 +100,10 @@ describe('lesson-only publication guard', () => {
     expect(evaluateLessonPullRequest(value)).toEqual({ applicable: false, message: 'Not an automated lesson candidate.' });
   });
   it('accepts a valid bounded candidate', () => expect(evaluateLessonPullRequest(fixture())).toMatchObject({ applicable: true, slug, lessonId: id }));
+  it.each([processFigure,processFigure.replace('process-flow','cycle-flow'),comparisonFigure])('accepts an app-owned structured figure without adding files', (figure) => {
+    const value=fixture();const blob=value.blobs[`${root}/adult.md`];blob.text=blob.text.replace('searchTerms:', `${figure}searchTerms:`);blob.size=Buffer.byteLength(blob.text);
+    expect(evaluateLessonPullRequest(value)).toMatchObject({ applicable:true,slug,lessonId:id });
+  });
 
   it.each([
     ['branch signal without review request', (v: ReturnType<typeof fixture>) => { v.pr.labels = ['review:mandatory']; }],
@@ -114,7 +140,12 @@ describe('lesson-only publication guard', () => {
     ['duplicate YAML key', (v: ReturnType<typeof fixture>) => { const b=v.blobs[`${root}/lesson.yaml`]; b.text += `slug: other\n`; b.size=Buffer.byteLength(b.text); }],
     ['unknown metadata', (v: ReturnType<typeof fixture>) => { const b=v.blobs[`${root}/lesson.yaml`]; b.text += `hidden: true\n`; b.size=Buffer.byteLength(b.text); }],
     ['malformed frontmatter', (v: ReturnType<typeof fixture>) => { const b=v.blobs[`${root}/adult.md`]; b.text='---\ntitle: ['; b.size=Buffer.byteLength(b.text); }],
-    ['figure', (v: ReturnType<typeof fixture>) => { const b=v.blobs[`${root}/adult.md`]; b.text=b.text.replace('searchTerms:', 'figure: {}\nsearchTerms:'); b.size=Buffer.byteLength(b.text); }],
+    ['unsupported image figure', (v: ReturnType<typeof fixture>) => { const b=v.blobs[`${root}/adult.md`]; b.text=b.text.replace('searchTerms:', 'figure: { type: image, src: /lesson-media/x.png, width: 10, height: 10, alt: x, caption: x, description: x }\nsearchTerms:'); b.size=Buffer.byteLength(b.text); }],
+    ['unknown figure field', (v: ReturnType<typeof fixture>) => { const b=v.blobs[`${root}/adult.md`]; b.text=b.text.replace('searchTerms:', `${processFigure.replace('  data:', '  html: <script>x</script>\n  data:')}searchTerms:`); b.size=Buffer.byteLength(b.text); }],
+    ['markup in figure text', (v: ReturnType<typeof fixture>) => { const b=v.blobs[`${root}/adult.md`]; b.text=b.text.replace('searchTerms:', `${processFigure.replace('A simple path.', '[click](https://example.test)')}searchTerms:`); b.size=Buffer.byteLength(b.text); }],
+    ['too many flow steps', (v: ReturnType<typeof fixture>) => { const b=v.blobs[`${root}/adult.md`]; b.text=b.text.replace('searchTerms:', `${processFigure.replace('      - { label: Shadow, detail: Less light reaches the surface. }', '      - { label: Three }\n      - { label: Four }\n      - { label: Five }\n      - { label: Six }\n      - { label: Seven }')}searchTerms:`); b.size=Buffer.byteLength(b.text); }],
+    ['duplicate comparison label', (v: ReturnType<typeof fixture>) => { const b=v.blobs[`${root}/adult.md`]; b.text=b.text.replace('searchTerms:', `${comparisonFigure.replace('label: Later', 'label: earlier')}searchTerms:`); b.size=Buffer.byteLength(b.text); }],
+    ['comparison drawing instruction', (v: ReturnType<typeof fixture>) => { const b=v.blobs[`${root}/adult.md`]; b.text=b.text.replace('searchTerms:', `${comparisonFigure.replace('data:', 'data:\n    path: M0 0 L10 10')}searchTerms:`); b.size=Buffer.byteLength(b.text); }],
     ['adult activity', (v: ReturnType<typeof fixture>) => { const b=v.blobs[`${root}/adult.md`]; b.text=b.text.replace('searchTerms:', 'activity: {}\nsearchTerms:'); b.size=Buffer.byteLength(b.text); }],
   ])('rejects unsafe or ambiguous content: %s', (_name, mutate) => rejected(mutate));
 
