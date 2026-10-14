@@ -34,10 +34,22 @@ const cycleCentre=visualStyle==='heat-transfer'?'Heat moves':visualStyle==='feed
   </div>
   <p class="diagram-key">Axis tilt: about {tilt}°. N = north; S = south. Schematic, not to scale.</p>
  </> : figure.type==='process-flow' ? <div class:list={["structured-figure","process-flow",`visual-${visualStyle}`]} role="img" aria-label={figure.alt} aria-describedby={`${id}-description`}>
-  <ol class="filter-map" aria-hidden="true">
+  <div class="filter-illustration" aria-hidden="true">
+   <svg viewBox="0 0 360 220" focusable="false">
+    <path class="blood-vessel" d="M30 42H146c22 0 34 12 34 31s-12 31-34 31H72" />
+    <path class="filter-membrane" d="M178 64v55M190 64v55M202 64v55" />
+    <path class="fluid-path" d="M190 119c0 38 39 25 39 59h72" />
+    <path class="return-path" d="M211 136c-34 4-54 25-78 25-26 0-38-17-38-39" />
+    <path class="waste-path" d="M301 178h28" />
+    <circle class="blood-cell" cx="70" cy="73" r="12" /><circle class="blood-cell" cx="112" cy="73" r="8" />
+    <circle class="small-solute" cx="166" cy="74" r="4" /><circle class="small-solute" cx="166" cy="91" r="4" />
+    <text x="30" y="27">BLOOD</text><text x="220" y="106">FILTERED FLUID</text><text x="36" y="151">USEFUL MATERIAL RETURNS</text><text x="276" y="209">URINE</text>
+   </svg>
+  </div>
+  <ol class="filter-legend" aria-hidden="true">
    {flow.map((step,index)=><li class={`filter-step filter-step-${index+1}`}>
     <span class="visual-number">{index+1}</span>
-    <span><strong>{step.label}</strong>{step.detail&&<small>{step.detail}</small>}</span>
+    <strong>{step.label}</strong>
    </li>)}
   </ol>
  </div> : figure.type==='cycle-flow' ? <div class:list={["structured-figure","cycle-flow",`visual-${visualStyle}`]} role="img" aria-label={figure.alt} aria-describedby={`${id}-description`}>
