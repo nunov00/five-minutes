@@ -128,7 +128,7 @@ The Owner authorises the Manager to merge qualifying Pull Requests without a sep
 Before merging, the Manager must verify that:
 - all required automated checks have passed on the exact current PR head; required tests must actually run, not be skipped;
 - any preview/deployment verification required by the change's scope and risk has succeeded for that head;
-- the review required by section 9 for the PR's recorded classification is complete, with no unresolved BLOCKER or IMPORTANT findings; in particular, a `review:integration` activating PR cannot merge before its cumulative different-provider review;
+- the review required by section 9 for the PR's recorded classification is complete, with no unresolved BLOCKER or IMPORTANT findings; in particular, a `review:integration` activating PR cannot merge before its cumulative qualifying independent review under section 9;
 - remaining MINOR findings are explicitly non-blocking and are resolved or recorded as follow-up work;
 - the change stays within the Owner-authorised scope and does not introduce an unapproved product, major architecture, cost, privacy, security or destructive decision.
 
