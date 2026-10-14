@@ -12,7 +12,7 @@ export function selectTodayLesson(catalogue: readonly CatalogueEntry[]): Catalog
   let today = catalogue[0];
   for (const entry of catalogue.slice(1)) {
     const newer = Date.parse(entry.publishedAt) - Date.parse(today.publishedAt);
-    if (newer > 0 || (newer === 0 && entry.id > today.id)) today = entry;
+    if (newer > 0 || (newer === 0 && entry.id < today.id)) today = entry;
   }
   return today;
 }
