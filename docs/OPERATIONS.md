@@ -156,10 +156,11 @@ Removal requires a reviewed deploy that first stops reads/writes and then adds a
 
 ## Automated publication operations
 
-ADR-0007 is the authority for automated lesson publication. The initial subscription-based schedule is:
+ADR-0007 is the authority for automated lesson publication. The current subscription-based schedule (Owner-approved morning target, 2026-10-15) is:
 
-- writer task (initially ChatGPT): once per Europe/Zurich day and no later than 14:00, after checking `publication-paused`, closing clearly stale automated new-lesson PRs, and checking today's slot and remaining automated PRs; each candidate records the required Adult figure, Teen figure and Teen activity decisions and includes useful schema-valid enhancements, with figures restricted to the app-owned structured types accepted by `lesson-guard`;
-- reviewer task (ChatGPT/OpenAI at M7.5 activation; same-provider separate-pass review is permitted under ADR-0007): every two hours from approximately 06:00 through 20:00 Europe/Zurich;
+- writer task (initially ChatGPT): daily at 04:30 Europe/Zurich, retaining the 14:00 late-start cutoff, after checking `publication-paused`, closing clearly stale automated new-lesson PRs, and checking today's slot and remaining automated PRs; each candidate records the required Adult figure, Teen figure and Teen activity decisions and includes useful schema-valid enhancements, with figures restricted to the app-owned structured types accepted by `lesson-guard`;
+- reviewer task (ChatGPT/OpenAI at M7.5 activation; same-provider separate-pass review is permitted under ADR-0007): at 06:00, 07:00, 08:00, 10:00, 12:00, 14:00, 16:00, 18:00 and 20:00 Europe/Zurich;
+- morning target: Writer sets `publishedAt` to 06:00 on the current Zurich date with its correct UTC offset, even if the same-day run is delayed. Reviewer may merge only at or after that timestamp. The goal is deployment around 06:15; late dispatch, review or deployment can delay availability. The 07:00 run is recovery, not permission to skip any gate;
 - named merge checks: `baseline`, `e2e` and `lesson-guard` after M7.2; only the latest completed result of each exact name on the current SHA counts, and it must be `success`;
 - stale boundary: an unmerged candidate closes when its intended Zurich date ends;
 - failure behaviour: no source access, no capacity, no successful check or any uncertainty means no publication.

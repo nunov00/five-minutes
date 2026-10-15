@@ -13,7 +13,7 @@ M7.5 records the configured prompts and verifies exact correspondence; the month
 
 ## Writer task
 
-Run once per Europe/Zurich day and no later than 14:00.
+Run once per Europe/Zurich day, scheduled at 04:30, and no later than 14:00. Set the candidate’s `publishedAt` to 06:00 on that same Zurich calendar date, using the correct local UTC offset for that date. A delayed same-day run retains 06:00; never move the timestamp to a later arbitrary slot. The target is for the deployed lesson to be available around 06:15, subject to successful checks, review and deployment.
 
 1. After the bootstrap loads this file from current `main`, read current-main AGENTS.md, ADR-0006, ADR-0007, ADR-0008 and EDITORIAL.md.
 2. If any open issue has `publication-paused`, stop without changing publication state.
@@ -26,7 +26,7 @@ Run once per Europe/Zurich day and no later than 14:00.
 
 ## Reviewer task
 
-Poll every two hours from approximately 06:00 through 20:00 Europe/Zurich.
+Run at 06:00, 07:00, 08:00, 10:00, 12:00, 14:00, 16:00, 18:00 and 20:00 Europe/Zurich. The 06:00 run serves the morning publication target; 07:00 is a recovery opportunity when dispatch or checks delay the first attempt. Every run repeats the complete eligibility, editorial and guarded-merge checks; this schedule grants no early-publication or gate-bypass authority.
 
 1. After the bootstrap loads this file from current `main`, read current-main AGENTS.md, GOVERNANCE.md, ADR-0006, ADR-0007, ADR-0008, EDITORIAL.md and OPERATIONS.md.
 2. If any open issue has `publication-paused`, stop.
