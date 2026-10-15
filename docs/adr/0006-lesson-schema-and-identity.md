@@ -5,6 +5,7 @@ Date: 2026-10-02
 Owner approval: approved 2026-10-02.
 Amended: 2026-10-03 — presentation heading contract (Owner-approved during M4.1, PR #39; recorded at the M4 gate, #45).
 Amended: 2026-10-04 — Owner-approved optional per-edition figures and Teen-only activities (ADR-0009 / #63). Schema version advances from 1 to 2 when these fields are implemented.
+Amended: 2026-10-16 — Owner-approved optional manual archive metadata and truthful adaptation dates (#138).
 
 ## Context
 
