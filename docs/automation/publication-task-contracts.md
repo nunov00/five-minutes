@@ -13,7 +13,7 @@ M7.5 records the configured prompts and verifies exact correspondence; the month
 
 ## Writer task
 
-Run once per Europe/Zurich day, scheduled at 04:30, and no later than 14:00. Set the candidate’s `publishedAt` to 06:00 on that same Zurich calendar date, using the correct local UTC offset for that date. A delayed same-day run retains 06:00; never move the timestamp to a later arbitrary slot. The target is for the deployed lesson to be available around 06:15, subject to successful checks, review and deployment.
+Run once per Europe/Zurich day, scheduled at 04:30, and no later than 14:00. Set the candidate’s `publishedAt` to 06:00 on that same Zurich calendar date, using the correct local UTC offset for that date. If the actual `provenance.createdAt` is later than that target, set `publishedAt` to that actual creation timestamp instead; never backdate creation or choose an arbitrary later slot. In all cases `publishedAt` must be at least `provenance.createdAt` and remain on the current Zurich date. The target is for the deployed lesson to be available around 06:15, subject to successful checks, review and deployment.
 
 1. After the bootstrap loads this file from current `main`, read current-main AGENTS.md, ADR-0006, ADR-0007, ADR-0008 and EDITORIAL.md.
 2. If any open issue has `publication-paused`, stop without changing publication state.
