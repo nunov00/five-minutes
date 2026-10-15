@@ -47,9 +47,9 @@ function restore() {
   }
   const pageEdition = root.dataset.edition;
   if (root.dataset.today === 'true') {
-    if (edition) root.dataset.edition = edition;
-    else delete root.dataset.edition;
-    reflectEdition(edition);
+    const todayEdition = edition ?? 'adult';
+    root.dataset.edition = todayEdition;
+    reflectEdition(todayEdition);
   }
   else if (root.dataset.preferenceSurface === 'true') reflectEdition(edition);
   else if (pageEdition) reflectEdition(pageEdition);
@@ -80,9 +80,16 @@ document.addEventListener('click', event => {
   const link = event.target instanceof Element ? event.target.closest<HTMLAnchorElement>('a[data-edition-choice]') : null;
   const edition = link?.dataset.editionChoice;
   if (!link || !isEdition(edition) || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-  if (!store.chooseEdition(edition)) {
+  const saved = store.chooseEdition(edition);
+  if (!saved) {
     showNote(store.inspect().kind === 'invalid');
     try { sessionStorage.setItem(NOTICE_KEY, 'not-saved'); } catch { /* No URL notice is shared. */ }
+  }
+  if (saved && root.dataset.today === 'true' && link.closest('[data-global-selector]')) {
+    event.preventDefault();
+    root.dataset.edition = edition;
+    reflectEdition(edition);
+    return;
   }
   // A first choice completes the neutral handoff; an edition switch remains normal history.
   if (root.dataset.neutralDiscovery === 'true') { event.preventDefault(); location.replace(link.href); }

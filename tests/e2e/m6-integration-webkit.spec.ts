@@ -71,7 +71,8 @@ test.describe('M6 integration in WebKit', () => {
     await expect(plain.getByRole('region', { name: 'Takeaway', exact: true })).toBeVisible();
     await plain.getByRole('link', { name: 'Back to Today' }).click();
     await expect(plain.getByRole('heading', { level: 1, name: "Today's idea" })).toBeVisible();
-    await expect(plain.locator('[data-today-edition]')).toHaveCount(2);
+    await expect(plain.locator('[data-today-edition="adult"]')).toBeVisible();
+    await expect(plain.locator('[data-today-edition="teen"]')).toBeHidden();
     expect(await plain.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
     await noScript.close();
   });

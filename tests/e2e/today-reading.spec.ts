@@ -18,27 +18,39 @@ async function expectNoHorizontalOverflow(page: Page) {
 }
 
 test.describe('Today → lesson → edition switch → Takeaway → Test yourself', () => {
-  test('Today offers both editions of one published lesson', async ({ page }) => {
+  test('Today defaults to one Adult presentation and switches editions in place', async ({ page }) => {
     const routes = await deliveryRoutes(page);
     await page.goto('/');
 
     const today = page.locator('[data-lesson-id]').first();
     const lessonId = await today.getAttribute('data-lesson-id');
-    const adult = page.getByRole('link', { name: /^Read the Adult edition/ });
-    const teen = page.getByRole('link', { name: /^Read the Teen edition/ });
+    const adult = today.locator('[data-today-edition="adult"]');
+    const teen = today.locator('[data-today-edition="teen"]');
     await expect(adult).toBeVisible();
-    await expect(teen).toBeVisible();
+    await expect(teen).toBeHidden();
 
     const expected = routes.filter((route) => route.lessonId === lessonId);
-    expect(await adult.getAttribute('href')).toBe(expected.find((route) => route.edition === 'adult')?.path);
-    expect(await teen.getAttribute('href')).toBe(expected.find((route) => route.edition === 'teen')?.path);
+    await expect(adult.getByRole('link', { name: /^Read:/ })).toHaveAttribute('href', expected.find((route) => route.edition === 'adult')?.path ?? '');
     await expect(today.locator(':scope > .eyebrow time')).toHaveText(/^\d{1,2} [A-Z][a-z]+ \d{4}$/);
+    await expect(today).not.toContainText('Adult edition');
+    await expect(today).not.toContainText('Teen edition');
     const earlier = page.getByRole('region', { name: 'Earlier' });
     await expect(earlier.locator('[data-earlier-id]')).toHaveCount(3);
     await expect(earlier.locator('[data-earlier-edition="adult"]:visible')).toHaveCount(3);
+    await expect(earlier.locator('[data-earlier-edition="teen"]:visible')).toHaveCount(0);
+
+    const selector = page.getByRole('navigation', { name: 'Edition' });
+    await expect(selector.getByRole('link', { name: 'Adult' })).toHaveAttribute('aria-current', 'page');
+    await selector.getByRole('link', { name: 'Teen' }).click();
+    await expect(page).toHaveURL('/');
+    await expect(adult).toBeHidden();
+    await expect(teen).toBeVisible();
+    await expect(teen.getByRole('link', { name: /^Read:/ })).toHaveAttribute('href', expected.find((route) => route.edition === 'teen')?.path ?? '');
+    await expect(selector.getByRole('link', { name: 'Teen' })).toHaveAttribute('aria-current', 'page');
+    await expect(earlier.locator('[data-earlier-edition="adult"]:visible')).toHaveCount(0);
     await expect(earlier.locator('[data-earlier-edition="teen"]:visible')).toHaveCount(3);
-    await expect(earlier.getByRole('link', { name: /^Adult edition: / })).toHaveCount(3);
-    await expect(earlier.getByRole('link', { name: /^Teen edition: / })).toHaveCount(3);
+    await expect(page.getByRole('link', { name: 'Surprise me' })).toHaveCount(1);
+    expect(await page.evaluate(() => JSON.parse(localStorage.getItem('five-minutes.reader-state')!).edition)).toBe('teen');
   });
 
   test('Today shows only the deliberately saved edition on later visits', async ({ page }) => {
@@ -50,17 +62,37 @@ test.describe('Today → lesson → edition switch → Takeaway → Test yoursel
     await page.goto('/');
     await expect(page.locator('[data-today-edition="teen"]')).toBeVisible();
     await expect(page.locator('[data-today-edition="adult"]')).toBeHidden();
-    await expect(page.getByRole('link', { name: /^Read the Teen edition/ })).toBeVisible();
-    await expect(page.getByRole('link', { name: /^Read the Adult edition/ })).toBeHidden();
+    await expect(page.getByRole('link', { name: /^Read:/ })).toBeVisible();
     await expect(page.getByRole('navigation', { name: 'Edition' }).getByRole('link', { name: 'Teen' })).toHaveAttribute('aria-current', 'page');
     await expect(page.locator('[data-earlier-edition="teen"]:visible')).toHaveCount(3);
     await expect(page.locator('[data-earlier-edition="adult"]:visible')).toHaveCount(0);
 
     await page.getByRole('navigation', { name: 'Edition' }).getByRole('link', { name: 'Adult' }).click();
+    await expect(page).toHaveURL('/');
+    await page.getByRole('link', { name: /^Read:/ }).click();
     await expect(page).toHaveURL(/\/adult\//);
     await page.getByRole('link', { name: 'Back to Today' }).click();
     await expect(page.locator('[data-today-edition="adult"]')).toBeVisible();
     await expect(page.locator('[data-today-edition="teen"]')).toBeHidden();
+  });
+
+  test('Today restores its selector before enhancement and keeps canonical fallback navigation', async ({ page }) => {
+    await page.addInitScript(() => localStorage.setItem('five-minutes.reader-state', JSON.stringify({
+      version: 1, edition: 'teen', saved: [], read: {}, recent: [], appearance: 'system',
+    })));
+    await page.route('**/_astro/*.js', route => route.abort());
+    await page.goto('/');
+    await expect(page.locator('[data-today-edition="teen"]')).toBeVisible();
+    await expect(page.getByRole('navigation', { name: 'Edition' }).getByRole('link', { name: 'Teen' })).toHaveAttribute('aria-current', 'page');
+
+    await page.unroute('**/_astro/*.js');
+    await page.addInitScript(() => {
+      Object.defineProperty(window, 'localStorage', { get() { throw Error('blocked'); } });
+    });
+    await page.goto('/');
+    await page.getByRole('navigation', { name: 'Edition' }).getByRole('link', { name: 'Teen' }).click();
+    await expect(page).toHaveURL(/\/teen\/[a-z0-9-]+$/);
+    await expect(page.locator('#preference-note')).toBeVisible();
   });
 
   test('Today ignores an edition inside unreadable version 1 data', async ({ page }) => {
@@ -69,8 +101,8 @@ test.describe('Today → lesson → edition switch → Takeaway → Test yoursel
     })));
     await page.goto('/');
     await expect(page.locator('[data-today-edition="adult"]')).toBeVisible();
-    await expect(page.locator('[data-today-edition="teen"]')).toBeVisible();
-    await expect(page.locator('html')).not.toHaveAttribute('data-edition', /.+/);
+    await expect(page.locator('[data-today-edition="teen"]')).toBeHidden();
+    await expect(page.locator('html')).toHaveAttribute('data-edition', 'adult');
     await expect(page.locator('html')).not.toHaveAttribute('data-appearance', 'dark');
     await expect(page.locator('#reader-recovery')).toBeVisible();
   });
@@ -79,7 +111,7 @@ test.describe('Today → lesson → edition switch → Takeaway → Test yoursel
     await page.goto('/');
     const lessonId = await page.locator('[data-lesson-id]').first().getAttribute('data-lesson-id');
 
-    await page.getByRole('link', { name: /^Read the Adult edition/ }).click();
+    await page.getByRole('link', { name: /^Read:/ }).click();
     await expect(page).toHaveURL(/\/adult\/[a-z0-9-]+$/);
     const article = page.locator('article[data-lesson-id]');
     await expect(article).toHaveAttribute('data-lesson-id', lessonId!);
