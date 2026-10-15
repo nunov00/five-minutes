@@ -7,7 +7,7 @@ test('first-visit neutral chooser and preference forwarding preserve path/query/
  await page.getByRole('link',{name:'Explore Teen',exact:true}).click();await expect(page).toHaveURL('/editions/teen/library/page/2?q=clock#main');
  expect(await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!).edition,key)).toBe('teen');
  await page.goto('/topics/science?from=library#main');await expect(page).toHaveURL('/editions/teen/topics/science?from=library#main');
- await page.goto('/');await expect(page).toHaveURL('/');await expect(page.getByRole('link',{name:/^Read the Adult edition/})).toBeHidden();await expect(page.getByRole('link',{name:/^Read the Teen edition/})).toBeVisible();
+ await page.goto('/');await expect(page).toHaveURL('/');await expect(page.locator('[data-today-edition="adult"]')).toBeHidden();await expect(page.locator('[data-today-edition="teen"]')).toBeVisible();
 });
 test('explicit routes and alternate version do not write preference; selector adds history',async({page})=>{
  await prefer(page,'adult');await page.goto('/teen/why-earth-has-seasons');
@@ -122,7 +122,7 @@ test('Library Surprise Me follows its edition without changing preference', asyn
  await expect(page.locator('.lesson-card [aria-label^="Editions for"]')).toHaveCount(0);
  await Promise.all([
   page.waitForURL(url => /^\/teen\/[^/]+$/.test(url.pathname), {waitUntil:'load'}),
-  page.getByRole('link',{name:'Surprise me · Teen',exact:true}).click(),
+  page.getByRole('link',{name:'Surprise me',exact:true}).click(),
  ]);
  await expect(page.locator('article[data-lesson-id]')).toHaveAttribute('data-edition','teen');
  expect(await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!).edition,key)).toBe('adult');

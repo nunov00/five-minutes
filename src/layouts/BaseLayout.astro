@@ -23,7 +23,7 @@ const choices = editionPaths ?? { adult: editionDiscoveryPath(pathname,'adult') 
 const canonical = !neutralDiscovery && !noindex && Astro.site ? new URL(pathname,Astro.site).href : undefined;
 ---
 <!doctype html>
-<html lang="en" data-edition={edition} data-today={todaySurface?'true':undefined} data-neutral-discovery={neutralDiscovery ? 'true' : undefined} data-preference-surface={preferenceSurface?'true':undefined} data-search={search?'true':undefined} data-discovery={discovery||search?'true':undefined} data-discovery-bounds={JSON.stringify(bounds)}>
+<html lang="en" data-edition={edition ?? (todaySurface ? 'adult' : undefined)} data-today={todaySurface?'true':undefined} data-neutral-discovery={neutralDiscovery ? 'true' : undefined} data-preference-surface={preferenceSurface?'true':undefined} data-search={search?'true':undefined} data-discovery={discovery||search?'true':undefined} data-discovery-bounds={JSON.stringify(bounds)}>
   <head>
     <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light dark" /><meta name="description" content={description} /><title>{title}</title>
@@ -41,9 +41,15 @@ const canonical = !neutralDiscovery && !noindex && Astro.site ? new URL(pathname
     <a class="skip-link" href="#main">Skip to content</a>
     <header class="site-header"><div class="container">
       <a class="brand" href="/">Five Minutes</a>
-      <nav class="edition-switch" aria-label="Edition" data-global-selector>
-        {(['adult','teen'] as const).map(option=><a href={choices[option]} data-edition-choice={option} aria-current={option===edition?'page':undefined}>{option==='adult'?'Adult':'Teen'}</a>)}
-      </nav>
+      <div class="edition-control">
+        <span class="edition-control-label" aria-hidden="true">Edition</span>
+        <nav class="edition-switch" aria-label="Edition" data-global-selector>
+          {(['adult','teen'] as const).map(option=><a href={choices[option]} data-edition-choice={option} aria-current={option===(edition ?? (todaySurface ? 'adult' : undefined))?'page':undefined}>{option==='adult'?'Adult':'Teen'}</a>)}
+        </nav>
+      </div>
+      <script is:inline>
+        {const selected=document.documentElement.dataset.edition;document.querySelectorAll('[data-global-selector] [data-edition-choice]').forEach(link=>{if(link.getAttribute('data-edition-choice')===selected)link.setAttribute('aria-current','page');else link.removeAttribute('aria-current')})}
+      </script>
       <nav class="site-nav" aria-label="Main navigation">{navigation.map(item=><a href={item.href} aria-current={item.current?'page':undefined}>{item.label}</a>)}</nav>
     </div></header>
     <p id="preference-note" class="container quiet-note" hidden>Your choice will not be remembered on this device.</p>
