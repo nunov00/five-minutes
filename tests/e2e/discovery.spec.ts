@@ -133,7 +133,7 @@ test.describe('M5 discovery', () => {
   test('Surprise Me chooses another published lesson with a no-script fallback', async ({ page }) => {
     await page.goto('/');
     const currentId = await page.locator('[data-lesson-id]').first().getAttribute('data-lesson-id');
-    const link = page.getByRole('link', { name: 'Surprise me · Adult' });
+    const link = page.getByRole('link', { name: 'Surprise me' });
     await expect(link).toHaveAttribute('href', /\/adult\//);
     await link.click();
     await expect(page).toHaveURL(/\/adult\/[a-z0-9-]+$/);

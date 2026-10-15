@@ -11,8 +11,8 @@ interface Props {
 }
 const { edition: selectedEdition, catalogue, excludeId = '', adultFallback, teenFallback } = Astro.props as Props;
 const links: Array<{ edition: LessonEdition; fallback: string; label: string }> = [
-  { edition: 'adult', fallback: adultFallback, label: 'Surprise me · Adult' },
-  { edition: 'teen', fallback: teenFallback, label: 'Surprise me · Teen' },
+  { edition: 'adult', fallback: adultFallback, label: 'Surprise me' },
+  { edition: 'teen', fallback: teenFallback, label: 'Surprise me' },
 ];
 ---
 <div class="surprise-actions" data-surprise data-catalogue={catalogue.path} data-exclude-id={excludeId}>

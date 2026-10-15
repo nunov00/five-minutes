@@ -3,7 +3,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import SurpriseLinks from '../components/SurpriseLinks.astro';
 import { getBuildMetadata } from '../lib/content/build-content';
 import { buildDiscoveryArtifacts } from '../lib/discovery/artifacts';
-import { EDITION_LABELS } from '../lib/reading';
 import { taxonomyTopic } from '../lib/taxonomy';
 import { formatEditorialDate, selectEarlierLessons, selectTodayLesson } from '../lib/today';
 
@@ -12,7 +11,7 @@ const today = selectTodayLesson(manifest.catalogue);
 const lesson = lessons.find((candidate) => candidate.metadata.id === today.id);
 if (!lesson?.adult || !lesson.teen) throw new Error(`Today lesson ${today.id} is not a complete published lesson.`);
 
-// Both editions are offered explicitly; edition paths come from the manifest.
+// Both presentations are rendered for progressive enhancement; one selected edition is visible.
 const editions = [
   { edition: 'adult' as const, path: today.adult.path, presentation: lesson.adult },
   { edition: 'teen' as const, path: today.teen.path, presentation: lesson.teen },
@@ -32,10 +31,9 @@ const earlier = selectEarlierLessons(manifest.catalogue, today.id).map((entry) =
     <h1 id="today-heading">Today's idea</h1>
     {editions.map(({ edition, path, presentation }) => (
       <article class="card" data-today-edition={edition}>
-        <p class="eyebrow">{EDITION_LABELS[edition]} edition</p>
         <h2>{presentation.title}</h2>
         <p>{presentation.description}</p>
-        <a class="button" data-edition-choice={edition} href={path} aria-label={`Read the ${EDITION_LABELS[edition]} edition: ${presentation.title}`}>Read the {EDITION_LABELS[edition]} edition</a>
+        <a class="button" href={path} aria-label={`Read: ${presentation.title}`}>Read</a>
       </article>
     ))}
     <section class="earlier-section" aria-labelledby="earlier-heading">
@@ -45,8 +43,8 @@ const earlier = selectEarlierLessons(manifest.catalogue, today.id).map((entry) =
           <li data-earlier-id={entry.id}>
             <p class="earlier-meta"><time datetime={entry.publishedAt}>{formatEditorialDate(entry.publishedAt)}</time> · {entry.topicLabel}</p>
             <div class="earlier-links">
-              <a data-earlier-edition="adult" href={entry.adult.path} aria-label={`Adult edition: ${entry.adult.title}`}><span>Adult</span>{entry.adult.title}</a>
-              <a data-earlier-edition="teen" href={entry.teen.path} aria-label={`Teen edition: ${entry.teen.title}`}><span>Teen</span>{entry.teen.title}</a>
+              <a data-earlier-edition="adult" href={entry.adult.path}>{entry.adult.title}</a>
+              <a data-earlier-edition="teen" href={entry.teen.path}>{entry.teen.title}</a>
             </div>
           </li>
         ))}

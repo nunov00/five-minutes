@@ -5,6 +5,7 @@ Date: 2026-10-02
 Owner approval: approved 2026-10-02.
 Amended: 2026-10-03 — canonical route syntax settled before M5 (#47).
 Amended: 2026-10-04 — Owner-approved edition-specific discovery routes and neutral-entry semantics (ADR-0009 / #63).
+Amended: 2026-10-15 — Owner-approved single-edition Today surface with an Adult fallback (ADR-0009 / #131).
 
 ## Context
 
@@ -25,14 +26,14 @@ The semantic contract is:
 - an explicit Adult URL renders the Adult presentation;
 - an explicit Teen URL renders the Teen presentation;
 - browser-local edition preference may improve navigation but never changes the meaning of an explicit URL;
-- there is no default edition: on a first visit, `/` remains the neutral Today page exposing both editions; choosing one there is the global edition selector and stores that preference;
+- Today `/` shows the saved edition when valid and otherwise defaults its interface to Adult without storing that fallback; its global selector switches the whole Today surface in place and stores an explicit choice;
 - neutral `/library` and `/topics` entry points route a returning reader to the corresponding `/editions/<saved-edition>/...` URL while preserving query and hash; without saved preference they render a simple Adult/Teen chooser and do not default;
 - Search remains the single `/search` URL with an edition setting that initially uses saved preference when available and otherwise requires/retains an explicit reader choice;
 - an edition-specific URL always renders the edition named by that URL, including after browser restoration;
-- only global edition selection surfaces write preference (the header selector, Today choices and neutral Library/Topics chooser choices). On a lesson page it both writes preference and navigates to the same immutable lesson in the selected edition. Explicit/shared lesson navigation and a visually distinct “Read the other version” link never write preference;
+- only global edition selection surfaces write preference (the header selector and neutral Library/Topics chooser choices). On Today the selector switches in place; on a lesson page it both writes preference and navigates to the same immutable lesson in the selected edition. Explicit/shared lesson navigation, Today’s Read action and a visually distinct “Read the other version” link never write preference;
 - the selector reflects the edition of the page currently open. If browser storage is unavailable, it still navigates and quietly explains that the choice will not be remembered;
 - neutral pages re-check saved preference when restored from browser cache;
-- edition switches use normal history entries; they do not replace history. A first choice from a neutral Library/Topics chooser completes the neutral entry handoff with replacement history, preventing Back from returning to a chooser that immediately forwards again;
+- Today’s in-place edition switch does not create a history entry. Navigating edition switches use normal history entries and do not replace history. A first choice from a neutral Library/Topics chooser completes the neutral entry handoff with replacement history, preventing Back from returning to a chooser that immediately forwards again;
 - lesson Return is an ordinary generated link, never a browser-Back action: it targets the last Library, Topics or Search page visited in the current browsing session, otherwise Today;
 - both Adult and Teen presentations are required for publication;
 - drafts on branches may be temporarily incomplete while generation is in progress, but incomplete lessons are not publication-eligible and generate no production routes;
