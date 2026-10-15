@@ -108,6 +108,7 @@ test('unreadable reader data is preserved until an explicit warned reset', async
  for (const raw of ['{',JSON.stringify({version:2,saved:['future-data']}),JSON.stringify({...{version:2,edition:'teen',read:{},recent:[],appearance:'dark'},saved:[{id:duplicateId,edition:'adult'},{id:duplicateId,edition:'adult'}]})]) {
   await page.goto('/'); await page.evaluate(({key,raw}) => localStorage.setItem(key,raw),{key,raw});
   await page.goto('/library');
+  await expect(page.locator('html')).not.toHaveAttribute('data-appearance','dark');
   await expect(page.locator('#preference-note')).toContainText('kept unchanged');
   await page.getByRole('link', {name:'Explore Teen',exact:true}).click();
   expect(await page.evaluate(k=>localStorage.getItem(k),key)).toBe(raw);
