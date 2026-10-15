@@ -1,6 +1,6 @@
 import type { BrowserCatalogueEntry } from '../discovery/types';
 import type { LessonEdition } from '../urls';
-import { isAppearance, isEdition, MAX_READER_STATE_CHARS, parseReaderState, readerStorage, type ReaderAppearance, type ReaderStateV2 } from './state';
+import { isAppearance, isEdition, MAX_READER_IMPORT_BYTES, parseReaderState, readerStorage, type ReaderAppearance, type ReaderStateV2 } from './state';
 
 const root = document.documentElement;
 const store = readerStorage(() => localStorage);
@@ -134,7 +134,7 @@ document.querySelector<HTMLButtonElement>('[data-import-reader]')?.addEventListe
   const confirm = document.querySelector<HTMLInputElement>('[data-import-confirm]');
   const status = document.querySelector<HTMLElement>('[data-import-status]');
   if (!file || !confirm?.checked) { if (status) status.textContent = 'Choose a file and confirm that it may replace this device’s reader data.'; return; }
-  if (file.size > MAX_READER_STATE_CHARS) { if (status) status.textContent = 'That file is too large. Nothing was changed.'; return; }
+  if (file.size > MAX_READER_IMPORT_BYTES) { if (status) status.textContent = 'That file is too large. Nothing was changed.'; return; }
   const raw = await file.text();
   if (!parseReaderState(raw)) { if (status) status.textContent = 'That file is not valid Five Minutes reader data. Nothing was changed.'; return; }
   if (!store.replaceFromJson(raw)) { if (status) status.textContent = 'Reader data could not be saved. Nothing was changed.'; showWriteFailure(); return; }
