@@ -1,0 +1,28 @@
+schemaVersion: 2
+id: 65fd10bc-6efe-4c74-8da4-6ac8a5600301
+slug: why-experts-skip-the-obvious-step
+aliases: []
+publishedAt: 2026-10-16T01:00:00+02:00
+archive:
+  sourceUrl: https://five-minutes.vitoria-nuno.chatgpt.site/lesson/curse-knowledge
+  catalogueDate: 2026-08-04
+topic: human-mind
+subtopic: learning
+concepts: [curse-of-knowledge, explanation, perspective-taking]
+related:
+  manual:
+    - id: 24b8d784-84b3-40ee-b873-40e9d67b52f9
+      reason: Asking someone to retrieve an idea tests more than a feeling of familiarity.
+    - id: 7cd5dca8-857f-49e5-8fd5-16a03658b0b7
+      reason: A confident nod can be a poor stand-in for actual understanding.
+  exclude: []
+sources:
+  - title: "The Curse of Knowledge in Economic Settings: An Experimental Analysis"
+    url: https://authors.library.caltech.edu/records/zgwcn-vap73
+    publisher: CaltechAUTHORS — Camerer, Loewenstein and Weber
+    accessedAt: 2026-10-16
+    note: Experimental basis for better-informed people failing to disregard their own information; teaching scenarios here are illustrative applications, not measured study results.
+provenance:
+  createdAt: 2026-10-16T00:58:05+02:00
+  createdBy: { type: ai, provider: openai, promptVersion: legacy-migration-pilot-v1 }
+  reviews: []
