@@ -5,8 +5,27 @@ import { buildDiscoveryArtifacts } from '../../src/lib/discovery/artifacts';
 import { newestLessons } from '../../src/lib/discovery/catalogue';
 import { selectTodayLesson } from '../../src/lib/today';
 import { searchDocuments } from '../../src/lib/discovery/search';
+import { editorialTimestamp } from '../../src/lib/editorial-order';
 
 describe('archive discovery', () => {
+  it.each([
+    ['2026-10-03', '2026-10-02T22:00:00.000Z'],
+    ['2026-01-03', '2026-01-02T23:00:00.000Z'],
+    ['2026-03-29', '2026-03-28T23:00:00.000Z'],
+    ['2026-10-25', '2026-10-24T22:00:00.000Z'],
+  ])('normalises archive date %s to the start of the Zurich day', (archiveDate, instant) => {
+    expect(new Date(editorialTimestamp({ archiveDate, publishedAt: '2026-10-26T00:00:00Z' })).toISOString()).toBe(instant);
+  });
+
+  it('places an original just after Zurich midnight after an archive with the same calendar date', () => {
+    const original = validLesson();
+    original.metadata.publishedAt = '2026-10-03T00:30:00+02:00';
+    const archive = validLesson();
+    archive.metadata.archive = { sourceUrl: 'https://example.com/old', catalogueDate: '2026-10-03' };
+    archive.metadata.id = '018f47a2-5d7b-7c31-9d4f-0d9a8b6c2e12';
+    archive.metadata.publishedAt = '2026-10-16T00:00:00Z';
+    expect(newestLessons([archive, original])[0]).toBe(original);
+  });
   it('keeps actual publication time while ordering archive discovery by the legacy date', () => {
     const original = validLesson();
     const archive = validLesson();
