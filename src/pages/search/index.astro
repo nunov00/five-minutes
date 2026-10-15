@@ -19,11 +19,6 @@ const artifacts = buildDiscoveryArtifacts(lessons);
           <input id="lesson-query" name="q" type="search" autocomplete="off" enterkeyhint="search" minlength="2" required />
           <button class="button" type="submit">Search</button>
         </div>
-        <fieldset class="edition-options">
-          <legend>Edition</legend>
-          <label><input type="radio" name="edition" value="adult" /> Adult</label>
-          <label><input type="radio" name="edition" value="teen" /> Teen</label>
-        </fieldset>
       </form>
       <p class="search-status" role="status" aria-live="polite">Enter at least two characters to search.</p>
       <ol class="search-results" aria-label="Search results"></ol>
@@ -46,11 +41,9 @@ const artifacts = buildDiscoveryArtifacts(lessons);
   const indexes: Partial<Record<LessonEdition, Promise<SearchDocument[]>>> = {};
   let timer: number | undefined;
   let searchSequence = 0;
+  let activeEdition: LessonEdition = 'adult';
 
-  function selectedEdition(): LessonEdition | null {
-    const value=form?.querySelector<HTMLInputElement>('input[name="edition"]:checked')?.value;
-    return isEdition(value)?value:null;
-  }
+  function selectedEdition(): LessonEdition { return activeEdition; }
   function context(writeUrl=true) {
     const edition=selectedEdition(), url=new URL(location.href);
     if(writeUrl){
@@ -68,8 +61,7 @@ const artifacts = buildDiscoveryArtifacts(lessons);
   }
   function initialise() {
     const url=new URL(location.href), value=url.searchParams.get('edition');
-    const edition=isEdition(value)?value:readerStorage(()=>localStorage).read()?.edition;
-    form?.querySelectorAll<HTMLInputElement>('input[name="edition"]').forEach(r=>{r.checked=r.value===edition;});
+    activeEdition=isEdition(value)?value:(readerStorage(()=>localStorage).read()?.edition ?? 'adult');
     if(input)input.value=url.searchParams.get('q')??'';
     context(false);void runSearch();
   }
@@ -119,7 +111,6 @@ const artifacts = buildDiscoveryArtifacts(lessons);
     const query = input.value.trim();
     const edition = selectedEdition();
     list.replaceChildren();
-    if (!edition) { status.textContent = 'Choose Adult or Teen to search.'; return; }
     if (query.length < 2) { status.textContent = 'Enter at least two characters to search.'; return; }
     status.textContent = 'Searching…';
     try {
@@ -143,10 +134,6 @@ const artifacts = buildDiscoveryArtifacts(lessons);
   input?.addEventListener('input', () => {
     window.clearTimeout(timer);
     context();timer = window.setTimeout(() => void runSearch(), 180);
-  });
-  form?.addEventListener('change', () => {
-    window.clearTimeout(timer);context();
-    void runSearch();
   });
   window.addEventListener('pageshow',initialise);
   window.addEventListener('popstate',initialise);
