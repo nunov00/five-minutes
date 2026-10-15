@@ -1,0 +1,33 @@
+schemaVersion: 2
+id: b62dafd3-523e-4e40-a8e9-5afc55b00302
+slug: why-tails-is-not-due
+aliases: []
+publishedAt: 2026-10-16T01:00:00+02:00
+archive:
+  sourceUrl: https://five-minutes.vitoria-nuno.chatgpt.site/lesson/gamblers-fallacy
+  catalogueDate: 2026-08-05
+topic: mathematics-thinking
+subtopic: mathematics
+concepts: [probability, independence, gamblers-fallacy]
+related:
+  manual:
+    - id: 1629895d-f11a-4bb7-afe5-8c8df5c07123
+      reason: Both ideas show why an intuitive pattern can mislead without a model of the process.
+    - id: 7cd5dca8-857f-49e5-8fd5-16a03658b0b7
+      reason: A number becomes misleading when we ask it to promise something it does not measure.
+  exclude: []
+sources:
+  - title: Independent and Mutually Exclusive Events
+    url: https://openstax.org/books/statistics/pages/3-2-independent-and-mutually-exclusive-events
+    publisher: OpenStax
+    accessedAt: 2026-10-16
+    note: Independence, conditional probability and sampling with or without replacement.
+  - title: "Reading 6b: Central Limit Theorem and the Law of Large Numbers"
+    url: https://ocw.mit.edu/courses/18-05-introduction-to-probability-and-statistics-spring-2022/resources/mit18_05_s22_class06-prep-b_pdf/
+    publisher: MIT OpenCourseWare
+    accessedAt: 2026-10-16
+    note: "Section 3, PDF page 2, defines convergence of sample averages for independent trials and explicitly says a finite fair-coin sequence is not guaranteed to be balanced. Combined with OpenStax independence, this supports the distinction between long-run proportions and a compensating next toss."
+provenance:
+  createdAt: 2026-10-16T00:58:05+02:00
+  createdBy: { type: ai, provider: openai, promptVersion: legacy-migration-pilot-v1 }
+  reviews: []
