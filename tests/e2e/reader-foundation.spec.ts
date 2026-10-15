@@ -105,7 +105,9 @@ test('write failures use a session notice without contaminating shared links', a
 
 test('unreadable reader data is preserved until an explicit warned reset', async ({page}) => {
  const duplicateId='0199a5b7-6e21-7a42-9c3d-8f1b2e4a6c70';
- for (const raw of ['{',JSON.stringify({version:2,saved:['future-data']}),JSON.stringify({...{version:2,edition:'teen',read:{},recent:[],appearance:'dark'},saved:[{id:duplicateId,edition:'adult'},{id:duplicateId,edition:'adult'}]})]) {
+ const oversizedBase={version:1,edition:'teen',saved:[duplicateId],read:{},recent:[],appearance:'dark',extension:''};
+ const oversizedRaw=JSON.stringify({...oversizedBase,extension:'x'.repeat(1_000_000-JSON.stringify(oversizedBase).length)});
+ for (const raw of ['{',JSON.stringify({version:2,saved:['future-data']}),JSON.stringify({...{version:2,edition:'teen',read:{},recent:[],appearance:'dark'},saved:[{id:duplicateId,edition:'adult'},{id:duplicateId,edition:'adult'}]}),oversizedRaw]) {
   await page.goto('/'); await page.evaluate(({key,raw}) => localStorage.setItem(key,raw),{key,raw});
   await page.goto('/library');
   await expect(page.locator('html')).not.toHaveAttribute('data-appearance','dark');
