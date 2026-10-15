@@ -2,7 +2,7 @@
 
 Status: Accepted
 Date: 2026-10-04
-Owner approval: design direction accepted after device review; production contracts D1-D4 approved explicitly on 2026-10-04 under #63. The returning-reader Today refinement was approved during the M6.4 device review on 2026-10-04. On 2026-10-15 the Owner approved replacing Today’s duplicated first-visit choice with one selected presentation, defaulting to Adult when no valid preference exists, under #131. The same day, the Owner approved making the global selector the sole edition control and saving exact presentations under #133. ADR-0005 and ADR-0006 are amended by these decisions.
+Owner approval: design direction accepted after device review; production contracts D1-D4 approved explicitly on 2026-10-04 under #63. The returning-reader Today refinement was approved during the M6.4 device review on 2026-10-04. On 2026-10-15 the Owner approved replacing Today’s duplicated first-visit choice with one selected presentation, defaulting to Adult when no valid preference exists, under #131. The same day, the Owner approved making the global selector the sole edition control and saving exact presentations under #133. ADR-0005 and this production-experience contract are amended by those 2026-10-15 decisions; ADR-0006's lesson-content schema is unchanged.
 
 ## Context
 
