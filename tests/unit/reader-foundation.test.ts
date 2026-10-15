@@ -3,16 +3,16 @@ import { emptyReaderState, MAX_READER_STATE_CHARS, parseReaderState, READER_STAT
 import { validatedOrigin, forwardDestination } from '../../src/lib/reader/navigation';
 import { discoveryPath, editionDiscoveryPath } from '../../src/lib/urls';
 const id='0199a5b7-6e21-7a42-9c3d-8f1b2e4a6c70';
-describe('reader v1 storage and discovery contracts',()=>{
+describe('reader v2 storage and discovery contracts',()=>{
  it('the first preference write uses the full final envelope and preserves reader data',()=>{
   let raw:string|null=null;const port={getItem:()=>raw,setItem:(key:string,value:string)=>{expect(key).toBe(READER_STATE_KEY);raw=value;}};
   const storage=readerStorage(()=>port);expect(storage.chooseEdition('teen')).toBe(true);
   expect(JSON.parse(raw!)).toEqual({...emptyReaderState(),edition:'teen'});
-  raw=JSON.stringify({...emptyReaderState(),saved:[id],read:{[id]:'2026-10-04T08:00:00Z'},recent:[{id,edition:'teen',visitedAt:'2026-10-04T08:00:00Z'}],appearance:'dark',extension:{future:true}});
-  expect(storage.chooseEdition('adult')).toBe(true);expect(JSON.parse(raw!)).toMatchObject({saved:[id],appearance:'dark',extension:{future:true}});
+  raw=JSON.stringify({...emptyReaderState(),saved:[{id,edition:'teen'}],read:{[id]:'2026-10-04T08:00:00Z'},recent:[{id,edition:'teen',visitedAt:'2026-10-04T08:00:00Z'}],appearance:'dark',extension:{future:true}});
+  expect(storage.chooseEdition('adult')).toBe(true);expect(JSON.parse(raw!)).toMatchObject({saved:[{id,edition:'teen'}],appearance:'dark',extension:{future:true}});
  });
  it('does not overwrite corrupt or unknown-version state and catches blocked reads/writes',()=>{
-  for(const raw of ['{','null',JSON.stringify({version:2}),JSON.stringify({...emptyReaderState(),saved:['bad-id']})]){
+  for(const raw of ['{','null',JSON.stringify({version:3}),JSON.stringify({...emptyReaderState(),saved:['bad-id']})]){
    let writes=0;const storage=readerStorage(()=>({getItem:()=>raw,setItem:()=>{writes++;}}));expect(storage.read()).toBeNull();expect(storage.chooseEdition('adult')).toBe(false);expect(writes).toBe(0);
   }
   expect(readerStorage(()=>{throw Error('blocked');}).chooseEdition('teen')).toBe(false);
@@ -30,11 +30,39 @@ describe('reader v1 storage and discovery contracts',()=>{
   expect(readerStorage(()=>{throw Error('blocked');}).inspect()).toEqual({kind:'unavailable'});
   expect(readerStorage(()=>{throw Error('blocked');}).reset()).toBe(false);
  });
- it('saves one lesson across editions and toggles it without losing extensions',()=>{
+ it('migrates identity-only v1 saves to the preference or Adult without discarding extensions',()=>{
+  const legacy=(edition:'adult'|'teen'|null)=>JSON.stringify({version:1,edition,saved:[id],read:{},recent:[],appearance:'system',extension:{kept:true}});
+  expect(parseReaderState(legacy('teen'))).toMatchObject({version:2,saved:[{id,edition:'teen'}],extension:{kept:true}});
+  expect(parseReaderState(legacy(null))).toMatchObject({version:2,saved:[{id,edition:'adult'}]});
+  let raw=legacy('teen');const storage=readerStorage(()=>({getItem:()=>raw,setItem:(_key:string,value:string)=>{raw=value;}}));
+  expect(storage.read()).toMatchObject({version:2,saved:[{id,edition:'teen'}],extension:{kept:true}});
+  expect(JSON.parse(raw)).toMatchObject({version:2,saved:[{id,edition:'teen'}],extension:{kept:true}});
+  expect(storage.chooseEdition('adult')).toBe(true);expect(JSON.parse(raw)).toMatchObject({version:2,saved:[{id,edition:'teen'}],extension:{kept:true}});
+ });
+ it('leaves a size-valid v1 envelope untouched when its v2 migration would exceed the limit',()=>{
+  const base={version:1,edition:'teen',saved:[id],read:{},recent:[],appearance:'system',extension:''};
+  const baseRaw=JSON.stringify(base);
+  const raw=JSON.stringify({...base,extension:'x'.repeat(MAX_READER_STATE_CHARS-baseRaw.length)});
+  expect(raw).toHaveLength(MAX_READER_STATE_CHARS);
+  expect(parseReaderState(raw)).toBeNull();
+  let stored=raw,writes=0;
+  const storage=readerStorage(()=>({getItem:()=>stored,setItem:(_key:string,value:string)=>{writes++;stored=value;}}));
+  expect(storage.read()).toBeNull();expect(storage.inspect()).toEqual({kind:'invalid'});
+  expect(writes).toBe(0);expect(stored).toBe(raw);
+ });
+ it('rejects duplicate saved identities and presentations',()=>{
+  const v1={version:1,edition:'adult',saved:[id,id],read:{},recent:[],appearance:'system'};
+  const presentation={id,edition:'adult'};
+  const v2={...emptyReaderState(),saved:[presentation,presentation]};
+  expect(parseReaderState(JSON.stringify(v1))).toBeNull();
+  expect(parseReaderState(JSON.stringify(v2))).toBeNull();
+ });
+ it('saves Adult and Teen presentations independently without losing extensions',()=>{
   let raw=JSON.stringify({...emptyReaderState(),extension:{kept:true}});
   const storage=readerStorage(()=>({getItem:()=>raw,setItem:(_key:string,value:string)=>{raw=value;}}));
-  expect(storage.toggleSaved(id)).toBe(true);expect(storage.read()?.saved).toEqual([id]);
-  expect(storage.toggleSaved(id)).toBe(true);expect(storage.read()?.saved).toEqual([]);
+  expect(storage.toggleSaved(id,'teen')).toBe(true);expect(storage.read()?.saved).toEqual([{id,edition:'teen'}]);
+  expect(storage.toggleSaved(id,'adult')).toBe(true);expect(storage.read()?.saved).toEqual([{id,edition:'teen'},{id,edition:'adult'}]);
+  expect(storage.toggleSaved(id,'teen')).toBe(true);expect(storage.read()?.saved).toEqual([{id,edition:'adult'}]);
   expect(JSON.parse(raw).extension).toEqual({kept:true});
  });
  it('marks visits read, deduplicates recents by lesson and edition, and caps the list',()=>{
@@ -46,13 +74,15 @@ describe('reader v1 storage and discovery contracts',()=>{
   expect(storage.read()?.recent.filter(r=>r.id===ids.at(-1))).toHaveLength(2);
   expect(storage.setRead(ids.at(-1)!,false)).toBe(true);expect(storage.read()?.read[ids.at(-1)!]).toBeUndefined();
  });
- it('applies appearance and exports and imports only bounded valid v1 data',()=>{
+ it('applies appearance and exports and imports bounded v2 or migratable v1 data',()=>{
   let raw:string|null=null;const storage=readerStorage(()=>({getItem:()=>raw,setItem:(_key:string,value:string)=>{raw=value;}}));
   expect(storage.setAppearance('dark')).toBe(true);expect(storage.exportJson()).toContain('"appearance": "dark"');
-  const replacement=JSON.stringify({...emptyReaderState(),edition:'teen',saved:[id]});
-  expect(storage.replaceFromJson(replacement)).toBe(true);expect(storage.read()?.saved).toEqual([id]);
+  const replacement=JSON.stringify({...emptyReaderState(),edition:'teen',saved:[{id,edition:'teen'}]});
+  expect(storage.replaceFromJson(replacement)).toBe(true);expect(storage.read()?.saved).toEqual([{id,edition:'teen'}]);
+  expect(storage.replaceFromJson(JSON.stringify({version:1,edition:null,saved:[id],read:{},recent:[],appearance:'light'}))).toBe(true);
+  expect(JSON.parse(raw!)).toMatchObject({version:2,saved:[{id,edition:'adult'}],appearance:'light'});
   const before=raw;
-  for(const invalid of ['{',JSON.stringify({...emptyReaderState(),version:2}),JSON.stringify({...emptyReaderState(),appearance:'sepia'}),'x'.repeat(MAX_READER_STATE_CHARS+1)]){
+  for(const invalid of ['{',JSON.stringify({...emptyReaderState(),version:3}),JSON.stringify({...emptyReaderState(),appearance:'sepia'}),'x'.repeat(MAX_READER_STATE_CHARS+1)]){
    expect(storage.replaceFromJson(invalid)).toBe(false);expect(raw).toBe(before);
   }
  });
