@@ -47,8 +47,17 @@ export function parseReaderState(raw: string | null): ReaderStateV2 | null {
 export type ReaderStorageStatus = { kind: 'valid'; state: ReaderStateV2 } | { kind: 'invalid' | 'unavailable' };
 /** Unknown/corrupt versions are preserved, never silently overwritten. */
 export function readerStorage(getStorage: () => StoragePort) {
+  const load = (storage: StoragePort): ReaderStateV2 | null => {
+    const raw = storage.getItem(READER_STATE_KEY), state = parseReaderState(raw);
+    if (state && raw !== null) {
+      try {
+        if (JSON.parse(raw)?.version === 1) storage.setItem(READER_STATE_KEY, JSON.stringify(state));
+      } catch { /* A readable migration remains usable when persistence is unavailable. */ }
+    }
+    return state;
+  };
   const read = (): ReaderStateV2 | null => {
-    try { return parseReaderState(getStorage().getItem(READER_STATE_KEY)); }
+    try { return load(getStorage()); }
     catch { return null; }
   };
   const mutate = (change: (state: ReaderStateV2) => ReaderStateV2): boolean => {
@@ -63,7 +72,7 @@ export function readerStorage(getStorage: () => StoragePort) {
   };
   const inspect = (): ReaderStorageStatus => {
     try {
-      const state = parseReaderState(getStorage().getItem(READER_STATE_KEY));
+      const state = load(getStorage());
       return state ? { kind: 'valid', state } : { kind: 'invalid' };
     } catch { return { kind: 'unavailable' }; }
   };

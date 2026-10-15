@@ -35,7 +35,16 @@ describe('reader v2 storage and discovery contracts',()=>{
   expect(parseReaderState(legacy('teen'))).toMatchObject({version:2,saved:[{id,edition:'teen'}],extension:{kept:true}});
   expect(parseReaderState(legacy(null))).toMatchObject({version:2,saved:[{id,edition:'adult'}]});
   let raw=legacy('teen');const storage=readerStorage(()=>({getItem:()=>raw,setItem:(_key:string,value:string)=>{raw=value;}}));
+  expect(storage.read()).toMatchObject({version:2,saved:[{id,edition:'teen'}],extension:{kept:true}});
+  expect(JSON.parse(raw)).toMatchObject({version:2,saved:[{id,edition:'teen'}],extension:{kept:true}});
   expect(storage.chooseEdition('adult')).toBe(true);expect(JSON.parse(raw)).toMatchObject({version:2,saved:[{id,edition:'teen'}],extension:{kept:true}});
+ });
+ it('rejects duplicate saved identities and presentations',()=>{
+  const v1={version:1,edition:'adult',saved:[id,id],read:{},recent:[],appearance:'system'};
+  const presentation={id,edition:'adult'};
+  const v2={...emptyReaderState(),saved:[presentation,presentation]};
+  expect(parseReaderState(JSON.stringify(v1))).toBeNull();
+  expect(parseReaderState(JSON.stringify(v2))).toBeNull();
  });
  it('saves Adult and Teen presentations independently without losing extensions',()=>{
   let raw=JSON.stringify({...emptyReaderState(),extension:{kept:true}});

@@ -104,7 +104,8 @@ test('write failures use a session notice without contaminating shared links', a
 });
 
 test('unreadable reader data is preserved until an explicit warned reset', async ({page}) => {
- for (const raw of ['{',JSON.stringify({version:2,saved:['future-data']})]) {
+ const duplicateId='0199a5b7-6e21-7a42-9c3d-8f1b2e4a6c70';
+ for (const raw of ['{',JSON.stringify({version:2,saved:['future-data']}),JSON.stringify({...{version:2,edition:'teen',read:{},recent:[],appearance:'dark'},saved:[{id:duplicateId,edition:'adult'},{id:duplicateId,edition:'adult'}]})]) {
   await page.goto('/'); await page.evaluate(({key,raw}) => localStorage.setItem(key,raw),{key,raw});
   await page.goto('/library');
   await expect(page.locator('#preference-note')).toContainText('kept unchanged');
