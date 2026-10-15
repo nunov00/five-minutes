@@ -3,6 +3,7 @@ import type { LessonBundle } from '../content/schema';
 import { taxonomySubtopic, taxonomyTopic } from '../taxonomy';
 import { lessonPath, type LessonEdition } from '../urls';
 import type { BrowserCatalogueEntry, SearchDocument } from './types';
+import { editorialTimestamp } from '../editorial-order';
 
 export interface DiscoveryArtifact<T> {
   path: string;
@@ -23,8 +24,8 @@ function artifact<T>(prefix: string, payload: T): DiscoveryArtifact<T> {
   return { path: `/discovery/${prefix}.${hash}.json`, payload };
 }
 
-function compareNewest(a: { publishedAt: string; id: string }, b: { publishedAt: string; id: string }) {
-  const byDate = Date.parse(b.publishedAt) - Date.parse(a.publishedAt);
+function compareNewest(a: { publishedAt: string; id: string; archiveDate?: string }, b: { publishedAt: string; id: string; archiveDate?: string }) {
+  const byDate = Date.parse(editorialTimestamp(b)) - Date.parse(editorialTimestamp(a));
   return byDate || (a.id < b.id ? 1 : a.id > b.id ? -1 : 0);
 }
 
@@ -39,6 +40,7 @@ function searchDocument(lesson: LessonBundle, edition: LessonEdition): SearchDoc
     edition,
     path: lessonPath(edition, lesson.metadata.slug),
     publishedAt: new Date(lesson.metadata.publishedAt).toISOString(),
+    ...(lesson.metadata.archive ? { archiveDate: lesson.metadata.archive.catalogueDate } : {}),
     topic: topic.token,
     topicLabel: topic.label,
     subtopic: subtopic.token,
@@ -57,6 +59,7 @@ export function buildDiscoveryArtifacts(lessons: readonly LessonBundle[]): Disco
     return {
       id: lesson.metadata.id,
       publishedAt: new Date(lesson.metadata.publishedAt).toISOString(),
+      ...(lesson.metadata.archive ? { archiveDate: lesson.metadata.archive.catalogueDate } : {}),
       topic: lesson.metadata.topic,
       subtopic: lesson.metadata.subtopic,
       adult: { title: lesson.adult.title, path: lessonPath('adult', lesson.metadata.slug) },

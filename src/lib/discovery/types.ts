@@ -8,6 +8,7 @@ export interface DiscoveryPresentation {
 export interface BrowserCatalogueEntry {
   id: string;
   publishedAt: string;
+  archiveDate?: string;
   topic: string;
   subtopic: string;
   adult: DiscoveryPresentation;
@@ -19,6 +20,7 @@ export interface SearchDocument {
   edition: LessonEdition;
   path: string;
   publishedAt: string;
+  archiveDate?: string;
   topic: string;
   topicLabel: string;
   subtopic: string;

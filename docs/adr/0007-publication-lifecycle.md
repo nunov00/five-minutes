@@ -7,6 +7,8 @@ Owner approval: approved 2026-10-02; subscription-based automated publication di
 
 ## Context
 
+Archive amendment (Owner-approved direction, 2026-10-16; issue #138): legacy imports carry ADR-0006's optional `archive` metadata. Today and its Earlier list consider only non-archive lessons, ordered by their actual `publishedAt`, so bulk imports cannot consume the daily slot or displace new ideas. Library/Topics/search and related discovery still include archives. An archive-only corpus fails Today selection rather than silently promoting an import. Daily writer/reviewer eligibility, the guard, date/provenance rules and same-run merge authority are unchanged; archive imports require the normal Manager-led PR workflow. Archived catalogue dates are not publication timestamps for the automated daily slot.
+
 Five Minutes needs automated lesson creation without allowing an AI writer to publish arbitrary output directly to production. Draft/review/publish semantics must be unambiguous for pages, catalogue/search, sitemaps and Today.
 
 The Owner requires routine publication to be fully automatic, without per-lesson human approval and without separate OpenAI or Anthropic API accounts. The available subscription tools can write, review and merge through the Owner's GitHub identity, but they cannot provide separate authenticated writer/reviewer identities or a reviewer-owned required status check. The configured ChatGPT/OpenAI reviewer task can inspect Pull Requests and named CI results and can merge with an expected-head guard. Its routine is schedule-based.

@@ -137,6 +137,14 @@ YAML is parsed in a safe mode with custom/object-construction tags disabled. The
 
 ### Publication field
 
+#### Legacy archive imports (Owner-approved direction, 2026-10-16; issue #138)
+
+Schema version 2 accepts an optional additive `archive` mapping with exactly `sourceUrl` (an absolute HTTP(S) URL without credentials) and `catalogueDate` (a valid YYYY-MM-DD date no later than publication's Zurich date). This records the old site's catalogue label, not an independently verified first-publication date or invented original creation time. Existing lessons need no migration.
+
+For imported/adapted bundles, `provenance.createdAt` is the actual creation time of the new adaptation; `publishedAt` is its intended publication on this site and must still be at or after creation. The original date is never copied into either timestamp. The reading page identifies Archive, the legacy date and the adaptation's publication date. Library/search ordering uses the archive calendar date while retaining actual `publishedAt` in generated metadata. Original lessons and their dates/identities are unchanged.
+
+Archive imports are Manager-led reviewed changes, not automated daily candidates. The daily guard's existing closed metadata allow-list intentionally excludes `archive`. No schema version bump is required for this optional additive field; all existing version-2 content retains identical behaviour and output. Removal or a changed interpretation of existing required fields still needs a versioned migration.
+
 Canonical lesson files do not persist a `reviewed` workflow state. Draft/review status belongs to the branch/PR and required checks.
 
 A lesson PR sets `publishedAt` to its intended publication time before independent review. Content on `main` is authoritative published content; publication automation may merge only at or after `publishedAt`. CI rejects canonical production content missing a valid publication timestamp or violating publication policy.
