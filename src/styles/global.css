@@ -642,3 +642,5 @@ html[data-appearance=dark] .diagram-ray{stroke:#ecc86b}html[data-appearance=dark
 .preferences fieldset{border:0;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:8px 24px}.preferences label,.confirm-control{display:flex;align-items:center;gap:8px;min-height:44px}.preferences input,.confirm-control input{width:20px;height:20px;accent-color:var(--color-accent)}
 .data-tools{display:grid;gap:12px;min-width:0}.data-tools>*{margin-block:0;min-width:0}.data-tools .button{justify-self:start;max-width:100%}.file-control{display:grid;gap:6px;min-width:0}.file-control input{font:inherit;width:100%;min-width:0;max-width:100%}
 .reader-js-only{display:none}.reader-features .reader-js-only{display:block}.reader-features .reader-js-fallback{display:none}
+
+.reader-settings > summary{display:flex;justify-content:space-between;gap:16px;width:100%;padding:12px 0;border-block:1px solid var(--color-border);font-size:var(--text-lg);list-style:none}.reader-settings > summary::-webkit-details-marker{display:none}.settings-chevron{display:inline-block;font-size:1.5em;line-height:1;transform:rotate(0deg)}.reader-settings[open] > summary .settings-chevron{transform:rotate(90deg)}
