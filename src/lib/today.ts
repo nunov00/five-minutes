@@ -4,13 +4,14 @@ import type { CatalogueEntry } from './delivery-manifest';
 export const EDITORIAL_TIMEZONE = 'Europe/Zurich';
 
 /**
- * ADR-0007: Today is the newest published lesson by `publishedAt`.
+ * ADR-0007: Today is the newest non-archive lesson by `publishedAt`.
  * Equal timestamps are broken by lesson ID so the static build stays deterministic.
  */
 export function selectTodayLesson(catalogue: readonly CatalogueEntry[]): CatalogueEntry {
-  if (catalogue.length === 0) throw new Error('Cannot select Today without published lessons.');
-  let today = catalogue[0];
-  for (const entry of catalogue.slice(1)) {
+  const originals = catalogue.filter((entry) => entry.archiveDate === undefined);
+  if (originals.length === 0) throw new Error('Cannot select Today without published lessons eligible for Today.');
+  let today = originals[0];
+  for (const entry of originals.slice(1)) {
     const newer = Date.parse(entry.publishedAt) - Date.parse(today.publishedAt);
     if (newer > 0 || (newer === 0 && entry.id > today.id)) today = entry;
   }
@@ -25,7 +26,7 @@ export function selectEarlierLessons(
 ): CatalogueEntry[] {
   if (!Number.isInteger(limit) || limit < 0) throw new Error('Earlier lesson limit must be a non-negative integer.');
   return catalogue
-    .filter((entry) => entry.id !== todayId)
+    .filter((entry) => entry.id !== todayId && entry.archiveDate === undefined)
     .sort((a, b) => {
       const newer = Date.parse(b.publishedAt) - Date.parse(a.publishedAt);
       return newer || (a.id < b.id ? 1 : a.id > b.id ? -1 : 0);

@@ -8,6 +8,13 @@ const entry = (id: string, publishedAt: string): CatalogueEntry => ({
 });
 
 describe('Today selection (ADR-0007)', () => {
+  it('never promotes a newly imported archive on Today or Earlier', () => {
+    const original = entry('a', '2026-10-01T06:00:00Z');
+    const archive = { ...entry('z', '2026-10-16T06:00:00Z'), archiveDate: '2026-08-04' };
+    expect(selectTodayLesson([archive, original]).id).toBe('a');
+    expect(selectEarlierLessons([archive, original], 'a')).toEqual([]);
+    expect(() => selectTodayLesson([archive])).toThrow(/eligible for Today/);
+  });
   it('selects the newest published lesson regardless of catalogue order', () => {
     const catalogue = [
       entry('a', '2026-10-01T06:00:00.000Z'),

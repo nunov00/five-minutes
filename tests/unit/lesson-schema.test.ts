@@ -19,6 +19,31 @@ describe('lesson schema v2', () => {
     expect(validateLessonBundle(validLesson())).toEqual({ valid: true, issues: [] });
   });
 
+  it('accepts honest archive history without backdating creation or publication', () => {
+    const lesson = validLesson();
+    lesson.metadata.archive = { sourceUrl: 'https://example.com/lesson/original', catalogueDate: '2026-08-04' };
+    expect(validateLessonBundle(lesson).valid).toBe(true);
+    lesson.metadata.publishedAt = '2026-08-04T00:00:00Z';
+    expect(validateLessonBundle(lesson).issues).toContainEqual(expect.objectContaining({ code: 'publication-before-creation' }));
+  });
+
+  it.each([null, [], {}, { sourceUrl: 'javascript:alert(1)', catalogueDate: '2026-08-04' },
+    { sourceUrl: 'https://user:password@example.com/', catalogueDate: '2026-08-04' },
+    { sourceUrl: 'https://example.com/', catalogueDate: '2026-02-30' },
+    { sourceUrl: 'https://example.com/', catalogueDate: '2026-10-04' },
+    { sourceUrl: 'https://example.com/', catalogueDate: '2026-08-04', extra: true },
+  ])('rejects malformed, unsafe or future archive metadata %j', (archive) => {
+    const lesson = validLesson();
+    expect(validateLessonBundle({ ...lesson, metadata: { ...lesson.metadata, archive } }).valid).toBe(false);
+  });
+
+  it('compares archive calendar dates in Zurich at the UTC midnight boundary', () => {
+    const lesson = validLesson();
+    lesson.metadata.publishedAt = '2026-10-03T00:30:00+02:00';
+    lesson.metadata.archive = { sourceUrl: 'https://example.com/lesson', catalogueDate: '2026-10-03' };
+    expect(validateLessonBundle(lesson).valid).toBe(true);
+  });
+
   it('allows a draft to be temporarily missing one presentation', () => {
     const lesson = validLesson();
     delete lesson.teen;

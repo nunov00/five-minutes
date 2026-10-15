@@ -2,6 +2,7 @@
 import type { LessonBundle } from '../lib/content/schema';
 import { taxonomySubtopic, taxonomyTopic } from '../lib/taxonomy';
 import { formatEditorialDate } from '../lib/today';
+import { lessonEditorialTimestamp } from '../lib/editorial-order';
 import { lessonPath, type LessonEdition } from '../lib/urls';
 
 interface Props { lesson: LessonBundle; edition: LessonEdition; }
@@ -18,7 +19,7 @@ if (!topic || !subtopic) throw new Error(`Cannot render unknown taxonomy for ${l
   <h2><a href={lessonPath(edition, lesson.metadata.slug)}>{presentation.title}</a></h2>
   <p>{presentation.description}</p>
   <div class="card-actions">
-    <time datetime={lesson.metadata.publishedAt}>{formatEditorialDate(lesson.metadata.publishedAt)}</time>
+    {lesson.metadata.archive ? <span>Archive · <time datetime={lessonEditorialTimestamp(lesson.metadata)}>{formatEditorialDate(lessonEditorialTimestamp(lesson.metadata))}</time></span> : <time datetime={lesson.metadata.publishedAt}>{formatEditorialDate(lesson.metadata.publishedAt)}</time>}
     <span class="reader-markers" data-reader-markers hidden></span>
   </div>
 </article>

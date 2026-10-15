@@ -2,10 +2,12 @@
 
 Status: Accepted
 Date: 2026-10-02
-Amended: 2026-10-04; 2026-10-09 (same-provider review permitted); 2026-10-12 (activation configuration wording); 2026-10-14 (figure/activity assessment and safe structured figures); 2026-10-14 (optional Copilot review evidence); 2026-10-15 (Owner-approved morning publication target)
+Amended: 2026-10-04; 2026-10-09 (same-provider review permitted); 2026-10-12 (activation configuration wording); 2026-10-14 (figure/activity assessment and safe structured figures); 2026-10-14 (optional Copilot review evidence); 2026-10-15 (Owner-approved morning publication target); 2026-10-16 (Owner-approved manual archive import direction, #138)
 Owner approval: approved 2026-10-02; subscription-based automated publication direction approved 2026-10-04; same-provider review permitted 2026-10-09; conditional figures and Teen activities approved 2026-10-14; 04:30 Writer, 06:00 publication target and 07:00 recovery review approved 2026-10-15.
 
 ## Context
+
+Archive amendment (Owner-approved direction, 2026-10-16; issue #138): legacy imports carry ADR-0006's optional `archive` metadata. Today and its Earlier list consider only non-archive lessons, ordered by their actual `publishedAt`, so bulk imports cannot consume the daily slot or displace new ideas. Library/Topics/search and related discovery still include archives. An archive-only corpus fails Today selection rather than silently promoting an import. Daily writer/reviewer eligibility, the guard, date/provenance rules and same-run merge authority are unchanged; archive imports require the normal Manager-led PR workflow. Archived catalogue dates are not publication timestamps for the automated daily slot.
 
 Five Minutes needs automated lesson creation without allowing an AI writer to publish arbitrary output directly to production. Draft/review/publish semantics must be unambiguous for pages, catalogue/search, sitemaps and Today.
 
@@ -49,9 +51,9 @@ This strict same-day rule is intentionally simpler than a rolling grace period. 
 
 ### Today
 
-**Today is the newest published lesson according to `publishedAt`.**
+**Today is the newest published non-archive lesson according to `publishedAt`.**
 
-It is not a separate manually maintained content slot. If no new lesson is published on a calendar day, Today continues to show the newest published lesson.
+It is not a separate manually maintained content slot. If no new non-archive lesson is published on a calendar day, Today continues to show the newest published non-archive lesson. The Earlier list also excludes archives. Surprise Me and related discovery may still lead to archive lessons: those are exploration links, not new-publication slots.
 
 Adult and Teen presentations share the same publication identity and `publishedAt`. A lesson is not publication-eligible unless both presentations exist and pass their gates.
 

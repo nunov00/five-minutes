@@ -26,6 +26,7 @@ export interface LessonMetadata {
   slug: string;
   aliases: string[];
   publishedAt: string;
+  archive?: { sourceUrl: string; catalogueDate: string };
   topic: string;
   subtopic: string;
   concepts: string[];
@@ -82,7 +83,7 @@ const TOKEN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const PRESENTATION_KEYS = new Set(['title', 'description', 'takeaway', 'question', 'answer', 'searchTerms', 'figure', 'activity']);
 const METADATA_KEYS = new Set([
   'schemaVersion', 'id', 'slug', 'aliases', 'publishedAt', 'topic', 'subtopic',
-  'concepts', 'related', 'sources', 'provenance',
+  'concepts', 'related', 'sources', 'provenance', 'archive',
 ]);
 
 function issue(issues: ValidationIssue[], path: string, code: string, message: string) {
@@ -168,6 +169,25 @@ export function validateLessonMetadata(value: unknown, path = 'metadata'): Valid
 
   if (!isValidTimestamp(value.publishedAt)) {
     issue(issues, `${path}.publishedAt`, 'timestamp', 'Expected an unambiguous ISO publication timestamp.');
+  }
+  if (value.archive !== undefined) {
+    if (!isObject(value.archive)) {
+      issue(issues, `${path}.archive`, 'archive', 'Expected sourceUrl and catalogueDate.');
+    } else {
+      validateExactKeys(value.archive, new Set(['sourceUrl', 'catalogueDate']), `${path}.archive`, issues);
+      if (!isSafeSourceUrl(value.archive.sourceUrl)) {
+        issue(issues, `${path}.archive.sourceUrl`, 'source-url', 'Archive source must be an absolute HTTP(S) URL without credentials.');
+      }
+      const date = value.archive.catalogueDate;
+      if (typeof date !== 'string' || !DATE.test(date) || !isValidTimestamp(`${date}T00:00:00Z`)) {
+        issue(issues, `${path}.archive.catalogueDate`, 'archive-date', 'Expected a real YYYY-MM-DD legacy catalogue date.');
+      } else if (isValidTimestamp(value.publishedAt)) {
+        const parts = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Zurich', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(new Date(value.publishedAt));
+        const part = (type: string) => parts.find((p) => p.type === type)!.value;
+        const publicationDate = `${part('year')}-${part('month')}-${part('day')}`;
+        if (date > publicationDate) issue(issues, `${path}.archive.catalogueDate`, 'archive-date', 'Legacy catalogue date cannot follow publication in Zurich.');
+      }
+    }
   }
   for (const key of ['topic', 'subtopic'] as const) {
     if (!nonEmpty(value[key]) || !TOKEN.test(value[key])) issue(issues, `${path}.${key}`, 'taxonomy-token', 'Expected a canonical taxonomy token.');
