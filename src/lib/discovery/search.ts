@@ -1,4 +1,5 @@
 import type { SearchDocument } from './types';
+import { editorialTimestamp } from '../editorial-order';
 
 export interface SearchResult {
   document: SearchDocument;
@@ -70,7 +71,7 @@ export function searchDocuments(
     if (matchedTokens !== queryTokens.length) return [];
     return [{ document, score }];
   }).sort((a, b) => b.score - a.score
-    || Date.parse(b.document.publishedAt) - Date.parse(a.document.publishedAt)
+    || Date.parse(editorialTimestamp(b.document)) - Date.parse(editorialTimestamp(a.document))
     || a.document.id.localeCompare(b.document.id))
     .slice(0, limit);
 }

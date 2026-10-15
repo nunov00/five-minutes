@@ -5,6 +5,7 @@ Date: 2026-10-02
 Owner approval: approved 2026-10-02.
 Amended: 2026-10-03 — presentation heading contract (Owner-approved during M4.1, PR #39; recorded at the M4 gate, #45).
 Amended: 2026-10-04 — Owner-approved optional per-edition figures and Teen-only activities (ADR-0009 / #63). Schema version advances from 1 to 2 when these fields are implemented.
+Amended: 2026-10-16 — Owner-approved optional manual archive metadata and truthful adaptation dates (#138).
 
 ## Context
 
@@ -136,6 +137,14 @@ Raw HTML in lesson Markdown is disabled. Rendered lesson HTML is sanitized as de
 YAML is parsed in a safe mode with custom/object-construction tags disabled. The application owns a Content Security Policy; deployment adapters apply it as response headers where supported, with standards-compatible document controls used where appropriate. Provider-specific header syntax is not part of the lesson/domain contract.
 
 ### Publication field
+
+#### Legacy archive imports (Owner-approved direction, 2026-10-16; issue #138)
+
+Schema version 2 accepts an optional additive `archive` mapping with exactly `sourceUrl` (an absolute HTTP(S) URL without credentials) and `catalogueDate` (a valid YYYY-MM-DD date no later than publication's Zurich date). This records the old site's catalogue label, not an independently verified first-publication date or invented original creation time. Existing lessons need no migration.
+
+For imported/adapted bundles, `provenance.createdAt` is the actual creation time of the new adaptation; `publishedAt` is its intended publication on this site and must still be at or after creation. The original date is never copied into either timestamp. The reading page identifies Archive, the legacy date and the adaptation's publication date. Library/search ordering uses the archive calendar date while retaining actual `publishedAt` in generated metadata. Original lessons and their dates/identities are unchanged.
+
+Archive imports are Manager-led reviewed changes, not automated daily candidates. The daily guard's existing closed metadata allow-list intentionally excludes `archive`. No schema version bump is required for this optional additive field; all existing version-2 content retains identical behaviour and output. Removal or a changed interpretation of existing required fields still needs a versioned migration.
 
 Canonical lesson files do not persist a `reviewed` workflow state. Draft/review status belongs to the branch/PR and required checks.
 

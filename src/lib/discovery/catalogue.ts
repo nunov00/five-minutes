@@ -1,6 +1,7 @@
 import { discoveryPath, type LessonEdition } from '../urls';
 import type { LessonBundle } from '../content/schema';
 import { TAXONOMY } from '../taxonomy';
+import { lessonEditorialTimestamp } from '../editorial-order';
 
 const testPageSize = process.env.FIVE_MINUTES_TEST_LIBRARY_PAGE_SIZE;
 export const LIBRARY_PAGE_SIZE = testPageSize === undefined ? 24 : Number(testPageSize);
@@ -9,7 +10,7 @@ if (!Number.isInteger(LIBRARY_PAGE_SIZE) || LIBRARY_PAGE_SIZE < 1) {
 }
 
 export function newestLessons(lessons: readonly LessonBundle[]): LessonBundle[] {
-  return [...lessons].sort((a, b) => Date.parse(b.metadata.publishedAt) - Date.parse(a.metadata.publishedAt)
+  return [...lessons].sort((a, b) => Date.parse(lessonEditorialTimestamp(b.metadata)) - Date.parse(lessonEditorialTimestamp(a.metadata))
     || (a.metadata.id < b.metadata.id ? 1 : a.metadata.id > b.metadata.id ? -1 : 0));
 }
 
