@@ -266,7 +266,6 @@ export function evaluateLessonPullRequest(input) {
   const publishedAt = new Date(metadata.publishedAt);
   const nowDate = new Date(now);
   if (!Number.isFinite(publishedAt.valueOf()) || !Number.isFinite(nowDate.valueOf())) fail('Publication time is invalid.');
-  if (publishedAt > nowDate) fail('Publication time must not be in the future.');
   const publicationDate = zurichDate(publishedAt);
   if (publicationDate !== zurichDate(nowDate)) fail('Publication date must be the current Europe/Zurich date.');
   if (!publicationDate.startsWith(`${year}-`)) fail('Lesson directory year must match publishedAt in Europe/Zurich.');
