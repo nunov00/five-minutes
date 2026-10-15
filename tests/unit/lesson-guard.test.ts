@@ -164,7 +164,11 @@ describe('lesson-only publication guard', () => {
   it('rejects a stale merge base', () => rejected((v) => { v.mergeBaseSha='a'.repeat(40); }, /current main/));
   it('rejects a head behind current main', () => rejected((v) => { v.behindBy=1; }, /current main/));
   it('rejects a past Zurich date', () => rejected((v) => { v.now='2026-10-06T06:00:00+02:00'; }, /current Europe\/Zurich date/));
-  it('rejects a future time', () => rejected((v) => { v.now='2026-10-05T04:00:00+02:00'; }, /future/));
+  it('accepts a future time on the current Zurich date', () => {
+    const value = fixture(); value.now='2026-10-05T04:00:00+02:00';
+    expect(evaluateLessonPullRequest(value)).toMatchObject({ applicable: true, slug, lessonId: id });
+  });
+  it('rejects a future Zurich date', () => rejected((v) => { v.now='2026-10-04T23:59:00+02:00'; }, /current Europe\/Zurich date/));
 
   it.each([
     ['removed route', (v: ReturnType<typeof fixture>) => { setRegistry(v, JSON.stringify({ [slug]: id })); }],
