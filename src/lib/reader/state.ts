@@ -3,6 +3,8 @@ import type { LessonEdition } from '../urls';
 export const READER_STATE_KEY = 'five-minutes.reader-state';
 export const RECENT_LIMIT = 50;
 export const MAX_READER_STATE_CHARS = 1_000_000;
+// UTF-8 needs at most three bytes per JavaScript UTF-16 code unit.
+export const MAX_READER_IMPORT_BYTES = 3 * MAX_READER_STATE_CHARS;
 export type ReaderAppearance = 'system' | 'light' | 'dark';
 export interface SavedPresentation { id: string; edition: LessonEdition; }
 export interface ReaderStateV2 {
@@ -117,7 +119,9 @@ export function readerStorage(getStorage: () => StoragePort) {
     },
     exportJson(): string | null {
       const state = read();
-      return state ? `${JSON.stringify(state, null, 2)}\n` : null;
+      if (!state) return null;
+      const pretty = `${JSON.stringify(state, null, 2)}\n`;
+      return pretty.length <= MAX_READER_STATE_CHARS ? pretty : JSON.stringify(state);
     },
     replaceFromJson(raw: string): boolean {
       if (raw.length > MAX_READER_STATE_CHARS) return false;

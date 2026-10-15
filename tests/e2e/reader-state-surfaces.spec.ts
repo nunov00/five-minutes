@@ -57,6 +57,21 @@ test('import requires confirmation, rejects invalid data, and migrates valid v1 
   expect(await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!),key)).toEqual({...valid,version:2});
 });
 
+test('imports a non-ASCII backup over one megabyte and rejects oversized files without replacement',async({page})=>{
+ await page.goto('/saved');
+ const valid={version:2,edition:'teen',saved:[],read:{},recent:[],appearance:'dark',extension:'漢'.repeat(500_000)};
+ const buffer=Buffer.from(JSON.stringify(valid));expect(buffer.length).toBeGreaterThan(1_000_000);
+ const file=page.locator('[data-import-file]');
+ await file.setInputFiles({name:'unicode.json',mimeType:'application/json',buffer});
+ await page.locator('[data-import-confirm]').check();await page.getByRole('button',{name:'Import and replace'}).click();
+ await expect(page.locator('[data-import-status]')).toHaveText('Reader data imported.');
+ expect(await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!),key)).toEqual(valid);
+ await file.setInputFiles({name:'oversized.json',mimeType:'application/json',buffer:Buffer.alloc(3_000_001,32)});
+ await page.locator('[data-import-confirm]').check();await page.getByRole('button',{name:'Import and replace'}).click();
+ await expect(page.locator('[data-import-status]')).toContainText('too large');
+ expect(await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!),key)).toEqual(valid);
+});
+
 test('another tab refreshes Saved through the storage event', async ({page}) => {
   await page.goto('/saved'); await expect(page.locator('[data-saved-empty]')).toHaveText('No saved lessons yet.');
   const reading=await page.context().newPage(); await reading.goto(lesson); await reading.getByRole('button',{name:'Save lesson',exact:true}).click();
