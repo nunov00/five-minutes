@@ -2,7 +2,7 @@
 
 Status: Accepted
 Date: 2026-10-02
-Amended: 2026-10-04; 2026-10-09 (same-provider review permitted); 2026-10-12 (activation configuration wording); 2026-10-14 (figure/activity assessment and safe structured figures); 2026-10-14 (optional Copilot review evidence)
+Amended: 2026-10-04; 2026-10-09 (same-provider review permitted); 2026-10-12 (activation configuration wording); 2026-10-14 (figure/activity assessment and safe structured figures); 2026-10-14 (optional Copilot review evidence); 2026-10-15 (Owner-approved morning publication target)
 Owner approval: approved 2026-10-02; subscription-based automated publication direction approved 2026-10-04; same-provider review permitted 2026-10-09; conditional figures and Teen activities approved 2026-10-14.
 
 ## Context
@@ -35,7 +35,7 @@ The scheduled reviewer (ChatGPT/OpenAI at M7.5 activation) may merge only under 
 
 ### Publication time and daily slot
 
-`publishedAt` is the intended/effective publication timestamp and is written before review. Automated lessons use Europe/Zurich as the editorial timezone.
+`publishedAt` is the intended/effective publication timestamp and is written before review. Automated lessons use Europe/Zurich as the editorial timezone. Automated candidates target 06:00 on the current Zurich calendar date, with the date’s correct local UTC offset. The Writer is scheduled at 04:30; the first Reviewer run at 06:00 aims for deployed availability around 06:15, with a 07:00 recovery run before the remaining daytime polls. A delayed same-day Writer retains the 06:00 timestamp. Scheduling does not guarantee availability or relax any review, same-day or merge safeguard.
 
 For the initial system:
 
