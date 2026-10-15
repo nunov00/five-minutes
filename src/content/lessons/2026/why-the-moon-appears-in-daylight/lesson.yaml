@@ -1,0 +1,33 @@
+schemaVersion: 2
+id: 883e567b-8ad6-4789-9a87-667dc8800303
+slug: why-the-moon-appears-in-daylight
+aliases: []
+publishedAt: 2026-10-16T01:00:00+02:00
+archive:
+  sourceUrl: https://five-minutes.vitoria-nuno.chatgpt.site/lesson/daytime-moon
+  catalogueDate: 2026-09-11
+topic: science
+subtopic: astronomy
+concepts: [moon, sunlight, lunar-phases, geometry]
+related:
+  manual:
+    - id: c50774ec-4593-4557-b8df-ecc65e504566
+      reason: Both appearances become clearer when you separate illumination from your viewing angle.
+    - id: 99b24089-9f36-404c-8b44-8cb594115dac
+      reason: The sky's changing geometry connects position with time.
+  exclude: []
+sources:
+  - title: Moon Phases
+    url: https://science.nasa.gov/moon/moon-phases/
+    publisher: NASA Science
+    accessedAt: 2026-10-16
+    note: Sunlit hemisphere, viewing geometry and approximate first-/last-quarter rise and set times.
+  - title: Why Can You See the Moon During the Day? We Asked a NASA Scientist
+    url: https://www.nasa.gov/solar-system/why-can-you-see-the-moon-during-the-day-we-asked-a-nasa-scientist-episode-19/
+    publisher: NASA
+    accessedAt: 2026-10-16
+    note: Reflected sunlight, daytime brightness and simultaneous Sun/Moon visibility; two complementary pages from the same definitive space-science authority, not independent organisations.
+provenance:
+  createdAt: 2026-10-16T00:58:05+02:00
+  createdBy: { type: ai, provider: openai, promptVersion: legacy-migration-pilot-v1 }
+  reviews: []
