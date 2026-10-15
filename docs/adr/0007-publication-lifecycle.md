@@ -3,7 +3,7 @@
 Status: Accepted
 Date: 2026-10-02
 Amended: 2026-10-04; 2026-10-09 (same-provider review permitted); 2026-10-12 (activation configuration wording); 2026-10-14 (figure/activity assessment and safe structured figures); 2026-10-14 (optional Copilot review evidence); 2026-10-15 (Owner-approved morning publication target)
-Owner approval: approved 2026-10-02; subscription-based automated publication direction approved 2026-10-04; same-provider review permitted 2026-10-09; conditional figures and Teen activities approved 2026-10-14.
+Owner approval: approved 2026-10-02; subscription-based automated publication direction approved 2026-10-04; same-provider review permitted 2026-10-09; conditional figures and Teen activities approved 2026-10-14; 04:30 Writer, 06:00 publication target and 07:00 recovery review approved 2026-10-15.
 
 ## Context
 
