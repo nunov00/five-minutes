@@ -80,6 +80,7 @@ test.describe('M6 integration in WebKit', () => {
   test('appearance, focus order and enlarged text remain usable at 320 CSS pixels', async ({ page }) => {
     await page.setViewportSize({ width: 320, height: 568 });
     await page.goto('/saved');
+    await page.locator('.reader-settings > summary').click();
     await page.getByRole('radio', { name: 'Dark' }).check();
     await page.reload();
     await expect(page.locator('html')).toHaveAttribute('data-appearance', 'dark');
