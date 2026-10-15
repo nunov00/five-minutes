@@ -5,13 +5,8 @@ import { buildDiscoveryArtifacts } from '../../lib/discovery/artifacts';
 
 const { lessons } = await getBuildMetadata();
 const artifacts = buildDiscoveryArtifacts(lessons);
-const editionPath = (edition: 'adult' | 'teen') => {
-  const params = new URLSearchParams(Astro.url.searchParams);
-  params.set('edition', edition);
-  return `/search?${params.toString()}#main`;
-};
 ---
-<BaseLayout title="Search · Five Minutes" description="Search Five Minutes lessons by idea, topic or takeaway." editionPaths={{adult:editionPath('adult'),teen:editionPath('teen')}}>
+<BaseLayout title="Search · Five Minutes" description="Search Five Minutes lessons by idea, topic or takeaway.">
   <section aria-labelledby="search-heading">
     <p class="eyebrow">Discovery</p>
     <h1 id="search-heading">Search</h1>
@@ -27,7 +22,7 @@ const editionPath = (edition: 'adult' | 'teen') => {
       </form>
       <p class="search-status" role="status" aria-live="polite">Enter at least two characters to search.</p>
       <ol class="search-results" aria-label="Search results"></ol>
-      <noscript><p>Search needs JavaScript. You can still browse every lesson in the <a href="/library">Library</a>.</p></noscript>
+      <noscript><p>Search and its edition context need JavaScript. You can still browse every lesson and choose an edition in the <a href="/library">Library</a>.</p></noscript>
     </div>
   </section>
 </BaseLayout>
