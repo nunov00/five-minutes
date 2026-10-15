@@ -22,11 +22,11 @@ sources:
     publisher: OpenStax
     accessedAt: 2026-10-16
     note: Independence, conditional probability and sampling with or without replacement.
-  - title: Lecture 14 — Introduction to Computer Science and Programming
-    url: https://ocw.mit.edu/courses/6-00sc-introduction-to-computer-science-and-programming-spring-2011/7bb12d95f0af666d115faadc318152e9_ddtobc-AOK4.pdf
+  - title: "Reading 6b: Central Limit Theorem and the Law of Large Numbers"
+    url: https://ocw.mit.edu/courses/18-05-introduction-to-probability-and-statistics-spring-2022/resources/mit18_05_s22_class06-prep-b_pdf/
     publisher: MIT OpenCourseWare
     accessedAt: 2026-10-16
-    note: The law of large numbers does not require later deviations to compensate for an early streak.
+    note: "Section 3, PDF page 2, defines convergence of sample averages for independent trials and explicitly says a finite fair-coin sequence is not guaranteed to be balanced. Combined with OpenStax independence, this supports the distinction between long-run proportions and a compensating next toss."
 provenance:
   createdAt: 2026-10-16T00:58:05+02:00
   createdBy: { type: ai, provider: openai, promptVersion: legacy-migration-pilot-v1 }
