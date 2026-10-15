@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { emptyReaderState, MAX_READER_STATE_CHARS, parseReaderState, READER_STATE_KEY, RECENT_LIMIT, readerStorage } from '../../src/lib/reader/state';
+import { emptyReaderState, MAX_READER_IMPORT_BYTES, MAX_READER_STATE_CHARS, parseReaderState, READER_STATE_KEY, RECENT_LIMIT, readerStorage } from '../../src/lib/reader/state';
 import { validatedOrigin, forwardDestination } from '../../src/lib/reader/navigation';
 import { discoveryPath, editionDiscoveryPath } from '../../src/lib/urls';
 const id='0199a5b7-6e21-7a42-9c3d-8f1b2e4a6c70';
@@ -85,6 +85,28 @@ describe('reader v2 storage and discovery contracts',()=>{
   for(const invalid of ['{',JSON.stringify({...emptyReaderState(),version:3}),JSON.stringify({...emptyReaderState(),appearance:'sepia'}),'x'.repeat(MAX_READER_STATE_CHARS+1)]){
    expect(storage.replaceFromJson(invalid)).toBe(false);expect(raw).toBe(before);
   }
+ });
+ it('round-trips a state at the character limit without export formatting overflow',()=>{
+  const base={...emptyReaderState(),saved:[{id,edition:'teen'}],extension:''};
+  const raw=JSON.stringify({...base,extension:'x'.repeat(MAX_READER_STATE_CHARS-JSON.stringify(base).length)});
+  const source=readerStorage(()=>({getItem:()=>raw,setItem:()=>{}}));
+  const exported=source.exportJson()!;
+  expect(exported.length).toBe(MAX_READER_STATE_CHARS);
+  let restored:string|null=null;
+  const target=readerStorage(()=>({getItem:()=>restored,setItem:(_key:string,value:string)=>{restored=value;}}));
+  expect(target.replaceFromJson(exported)).toBe(true);
+  expect(restored).toBe(raw);
+ });
+ it('allows UTF-8 backups within the character bound and keeps the byte preflight bounded',()=>{
+  const raw=JSON.stringify({...emptyReaderState(),extension:'漢'.repeat(500_000)});
+  const source=readerStorage(()=>({getItem:()=>raw,setItem:()=>{}}));
+  const exported=source.exportJson()!;
+  expect(new TextEncoder().encode(exported).length).toBeGreaterThan(MAX_READER_STATE_CHARS);
+  expect(new TextEncoder().encode(exported).length).toBeLessThanOrEqual(MAX_READER_IMPORT_BYTES);
+  let restored:string|null=null;
+  const target=readerStorage(()=>({getItem:()=>restored,setItem:(_key:string,value:string)=>{restored=value;}}));
+  expect(target.replaceFromJson(exported)).toBe(true);
+  expect(JSON.parse(restored!)).toEqual(JSON.parse(raw));
  });
  it('generates collision-free edition routes and preserves path meaning while forwarding',()=>{
   expect(discoveryPath('teen','library',2)).toBe('/editions/teen/library/page/2');
