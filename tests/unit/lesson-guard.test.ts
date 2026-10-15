@@ -99,6 +99,13 @@ function rejected(change: (value: ReturnType<typeof fixture>) => void, pattern?:
 }
 
 describe('lesson-only publication guard', () => {
+  it('rejects archive imports from the automated daily publication path', () => {
+    rejected((value) => {
+      const blob = value.blobs[`${root}/lesson.yaml`];
+      blob.text += 'archive: { sourceUrl: https://example.com/old, catalogueDate: 2026-08-04 }\n';
+      blob.size = Buffer.byteLength(blob.text);
+    }, /outside|unknown|archive/i);
+  });
   it('passes an ordinary PR as not applicable', () => {
     const value = fixture(); value.pr.headRef = 'docs/update'; value.pr.labels = ['review:mandatory'];
     expect(evaluateLessonPullRequest(value)).toEqual({ applicable: false, message: 'Not an automated lesson candidate.' });

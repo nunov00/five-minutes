@@ -63,6 +63,10 @@ Related links use immutable IDs and shared generated URLs. Manual editorial rela
 
 ## Environments
 
+### Manual legacy migration
+
+Issue #138 tracks the old Sites catalogue, existing counterparts and three-lesson pilot. Preserve current UUIDs for counterparts; compare central mechanisms before treating similar titles as duplicates. Newly adapted archive lessons record truthful current provenance/publication timestamps and ADR-0006's `archive.sourceUrl`/`archive.catalogueDate`. The date label comes from the legacy catalogue and may not establish historical first publication. Reading pages explicitly label Archive and Adapted; Library/Topics/search ordering uses the legacy date. Today/Earlier ignore imports. Do not use `lesson/` branches or `editorial-review-requested`: automated publication intentionally rejects archive metadata. Use a manual branch, mandatory editorial review, normal checks and preview. The first pilot remains unmerged until Owner calibration; the old site stays accessible.
+
 Pull requests receive preview deployments where practical. `main` represents production-ready repository state. Production deployment consumes only validated published content.
 
 Cloudflare is the initial target. Deployment configuration is replaceable and must not leak into core content/domain APIs.
