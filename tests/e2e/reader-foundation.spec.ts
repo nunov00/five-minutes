@@ -9,10 +9,13 @@ test('first-visit neutral chooser and preference forwarding preserve path/query/
  await page.goto('/topics/science?from=library#main');await expect(page).toHaveURL('/editions/teen/topics/science?from=library#main');
  await page.goto('/');await expect(page).toHaveURL('/');await expect(page.locator('[data-today-edition="adult"]')).toBeHidden();await expect(page.locator('[data-today-edition="teen"]')).toBeVisible();
 });
-test('explicit routes and alternate version do not write preference; selector adds history',async({page})=>{
+test('explicit routes use the sole global selector for edition switching and history',async({page})=>{
  await prefer(page,'adult');await page.goto('/teen/why-earth-has-seasons');
  await expect(page.getByRole('navigation',{name:'Edition'}).getByRole('link',{name:'Teen',exact:true})).toHaveAttribute('aria-current','page');
- await page.getByRole('link',{name:'Read the other version →'}).click();await expect(page).toHaveURL('/adult/why-earth-has-seasons');
+ await expect(page.locator('.reader-header .eyebrow')).toHaveText(/^\d{1,2} [A-Z][a-z]+ 2026$/);
+ await expect(page.locator('.reader-header .eyebrow')).not.toContainText('edition');
+ await expect(page.getByRole('link',{name:/Read the other version/})).toHaveCount(0);
+ await page.getByRole('navigation',{name:'Edition'}).getByRole('link',{name:'Adult',exact:true}).click();await expect(page).toHaveURL('/adult/why-earth-has-seasons');
  expect(await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!).edition,key)).toBe('adult');
  await page.getByRole('navigation',{name:'Edition'}).getByRole('link',{name:'Teen',exact:true}).click();await expect(page).toHaveURL('/teen/why-earth-has-seasons');
  await page.goBack();await expect(page).toHaveURL('/adult/why-earth-has-seasons');
@@ -20,7 +23,7 @@ test('explicit routes and alternate version do not write preference; selector ad
 });
 test('selector writes the final envelope and preserves pagination',async({page})=>{
  await page.goto('/editions/adult/library/page/2');await page.getByRole('navigation',{name:'Edition'}).getByRole('link',{name:'Teen',exact:true}).click();
- await expect(page).toHaveURL('/editions/teen/library/page/2');expect(await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!),key)).toEqual({version:1,edition:'teen',saved:[],read:{},recent:[],appearance:'system'});
+ await expect(page).toHaveURL('/editions/teen/library/page/2');expect(await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!),key)).toEqual({version:2,edition:'teen',saved:[],read:{},recent:[],appearance:'system'});
  await page.goto('/editions/adult/topics/science');await expect(page).toHaveURL('/editions/adult/topics/science');expect(await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!).edition,key)).toBe('teen');
 });
 test('Return is a session link to discovery, including Search query and invalid-origin fallback',async({page})=>{
@@ -40,9 +43,11 @@ test('neutral restoration re-checks preference and replacement leaves the previo
  await page.goto('/');await page.goto('/library');await page.evaluate(k=>localStorage.setItem(k,JSON.stringify({version:1,edition:'teen',saved:[],read:{},recent:[],appearance:'system'})),key);
  await page.evaluate(()=>window.dispatchEvent(new PageTransitionEvent('pageshow',{persisted:true})));await expect(page).toHaveURL('/editions/teen/library');await page.goBack();await expect(page).toHaveURL('/');
 });
-test('Search has no default and local edition setting never writes preference',async({page})=>{
- await page.goto('/search?q=clock');await expect(page.getByRole('status')).toHaveText('Choose Adult or Teen to search.');await page.getByRole('radio',{name:'Teen',exact:true}).check();await expect(page.getByRole('status')).toContainText('lesson');
- expect(await page.evaluate(k=>localStorage.getItem(k),key)).toBeNull();await page.getByRole('navigation',{name:'Edition'}).getByRole('link',{name:'Adult',exact:true}).click();await expect(page).toHaveURL(/\/search\?q=clock&edition=adult/);expect(await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!).edition,key)).toBe('adult');
+test('Search defaults to Adult and uses only the global selector',async({page})=>{
+ await page.goto('/search?q=clock');await expect(page.getByRole('status')).toContainText('lesson');
+ await expect(page.getByRole('navigation',{name:'Edition'}).getByRole('link',{name:'Adult',exact:true})).toHaveAttribute('aria-current','page');
+ await expect(page.getByRole('radio')).toHaveCount(0);expect(await page.evaluate(k=>localStorage.getItem(k),key)).toBeNull();
+ await page.getByRole('navigation',{name:'Edition'}).getByRole('link',{name:'Teen',exact:true}).click();await expect(page).toHaveURL(/\/search\?q=clock&edition=teen/);expect(await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!).edition,key)).toBe('teen');
 });
 test('no-JavaScript chooser, explicit routes and Return fallback remain usable',async({browser})=>{
  const context=await browser.newContext({javaScriptEnabled:false,viewport:{width:320,height:568}});const page=await context.newPage();
@@ -109,7 +114,7 @@ test('unreadable reader data is preserved until an explicit warned reset', async
   await expect(page.getByText(/Resetting discards saved lessons/)).toBeVisible();
   await page.getByRole('button', {name:'Discard local reader data and reset'}).click();
   await expect(page.locator('#reader-recovery')).toBeHidden();
-  expect(await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!),key)).toEqual({version:1,edition:null,saved:[],read:{},recent:[],appearance:'system'});
+  expect(await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!),key)).toEqual({version:2,edition:null,saved:[],read:{},recent:[],appearance:'system'});
   await page.getByRole('navigation',{name:'Edition'}).getByRole('link',{name:'Adult',exact:true}).click();
   await expect(page).toHaveURL('/editions/adult/library');
   expect(await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!).edition,key)).toBe('adult');

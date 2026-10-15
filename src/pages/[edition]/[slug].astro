@@ -49,7 +49,7 @@ const positioned=presentation.figure?figurePosition(html,presentation.figure.aft
 <BaseLayout title={`${presentation.title} · ${EDITION_LABELS[edition]} edition · Five Minutes`} description={presentation.description} edition={edition} editionPaths={editionPaths} wide={!!presentation.figure}>
   <article class:list={['reading-article', {'has-figure': !!presentation.figure}]} data-reader-lesson data-lesson-id={lesson.metadata.id} data-edition={edition}>
     <header class="reader-header">
-      <p class="eyebrow">{EDITION_LABELS[edition]} edition · <time datetime={lesson.metadata.publishedAt}>{formatEditorialDate(lesson.metadata.publishedAt)}</time></p>
+      <p class="eyebrow"><time datetime={lesson.metadata.publishedAt}>{formatEditorialDate(lesson.metadata.publishedAt)}</time></p>
       <h1>{presentation.title}</h1>
       <p class="lede">{presentation.description}</p>
     </header>
@@ -89,6 +89,5 @@ const positioned=presentation.figure?figurePosition(html,presentation.figure.aft
       </div>
     </section>
     <p class="lesson-section"><a data-return href="/">Back to Today</a></p>
-    <p class="lesson-section"><a class="other-version" href={editionPaths[edition==='adult'?'teen':'adult']}>Read the other version →</a></p>
   </article>
 </BaseLayout>

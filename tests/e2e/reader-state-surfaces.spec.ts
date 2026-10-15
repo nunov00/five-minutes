@@ -3,29 +3,29 @@ import { expect, test } from './support/fixtures';
 const key = 'five-minutes.reader-state';
 const lesson = '/teen/why-earth-has-seasons';
 
-test('lesson visits are read and recent, while Save is shared across editions', async ({page}) => {
+test('lesson visits are read and recent, while Save is presentation-specific', async ({page}) => {
   await page.goto(lesson);
   const id = await page.locator('[data-reader-lesson]').getAttribute('data-lesson-id');
   await expect(page.getByRole('button', {name:'Mark unread'})).toBeVisible();
   const save=page.getByRole('button', {name:'Save lesson', exact:true}); await save.click();
   await expect(save).toHaveAttribute('aria-pressed','true'); await expect(save).toHaveText('Save lesson');
-  expect(await page.evaluate(k => JSON.parse(localStorage.getItem(k)!), key)).toMatchObject({saved:[id], read:{[id!]:expect.any(String)}, recent:[{id,edition:'teen'}]});
+  expect(await page.evaluate(k => JSON.parse(localStorage.getItem(k)!), key)).toMatchObject({version:2,saved:[{id,edition:'teen'}], read:{[id!]:expect.any(String)}, recent:[{id,edition:'teen'}]});
   await page.goto('/adult/why-earth-has-seasons');
-  await expect(page.getByRole('button', {name:'Save lesson', exact:true})).toHaveAttribute('aria-pressed','true');
+  await expect(page.getByRole('button', {name:'Save lesson', exact:true})).toHaveAttribute('aria-pressed','false');
   await page.getByRole('button', {name:'Mark unread'}).click();
   await expect(page.getByRole('button', {name:'Mark read'})).not.toHaveAttribute('aria-pressed',/.+/);
   expect(await page.evaluate(({key,id}) => JSON.parse(localStorage.getItem(key)!).read[id!], {key,id})).toBeUndefined();
 });
 
-test('Saved renders both editions, Recent preserves the visited edition, and markers appear', async ({page}) => {
+test('Saved renders only the saved presentation without redundant edition labels', async ({page}) => {
   await page.goto(lesson); await page.getByRole('button', {name:'Save lesson', exact:true}).click();
   await page.getByRole('navigation', {name:'Main navigation'}).getByRole('link', {name:'Saved'}).click();
   await expect(page).toHaveURL('/saved');
   await expect(page.getByRole('heading', {name:'Saved and recent'})).toBeVisible();
-  await expect(page.locator('[data-saved-list]')).toContainText('Adult'); await expect(page.locator('[data-saved-list]')).toContainText('Teen');
-  await expect(page.locator('[data-saved-list]')).toContainText('Adult: Why Summer Is Not Earth Moving Closer to the Sun');
-  await expect(page.locator('[data-saved-list]')).toContainText('Teen: The Season Explanation That Fails Half the Planet');
-  await expect(page.locator('[data-recent-list]')).toContainText('Teen');
+  await expect(page.locator('[data-saved-list]')).toContainText('The Season Explanation That Fails Half the Planet');
+  await expect(page.locator('[data-saved-list]')).not.toContainText('Why Summer Is Not Earth Moving Closer to the Sun');
+  await expect(page.locator('[data-saved-list]')).not.toContainText('Teen:');
+  await expect(page.locator('[data-recent-list]')).not.toContainText('Teen ·');
   await page.getByRole('navigation',{name:'Main navigation'}).getByRole('link', {name:'Library', exact:true}).focus(); await page.keyboard.press('Enter'); await page.getByRole('link', {name:'Explore Teen', exact:true}).click();
   await expect(page.locator('[data-reader-markers]').filter({hasText:'Saved'}).first()).toBeVisible();
   await page.goto('/search?q=season&edition=teen'); await expect(page.getByRole('status')).toContainText('lesson');
@@ -40,7 +40,7 @@ test('appearance persists and overrides the operating-system preference before c
   await page.getByRole('radio', {name:'System'}).check(); await expect(page.locator('html')).toHaveAttribute('data-appearance','system');
 });
 
-test('import requires confirmation, rejects invalid data, and replaces valid v1 data', async ({page}) => {
+test('import requires confirmation, rejects invalid data, and migrates valid v1 data', async ({page}) => {
   await page.goto('/saved');
   const downloadPromise=page.waitForEvent('download'); await page.getByRole('button',{name:'Export data'}).click();
   const download=await downloadPromise; expect(download.suggestedFilename()).toBe('five-minutes-reader-data.json');
@@ -54,7 +54,7 @@ test('import requires confirmation, rejects invalid data, and replaces valid v1 
   await file.setInputFiles({name:'five-minutes-reader-data.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(valid))});
   await page.locator('[data-import-confirm]').check(); await page.getByRole('button', {name:'Import and replace'}).focus(); await page.keyboard.press('Enter');
   await expect(page.locator('[data-import-status]')).toHaveText('Reader data imported.'); await expect(page.locator('html')).toHaveAttribute('data-appearance','dark');
-  expect(await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!),key)).toEqual(valid);
+  expect(await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!),key)).toEqual({...valid,version:2});
 });
 
 test('another tab refreshes Saved through the storage event', async ({page}) => {

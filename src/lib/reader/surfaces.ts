@@ -1,6 +1,6 @@
 import type { BrowserCatalogueEntry } from '../discovery/types';
 import type { LessonEdition } from '../urls';
-import { isAppearance, MAX_READER_STATE_CHARS, parseReaderState, readerStorage, type ReaderAppearance, type ReaderStateV1 } from './state';
+import { isAppearance, isEdition, MAX_READER_STATE_CHARS, parseReaderState, readerStorage, type ReaderAppearance, type ReaderStateV2 } from './state';
 
 const root = document.documentElement;
 const store = readerStorage(() => localStorage);
@@ -20,11 +20,12 @@ function applyAppearance(appearance: ReaderAppearance) {
   document.querySelectorAll<HTMLInputElement>('input[name="appearance"]').forEach(input => { input.checked = input.value === appearance; });
 }
 
-function reflectLessonControls(state: ReaderStateV1) {
+function reflectLessonControls(state: ReaderStateV2) {
   if (!lesson) return;
   const id = lesson.dataset.lessonId;
   if (!id) return;
-  const saved = state.saved.includes(id);
+  const edition = lesson.dataset.edition;
+  const saved = isEdition(edition) && state.saved.some(entry => entry.id === id && entry.edition === edition);
   const read = Boolean(state.read[id]);
   const save = lesson.querySelector<HTMLButtonElement>('[data-save-lesson]');
   const readButton = lesson.querySelector<HTMLButtonElement>('[data-read-lesson]');
@@ -32,11 +33,12 @@ function reflectLessonControls(state: ReaderStateV1) {
   if (readButton) { readButton.hidden = false; readButton.removeAttribute('aria-pressed'); readButton.textContent = read ? 'Mark unread' : 'Mark read'; }
 }
 
-function reflectMarkers(state: ReaderStateV1) {
+function reflectMarkers(state: ReaderStateV2) {
   document.querySelectorAll<HTMLElement>('[data-reader-markers]').forEach(marker => {
     const id = marker.closest<HTMLElement>('[data-lesson-id]')?.dataset.lessonId;
     if (!id) return;
-    const labels = [state.saved.includes(id) ? 'Saved' : '', state.read[id] ? 'Read' : ''].filter(Boolean);
+    const edition = marker.closest<HTMLElement>('[data-edition]')?.dataset.edition ?? root.dataset.edition;
+    const labels = [isEdition(edition) && state.saved.some(entry => entry.id === id && entry.edition === edition) ? 'Saved' : '', state.read[id] ? 'Read' : ''].filter(Boolean);
     marker.textContent = labels.join(' · ');
     marker.hidden = labels.length === 0;
   });
@@ -46,7 +48,7 @@ function link(text: string, href: string) {
   const anchor = document.createElement('a'); anchor.textContent = text; anchor.href = href; return anchor;
 }
 
-function renderPersonalLists(state: ReaderStateV1, catalogue: readonly BrowserCatalogueEntry[]) {
+function renderPersonalLists(state: ReaderStateV2, catalogue: readonly BrowserCatalogueEntry[]) {
   const byId = new Map(catalogue.map(entry => [entry.id, entry]));
   const savedList = document.querySelector<HTMLOListElement>('[data-saved-list]');
   const recentList = document.querySelector<HTMLOListElement>('[data-recent-list]');
@@ -54,18 +56,16 @@ function renderPersonalLists(state: ReaderStateV1, catalogue: readonly BrowserCa
   const recentEmpty = document.querySelector<HTMLElement>('[data-recent-empty]');
   let missingSaved = 0, missingRecent = 0;
   savedList?.replaceChildren(); recentList?.replaceChildren();
-  state.saved.forEach(id => {
-    const entry = byId.get(id); if (!entry) { missingSaved++; return; }
-    const item = document.createElement('li'); item.dataset.lessonId = id;
-    const choices = document.createElement('span'); choices.className = 'personal-editions';
-    choices.append(link(`Adult: ${entry.adult.title}`, entry.adult.path), link(`Teen: ${entry.teen.title}`, entry.teen.path));
-    item.append(choices); savedList?.append(item);
+  state.saved.forEach(saved => {
+    const entry = byId.get(saved.id); if (!entry) { missingSaved++; return; }
+    const item = document.createElement('li'); item.dataset.lessonId = saved.id; item.dataset.edition = saved.edition;
+    item.append(link(entry[saved.edition].title, entry[saved.edition].path)); savedList?.append(item);
   });
   state.recent.forEach(recent => {
     const entry = byId.get(recent.id); if (!entry) { missingRecent++; return; }
     const item = document.createElement('li'); item.dataset.lessonId = recent.id;
     item.append(link(entry[recent.edition].title, entry[recent.edition].path));
-    const meta = document.createElement('span'); meta.className = 'personal-links'; meta.textContent = `${recent.edition === 'adult' ? 'Adult' : 'Teen'} · ${new Intl.DateTimeFormat('en-GB',{dateStyle:'medium'}).format(new Date(recent.visitedAt))}`;
+    const meta = document.createElement('span'); meta.className = 'personal-links'; meta.textContent = new Intl.DateTimeFormat('en-GB',{dateStyle:'medium'}).format(new Date(recent.visitedAt));
     item.append(meta); recentList?.append(item);
   });
   if (savedEmpty) { savedEmpty.hidden = state.saved.length > 0; savedEmpty.textContent = 'No saved lessons yet.'; }
@@ -107,8 +107,8 @@ if (lesson?.dataset.lessonId && (lesson.dataset.edition === 'adult' || lesson.da
 }
 
 lesson?.querySelector('[data-save-lesson]')?.addEventListener('click', () => {
-  if (!lesson.dataset.lessonId) return;
-  if (store.toggleSaved(lesson.dataset.lessonId)) emit(); else showWriteFailure();
+  if (!lesson.dataset.lessonId || !isEdition(lesson.dataset.edition)) return;
+  if (store.toggleSaved(lesson.dataset.lessonId, lesson.dataset.edition)) emit(); else showWriteFailure();
   void refresh();
 });
 lesson?.querySelector('[data-read-lesson]')?.addEventListener('click', () => {
