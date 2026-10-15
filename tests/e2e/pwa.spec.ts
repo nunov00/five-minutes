@@ -72,7 +72,8 @@ test.describe('installable PWA shell', () => {
     await expect(page.getByRole('heading', { level: 1, name: "Today's idea" })).toBeVisible();
 
     // No browser chrome in standalone display: every step uses links on the page.
-    await page.getByRole('link', { name: /^Read the Teen edition/ }).click();
+    await page.getByRole('navigation', { name: 'Edition' }).getByRole('link', { name: 'Teen' }).click();
+    await page.getByRole('link', { name: /^Read:/ }).click();
     await expect(page.locator('article[data-lesson-id]')).toHaveAttribute('data-edition', 'teen');
     inScope();
     await page.getByRole('navigation', { name: 'Edition' }).getByRole('link', { name: 'Adult' }).click();
@@ -81,7 +82,7 @@ test.describe('installable PWA shell', () => {
     await page.getByRole('link', { name: 'Back to Today' }).click();
     await expect(page.getByRole('heading', { level: 1, name: "Today's idea" })).toBeVisible();
     inScope();
-    await page.getByRole('link', { name: /^Read the Adult edition/ }).click();
+    await page.getByRole('link', { name: /^Read:/ }).click();
     await page.getByRole('banner').getByRole('link', { name: 'Five Minutes' }).click();
     await expect(page.getByRole('heading', { level: 1, name: "Today's idea" })).toBeVisible();
     inScope();

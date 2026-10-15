@@ -18,12 +18,17 @@ describe('app shell', () => {
     expect(html).toMatch(/<a[^>]*href="\/feedback"[^>]*>Send anonymous feedback<\/a>/);
   });
 
-  it('offers both editions of the newest lesson on Today using manifest paths', async () => {
+  it('renders both progressive-enhancement presentations while defaulting Today to Adult', async () => {
     const container = await AstroContainer.create();
     const html = await container.renderToString(HomePage);
 
     expect(html).toMatch(/href="\/adult\/[a-z0-9-]+"/);
     expect(html).toMatch(/href="\/teen\/[a-z0-9-]+"/);
+    expect(html).toContain('data-edition="adult"');
+    expect(html).toMatch(/data-edition-choice="adult" aria-current="page"/);
+    expect(html).toContain('>Edition</span>');
+    expect(html).not.toContain('Read the Adult edition');
+    expect(html).not.toContain('Read the Teen edition');
     expect(html).not.toContain('One idea in two editions');
     expect(html).not.toContain('Your chosen edition for today');
     expect(html.match(/data-earlier-id=/g)).toHaveLength(3);
