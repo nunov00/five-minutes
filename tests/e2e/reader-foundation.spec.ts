@@ -55,6 +55,13 @@ test('no-JavaScript chooser, explicit routes and Return fallback remain usable',
  await expect(page.getByText('Edition links work, but your choice will not be remembered without JavaScript.')).toBeVisible();expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await context.close();
 });
 
+test('no-JavaScript Search edition links preserve the query and main anchor',async({browser})=>{
+ const context=await browser.newContext({javaScriptEnabled:false});const page=await context.newPage();
+ await page.goto('http://127.0.0.1:4321/search?q=clock#main');
+ await expect(page.getByRole('navigation',{name:'Edition'}).getByRole('link',{name:'Teen',exact:true})).toHaveAttribute('href','/search?q=clock&edition=teen#main');
+ await context.close();
+});
+
 test('neutral SEO and invalid edition routes preserve the static contract',async({page})=>{
  await page.goto('/library');await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content','noindex,follow');await expect(page.locator('link[rel="canonical"]')).toHaveCount(0);
  await page.goto('/editions/teen/library');await expect(page.locator('meta[name="robots"]')).toHaveCount(0);

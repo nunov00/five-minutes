@@ -5,8 +5,13 @@ import { buildDiscoveryArtifacts } from '../../lib/discovery/artifacts';
 
 const { lessons } = await getBuildMetadata();
 const artifacts = buildDiscoveryArtifacts(lessons);
+const editionPath = (edition: 'adult' | 'teen') => {
+  const params = new URLSearchParams(Astro.url.searchParams);
+  params.set('edition', edition);
+  return `/search?${params.toString()}#main`;
+};
 ---
-<BaseLayout title="Search · Five Minutes" description="Search Five Minutes lessons by idea, topic or takeaway.">
+<BaseLayout title="Search · Five Minutes" description="Search Five Minutes lessons by idea, topic or takeaway." editionPaths={{adult:editionPath('adult'),teen:editionPath('teen')}}>
   <section aria-labelledby="search-heading">
     <p class="eyebrow">Discovery</p>
     <h1 id="search-heading">Search</h1>
