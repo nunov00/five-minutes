@@ -29,7 +29,8 @@ function validSharedState(s: any): boolean {
 function migrateV1(s: any): ReaderStateV2 | null {
   if (!validSharedState(s) || !Array.isArray(s.saved) || !s.saved.every(isLessonId) || new Set(s.saved).size !== s.saved.length) return null;
   const edition: LessonEdition = isEdition(s.edition) ? s.edition : 'adult';
-  return { ...s, version: 2, saved: s.saved.map((id: string) => ({ id, edition })) } as ReaderStateV2;
+  const migrated = { ...s, version: 2, saved: s.saved.map((id: string) => ({ id, edition })) } as ReaderStateV2;
+  return JSON.stringify(migrated).length <= MAX_READER_STATE_CHARS ? migrated : null;
 }
 export function parseReaderState(raw: string | null): ReaderStateV2 | null {
   if (raw === null) return emptyReaderState();

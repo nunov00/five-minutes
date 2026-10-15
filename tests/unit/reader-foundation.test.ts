@@ -39,6 +39,17 @@ describe('reader v2 storage and discovery contracts',()=>{
   expect(JSON.parse(raw)).toMatchObject({version:2,saved:[{id,edition:'teen'}],extension:{kept:true}});
   expect(storage.chooseEdition('adult')).toBe(true);expect(JSON.parse(raw)).toMatchObject({version:2,saved:[{id,edition:'teen'}],extension:{kept:true}});
  });
+ it('leaves a size-valid v1 envelope untouched when its v2 migration would exceed the limit',()=>{
+  const base={version:1,edition:'teen',saved:[id],read:{},recent:[],appearance:'system',extension:''};
+  const baseRaw=JSON.stringify(base);
+  const raw=JSON.stringify({...base,extension:'x'.repeat(MAX_READER_STATE_CHARS-baseRaw.length)});
+  expect(raw).toHaveLength(MAX_READER_STATE_CHARS);
+  expect(parseReaderState(raw)).toBeNull();
+  let stored=raw,writes=0;
+  const storage=readerStorage(()=>({getItem:()=>stored,setItem:(_key:string,value:string)=>{writes++;stored=value;}}));
+  expect(storage.read()).toBeNull();expect(storage.inspect()).toEqual({kind:'invalid'});
+  expect(writes).toBe(0);expect(stored).toBe(raw);
+ });
  it('rejects duplicate saved identities and presentations',()=>{
   const v1={version:1,edition:'adult',saved:[id,id],read:{},recent:[],appearance:'system'};
   const presentation={id,edition:'adult'};
