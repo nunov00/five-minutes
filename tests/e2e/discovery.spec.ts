@@ -59,7 +59,6 @@ test.describe('M5 discovery', () => {
       if (request.url().includes('/discovery/search-')) requested.push(request.url());
     });
     await page.goto('/search');
-    await page.getByRole('radio', { name: 'Adult', exact:true }).check();
     expect(requested).toEqual([]);
     await page.getByRole('searchbox').fill('marine chronometer');
     await expect(page.getByRole('status')).toContainText('1 lesson found');
@@ -67,7 +66,7 @@ test.describe('M5 discovery', () => {
     expect(requested.some((url) => url.includes('search-adult'))).toBe(true);
     expect(requested.some((url) => url.includes('search-teen'))).toBe(false);
 
-    await page.getByRole('radio', { name: 'Teen' }).check();
+    await page.getByRole('navigation', {name:'Edition'}).getByRole('link', { name: 'Teen', exact:true }).click();
     await page.getByRole('searchbox').fill('ship navigation clock');
     await expect(page.getByRole('status')).toContainText('1 lesson found');
     await expect(page.getByRole('link', { name: 'The Clock That Told Sailors Where They Were' })).toBeVisible();
@@ -82,22 +81,18 @@ test.describe('M5 discovery', () => {
       await route.continue();
     });
     await page.goto('/search');
-    await page.getByRole('radio', { name: 'Adult', exact:true }).check();
     const adultRequest = page.waitForRequest((request) => request.url().includes('/discovery/search-adult.'));
     await page.getByRole('searchbox').fill('clock');
     await adultRequest;
-    await page.getByRole('radio', { name: 'Teen' }).check();
-    await page.getByRole('searchbox').fill('ship navigation clock');
-    await expect(page.getByRole('link', { name: 'The Clock That Told Sailors Where They Were' })).toBeVisible();
-    await expect(page.getByRole('status')).toHaveText('1 lesson found.');
+    await page.getByRole('searchbox').fill('kidneys');
     const adultResponse = page.waitForResponse((response) => response.url().includes('/discovery/search-adult.'));
     releaseAdult();
     await adultResponse;
-    await page.waitForTimeout(250);
+    await expect(page.getByRole('link', { name: 'Your Kidneys Filter by Taking Back What You Need' })).toBeVisible();
+    await expect(page.getByRole('status')).toHaveText('1 lesson found.');
     await expect(page.getByRole('link', { name: "How an Accurate Clock Revealed a Ship's Longitude" })).toHaveCount(0);
 
-    await page.getByRole('radio', { name: 'Adult' }).check();
-    await page.getByRole('searchbox').fill('kidneys');
+    await page.getByRole('searchbox').fill('marine chronometer');
     await page.getByRole('searchbox').press('Enter');
     await expect(page.getByRole('status')).toContainText('1 lesson found');
     await expect(page.locator('.search-results > li')).toHaveCount(1);
@@ -111,7 +106,6 @@ test.describe('M5 discovery', () => {
       else await route.continue();
     });
     await page.goto('/search');
-    await page.getByRole('radio', { name: 'Adult', exact:true }).check();
     await page.getByRole('searchbox').fill('clock');
     await expect(page.getByRole('status')).toContainText('Search could not load');
     await page.getByRole('searchbox').fill('marine chronometer');

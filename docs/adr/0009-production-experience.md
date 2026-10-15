@@ -2,7 +2,7 @@
 
 Status: Accepted
 Date: 2026-10-04
-Owner approval: design direction accepted after device review; production contracts D1-D4 approved explicitly on 2026-10-04 under #63. The returning-reader Today refinement was approved during the M6.4 device review on 2026-10-04. On 2026-10-15 the Owner approved replacing Today’s duplicated first-visit choice with one selected presentation, defaulting to Adult when no valid preference exists, under #131. ADR-0005 and ADR-0006 are amended by the same decisions.
+Owner approval: design direction accepted after device review; production contracts D1-D4 approved explicitly on 2026-10-04 under #63. The returning-reader Today refinement was approved during the M6.4 device review on 2026-10-04. On 2026-10-15 the Owner approved replacing Today’s duplicated first-visit choice with one selected presentation, defaulting to Adult when no valid preference exists, under #131. The same day, the Owner approved making the global selector the sole edition control and saving exact presentations under #133. ADR-0005 and this production-experience contract are amended by those 2026-10-15 decisions; ADR-0006's lesson-content schema is unchanged.
 
 ## Context
 
@@ -49,17 +49,19 @@ The complete edition-specific discovery route family is generated centrally:
 
 - `/editions/<edition>/library` and `/editions/<edition>/library/page/<n>`;
 - `/editions/<edition>/topics`, `/editions/<edition>/topics/<topic>` and any later accepted subtopic route beneath that same edition namespace;
-- Search remains the single `/search` URL with an edition setting and is not duplicated under `/editions`.
+- Search remains the single `/search` URL with an edition query context and is not duplicated under `/editions`.
 
 Existing neutral discovery routes remain valid static entry pages: `/library`, `/library/page/<n>`, `/topics` and `/topics/<topic>`. With a saved preference, client enhancement forwards to the exact corresponding edition-specific route, preserving pagination/path meaning, query and hash, using `location.replace()` (or an equivalent navigation that replaces the current history entry) so the destination actually loads and Back does not bounce forward again. With no saved preference, or without JavaScript/storage, the neutral page renders a simple usable Adult/Teen chooser with links to the corresponding edition-specific destination; it never defaults to Adult. Neutral pages are indexable only according to the SEO policy chosen for chooser/forwarding surfaces; the sitemap lists canonical edition-specific discovery URLs and does not treat neutral forwarding/chooser pages as canonical edition content.
 
-Today `/` is deliberately different: it never auto-forwards from saved preference. It presents the saved edition, or Adult when no valid preference exists, at the same URL. Choosing its global selector writes preference. Search defaults its edition setting to saved preference when available; without one it continues to expose an explicit edition choice and does not assume Adult.
+Today `/` is deliberately different: it never auto-forwards from saved preference. It presents the saved edition, or Adult when no valid preference exists, at the same URL. Choosing its global selector writes preference. Search uses that same sole global selector, restores saved preference and otherwise defaults its interface to Adult without writing the fallback.
 
 ### D2 — Preference-writing actions
 
 Only global Adult/Teen selection surfaces write edition preference: the shared header selector and edition choices on neutral Library/Topics choosers. On Today the header selector switches the whole surface in place. On a lesson page it opens the same immutable lesson in the selected edition and shows the edition of the page currently open.
 
-Explicit/shared lesson links and the visually distinct “Read the other version” link never write preference. If browser storage is blocked/unavailable, the selector still navigates and a quiet note explains that the choice will not be remembered.
+Explicit/shared lesson links never write preference. Lesson pages show the date without a redundant edition label and do not duplicate the global selector with a “Read the other version” link. If browser storage is blocked/unavailable, the selector still navigates and a quiet note explains that the choice will not be remembered.
+
+Saved state records the immutable lesson ID together with the exact saved edition. Adult and Teen presentations can therefore be saved independently, while Read state remains shared by lesson identity. Saved and Recent lists use the exact presentation title without repeating edition labels already represented by that title and context.
 
 ### D3 — History, Return and restoration
 
