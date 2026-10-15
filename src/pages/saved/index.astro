@@ -22,6 +22,8 @@ const catalogue = buildDiscoveryArtifacts(lessons).catalogue.path;
       <p class="reader-js-only" data-recent-empty>Loading recent lessons…</p><p class="reader-js-fallback">Recent lessons need JavaScript to appear here.</p><ol class="personal-list" data-recent-list></ol>
       <p class="quiet-note" data-missing-items hidden></p>
     </section>
+    <details class="reader-settings lesson-section">
+      <summary>Settings <span class="settings-chevron" aria-hidden="true">›</span></summary>
     <section class="lesson-section card preferences" aria-labelledby="appearance-heading">
       <h2 id="appearance-heading">Appearance</h2>
       <fieldset><legend>Colour theme</legend>
@@ -39,6 +41,7 @@ const catalogue = buildDiscoveryArtifacts(lessons).catalogue.path;
       <button class="button button-secondary" type="button" data-import-reader>Import and replace</button>
       <p data-import-status role="status" aria-live="polite"></p>
     </section>
+    </details>
     <p class="card reader-js-fallback">Saved lessons, recent reading, appearance and data export need JavaScript. You can still read and browse every lesson.</p>
   </section>
 </BaseLayout>

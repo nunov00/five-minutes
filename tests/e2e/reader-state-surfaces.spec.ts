@@ -3,6 +3,18 @@ import { expect, test } from './support/fixtures';
 const key = 'five-minutes.reader-state';
 const lesson = '/teen/why-earth-has-seasons';
 
+test('Settings starts collapsed and opens and closes with the keyboard',async({page})=>{
+ await page.goto('/saved');
+ const settings=page.locator('.reader-settings'),summary=settings.locator('summary');
+ await expect(settings).not.toHaveAttribute('open');
+ await expect(page.getByRole('heading',{name:'Appearance'})).toBeHidden();
+ await summary.focus();await page.keyboard.press('Enter');
+ await expect(page.getByRole('radio',{name:'System'})).toBeVisible();
+ await expect(page.getByRole('button',{name:'Export data'})).toBeVisible();
+ await summary.focus();await page.keyboard.press('Space');
+ await expect(settings).not.toHaveAttribute('open');
+});
+
 test('lesson visits are read and recent, while Save is presentation-specific', async ({page}) => {
   await page.goto(lesson);
   const id = await page.locator('[data-reader-lesson]').getAttribute('data-lesson-id');
@@ -33,15 +45,16 @@ test('Saved renders only the saved presentation without redundant edition labels
 });
 
 test('appearance persists and overrides the operating-system preference before content is read', async ({page}) => {
-  await page.emulateMedia({colorScheme:'dark'}); await page.goto('/saved');
+  await page.emulateMedia({colorScheme:'dark'}); await page.goto('/saved'); await page.locator('.reader-settings > summary').click();
   await page.getByRole('radio', {name:'Light'}).check();
   await expect(page.locator('html')).toHaveAttribute('data-appearance','light');
   await page.reload(); await expect(page.locator('html')).toHaveAttribute('data-appearance','light');
+  await page.locator('.reader-settings > summary').click();
   await page.getByRole('radio', {name:'System'}).check(); await expect(page.locator('html')).toHaveAttribute('data-appearance','system');
 });
 
 test('import requires confirmation, rejects invalid data, and migrates valid v1 data', async ({page}) => {
-  await page.goto('/saved');
+  await page.goto('/saved'); await page.locator('.reader-settings > summary').click();
   const downloadPromise=page.waitForEvent('download'); await page.getByRole('button',{name:'Export data'}).click();
   const download=await downloadPromise; expect(download.suggestedFilename()).toBe('five-minutes-reader-data.json');
   const file = page.locator('[data-import-file]');
@@ -58,7 +71,7 @@ test('import requires confirmation, rejects invalid data, and migrates valid v1 
 });
 
 test('imports a non-ASCII backup over one megabyte and rejects oversized files without replacement',async({page})=>{
- await page.goto('/saved');
+ await page.goto('/saved'); await page.locator('.reader-settings > summary').click();
  const valid={version:2,edition:'teen',saved:[],read:{},recent:[],appearance:'dark',extension:'漢'.repeat(500_000)};
  const buffer=Buffer.from(JSON.stringify(valid));expect(buffer.length).toBeGreaterThan(1_000_000);
  const file=page.locator('[data-import-file]');
@@ -73,7 +86,7 @@ test('imports a non-ASCII backup over one megabyte and rejects oversized files w
 });
 
 test('another tab refreshes Saved through the storage event', async ({page}) => {
-  await page.goto('/saved'); await expect(page.locator('[data-saved-empty]')).toHaveText('No saved lessons yet.');
+  await page.goto('/saved'); await page.locator('.reader-settings > summary').click(); await expect(page.locator('[data-saved-empty]')).toHaveText('No saved lessons yet.');
   const reading=await page.context().newPage(); await reading.goto(lesson); await reading.getByRole('button',{name:'Save lesson',exact:true}).click();
   await expect(page.locator('[data-saved-list] li')).toHaveCount(1); await reading.close();
 });
@@ -82,13 +95,13 @@ test('write failures are explained and controls return to stored state', async (
   await page.addInitScript(()=>{const original=Storage.prototype.setItem;Storage.prototype.setItem=function(k,v){if(this===localStorage)throw Error('full');original.call(this,k,v);};});
   await page.goto(lesson); await expect(page.locator('#preference-note')).toContainText('could not be saved');
   await page.getByRole('button',{name:'Save lesson'}).click(); await expect(page.locator('#preference-note')).toBeVisible();
-  await page.goto('/saved'); await page.getByRole('radio',{name:'Light'}).click();
+  await page.goto('/saved'); await page.locator('.reader-settings > summary').click(); await page.getByRole('radio',{name:'Light'}).click();
   await expect(page.getByRole('radio',{name:'System'})).toBeChecked(); await expect(page.locator('#preference-note')).toContainText('will not be remembered');
 });
 
 test('blocked storage disables personal controls without changing content access', async ({page}) => {
   await page.addInitScript(()=>Object.defineProperty(window,'localStorage',{get(){throw Error('blocked');}}));
-  await page.goto('/saved'); await expect(page.locator('[data-personal-status]')).toHaveText('Reader data is unavailable. It has not been changed.');
+  await page.goto('/saved'); await page.locator('.reader-settings > summary').click(); await expect(page.locator('[data-personal-status]')).toHaveText('Reader data is unavailable. It has not been changed.');
   await expect(page.getByRole('button',{name:'Export data'})).toBeDisabled(); await expect(page.getByRole('radio',{name:'System'})).toBeDisabled();
   await page.goto(lesson); await expect(page.locator('.lesson-body').first()).toBeVisible(); await expect(page.getByRole('button',{name:'Save'})).toHaveCount(0);
 });
