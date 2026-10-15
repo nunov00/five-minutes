@@ -1,0 +1,37 @@
+schemaVersion: 2
+id: 034c4a38-3d76-482a-83d8-ce1d8d59b5c2
+slug: why-password-hashes-need-salt
+aliases: []
+publishedAt: 2026-10-15T10:00:00+02:00
+topic: technology
+subtopic: computing
+concepts:
+  - password-hashing
+  - cryptographic-salt
+  - offline-attack
+related:
+  manual:
+    - id: 5d0eaefd-39c4-404e-9dbb-7e75e88474f6
+      reason: Both lessons examine a deliberate data transformation, but secure password hashing is designed to be one-way rather than reversible.
+    - id: 1629895d-f11a-4bb7-afe5-8c8df5c07123
+      reason: Password security depends partly on how rapidly the number of possible guesses grows and how expensive each guess is.
+  exclude: []
+sources:
+  - title: "NIST Special Publication 800-63B: Authentication and Authenticator Management"
+    url: https://pages.nist.gov/800-63-4/sp800-63b.html
+    publisher: National Institute of Standards and Technology
+    accessedAt: 2026-10-15
+    note: Requires suitable salted password hashing, a cost factor and storage of both the salt and resulting hash.
+  - title: Password Storage Cheat Sheet
+    url: https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html
+    publisher: OWASP Foundation
+    accessedAt: 2026-10-15
+    note: Explains one-way password hashing, unique salts, offline guessing and why slow password-hashing algorithms matter.
+provenance:
+  createdAt: 2026-10-15T09:01:00+02:00
+  createdBy:
+    type: ai
+    provider: openai
+    model: gpt-5-codex
+    promptVersion: automated-writer-v2
+  reviews: []
