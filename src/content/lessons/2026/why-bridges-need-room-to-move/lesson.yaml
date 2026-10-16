@@ -1,0 +1,42 @@
+schemaVersion: 2
+id: 1021a4c8-9e35-47ca-9de8-fdc69f790738
+slug: why-bridges-need-room-to-move
+aliases: []
+publishedAt: '2026-10-16T07:26:41Z'
+archive:
+  sourceUrl: https://five-minutes.vitoria-nuno.chatgpt.site/lesson/thermal-expansion
+  catalogueDate: '2026-09-21'
+topic: technology
+subtopic: engineering
+concepts:
+- thermal-expansion
+- structures
+- temperature
+related:
+  manual:
+  - id: 532a34e6-cbc9-4c65-9316-c716749c66e2
+    reason: Explore another way that heat and material behaviour shape an everyday experience.
+  exclude: []
+sources:
+- title: Thermal Expansion of Solids and Liquids
+  url: https://openstax.org/books/college-physics-2e/pages/13-2-thermal-expansion-of-solids-and-liquids
+  publisher: OpenStax
+  accessedAt: '2026-10-16'
+  note: Linear expansion equation, representative steel coefficient of 12 millionths per °C, and stress when expansion is restrained.
+- title: 'Expansion Joints: Long-Term Bridge Performance Protocol'
+  url: https://www.fhwa.dot.gov/publications/research/infrastructure/structures/ltbp/16007/055.cfm
+  publisher: Federal Highway Administration
+  accessedAt: '2026-10-16'
+  note: Real bridge-joint inspection records temperature alongside opening size and checks seals, debris and damage.
+- title: 'Early-Age Pavement Behavior: Temperature Changes'
+  url: https://www.fhwa.dot.gov/publications/research/infrastructure/pavements/pccp/04122/02.cfm
+  publisher: Federal Highway Administration
+  accessedAt: '2026-10-16'
+  note: Warming sections close a movement joint; cooling opens it. Joint movement also depends on other material and design factors.
+provenance:
+  createdAt: '2026-10-16T07:26:41Z'
+  createdBy:
+    type: ai
+    provider: openai
+    promptVersion: legacy-migration-batch-v1
+  reviews: []

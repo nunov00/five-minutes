@@ -1,0 +1,39 @@
+schemaVersion: 2
+id: 532a34e6-cbc9-4c65-9316-c716749c66e2
+slug: why-metal-feels-colder-than-wood
+aliases: []
+publishedAt: '2026-10-16T07:26:41Z'
+archive:
+  sourceUrl: https://five-minutes.vitoria-nuno.chatgpt.site/lesson/thermal-conductivity
+  catalogueDate: '2026-08-15'
+topic: science
+subtopic: physics
+concepts:
+- heat-transfer
+- thermal-conductivity
+- temperature
+related:
+  manual:
+  - id: 6905c8d7-1cd9-4d9f-af69-30cc92616d2f
+    reason: Explore another way that heat and material behaviour shape an everyday experience.
+  - id: 1021a4c8-9e35-47ca-9de8-fdc69f790738
+    reason: Explore another way that heat and material behaviour shape an everyday experience.
+  exclude: []
+sources:
+- title: 'Temperature: human perception and thermal equilibrium'
+  url: https://openstax.org/books/college-physics-2e/pages/13-1-temperature
+  publisher: OpenStax
+  accessedAt: '2026-10-16'
+  note: Same-temperature metal and wood feel different because heat leaves skin at different rates.
+- title: Conduction
+  url: https://openstax.org/books/college-physics-2e/pages/14-5-conduction
+  publisher: OpenStax
+  accessedAt: '2026-10-16'
+  note: Thermal conductivity, temperature difference and geometry determine conduction rates.
+provenance:
+  createdAt: '2026-10-16T07:26:41Z'
+  createdBy:
+    type: ai
+    provider: openai
+    promptVersion: legacy-migration-batch-v1
+  reviews: []

@@ -1,0 +1,35 @@
+schemaVersion: 2
+id: cd638bb5-5105-4f69-80f4-307d5995e66a
+slug: why-small-pushes-can-build-big-movements
+aliases: []
+publishedAt: '2026-10-16T07:26:41Z'
+archive:
+  sourceUrl: https://five-minutes.vitoria-nuno.chatgpt.site/lesson/resonance
+  catalogueDate: '2026-08-10'
+topic: science
+subtopic: physics
+concepts:
+- resonance
+- oscillation
+- damping
+related:
+  manual: []
+  exclude: []
+sources:
+- title: Forced Oscillations
+  url: https://openstax.org/books/university-physics-volume-1/pages/15-6-forced-oscillations
+  publisher: OpenStax
+  accessedAt: '2026-10-16'
+  note: Equation 15.29 defines the driven spring-mass amplitude used for the original plotted curves; periodic forcing and natural frequency.
+- title: Forced Oscillations and Resonance
+  url: https://openstax.org/books/college-physics-2e/pages/16-8-forced-oscillations-and-resonance
+  publisher: OpenStax
+  accessedAt: '2026-10-16'
+  note: Swing example, greater response near natural frequency and the effect of damping. Historical bridge simplifications on this page are not used.
+provenance:
+  createdAt: '2026-10-16T07:26:41Z'
+  createdBy:
+    type: ai
+    provider: openai
+    promptVersion: legacy-migration-batch-v1
+  reviews: []
