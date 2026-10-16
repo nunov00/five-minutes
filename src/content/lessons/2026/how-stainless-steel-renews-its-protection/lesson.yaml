@@ -1,0 +1,35 @@
+schemaVersion: 2
+id: 92a1a093-db19-441d-8e71-ea54d9744c83
+slug: how-stainless-steel-renews-its-protection
+aliases: []
+publishedAt: '2026-10-16T07:26:41Z'
+archive:
+  sourceUrl: https://five-minutes.vitoria-nuno.chatgpt.site/lesson/stainless-steel
+  catalogueDate: '2026-09-04'
+topic: technology
+subtopic: engineering
+concepts:
+- stainless-steel
+- corrosion
+- passivation
+related:
+  manual: []
+  exclude: []
+sources:
+- title: Corrosion properties
+  url: https://worldstainless.org/about-stainless/properties/corrosion-properties/
+  publisher: worldstainless
+  accessedAt: '2026-10-16'
+  note: Chromium-rich passive film, oxygen-dependent reformation and corrosion modes including pitting and crevice corrosion.
+- title: The power of corrosion resistance
+  url: https://www.outokumpu.com/expertise/2020/the-power-of-corrosion-resistance
+  publisher: Outokumpu
+  accessedAt: '2026-10-16'
+  note: Producer explanation of oxide/hydroxide passive layers, nanometre scale, repassivation after scratches, chloride and crevice limits.
+provenance:
+  createdAt: '2026-10-16T07:26:41Z'
+  createdBy:
+    type: ai
+    provider: openai
+    promptVersion: legacy-migration-batch-v1
+  reviews: []

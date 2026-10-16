@@ -1,0 +1,37 @@
+schemaVersion: 2
+id: 6905c8d7-1cd9-4d9f-af69-30cc92616d2f
+slug: why-sweat-needs-to-evaporate
+aliases: []
+publishedAt: '2026-10-16T07:26:41Z'
+archive:
+  sourceUrl: https://five-minutes.vitoria-nuno.chatgpt.site/lesson/evaporative-cooling
+  catalogueDate: '2026-08-13'
+topic: science
+subtopic: physics
+concepts:
+- evaporation
+- heat-transfer
+- humidity
+related:
+  manual:
+  - id: 532a34e6-cbc9-4c65-9316-c716749c66e2
+    reason: Explore another way that heat and material behaviour shape an everyday experience.
+  exclude: []
+sources:
+- title: Humidity, Evaporation, and Boiling
+  url: https://openstax.org/books/college-physics-2e/pages/13-6-humidity-evaporation-and-boiling
+  publisher: OpenStax
+  accessedAt: '2026-10-16'
+  note: Molecular account of evaporation and cooling; effect of water vapour and humidity.
+- title: Mechanisms of Heat Transfer
+  url: https://openstax.org/books/university-physics-volume-2/pages/1-6-mechanisms-of-heat-transfer
+  publisher: OpenStax
+  accessedAt: '2026-10-16'
+  note: Evaporation transfers energy away from wet skin and water; convection replaces adjacent moist air and helps evaporation continue.
+provenance:
+  createdAt: '2026-10-16T07:26:41Z'
+  createdBy:
+    type: ai
+    provider: openai
+    promptVersion: legacy-migration-batch-v1
+  reviews: []
