@@ -1,0 +1,37 @@
+schemaVersion: 2
+id: 15944494-03f6-40a5-b7ab-2fd7192b6836
+slug: why-ice-floats-on-water
+aliases: []
+publishedAt: 2026-10-16T06:00:00+02:00
+topic: science
+subtopic: physics
+concepts: [density, freezing, molecular-structure]
+related:
+  manual:
+    - id: 6bd86c0f-7cde-467c-abd1-ef6c8a2b51b1
+      reason: Explore another consequence of changing a substance's state in the refrigeration cycle of a heat pump.
+  exclude: []
+sources:
+  - title: Water Density
+    url: https://www.usgs.gov/water-science-school/science/water-density
+    publisher: U.S. Geological Survey
+    accessedAt: 2026-10-16
+    note: Defines density and explains how the open lattice of ordinary ice makes it less dense than liquid water.
+  - title: "Changing State—Freezing"
+    url: https://www.acs.org/middleschoolchemistry/lessonplans/chapter2/lesson4.html
+    publisher: American Chemical Society
+    accessedAt: 2026-10-16
+    note: Explains expansion on freezing, molecular attractions and the spacing and motion of molecules in ice.
+  - title: "Density: Sink and Float for Solids"
+    url: https://www.acs.org/middleschoolchemistry/lessonplans/chapter3/lesson4.html
+    publisher: American Chemical Society
+    accessedAt: 2026-10-16
+    note: Explains why a solid's density relative to the surrounding liquid determines whether it sinks or floats.
+provenance:
+  createdAt: 2026-10-16T04:27:59+02:00
+  createdBy:
+    type: ai
+    provider: openai
+    model: gpt-6
+    promptVersion: automated-writer-v3
+  reviews: []
