@@ -5,6 +5,8 @@ Date: 2026-10-02
 Amended: 2026-10-04; 2026-10-09 (same-provider review permitted); 2026-10-12 (activation configuration wording); 2026-10-14 (figure/activity assessment and safe structured figures); 2026-10-14 (optional Copilot review evidence); 2026-10-15 (Owner-approved morning publication target); 2026-10-16 (Owner-approved manual archive import direction, #138)
 Owner approval: approved 2026-10-02; subscription-based automated publication direction approved 2026-10-04; same-provider review permitted 2026-10-09; conditional figures and Teen activities approved 2026-10-14; 04:30 Writer, 06:00 publication target and 07:00 recovery review approved 2026-10-15.
 
+Recovery amendment (Owner-approved direction, 17 October 2026): the existing Reviewer may diagnose failed checks, perform bounded technical maintenance through separate normal PRs, and mechanically refresh an unchanged same-day candidate only after its own recorded repair advances main. The exact limits, exclusions, durable retry budget and later-run editorial review are in `docs/automation/publication-task-contracts.md`. This does not permit lesson-content edits, broaden the lesson guard or bypass any named check. No extra task or schedule is introduced.
+
 ## Context
 
 Archive amendment (Owner-approved direction, 2026-10-16; issue #138): legacy imports carry ADR-0006's optional `archive` metadata. Today and its Earlier list consider only non-archive lessons, ordered by their actual `publishedAt`, so bulk imports cannot consume the daily slot or displace new ideas. Library/Topics/search and related discovery still include archives. An archive-only corpus fails Today selection rather than silently promoting an import. Daily writer/reviewer eligibility, the guard, date/provenance rules and same-run merge authority are unchanged; archive imports require the normal Manager-led PR workflow. Archived catalogue dates are not publication timestamps for the automated daily slot.
@@ -33,7 +35,7 @@ Normal automated lesson generation occurs on a `lesson/<slug>` branch created fr
 
 The scheduled writer (initially ChatGPT) may create the bounded branch and PR. It must not merge, enable auto-merge, claim to be the reviewer or change repository settings.
 
-The scheduled reviewer (ChatGPT/OpenAI at M7.5 activation) may merge only under the exact same-run review contract below. It must not edit lesson content. Since 2026-10-09 the writer and reviewer may use the same provider or different providers; in either case they are separate scheduled tasks, and review never happens in the run or session that authored the candidate. Both assistants currently act through the Owner's GitHub identity, so GitHub cannot authenticate their separation. These restrictions are procedural and are backed by the lesson-only guard, explicit named-check verification, exact-base and expected-head checks, and periodic configuration audit.
+The scheduled reviewer (ChatGPT/OpenAI at M7.5 activation) may merge lessons only under the exact same-run review contract below. Bounded technical recovery uses separate maintenance PRs under GOVERNANCE; it is not lesson approval. It must not edit lesson content. Since 2026-10-09 the writer and reviewer may use the same provider or different providers; in either case they are separate scheduled tasks, and review never happens in the run or session that authored the candidate. Both assistants currently act through the Owner's GitHub identity, so GitHub cannot authenticate their separation. These restrictions are procedural and are backed by the lesson-only guard, explicit named-check verification, exact-base and expected-head checks, and periodic configuration audit.
 
 ### Publication time and daily slot
 
@@ -80,7 +82,7 @@ For each eligible automated candidate it:
 
 1. checks the off switch;
 2. waits until the latest completed run of each named required check reports exactly `success` on the current head; `skipped`, `neutral`, `cancelled`, absent, pending or stale results are not success;
-3. records the head SHA and verifies the lesson-only diff, that a comparison from current `main` to that head has current `main` as its merge base with zero commits behind, daily slot and freshness rules, and that no other automated lesson or correction PR is open; an eligible candidate whose ancestry is no longer current or whose intended date has passed is closed;
+3. records the head SHA and verifies the lesson-only diff, that a comparison from current `main` to that head has current `main` as its merge base with zero commits behind, daily slot and freshness rules, and that no other automated lesson or correction PR is open; an eligible candidate whose ancestry is no longer current or whose intended date has passed is closed, except for the bounded repair-only mechanical refresh described in the task contract;
 4. checks any available automatic GitHub Copilot review on the exact head, independently verifies substantive findings, and documents dispositions; confirmed unresolved BLOCKER/IMPORTANT findings prevent Ready, but absent/pending Copilot review is recorded rather than becoming a new gate. Copilot does not replace the separate editorial review;
 5. independently fetches and judges the sources and performs the complete EDITORIAL.md review for Adult and Teen, originality, the recorded figure decisions and the Teen activity decision, including any activity present;
 6. posts the review naming the exact SHA and the Copilot review availability/finding dispositions;
@@ -114,7 +116,7 @@ M7.2 adds a fail-closed guard. Initially, an automated new-lesson PR:
 - stays within defined file and diff limits;
 - passes schema-v2 identity, route, source, safe-content, build, static and browser gates.
 
-Same-repository Pull Request checks use the branch's workflow definitions. The reviewer therefore also verifies the file list and compares the exact candidate head with current `main`: the common ancestor must be current `main` and the candidate must be zero commits behind. GitHub's mutable Pull Request base field is not accepted as proof of ancestry. A candidate based on older `main` is closed, not rebased and trusted.
+Same-repository Pull Request checks use the branch's workflow definitions. The reviewer therefore also verifies the file list and compares the exact candidate head with current `main`: the common ancestor must be current `main` and the candidate must be zero commits behind. GitHub's mutable Pull Request base field is not accepted as proof of ancestry. A candidate based on older `main` is closed, except for the task contract’s strictly bounded mechanical merge after its recorded technical repair. Such a refresh changes no lesson blob, invalidates all prior evidence and requires fresh named checks plus full editorial review in a later run; rebasing or an earlier Ready record never establishes trust.
 
 All AI-authored bodies remain subject to ADR-0006's validated safe-Markdown and structured-content rules. Fork and other untrusted workflows never receive repository or publication secrets.
 
