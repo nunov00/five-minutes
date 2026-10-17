@@ -27,6 +27,7 @@ Five Minutes is a Git-backed, static learning publication. Read these before sub
 - Reader state is local-first behind a storage abstraction.
 - AI workers may author changes but do not push directly to `main`.
 - Routine automated lesson publication follows ADR-0007: the writer cannot merge; named checks must pass before the editorial review in a separate reviewer run begins (an independent review, or a same-provider separate-pass review); Ready review and `expectedHeadSha` merge occur in the same reviewer run; prior comments/labels never authorise publication; failed, stale or uncertain candidates do not publish.
+- The Reviewer may perform bounded technical recovery only as defined in `docs/automation/publication-task-contracts.md`: separate maintenance PRs under normal governance, no weakened gates or lesson edits, and at most the documented mechanical refresh followed by fresh checks and editorial review in a later run. Recovery never authorises an earlier Ready record or an extra automation.
 - Prefer small, testable changes and update documentation/ADRs when architectural behaviour changes.
 - Keep commits atomic at the logical-change level where practical: prepare related code/configuration and documentation together before pushing. Avoid unnecessary sequential commits on CI/CD-connected branches because each push may trigger a full test, preview build or deployment.
 
