@@ -1,0 +1,39 @@
+schemaVersion: 2
+id: 3d9b52ca-9082-4d28-9679-837e595df094
+slug: why-astronauts-float-in-orbit
+aliases: []
+publishedAt: 2026-10-17T06:00:00+02:00
+topic: science
+subtopic: astronomy
+concepts: [orbit, gravity, free-fall, microgravity]
+related:
+  manual:
+    - id: 0199a5b7-6e21-7a42-9c3d-8f1b2e4a6c70
+      reason: Explore how motion and gravity also affect the clocks on navigation satellites.
+    - id: 883e567b-8ad6-4789-9a87-667dc8800303
+      reason: Another familiar sight in the sky becomes clearer when you follow the motion and geometry.
+  exclude: []
+sources:
+  - title: What Is Microgravity? (Grades 5-8)
+    url: https://www.nasa.gov/learning-resources/for-kids-and-students/what-is-microgravity-grades-5-8/
+    publisher: NASA STEM
+    accessedAt: 2026-10-17
+    note: Shared free fall explains floating; sideways motion lets the falling spacecraft keep missing Earth.
+  - title: What is Microgravity?
+    url: https://www.nasa.gov/centers-and-facilities/glenn/what-is-microgravity/
+    publisher: NASA Glenn Research Center
+    accessedAt: 2026-10-17
+    note: Gravity remains strong in low Earth orbit; the spacecraft, crew and objects fall together.
+  - title: "European User Guide to Low Gravity Platforms: International Space Station, section 7.3"
+    url: https://wsn.spaceflight.esa.int/docs/EUG2LGPr3/EUG2LGPr3-7-ISS.pdf
+    publisher: European Space Agency
+    accessedAt: 2026-10-17
+    note: Page 7-27 independently explains orbital free fall and the small residual accelerations in microgravity.
+provenance:
+  createdAt: 2026-10-17T04:34:02+02:00
+  createdBy:
+    type: ai
+    provider: openai
+    model: gpt-6
+    promptVersion: automated-writer-v3
+  reviews: []
