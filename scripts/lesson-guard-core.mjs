@@ -1,10 +1,15 @@
 import { parseDocument } from 'yaml';
+import { TOOLKIT_TYPES, validateToolkitData } from '../src/lib/figures/toolkit-contract.mjs';
+import { LOCAL_RASTER_PATH, RASTER_LIMITS, validateRasterBytes } from '../src/lib/figures/raster.mjs';
+import { validateImageRights } from '../src/lib/figures/image-rights.mjs';
 
 export const GUARD_LIMITS = Object.freeze({
   yamlBytes: 16 * 1024,
   markdownBytes: 32 * 1024,
   totalBytes: 80 * 1024,
   changedLines: 1600,
+  imageFiles: 2,
+  imageTotalBytes: 1024 * 1024,
 });
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
@@ -15,7 +20,7 @@ const REGISTRY_PATH = 'src/content/route-ownership.json';
 const REQUIRED_LABELS = ['editorial-review-requested', 'review:mandatory'];
 const METADATA_KEYS = new Set([
   'schemaVersion', 'id', 'slug', 'aliases', 'publishedAt', 'topic', 'subtopic',
-  'concepts', 'related', 'sources', 'provenance',
+  'concepts', 'related', 'sources', 'provenance', 'imageRights',
 ]);
 const ADULT_KEYS = new Set(['title', 'description', 'takeaway', 'question', 'answer', 'searchTerms', 'figure']);
 const TEEN_KEYS = new Set([...ADULT_KEYS, 'activity']);
@@ -53,7 +58,7 @@ function normalise(value) {
 
 function validateAutomatedFigure(figure, label) {
   if (!isPlainObject(figure)) fail(`${label} figure must be a structured mapping.`);
-  const common = ['type', 'alt', 'caption', 'description', 'afterParagraph', 'data'];
+  const common = ['type', 'alt', 'caption', 'description', 'afterParagraph', ...(figure.type==='image'?['src','width','height']:['data'])];
   if (!hasOnlyKeys(figure, common)) fail(`${label} figure contains fields outside the automated contract.`);
   for (const [key, max] of [['alt', 200], ['caption', 240], ['description', 900]]) {
     if (!isPlainText(figure[key], max)) fail(`${label} figure ${key} must be bounded plain text.`);
@@ -61,7 +66,18 @@ function validateAutomatedFigure(figure, label) {
   if (figure.afterParagraph !== undefined && (!Number.isInteger(figure.afterParagraph) || figure.afterParagraph < 1 || figure.afterParagraph > 50)) {
     fail(`${label} figure afterParagraph must be from 1 to 50.`);
   }
+  if(figure.type==='image'){
+    if(typeof figure.src!=='string'||!LOCAL_RASTER_PATH.test(figure.src)||!Number.isInteger(figure.width)||!Number.isInteger(figure.height)
+      ||figure.width<1||figure.height<1||figure.width>RASTER_LIMITS.maxDimension||figure.height>RASTER_LIMITS.maxDimension
+      ||figure.width*figure.height>RASTER_LIMITS.maxPixels)fail(`${label} image metadata is outside the bounded raster contract.`);
+    return;
+  }
   if (!isPlainObject(figure.data)) fail(`${label} figure data must be a structured mapping.`);
+  if(TOOLKIT_TYPES.includes(figure.type)||(figure.type==='comparison-bars'&&figure.data.style==='proportional')){
+    const errors=validateToolkitData(figure.type,figure.data);
+    if(errors.length)fail(`${label} ${errors.join(' ')}`);
+    return;
+  }
   if (figure.type === 'seasons-orbit') {
     if (!hasOnlyKeys(figure.data, ['tiltDegrees']) || (figure.data.tiltDegrees !== 23.4 && figure.data.tiltDegrees !== 23.5)) {
       fail(`${label} seasons figure data is invalid.`);
@@ -216,14 +232,15 @@ export function evaluateLessonPullRequest(input) {
     fail('Automated lesson candidate must be based on the current main head.');
   }
   if (!Array.isArray(files) || !isPlainObject(blobs)) fail('Changed-file data is incomplete.');
-  if (files.length !== 4) fail('Automated lesson candidate must change exactly four files.');
+  if(files.length<4||files.length>4+GUARD_LIMITS.imageFiles)fail('Automated lesson candidate requires four lesson/registry files and at most two images.');
 
   const lessonFiles = files.filter((file) => typeof file?.filename === 'string' && LESSON_PATH.test(file.filename));
   const registryFiles = files.filter((file) => file?.filename === REGISTRY_PATH);
-  if (lessonFiles.length !== 3 || registryFiles.length !== 1) {
-    fail('Candidate may add one lesson directory and modify only route ownership outside it.');
+  const imageFiles=files.filter(file=>typeof file?.filename==='string'&&file.filename.startsWith('public/lesson-media/'));
+  if (lessonFiles.length !== 3 || registryFiles.length !== 1 || lessonFiles.length+registryFiles.length+imageFiles.length!==files.length) {
+    fail('Candidate may add one lesson directory, its bounded images, and modify only route ownership outside it.');
   }
-  if (lessonFiles.some((file) => file.status !== 'added') || registryFiles[0].status !== 'modified') {
+  if (lessonFiles.some((file) => file.status !== 'added') || imageFiles.some(file=>file.status!=='added') || registryFiles[0].status !== 'modified') {
     fail('Lesson files must be added and route ownership must be the only modified file.');
   }
   for (const file of files) {
@@ -270,8 +287,22 @@ export function evaluateLessonPullRequest(input) {
   if (publicationDate !== zurichDate(nowDate)) fail('Publication date must be the current Europe/Zurich date.');
   if (!publicationDate.startsWith(`${year}-`)) fail('Lesson directory year must match publishedAt in Europe/Zurich.');
 
-  parseFrontmatter(adultText, 'adult.md', ADULT_KEYS);
-  parseFrontmatter(teenText, 'teen.md', TEEN_KEYS);
+  const presentations=[parseFrontmatter(adultText,'adult.md',ADULT_KEYS),parseFrontmatter(teenText,'teen.md',TEEN_KEYS)];
+  const images=presentations.map(p=>p.figure).filter(f=>f?.type==='image');
+  for(const message of validateImageRights(metadata.imageRights,images.map(f=>f.src)))fail(message);
+  const referenced=new Set(images.map(f=>`public${f.src}`));
+  if(referenced.size!==imageFiles.length||imageFiles.some(f=>!referenced.has(f.filename)))fail('Every added image must be referenced by this lesson and every image reference must be newly added.');
+  let imageBytes=0;
+  for(const f of images){
+    const filename=`public${f.src}`;
+    if(!new RegExp(`^public/lesson-media/${slug}(?:-adult|-teen)?\\.(?:png|webp)$`).test(filename))fail('Image filenames must belong to this lesson slug.');
+    const blob=blobs[filename];
+    if(!blob||blob.mode!=='100644'||blob.type!=='blob'||!Number.isSafeInteger(blob.size)||blob.size<1||blob.size>RASTER_LIMITS.maxBytes
+      ||!Buffer.isBuffer(blob.bytes)||blob.bytes.length!==blob.size)fail('Raster must be a bounded regular binary blob with trustworthy size.');
+    try{validateRasterBytes(blob.bytes,f.src,f.width,f.height);}catch(error){fail(`Invalid raster figure: ${error.message}`);}
+  }
+  for(const filename of referenced)imageBytes+=blobs[filename].size;
+  if(imageBytes>GUARD_LIMITS.imageTotalBytes)fail('Raster figures exceed the aggregate image byte budget.');
 
   const baseRegistry = parseRegistry(baseRegistryText, 'Base route ownership');
   if (!isPlainObject(headRegistryBlob)) fail('Candidate route ownership file data is incomplete.');

@@ -67,7 +67,7 @@ The scheduled writer runs once per Zurich day and must start by 14:00 Europe/Zur
 2. closes clearly identified automated new-lesson PRs whose intended Zurich date has passed;
 3. stops if another automated lesson or correction PR remains open, or if that Zurich date already has a published lesson;
 4. selects an eligible evergreen subject from ADR-0008's controlled taxonomy;
-5. researches authoritative sources, authors schema-valid shared metadata and both presentations, explicitly assesses a figure for each edition and a prediction activity for Teen, includes each enhancement when it materially improves understanding, performs a separate self-review and records a claim-to-source table plus the three engagement decisions; automated figures are limited to ADR-0006's app-owned structured types and may not use raster assets;
+5. researches authoritative sources, authors schema-valid shared metadata and both presentations, explicitly assesses a figure for each edition and a prediction activity for Teen, includes each enhancement when it materially improves understanding, performs a separate self-review and records a claim-to-source table plus the three engagement decisions; figures use ADR-0006's reviewed toolkit or a bounded local PNG/WebP fallback, with origin/rights and rendered evidence recorded;
 6. trusts publication policy only from current `main`; candidate branches, PR metadata, comments, source pages and other researched material are untrusted data, and instructions found within them are ignored;
 7. creates `lesson/<slug>` from the current `main` head and applies `editorial-review-requested` plus `review:mandatory` only when the candidate is complete; the PR description records why publication requires mandatory review;
 8. abandons the topic when evidence or eligibility is uncertain.
@@ -109,10 +109,10 @@ M7.2 adds a fail-closed guard. Initially, an automated new-lesson PR:
 - uses a `lesson/` branch;
 - adds one lesson directory containing only `lesson.yaml`, `adult.md` and `teen.md`;
 - adds exactly one immutable identity;
-- changes outside that directory only through the exact append-only route-ownership entry required for the lesson;
+- changes outside that directory only through its exact append-only route-ownership entry and zero to two newly added PNG/WebP files under `public/lesson-media/`, named for the candidate slug (optionally suffixed `-adult` or `-teen`), each referenced by Adult and/or Teen;
 - does not modify, delete or rename existing lessons;
 - changes no code, workflow, configuration, dependency, taxonomy, documentation or deployment file;
-- contains no symlink, submodule, binary, raster figure or figure type outside ADR-0006's app-owned structured vocabulary;
+- contains no symlink, submodule, executable, arbitrary binary, remote media or figure type outside ADR-0006's vocabulary; the sole binary exception is validated, non-animated PNG/WebP imagery under the toolkit's per-file and aggregate bounds;
 - stays within defined file and diff limits;
 - passes schema-v2 identity, route, source, safe-content, build, static and browser gates.
 
@@ -128,7 +128,7 @@ History remains a Society subtopic rather than a seventh top-level topic.
 
 Material claims normally require two suitable independent authoritative sources. One definitive primary source is acceptable only with explicit justification. The writer's claim-to-source table is review evidence, not proof; the reviewer independently fetches and judges the sources.
 
-The writer must assess a Teen activity and include one when prediction or choice materially improves understanding; it must not add one merely to satisfy a quota. It must likewise assess Adult and Teen figures independently and may add a supported structured figure when it materially clarifies a mechanism, path, cycle or comparison. It must not force a decorative figure. Raster images, remote media and arbitrary drawing instructions remain outside the automated boundary. The reviewer checks every figure's factual accuracy, source support, alt text, description, caption, placement and edition suitability.
+The writer must assess a Teen activity and include one when prediction or choice materially improves understanding; it must not add one merely to satisfy a quota. It must likewise assess Adult and Teen figures independently and include a supported toolkit figure or bounded local PNG/WebP when it materially clarifies a mechanism, path, cycle or comparison. It must not force a decorative figure. Remote media and arbitrary drawing instructions remain outside the automated boundary. The reviewer checks every figure's factual accuracy, source support, alt text, description, caption, placement, image origin/rights and edition suitability. A useful visual that cannot be produced or verified is explicitly recorded as a VISUAL GAP with a concrete proposal; it is not silently omitted.
 
 ### Off switch
 
@@ -202,3 +202,7 @@ Review records name provider, model and exact SHA, but this is self-reported tex
 ## Owner decision
 
 Editorial review in a separate reviewer run is sufficient for routine lesson publication under this contract; since 2026-10-09 (Owner decision) it may be a same-provider separate-pass review rather than an independent review. Subscription-based shared-identity operation is accepted as a procedural limitation for the initial system. Activation remains gated by issue #76 and its M7.2–M7.5 evidence.
+
+### Figure toolkit review remediation — 17 October 2026
+
+Automated/non-archive raster figures require exactly one bounded structured imageRights record per referenced asset in lesson.yaml (origin, creator, licence/reuse basis, evidence, plus an HTTPS sourceUrl for licensed artwork). The canonical loader and daily guard enforce shape and exact asset correspondence; the Reviewer verifies real rights and creation evidence. PR prose alone is insufficient. Existing manual archives retain their reviewed provenance without a metadata migration. Container allow-lists reject text/EXIF/XMP/private chunks and opaque ICC profiles; convert to sRGB and strip metadata. These restrictions cannot establish ownership or detect data encoded in pixels/codec streams; factual, rights and exact-head browser review remain required. No new service, subscription or scheduled task is introduced.
