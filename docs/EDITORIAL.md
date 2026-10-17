@@ -23,10 +23,23 @@ A publishable lesson must meet every criterion below. Reviewers use judgement an
 | Structure and flow | The title sets an honest expectation. The opening establishes the question or tension, each paragraph follows from the last, and the ending resolves the opening. Headings are used only when they help navigation. | The key explanation arrives late; sections feel interchangeable; the lesson changes subject; a heading adds hierarchy without meaning. |
 | Appropriate depth | The lesson includes what the reader needs to understand and use the idea, without assuming unexplained specialist knowledge. It names important limits but does not turn every caveat into a tangent. | A crucial causal step is skipped; jargon carries the argument; detail accumulates after the central idea is already complete. |
 | Takeaway and retrieval question | The front-matter takeaway states the durable insight in one useful sentence and is rendered once by the reading page; the body earns that conclusion without adding a second labelled takeaway. The question tests the insight, and the answer explains it rather than rewarding a trivial word match. | The takeaway is repeated or contradicted in the body; it is a slogan; the question tests an isolated number or wording copied from the title; the answer introduces new unsupported information. |
-| Adult presentation | Adult writing is intelligent, economical and precise. It may use technical language when it immediately explains it. It respects the reader without sounding academic for its own sake. | Corporate or textbook tone; needless jargon; oversimplification that removes the interesting mechanism. |
-| Teen presentation | Teen writing is engaging and natural. It may choose a different hook, example and structure from Adult while preserving the same facts and depth. It never relies on forced slang, trend references or a patronising voice. | The Adult version is merely shortened; slang tries to manufacture relevance; the reader is talked down to; nuance disappears. |
+| Memorability and payoff | A specific mental picture, example, connection or piece of reasoning makes the central insight easier to retain. The ending resolves the opening or reveals a worthwhile implication. | No clear answer to what the reader might remember tomorrow; a striking detail is unrelated to the mechanism; the ending is a recap list. |
+| Adult presentation | Adult writing is intelligent, economical and precise, and adds a meaningful explanatory layer beyond Teen: a deeper causal step, useful technical concept, implication, trade-off or boundary. Explain technical terms immediately and assume no specialist knowledge. | Corporate or textbook tone; extra length or vocabulary substitutes for depth; the two editions offer essentially the same understanding. |
+| Teen presentation | Teen writing is engaging and natural, with a complete, accurate central explanation. It may choose a different hook, example and structure from Adult. It never relies on forced slang, trend references or a patronising voice. | The Adult version is merely shortened; slang tries to manufacture relevance; the reader is talked down to; a necessary mechanism or qualification disappears. |
 | Title, deck and discoverability | Each edition has a specific, accurate title and a description that adds information. Search terms cover likely language a reader would use without stuffing synonyms. | Clickbait, vague titles, duplicated title/description, promises absent from the body or irrelevant search terms. |
 | Originality and non-duplication | The lesson has a distinct central insight and treatment. Before publication, compare its identity, title, concepts, takeaway and examples with the catalogue. Overlap is acceptable only when the new lesson answers a materially different question. | A new title hides the same lesson; familiar material is paraphrased without a fresh explanatory angle; Adult and Teen differ only cosmetically. |
+
+## Writing for understanding and memory
+
+Build the lesson around one worthwhile insight, rather than a sequence of facts about a topic:
+
+- **Give the reader a reason to care early.** A puzzle, surprising observation, recognisable situation or practical consequence can establish the question. Make the stakes concrete and proportionate; do not invent urgency or promise a life-changing application.
+- **Explain the mechanism.** Connect cause and effect without skipping the step that makes the result intelligible. An analogy should help the reader follow that reasoning; the explanation must still work when the analogy is removed. If an analogy needs so many disclaimers that its image stops helping, replace it.
+- **Choose something that sticks.** A mental picture, revealing example, useful comparison, sourced number or explanatory figure can anchor the insight. Choose what serves this topic. No lesson must contain every device, and no number or diagram should be added merely to meet a quota.
+- **Show where the idea leads.** Develop a consequence, application or connection that helps the reader see something familiar differently. Keep it within the lesson's evidence and scope.
+- **Deliver a payoff.** Resolve the opening question or draw out an implication. Avoid a final list that repeats the body; the reading page already provides the separate takeaway after retrieval.
+
+These are reader outcomes, not a compulsory five-part outline. Vary the structure and voice with the idea. All added facts, numbers and implications need the same source checking as the central explanation. Interesting wording never justifies overstating a claim.
 
 ## Figures and Teen activities
 
@@ -40,7 +53,7 @@ Only the safe representations defined by ADR-0006 and the reusable [figure toolk
 
 Every new or migrated Teen presentation and substantial Teen editorial pass must explicitly assess whether a lightweight prediction or choice would help the reader engage with the mechanism. Include an activity when committing to an answer, ordering possibilities or choosing between plausible explanations makes the subsequent explanation more effective. Omit it, with the reason recorded in the Pull Request, when it would merely repeat **Test yourself**, interrupt the flow or force artificial gamification. Activities are invitations to think, not a quota or decoration.
 
-Reviewers verify that the prompt is unambiguous, every option is plausible in context, the marked/recommended answer is correct, and the explanation follows from the lesson without introducing unsupported claims. The activity must remain understandable and revealable without JavaScript and must not patronise the reader.
+Reviewers verify that the prompt is unambiguous, every option is plausible in context, the marked/recommended answer is correct, and the explanation follows from the lesson without introducing unsupported claims. Wrong options should express plausible misconceptions that the explanation helps resolve, rather than be obviously absurd or give away the answer through wording. Apply that principle to any choice-based retrieval question too; open questions need no invented options. The activity must remain understandable and revealable without JavaScript and must not patronise the reader.
 
 ## Research and source practice
 
@@ -50,17 +63,29 @@ Check dates for facts that can change. For contested or consequential claims, se
 
 ## Adult and Teen relationship
 
-Adult and Teen are two presentations of one lesson identity. They share facts, sources, taxonomy and the central insight, but they need not share an outline. Adapt the route into the idea: a Teen presentation can start from school, games, a phone or another familiar situation when that example genuinely clarifies the concept. Adult can move more quickly into abstraction. Neither edition is the default or the complete version.
+Adult and Teen are two presentations of one lesson identity. They use shared sources and taxonomy to teach the same central insight, but their outlines and supporting detail may differ. Their factual accounts must be consistent, and any additional claims in either edition must be supported by the shared source record. Adapt the route into the idea: a Teen presentation can start from school, games, a phone or another familiar situation when that example genuinely clarifies the concept. Adult can move more quickly into abstraction. Neither edition is the default or the complete version.
 
 Both editions must preserve qualifications that affect truth. Simpler language means shorter sentences, explained terms and well-chosen examples; it does not mean removing the mechanism or pretending that a complex idea has no limits.
+
+Adult must answer: **What worthwhile understanding does this add beyond Teen?** Identify one specific additional layer, and develop it enough to explain something. More words, formal phrasing or an unexplained technical name do not count. Teen remains a complete lesson, not a teaser for Adult: do not manufacture the distinction by removing essential reasoning from Teen. Both editions deserve memorable examples and a satisfying payoff; Adult may reuse a strong Teen image when it helps.
+
+| Teen emphasis | Adult additional layer |
+| --- | --- |
+| Concrete situations and an accessible, complete central explanation | More detail in the mechanism, or a useful implication, trade-off or boundary |
+| Explain technical terms when they help | Name and explain relevant technical concepts where they add understanding |
+| Keep the central explanation focused | Develop one worthwhile complication without turning the lesson into a survey |
+
+Neither edition assumes specialist knowledge. There is no required length difference.
 
 ## Review outcomes
 
 Review findings use the project-wide severity language:
 
 - **BLOCKER** — publication would be unsafe or untrustworthy. Examples include a material factual error, invented or misrepresented source, harmful instruction, plagiarism, identity/route conflict or a missing edition. The lesson must not publish.
-- **IMPORTANT** — the lesson does not yet meet the editorial contract. Examples include an unsupported central claim, confusing causal gap, misleading title, weak retrieval question, patronising Teen voice or substantial duplication. Revise before publication.
+- **IMPORTANT** — the lesson does not yet meet the editorial contract. Examples include an unsupported central claim, confusing causal gap, misleading title, weak retrieval question, patronising Teen voice or substantial duplication. An accurate but generic lesson also needs revision when it lacks a clear reason to care, a memorable explanation or a satisfying payoff, or when Adult adds no meaningful understanding beyond Teen. Identify the missing reader outcome and a targeted revision; do not dismiss the gap as stylistic preference. Revise before publication.
 - **MINOR** — local polish that does not undermine accuracy, comprehension or the lesson's value. It may publish if the finding is explicitly recorded and accepted under the project's merge rules.
+
+For a narrow correction to a published lesson that is not a substantial editorial pass, pre-existing weaknesses in interest, memorability/payoff or Adult's additional depth may be deferred only when the correction neither introduces nor worsens them. Record those weaknesses in a linked follow-up issue rather than requiring an unrelated rewrite before the correction can merge. Review both editions and retain all other applicable gates, including factual accuracy, source support, safety, essential causal reasoning and figure verification. New lessons and substantial editorial passes must meet the full reader-value standard.
 
 A lesson is **Ready** only when there are no unresolved BLOCKER or IMPORTANT findings and all automated gates pass. When evidence is uncertain, the reviewer fails closed and requests revision or escalation rather than converting uncertainty into a low score.
 
@@ -79,6 +104,13 @@ For factual and editorial review, record:
 7. attention evidence for each edition: the title promise, opening hook or tension, points where momentum or comprehension may drop, and whether the payoff fulfils the promise;
 8. the catalogue comparison used for originality and duplication.
 9. the figure decision for each edition and the Teen activity decision, including the reason for any omission; for an included figure, record `FIGURE: PASS` or `FIGURE: REWORK`, the exact-head rendered route and the phone/wide viewports inspected.
+10. a concise reader-value assessment, with passage-specific evidence rather than a generic assertion, answering these four questions:
+    - **Interest:** what gives each edition's reader a reason to care early?
+    - **Understanding:** how does each edition explain the mechanism, and is a crucial causal step missing?
+    - **Memory:** what specific image, example, connection or reasoning might each reader remember tomorrow, and does the ending deliver its payoff? This is editorial judgement, not a claim of measured retention.
+    - **Adult depth:** what meaningful additional understanding does Adult provide beyond Teen?
+
+These answers can be incorporated into the existing per-edition and attention notes; do not duplicate the review. Missing reader outcomes require actionable findings under the severity definitions above. Check the author's claims against the actual text rather than accepting their self-assessment.
 
 Do not report a numeric quality score, an averaged rubric percentage or a precision-style confidence number. Descriptive confidence is useful only when it explains what is uncertain and what evidence would resolve it.
 
@@ -90,16 +122,30 @@ Before requesting review:
 
 - state the central insight in one sentence;
 - state the title's promise and ensure the opening reaches the interesting question immediately;
+- identify the concrete reason to care and the image, example, connection or reasoning the reader could remember tomorrow;
 - verify the important claims against the recorded sources;
 - remove any paragraph that does not improve understanding;
 - define necessary terms and test the explanation without its analogy;
 - check that each paragraph creates progress and that the ending delivers the promised payoff;
 - read each edition independently for flow and voice;
+- identify Adult's additional explanatory layer and check that Teen still contains the complete central explanation;
 - verify that the takeaway and retrieval answer express the same durable insight;
 - compare the proposed lesson with the existing catalogue for overlap;
 - assess a useful figure for each edition and a prediction activity for Teen; include supported additions when they improve understanding, otherwise record why they were omitted;
 - inspect every included figure on the rendered page at phone and wide widths, checking meaning before expansion, collisions, clipping, hierarchy and connection between labels/stages and artwork;
 - run the canonical content, build and static validation gates.
+
+## Short editorial examples
+
+Owner calibration direction, 17 October 2026. These are illustrative drafting contrasts, not quotations from the published lessons, factual review records or approved replacement copy. Verify any proposed factual addition against the lesson's actual sources before publishing it. All three topics already exist in the catalogue; these rows are neither new-topic suggestions nor figure decisions for those lessons. Assess figures from the actual current lesson and rendered page.
+
+| Topic | Flat treatment | More useful direction | Adult substance to develop |
+| --- | --- | --- | --- |
+| Ice floating | State that ice is less dense, then repeat that it floats. | Open with a lake freezing at the surface; connect that observation to water expanding as it freezes, and return to the consequence for the water below. | Explain how hydrogen bonds arrange water molecules into a more open structure on freezing; naming the bonds alone is insufficient. A density comparison belongs only if it helps and is sourced. |
+| Astronauts floating | Say that astronauts are in free fall without helping the reader picture it. | Use the falling-cabin image to explain the absence of support, then connect forward motion and Earth's curvature to orbit. Assess an orbital figure against the current toolkit. | Distinguish gravity from the support force a person feels; explain why orbital free fall can continue rather than relying on the word "weightless". A sourced gravity comparison can challenge the starting assumption. |
+| Password salt | List the properties of salts and hashes, then close with another list. | Follow two people who choose the same password through an attacker's attempt to reuse work, and resolve what changes when each password has a different salt. | Explain the different jobs of a unique salt and a deliberately costly password-hashing method, and why the salt can be public. Avoid implying that salting makes a weak password safe. |
+
+The transferable pattern is a clearer explanation with a worthwhile consequence, not a requirement to reuse these openings or impose science-style mechanisms on every subject. For a historical or conceptual lesson, show the relevant reasoning or relationships instead.
 
 ## Calibration corpus
 
