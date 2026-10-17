@@ -11,23 +11,26 @@ const cycleNodes=nodes.map((node,index)=>({node,index,x:150+100*Math.sin(2*Math.
 ---
 {figure.type==='orbital-motion' ? <div class="toolkit-figure orbit-mechanism" role="img" aria-label={figure.alt} aria-describedby={`${id}-description`}>
  <svg viewBox="0 0 360 270" aria-hidden="true" focusable="false" data-visual-canvas>
-  <defs><marker id={`${id}-orbit-arrow`} viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10Z" fill="currentColor"/></marker></defs>
+  <defs>
+   <marker id={`${id}-orbit-arrow`} viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10Z" class="motion-arrowhead"/></marker>
+   <marker id={`${id}-gravity-arrow`} viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10Z" class="gravity-arrowhead"/></marker>
+  </defs>
   <circle cx="180" cy="145" r="108" class="orbit-track"/>
   <circle cx="180" cy="145" r="58" class="orbit-earth"/>
   <path d="M135 130q30-30 45 5t55 15M170 93q-20 30 0 45t0 60" class="orbit-land"/>
   <text x="180" y="151" text-anchor="middle" data-visual-label>Earth</text>
   <path d="M214 37H278" class="motion-vector" marker-end={`url(#${id}-orbit-arrow)`}/>
-  <path d="M180 53V83" class="gravity-vector" marker-end={`url(#${id}-orbit-arrow)`}/>
+  <path d="M180 53V83" class="gravity-vector" marker-end={`url(#${id}-gravity-arrow)`}/>
   <g class="orbit-station"><rect x="172" y="30" width="16" height="14" rx="3"/><path d="M170 32h-20v10h20M190 32h20v10h-20"/></g>
   <g class="orbit-badge" data-visual-label><circle cx="301" cy="37" r="12"/><text x="301" y="42" text-anchor="middle">1</text></g>
   <g class="orbit-badge" data-visual-label><circle cx="208" cy="70" r="12"/><text x="208" y="75" text-anchor="middle">2</text></g>
  </svg>
  <ol class="orbit-key" aria-hidden="true"><li data-visual-label><b>1 · Sideways motion</b><span>The path keeps curving around Earth.</span></li><li data-visual-label><b>2 · Gravity</b><span>Pulls towards Earth's centre.</span></li></ol>
  <p class="cabin-heading" aria-hidden="true">Inside: everything falls together</p>
- <svg class="free-fall-cabin" viewBox="0 0 360 120" aria-hidden="true" focusable="false">
+ <svg class="free-fall-cabin" viewBox="0 0 360 142" aria-hidden="true" focusable="false">
   <rect x="32" y="8" width="296" height="84" rx="12" class="cabin-frame"/>
   <g class="cabin-objects"><circle cx="110" cy="33" r="8"/><path d="M110 41v20m-16-13 16-5 16 5m-26 26 10-13 10 13M220 37l25 12-4 7-25-12Z"/></g>
-  <path d="M22 79v31M110 82v28M235 76v34" class="gravity-vector" marker-end={`url(#${id}-orbit-arrow)`}/>
+  {[{x:55,y:96},{x:110,y:82},{x:235,y:76}].map(({x,y})=><path d={`M${x} ${y}v26`} class="gravity-vector" marker-end={`url(#${id}-gravity-arrow)`}/>)}
  </svg>
  <p class="toolkit-note" aria-hidden="true">Station, astronaut and pencil share the fall. Schematic, not to scale; arrows show gravity.</p>
  </div> : figure.type==='concept-flow' && pattern==='cycle' ? <div class="toolkit-figure concept-cycle" role="img" aria-label={figure.alt} aria-describedby={`${id}-description`}>

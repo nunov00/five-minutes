@@ -1,5 +1,6 @@
 import { test,expect } from './support/fixtures';
 import { loadPublishedLessons } from '../../src/lib/content/loader';
+import type { LessonFigure } from '../../src/lib/content/presentation-extensions';
 import { readFileSync } from 'node:fs';
 const routeOwnership=JSON.parse(readFileSync('src/content/route-ownership.json','utf8'));
 
@@ -8,6 +9,8 @@ test('toolkit figures remain readable and proportional on phones and desktop',as
   await page.setViewportSize({width,height:900});await page.emulateMedia({colorScheme});
   await page.goto('/figure-fixtures/toolkit');
   await expect(page.locator('.lesson-figure')).toHaveCount(7);
+  // A single SVG path with three subpaths only draws its final marker: each body needs an arrow.
+  await expect(page.locator('.free-fall-cabin .gravity-vector[marker-end]')).toHaveCount(3);
   for(const figure of await page.locator('.lesson-figure').all()){
    await expect(figure.getByRole('img')).toHaveAccessibleName(/\S/);
    const geometry=await figure.evaluate(root=>{
@@ -34,16 +37,21 @@ test('toolkit figures remain available without scripts and with enlarged text',a
  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await context.close();
 });
 
-// Every original daily raster gets the same decoding/size evidence as archive imports.
-const rasterLessons=(await loadPublishedLessons('src/content/lessons',routeOwnership)).filter(l=>!l.metadata.archive&&(l.adult?.figure?.type==='image'||l.teen?.figure?.type==='image'));
-for(const lesson of rasterLessons)for(const edition of ['adult','teen'] as const){
- const figure=lesson[edition]?.figure;if(figure?.type!=='image')continue;
- test(`daily raster ${edition}/${lesson.metadata.slug} loads at declared dimensions`,async({page},testInfo)=>{
+// New toolkit figures also get evidence inside their actual Adult/Teen reading pages.
+const usesToolkit=(figure:LessonFigure|undefined)=>figure&&(figure.type==='image'||figure.type==='concept-flow'||figure.type==='orbital-motion'||(figure.type==='comparison-bars'&&figure.data.style==='proportional'));
+const toolkitLessons=(await loadPublishedLessons('src/content/lessons',routeOwnership)).filter(l=>!l.metadata.archive&&(usesToolkit(l.adult?.figure)||usesToolkit(l.teen?.figure)));
+for(const lesson of toolkitLessons)for(const edition of ['adult','teen'] as const){
+ const figure=lesson[edition]?.figure;if(!usesToolkit(figure)||!figure)continue;
+ test(`daily figure ${edition}/${lesson.metadata.slug} remains readable`,async({page},testInfo)=>{
   for(const width of [320,393,1440]){
    await page.setViewportSize({width,height:900});await page.goto(`/${edition}/${lesson.metadata.slug}`);
-   const image=page.locator('.lesson-figure img');await image.scrollIntoViewIfNeeded();
-   await expect(image).toHaveAttribute('alt',figure.alt);
-   await expect.poll(()=>image.evaluate(el=>({loaded:(el as HTMLImageElement).complete,width:(el as HTMLImageElement).naturalWidth,height:(el as HTMLImageElement).naturalHeight}))).toEqual({loaded:true,width:figure.width,height:figure.height});
+   const rendered=page.locator('.lesson-figure');await rendered.scrollIntoViewIfNeeded();
+   await expect(rendered.getByRole('img')).toHaveAccessibleName(figure.alt);
+   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+   if(figure.type==='image'){
+    const image=rendered.locator('img');
+    await expect.poll(()=>image.evaluate(el=>({loaded:(el as HTMLImageElement).complete,width:(el as HTMLImageElement).naturalWidth,height:(el as HTMLImageElement).naturalHeight}))).toEqual({loaded:true,width:figure.width,height:figure.height});
+   }
    if(testInfo.project.name==='desktop-chromium')await page.locator('.lesson-figure').screenshot({path:testInfo.outputPath(`visual-daily-${edition}-${lesson.metadata.slug}-${width}.png`)});
   }
  });
