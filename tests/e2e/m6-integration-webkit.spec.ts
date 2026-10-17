@@ -15,6 +15,7 @@ test.describe('M6 integration in WebKit', () => {
     await expect(page.locator('[data-today-edition="adult"]')).toBeHidden();
 
     await page.goto('/library');
+    await expect(page).toHaveURL('/editions/teen/library');
     await page.goto('/adult/why-earth-has-seasons');
     await page.evaluate((key) => localStorage.setItem(key, JSON.stringify({
       version: 1, edition: 'teen', saved: [], read: {}, recent: [], appearance: 'system',

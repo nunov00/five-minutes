@@ -13,7 +13,7 @@ M7.5 records the configured prompts and verifies exact correspondence; the month
 
 ## Writer task
 
-Run once per Europe/Zurich day, scheduled at 04:30, and no later than 14:00. Set the candidate’s `publishedAt` to 06:00 on that same Zurich calendar date, using the correct local UTC offset for that date. If the actual `provenance.createdAt` is later than that target, set `publishedAt` to that actual creation timestamp instead; never backdate creation or choose an arbitrary later slot. In all cases `publishedAt` must be at least `provenance.createdAt` and remain on the current Zurich date. The target is for the deployed lesson to be available around 06:15, subject to successful checks, review and deployment.
+Run once per Europe/Zurich day, scheduled at 02:00, and no later than 14:00. Set the candidate’s `publishedAt` to 03:00 on that same Zurich calendar date, using the correct local UTC offset for that date. If the actual `provenance.createdAt` is later than that target, set `publishedAt` to that actual creation timestamp instead; never backdate creation or choose an arbitrary later slot. In all cases `publishedAt` must be at least `provenance.createdAt` and remain on the current Zurich date. The goal is deployed availability by 06:00, with earlier publication permitted after all gates pass. This is a service target, not a guarantee: delayed dispatch, source access, checks, review, repairs or deployment can cause a missed target; no gate may be bypassed to meet it.
 
 1. After the bootstrap loads this file from current `main`, read current-main AGENTS.md, ADR-0006, ADR-0007, ADR-0008 and EDITORIAL.md.
 2. If any open issue has `publication-paused`, stop without changing publication state.
@@ -26,7 +26,7 @@ Run once per Europe/Zurich day, scheduled at 04:30, and no later than 14:00. Set
 
 ## Reviewer task
 
-Run at 06:00, 07:00, 08:00, 10:00, 12:00, 14:00, 16:00, 18:00 and 20:00 Europe/Zurich. The 06:00 run serves the morning publication target; 07:00 is a recovery opportunity when dispatch or checks delay the first attempt. Every run repeats the complete eligibility, editorial and guarded-merge checks; this schedule grants no early-publication or gate-bypass authority.
+Run at 03:00, 04:00, 05:00, 06:00, 07:00, 08:00, 10:00, 12:00, 14:00, 16:00, 18:00 and 20:00 Europe/Zurich. The 03:00 run is the first publication opportunity; 04:00 and 05:00 allow recovery before the 06:00 availability target. Later runs retain same-day recovery when that target is missed. Every run repeats the complete eligibility, editorial and guarded-merge checks; this schedule grants no authority to publish before the candidate’s `publishedAt` or bypass a gate.
 
 1. After the bootstrap loads this file from current `main`, read current-main AGENTS.md, GOVERNANCE.md, ADR-0006, ADR-0007, ADR-0008, EDITORIAL.md and OPERATIONS.md.
 2. If any open issue has `publication-paused`, stop.
