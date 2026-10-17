@@ -1,7 +1,26 @@
 import { expect, test } from './support/fixtures';
+import type { Page } from '@playwright/test';
 
 const key = 'five-minutes.reader-state';
 const lesson = '/teen/why-earth-has-seasons';
+
+// Follow real pagination; neither catalogue growth nor page size fixes a lesson's position.
+async function findLibraryCard(page: Page, path: string) {
+  const catalogue = await page.request.get('/delivery.json');
+  expect(catalogue.ok()).toBe(true);
+  const { routes } = await catalogue.json() as { routes: Array<{ edition: string }> };
+  const teenLessons = routes.filter(route => route.edition === 'teen').length;
+  expect(teenLessons).toBeGreaterThan(0);
+  const card = page.locator('article[data-lesson-id]').filter({ has: page.locator(`a[href="${path}"]`) });
+  for (let visited = 1; await card.count() === 0 && visited < teenLessons; visited += 1) {
+    const next = page.getByRole('navigation', { name: 'Library pages' }).getByRole('link', { name: 'Next', exact: true });
+    await expect(next, 'The saved lesson must be reachable through Library pagination').toBeVisible();
+    await next.click();
+  }
+  await expect(card).toHaveCount(1);
+  return card;
+}
+
 
 test('Settings starts collapsed and opens and closes with the keyboard',async({page})=>{
  await page.goto('/saved');
@@ -39,9 +58,30 @@ test('Saved renders only the saved presentation without redundant edition labels
   await expect(page.locator('[data-saved-list]')).not.toContainText('Teen:');
   await expect(page.locator('[data-recent-list]')).not.toContainText('Teen ·');
   await page.getByRole('navigation',{name:'Main navigation'}).getByRole('link', {name:'Library', exact:true}).focus(); await page.keyboard.press('Enter'); await page.getByRole('link', {name:'Explore Teen', exact:true}).click();
-  await expect(page.locator('[data-reader-markers]').filter({hasText:'Saved'}).first()).toBeVisible();
+  const savedCard = await findLibraryCard(page, lesson);
+  await expect(savedCard).toHaveCount(1);
+  await expect(savedCard.locator('[data-reader-markers]')).toBeVisible();
+  await expect(savedCard.locator('[data-reader-markers]')).toContainText('Saved');
   await page.goto('/search?q=season&edition=teen'); await expect(page.getByRole('status')).toContainText('lesson');
-  await expect(page.locator('[data-reader-markers]').filter({hasText:'Saved'}).first()).toBeVisible();
+  const searchMarker = page.locator('li[data-lesson-id]').filter({ has: page.locator(`a[href="${lesson}"]`) }).locator('[data-reader-markers]');
+  await expect(searchMarker).toBeVisible();
+  await expect(searchMarker).toContainText('Saved');
+});
+
+
+test('Saved markers remain visible when the saved lesson starts on a later Library page', async ({page}) => {
+  await page.goto('/editions/teen/library');
+  await page.getByRole('navigation', {name:'Library pages'}).getByRole('link', {name:'Next', exact:true}).click();
+  const readingLink = page.locator('article[data-lesson-id] h2 a').first();
+  const path = await readingLink.getAttribute('href');
+  expect(path).toMatch(/^\/teen\//);
+  await readingLink.click();
+  await page.getByRole('button', {name:'Save lesson', exact:true}).click();
+  await page.goto('/editions/teen/library');
+  await expect(page.locator(`article[data-lesson-id] a[href="${path}"]`)).toHaveCount(0);
+  const card = await findLibraryCard(page, path!);
+  await expect(card.locator('[data-reader-markers]')).toBeVisible();
+  await expect(card.locator('[data-reader-markers]')).toContainText('Saved');
 });
 
 test('appearance persists and overrides the operating-system preference before content is read', async ({page}) => {
