@@ -1,6 +1,7 @@
 import { parseDocument } from 'yaml';
 import { TOOLKIT_TYPES, validateToolkitData } from '../src/lib/figures/toolkit-contract.mjs';
 import { LOCAL_RASTER_PATH, RASTER_LIMITS, validateRasterBytes } from '../src/lib/figures/raster.mjs';
+import { validateImageRights } from '../src/lib/figures/image-rights.mjs';
 
 export const GUARD_LIMITS = Object.freeze({
   yamlBytes: 16 * 1024,
@@ -19,7 +20,7 @@ const REGISTRY_PATH = 'src/content/route-ownership.json';
 const REQUIRED_LABELS = ['editorial-review-requested', 'review:mandatory'];
 const METADATA_KEYS = new Set([
   'schemaVersion', 'id', 'slug', 'aliases', 'publishedAt', 'topic', 'subtopic',
-  'concepts', 'related', 'sources', 'provenance',
+  'concepts', 'related', 'sources', 'provenance', 'imageRights',
 ]);
 const ADULT_KEYS = new Set(['title', 'description', 'takeaway', 'question', 'answer', 'searchTerms', 'figure']);
 const TEEN_KEYS = new Set([...ADULT_KEYS, 'activity']);
@@ -288,6 +289,7 @@ export function evaluateLessonPullRequest(input) {
 
   const presentations=[parseFrontmatter(adultText,'adult.md',ADULT_KEYS),parseFrontmatter(teenText,'teen.md',TEEN_KEYS)];
   const images=presentations.map(p=>p.figure).filter(f=>f?.type==='image');
+  for(const message of validateImageRights(metadata.imageRights,images.map(f=>f.src)))fail(message);
   const referenced=new Set(images.map(f=>`public${f.src}`));
   if(referenced.size!==imageFiles.length||imageFiles.some(f=>!referenced.has(f.filename)))fail('Every added image must be referenced by this lesson and every image reference must be newly added.');
   let imageBytes=0;
