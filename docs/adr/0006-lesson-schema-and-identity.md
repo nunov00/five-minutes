@@ -225,3 +225,7 @@ Rejected for the initial product under ADR-0001; the schema is intentionally por
 ## Follow-up decisions
 
 The publication lifecycle/review policy, edition-specific discovery search, two-presentation rendering benchmark, and initial controlled taxonomy/related rules are defined by ADR-0007, ADR-0003, ADR-0002 and ADR-0008 respectively.
+
+### Figure toolkit review remediation — 17 October 2026
+
+Automated/non-archive raster figures require exactly one bounded structured imageRights record per referenced asset in lesson.yaml (origin, creator, licence/reuse basis, evidence, plus an HTTPS sourceUrl for licensed artwork). The canonical loader and daily guard enforce shape and exact asset correspondence; the Reviewer verifies real rights and creation evidence. PR prose alone is insufficient. Existing manual archives retain their reviewed provenance without a metadata migration. Container allow-lists reject text/EXIF/XMP/private chunks and opaque ICC profiles; convert to sRGB and strip metadata. These restrictions cannot establish ownership or detect data encoded in pixels/codec streams; factual, rights and exact-head browser review remain required. No new service, subscription or scheduled task is introduced.

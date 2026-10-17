@@ -27,10 +27,11 @@ const cycleNodes=nodes.map((node,index)=>({node,index,x:150+100*Math.sin(2*Math.
  </svg>
  <ol class="orbit-key" aria-hidden="true"><li data-visual-label><b>1 · Sideways motion</b><span>The path keeps curving around Earth.</span></li><li data-visual-label><b>2 · Gravity</b><span>Pulls towards Earth's centre.</span></li></ol>
  <p class="cabin-heading" aria-hidden="true">Inside: everything falls together</p>
- <svg class="free-fall-cabin" viewBox="0 0 360 142" aria-hidden="true" focusable="false">
+ <svg class="free-fall-cabin" viewBox="0 0 360 160" aria-hidden="true" focusable="false">
   <rect x="32" y="8" width="296" height="84" rx="12" class="cabin-frame"/>
-  <g class="cabin-objects"><circle cx="110" cy="33" r="8"/><path d="M110 41v20m-16-13 16-5 16 5m-26 26 10-13 10 13M220 37l25 12-4 7-25-12Z"/></g>
-  {[{x:55,y:96},{x:110,y:82},{x:235,y:76}].map(({x,y})=><path d={`M${x} ${y}v26`} class="gravity-vector" marker-end={`url(#${id}-gravity-arrow)`}/>)}
+  <g class="cabin-objects"><circle cx="142" cy="33" r="8"/><path d="M142 41v20m-16-13 16-5 16 5m-26 26 10-13 10 13M220 37l25 12-4 7-25-12Z"/></g>
+  {[{x:55,y:96},{x:142,y:82},{x:235,y:76}].map(({x,y})=><path d={`M${x} ${y}v26`} class="gravity-vector" marker-end={`url(#${id}-gravity-arrow)`}/>)}
+  <g><text x="55" y="150" text-anchor="middle" data-visual-label>Station</text><text x="142" y="150" text-anchor="middle" data-visual-label>Astronaut</text><text x="235" y="150" text-anchor="middle" data-visual-label>Pencil</text></g>
  </svg>
  <p class="toolkit-note" aria-hidden="true">Station, astronaut and pencil share the fall. Schematic, not to scale; arrows show gravity.</p>
  </div> : figure.type==='concept-flow' && pattern==='cycle' ? <div class="toolkit-figure concept-cycle" role="img" aria-label={figure.alt} aria-describedby={`${id}-description`}>
