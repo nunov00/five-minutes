@@ -5,6 +5,8 @@ import {validatePresentationExtensions} from '../../src/lib/content/presentation
 import {validateToolkitData} from '../../src/lib/figures/toolkit-contract.mjs';
 import {evaluateLessonPullRequest} from '../../scripts/lesson-guard-core.mjs';
 import {strictBase64Bytes,collectGuardInput} from '../../scripts/verify-lesson-pr.mjs';
+import {validateRasterBytes,rasterDimensions} from '../../src/lib/figures/raster.mjs';
+import {validateLessonBundle} from '../../src/lib/content/schema';
 
 const slug='toolkit-check',root=`src/content/lessons/2026/${slug}`,base='a'.repeat(40),head='b'.repeat(40),id='12345678-1234-4234-9234-123456789abc';
 const words={alt:'A meaningful diagram.',caption:'An explanation.',description:'An equivalent explanation in plain text.'};
@@ -23,7 +25,9 @@ function candidate(figure:unknown=orbit){
   files:[...paths.map(filename=>({filename,status:'added',additions:20,deletions:0,changes:20})),{filename:'src/content/route-ownership.json',status:'modified',additions:1,deletions:0,changes:1}],
   blobs:Object.fromEntries(paths.map(path=>[path,textBlob(path.endsWith('.yaml')?yaml:body)])) as Record<string,any>,baseRegistryText:'{}',headRegistryBlob:textBlob(JSON.stringify({[slug]:id})),now:'2026-10-17T05:00:00+02:00'};
 }
-function rasterCandidate(){const v=candidate(image),path=`public${image.src}`;v.files.push({filename:path,status:'added',additions:0,deletions:0,changes:0});v.blobs[path]={mode:'100644',type:'blob',size:png.length,bytes:png};return v;}
+const rights=(src=image.src)=>({src,origin:'original-code',creator:'Publication illustrator',licence:'Original artwork owned by the publication',evidence:'Drawn from the factual sources recorded in this lesson; no third-party artwork.'});
+function setRights(v:ReturnType<typeof candidate>,records:unknown){const path=`${root}/lesson.yaml`,m=parse(v.blobs[path].text);if(records===undefined)delete m.imageRights;else m.imageRights=records;v.blobs[path]=textBlob(stringify(m));}
+function rasterCandidate(){const v=candidate(image),path=`public${image.src}`;v.files.push({filename:path,status:'added',additions:0,deletions:0,changes:0});v.blobs[path]={mode:'100644',type:'blob',size:png.length,bytes:png};setRights(v,[rights()]);return v;}
 function setFigure(v:ReturnType<typeof candidate>,figure:unknown){for(const path of [`${root}/adult.md`,`${root}/teen.md`]){const parts=v.blobs[path].text.split('---\n'),front=parse(parts[1]);front.figure=figure;v.blobs[path]=textBlob(`---\n${stringify(front)}---\nBody.\n`);}}
 
 describe('reusable figure contracts and trusted-base parity',()=>{
@@ -58,6 +62,7 @@ describe('reusable figure contracts and trusted-base parity',()=>{
   setFigure(v,adult);const blob=v.blobs[`${root}/teen.md`];blob.text=blob.text.replace(adult.src,teen.src);blob.size=Buffer.byteLength(blob.text);
   const original=v.files.pop()!;delete v.blobs[original.filename];
   for(const f of [adult,teen]){v.files.push({...original,filename:`public${f.src}`});v.blobs[`public${f.src}`]={mode:'100644',type:'blob',size:png.length,bytes:png};}
+  setRights(v,[rights(adult.src),rights(teen.src)]);
   expect(evaluateLessonPullRequest(v)).toMatchObject({applicable:true});
  });
  it.each([
@@ -100,5 +105,48 @@ describe('reusable figure contracts and trusted-base parity',()=>{
   const input=await collectGuardInput({env:{GITHUB_TOKEN:'test-only',GITHUB_REPOSITORY:'owner/repo',PR_NUMBER:'7',TRIGGER_HEAD_SHA:head,TRIGGER_HEAD_REF:`lesson/${slug}`,TRIGGER_HAS_REVIEW_LABEL:'true'},fetchImpl:fetchImpl as any,now:v.now});
   expect(evaluateLessonPullRequest(input)).toMatchObject({applicable:true});
   expect(requests.filter(u=>u.includes('/contents/public/lesson-media/'))).toHaveLength(1);
+ });
+});
+
+describe('persistent image rights and stripped raster containers',()=>{
+ function canonicalRightsIssues(v:ReturnType<typeof candidate>){return validateLessonBundle({metadata:parse(v.blobs[`${root}/lesson.yaml`].text),adult:parse(v.blobs[`${root}/adult.md`].text.split('---\n')[1]),teen:parse(v.blobs[`${root}/teen.md`].text.split('---\n')[1])}).issues.filter(i=>i.code==='image-rights');}
+ it.each([
+  [rights()], [{...rights(),origin:'generated',creator:'Named image model',evidence:'Original generated artwork; checked against the lesson sources.'}],
+  [{...rights(),origin:'licensed',licence:'CC BY 4.0',sourceUrl:'https://example.org/original-artwork'}],
+ ])('accepts a complete rights record in canonical loading and the daily guard %#',record=>{
+  const v=rasterCandidate();setRights(v,[record]);expect(canonicalRightsIssues(v)).toEqual([]);expect(evaluateLessonPullRequest(v)).toMatchObject({applicable:true});
+ });
+ it.each([
+  undefined, [], [rights(),rights()], [{...rights(),src:'/lesson-media/other.png'}],
+  [{...rights(),origin:'unknown'}], [{...rights(),creator:''}], [{...rights(),licence:''}],
+  [{...rights(),evidence:'x'.repeat(601)}], [{...rights(),extra:'hidden'}], [{...rights(),creator:'<script>'}],
+  [{...rights(),origin:'licensed'}], [{...rights(),origin:'licensed',sourceUrl:'http://example.org/image'}],
+  [{...rights(),sourceUrl:'https://user:secret@example.org/image'}], [{...rights(),sourceUrl:'javascript:alert(1)'}],
+ ].map(records=>[records]))('rejects missing, mismatched or unsafe rights in both boundaries %#',records=>{
+  const v=rasterCandidate();setRights(v,records);expect(canonicalRightsIssues(v).length).toBeGreaterThan(0);expect(()=>evaluateLessonPullRequest(v)).toThrow(/imageRights/);
+ });
+ it('rejects rights for an unreferenced asset even on a structured-only lesson',()=>{const v=candidate();setRights(v,[rights()]);expect(canonicalRightsIssues(v).length).toBeGreaterThan(0);expect(()=>evaluateLessonPullRequest(v)).toThrow(/imageRights/);});
+ function pngChunk(type:string,data:Buffer){
+  const b=Buffer.alloc(data.length+12);b.writeUInt32BE(data.length);b.write(type,4,'latin1');data.copy(b,8);
+  let crc=0xffffffff;for(const octet of b.subarray(4,-4)){crc^=octet;for(let i=0;i<8;i++)crc=(crc>>>1)^((crc&1)?0xedb88320:0);}b.writeUInt32BE((crc^0xffffffff)>>>0,b.length-4);return b;
+ }
+ function webpChunk(type:string,data:Buffer){const b=Buffer.alloc(8+data.length+(data.length%2));b.write(type);b.writeUInt32LE(data.length,4);data.copy(b,8);return b;}
+ function webp(...chunks:Buffer[]){const b=Buffer.concat([Buffer.from('RIFF0000WEBP'),...chunks]);b.writeUInt32LE(b.length-8,4);return b;}
+ const frame=Buffer.from([47,0,0,0,0]);
+ it.each(['tEXt','zTXt','iTXt','eXIf','zzZz','iCCP'])('rejects PNG %s payloads in shared parser and guard',type=>{
+  const bytes=Buffer.concat([png.subarray(0,-12),pngChunk(type,Buffer.alloc(type==='tEXt'?420000:32,65)),png.subarray(-12)]);
+  expect(()=>validateRasterBytes(bytes,image.src,192,192)).toThrow(/chunk/);
+  const v=rasterCandidate();v.blobs[`public${image.src}`]={mode:'100644',type:'blob',size:bytes.length,bytes};expect(()=>evaluateLessonPullRequest(v)).toThrow(/chunk/);
+ });
+ it.each(['EXIF','XMP ','ZZZZ','ICCP'])('rejects WebP %s payloads',type=>expect(()=>rasterDimensions(webp(webpChunk('VP8L',frame),webpChunk(type,Buffer.from('private metadata'))),'webp')).toThrow(/chunk/));
+ it.each([0x08,0x04,0x20,0x02,0x80])('rejects WebP metadata/animation/reserved flag %# without a payload chunk',flag=>{const header=Buffer.alloc(10);header[0]=flag;expect(()=>rasterDimensions(webp(webpChunk('VP8X',header),webpChunk('VP8L',frame)),'webp')).toThrow(/header/);});
+ it('retains PNG parsing and accepts alpha-only WebP container headers',()=>{
+  expect(()=>validateRasterBytes(png,image.src,192,192)).not.toThrow();
+  const header=Buffer.alloc(10);header[0]=0x10;expect(rasterDimensions(webp(webpChunk('VP8X',header),webpChunk('VP8L',frame)),'webp')).toEqual({width:1,height:1});
+  const lossy=Buffer.from([0,0,0,157,1,42,1,0,1,0]);expect(rasterDimensions(webp(webpChunk('VP8X',header),webpChunk('ALPH',Buffer.from([0,0])),webpChunk('VP8 ',lossy)),'webp')).toEqual({width:1,height:1});
+ });
+ it('rejects unused, misplaced and oversized alpha payloads that a decoder might ignore',()=>{
+  const header=Buffer.alloc(10);header[0]=0x10;const alpha=webpChunk('ALPH',Buffer.from([0,0]));
+  for(const bytes of [webp(alpha,webpChunk('VP8L',frame)),webp(webpChunk('VP8X',header),alpha,webpChunk('VP8L',frame)),webp(webpChunk('VP8X',header),webpChunk('VP8L',frame),alpha),webp(webpChunk('VP8X',header),webpChunk('ALPH',Buffer.alloc(420000)),webpChunk('VP8L',frame))])expect(()=>rasterDimensions(bytes,'webp')).toThrow(/alpha/);
  });
 });

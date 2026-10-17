@@ -202,3 +202,7 @@ Review records name provider, model and exact SHA, but this is self-reported tex
 ## Owner decision
 
 Editorial review in a separate reviewer run is sufficient for routine lesson publication under this contract; since 2026-10-09 (Owner decision) it may be a same-provider separate-pass review rather than an independent review. Subscription-based shared-identity operation is accepted as a procedural limitation for the initial system. Activation remains gated by issue #76 and its M7.2–M7.5 evidence.
+
+### Figure toolkit review remediation — 17 October 2026
+
+Automated/non-archive raster figures require exactly one bounded structured imageRights record per referenced asset in lesson.yaml (origin, creator, licence/reuse basis, evidence, plus an HTTPS sourceUrl for licensed artwork). The canonical loader and daily guard enforce shape and exact asset correspondence; the Reviewer verifies real rights and creation evidence. PR prose alone is insufficient. Existing manual archives retain their reviewed provenance without a metadata migration. Container allow-lists reject text/EXIF/XMP/private chunks and opaque ICC profiles; convert to sRGB and strip metadata. These restrictions cannot establish ownership or detect data encoded in pixels/codec streams; factual, rights and exact-head browser review remain required. No new service, subscription or scheduled task is introduced.

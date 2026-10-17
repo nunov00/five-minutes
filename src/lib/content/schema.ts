@@ -2,6 +2,7 @@ import { validatePresentationExtensions, type LessonFigure, type TeenActivity } 
 import { lessonPath } from '../urls';
 import { isTaxonomyPair, taxonomyTopic } from '../taxonomy';
 import { relatedCandidateCount } from '../discovery/related';
+import { validateImageRightsRecords, validateImageRights } from '../figures/image-rights.mjs';
 
 export const LESSON_SCHEMA_VERSION = 2 as const;
 
@@ -35,6 +36,7 @@ export interface LessonMetadata {
     exclude: LessonId[];
   };
   sources: LessonSource[];
+  imageRights?: Array<{src:string;origin:'original-code'|'generated'|'licensed';creator:string;licence:string;evidence:string;sourceUrl?:string}>;
   provenance: {
     createdAt: string;
     createdBy: {
@@ -83,7 +85,7 @@ const TOKEN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const PRESENTATION_KEYS = new Set(['title', 'description', 'takeaway', 'question', 'answer', 'searchTerms', 'figure', 'activity']);
 const METADATA_KEYS = new Set([
   'schemaVersion', 'id', 'slug', 'aliases', 'publishedAt', 'topic', 'subtopic',
-  'concepts', 'related', 'sources', 'provenance', 'archive',
+  'concepts', 'related', 'sources', 'provenance', 'archive', 'imageRights',
 ]);
 
 function issue(issues: ValidationIssue[], path: string, code: string, message: string) {
@@ -161,6 +163,7 @@ export function validateLessonMetadata(value: unknown, path = 'metadata'): Valid
   if (!isObject(value)) return { valid: false, issues: [{ path, code: 'type', message: 'Expected lesson metadata.' }] };
 
   validateExactKeys(value, METADATA_KEYS, path, issues);
+  for(const message of validateImageRightsRecords(value.imageRights))issue(issues,`${path}.imageRights`,'image-rights',message);
 
   if (value.schemaVersion !== LESSON_SCHEMA_VERSION) issue(issues, `${path}.schemaVersion`, 'schema-version', 'Expected schemaVersion 2.');
   if (!nonEmpty(value.id) || !UUID.test(value.id)) issue(issues, `${path}.id`, 'uuid', 'Expected an RFC 4122-style UUID.');
@@ -241,6 +244,10 @@ export function validateLessonBundle(bundle: unknown): ValidationResult {
   issues.push(...validateLessonMetadata(bundle.metadata).issues);
   if (bundle.adult !== undefined) issues.push(...validatePresentation(bundle.adult, 'adult').issues);
   if (bundle.teen !== undefined) issues.push(...validatePresentation(bundle.teen, 'teen', 'teen').issues);
+  if(isObject(bundle.metadata)){
+    const paths=[bundle.adult,bundle.teen].flatMap(p=>isObject(p)&&isObject(p.figure)&&p.figure.type==='image'?[p.figure.src]:[]);
+    for(const message of validateImageRights(bundle.metadata.imageRights,paths,!bundle.metadata.archive))issue(issues,'metadata.imageRights','image-rights',message);
+  }
 
   return { valid: issues.length === 0, issues };
 }

@@ -91,6 +91,8 @@ describe('safe v2 presentation extensions',()=>{
   const path=join(root,'2026/why-earth-has-seasons/adult.md');const original=await readFile(path,'utf8');
   await writeFile(path,original.replace('afterParagraph: 1','afterParagraph: 49'));await expect(loadPublishedLessons(root,routeOwnership)).rejects.toThrow(/adult.md figure.*existing prose/);
   await writeFile(path,original.replace('type: seasons-orbit\n  data: { tiltDegrees: 23.4 }','type: image\n  src: /lesson-media/missing.png\n  width: 192\n  height: 192'));
+  const metadataPath=join(path.slice(0,path.lastIndexOf('/')),'lesson.yaml');
+  await writeFile(metadataPath,(await readFile(metadataPath,'utf8'))+'\nimageRights:\n  - src: /lesson-media/missing.png\n    origin: original-code\n    creator: Test illustrator\n    licence: Original test artwork\n    evidence: Asset intentionally missing to test loader failure.\n');
   await expect(loadPublishedLessons(root,routeOwnership,await assetRoot())).rejects.toThrow(/adult.md figure/);
  });
 });
