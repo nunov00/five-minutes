@@ -5,6 +5,13 @@ takeaway: Orbital weightlessness comes from shared free fall, even where Earth's
 question: Why does a released object not immediately fall towards the station's floor?
 answer: The station, astronaut and object are already falling together along nearly the same orbit, so the object does not accelerate towards the floor as it would in a stationary room.
 searchTerms: [why astronauts float, gravity in space, orbit and free fall]
+figure:
+  type: orbital-motion
+  data: { style: shared-free-fall }
+  afterParagraph: 2
+  alt: Sideways motion follows the orbit while gravity points towards Earth; the station, astronaut and pencil fall together.
+  caption: Gravity bends the station's path around Earth. Inside, the astronaut and pencil share the station's fall. Schematic, not to scale.
+  description: The upper drawing shows a station moving sideways along a circular orbit, with gravity pointing towards Earth's centre. Its sideways motion carries it around Earth's curve while gravity keeps bending its path. Below, the cabin, astronaut and released pencil have arrows in the same direction because all share the fall. The pencil therefore appears to float relative to the cabin. The arrows show directions, not measured speeds or forces; small disturbances are omitted.
 ---
 An astronaut floats beside a window while Earth passes below. It looks as though gravity has disappeared. Yet gravity remains strong at the height of an orbiting space station. Without its pull, the station would not follow its curved path around Earth.
 

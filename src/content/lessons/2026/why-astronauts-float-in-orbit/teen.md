@@ -10,6 +10,13 @@ activity:
   options: ["It stays approximately beside the astronaut", "It immediately falls towards the station's floor", "It immediately shoots backwards because the station is moving"]
   answer: 0
   explanation: "The pencil already shares the astronaut's orbital motion. Both fall with the station, so releasing it does not suddenly send it towards the floor or leave it behind."
+figure:
+  type: orbital-motion
+  data: { style: shared-free-fall }
+  afterParagraph: 2
+  alt: The station moves sideways as gravity pulls towards Earth. Inside, the astronaut and pencil fall with the cabin.
+  caption: The station keeps falling around Earth. The astronaut and pencil fall with it, so the pencil seems to float. Schematic, not to scale.
+  description: At the top of the drawing, the station's sideways motion points along its orbit and gravity points towards Earth's centre. The station moves around Earth's curve while gravity bends its path. The lower drawing shows a cabin, an astronaut and a pencil. All three have arrows pointing the same way because they fall together. The pencil does not suddenly drop towards the moving floor. Arrow lengths are not measurements, and the drawing leaves out small disturbances.
 ---
 Let go of a pencil in your room and it drops. Let go of one inside an orbiting station and it seems to hang beside you. Has travelling into space turned gravity off?
 
