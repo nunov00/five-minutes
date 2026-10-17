@@ -27,24 +27,32 @@ export function rasterDimensions(bytes, extension) {
     return dimensions;
   }
   if(extension!=='webp'||bytes.length<20||bytes.toString('ascii',0,4)!=='RIFF'||bytes.toString('ascii',8,12)!=='WEBP'||bytes.readUInt32LE(4)+8!==bytes.length)throw Error('Invalid WebP container.');
-  let offset=12,dimensions,canvas;const seen=new Set();
+  let offset=12,dimensions,canvas,flags=0,alpha=false;const seen=new Set();
   while(offset+8<=bytes.length){
     const type=bytes.toString('latin1',offset,offset+4),size=bytes.readUInt32LE(offset+4),data=offset+8;
     if(size>bytes.length-data)throw Error('Truncated WebP chunk.');
     if(type==='ANIM'||type==='ANMF')throw Error('Animated figures are not supported.');
     if(!WEBP_CHUNKS.has(type))throw Error(`Unsupported WebP chunk: ${type}. Strip image metadata before publication.`);
     if(seen.has(type))throw Error('Duplicate WebP rendering chunk.');seen.add(type);
-    if(type==='VP8X'){if(size!==10||canvas||(bytes[data]&~0x10)||bytes[data+1]||bytes[data+2]||bytes[data+3])throw Error('Invalid/animated/metadata-bearing WebP header.');canvas={width:1+bytes.readUIntLE(data+4,3),height:1+bytes.readUIntLE(data+7,3)};}
+    if(type==='VP8X'){if(offset!==12||size!==10||canvas||(bytes[data]&~0x10)||bytes[data+1]||bytes[data+2]||bytes[data+3])throw Error('Invalid/animated/metadata-bearing WebP header.');flags=bytes[data];canvas={width:1+bytes.readUIntLE(data+4,3),height:1+bytes.readUIntLE(data+7,3)};}
+    if(type==='ALPH'){
+      if(!canvas||!(flags&0x10)||dimensions||size<1||(bytes[data]&0xc0)||(bytes[data]&3)>1||((bytes[data]>>>4)&3)>1)throw Error('Invalid WebP alpha chunk.');
+      if((bytes[data]&3)===0&&size!==1+canvas.width*canvas.height)throw Error('Invalid uncompressed WebP alpha size.');
+      alpha=true;
+    }
     if(type==='VP8 '||type==='VP8L'){
       if(dimensions)throw Error('Duplicate WebP frame.');
       if(type==='VP8 '){
+        if(Boolean(flags&0x10)!==alpha)throw Error('WebP alpha flag/frame mismatch.');
         if(size<10||!bytes.subarray(data+3,data+6).equals(Buffer.from([157,1,42])))throw Error('Invalid WebP frame.');
         dimensions={width:bytes.readUInt16LE(data+6)&0x3fff,height:bytes.readUInt16LE(data+8)&0x3fff};
       }else{
+        if(alpha)throw Error('WebP lossless frames cannot carry a separate alpha chunk.');
         if(size<5||bytes[data]!==47)throw Error('Invalid lossless WebP frame.');
         const bits=bytes.readUInt32LE(data+1);dimensions={width:(bits&0x3fff)+1,height:((bits>>>14)&0x3fff)+1};
       }
     }
+    if(size%2&&bytes[data+size]!==0)throw Error('Invalid WebP padding.');
     offset=data+size+(size%2);
   }
   if(offset!==bytes.length||!dimensions||(canvas&&(canvas.width!==dimensions.width||canvas.height!==dimensions.height)))throw Error('Incomplete/inconsistent WebP.');

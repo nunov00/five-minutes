@@ -142,6 +142,11 @@ describe('persistent image rights and stripped raster containers',()=>{
  it.each([0x08,0x04,0x20,0x02,0x80])('rejects WebP metadata/animation/reserved flag %# without a payload chunk',flag=>{const header=Buffer.alloc(10);header[0]=flag;expect(()=>rasterDimensions(webp(webpChunk('VP8X',header),webpChunk('VP8L',frame)),'webp')).toThrow(/header/);});
  it('retains PNG parsing and accepts alpha-only WebP container headers',()=>{
   expect(()=>validateRasterBytes(png,image.src,192,192)).not.toThrow();
-  const header=Buffer.alloc(10);header[0]=0x10;expect(rasterDimensions(webp(webpChunk('VP8X',header),webpChunk('ALPH',Buffer.from([0,0])),webpChunk('VP8L',frame)),'webp')).toEqual({width:1,height:1});
+  const header=Buffer.alloc(10);header[0]=0x10;expect(rasterDimensions(webp(webpChunk('VP8X',header),webpChunk('VP8L',frame)),'webp')).toEqual({width:1,height:1});
+  const lossy=Buffer.from([0,0,0,157,1,42,1,0,1,0]);expect(rasterDimensions(webp(webpChunk('VP8X',header),webpChunk('ALPH',Buffer.from([0,0])),webpChunk('VP8 ',lossy)),'webp')).toEqual({width:1,height:1});
+ });
+ it('rejects unused, misplaced and oversized alpha payloads that a decoder might ignore',()=>{
+  const header=Buffer.alloc(10);header[0]=0x10;const alpha=webpChunk('ALPH',Buffer.from([0,0]));
+  for(const bytes of [webp(alpha,webpChunk('VP8L',frame)),webp(webpChunk('VP8X',header),alpha,webpChunk('VP8L',frame)),webp(webpChunk('VP8X',header),webpChunk('VP8L',frame),alpha),webp(webpChunk('VP8X',header),webpChunk('ALPH',Buffer.alloc(420000)),webpChunk('VP8L',frame))])expect(()=>rasterDimensions(bytes,'webp')).toThrow(/alpha/);
  });
 });
