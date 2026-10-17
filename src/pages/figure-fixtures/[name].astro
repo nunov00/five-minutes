@@ -1,0 +1,20 @@
+---
+// Only emitted by the existing five-items-per-page browser-fixture build, never production.
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import LessonFigure from '../../components/reading/LessonFigure.astro';
+import type { LessonFigure as Figure } from '../../lib/content/presentation-extensions';
+export function getStaticPaths(){return process.env.FIVE_MINUTES_TEST_LIBRARY_PAGE_SIZE ? [{params:{name:'toolkit'}}] : [];}
+const words={alt:'A reviewed toolkit calibration diagram.',caption:'Toolkit calibration.',description:'A full text equivalent remains available without JavaScript.'};
+const figures:Figure[]=[
+ {type:'orbital-motion',data:{style:'shared-free-fall'},...words},
+ ...(['sequence','cycle','branch'] as const).map(pattern=>({type:'concept-flow' as const,data:{pattern,nodes:[{label:'Source material',symbol:'source' as const},{label:'Selective filtering',symbol:'filter' as const},{label:'Collected output',symbol:'container' as const},{label:'Final destination',symbol:'output' as const}].slice(0,pattern==='branch'?3:4)},...words})),
+ {type:'concept-flow',data:{pattern:'cycle',nodes:[{label:'Measure the result',symbol:'sensor'},{label:'Compare with the goal',symbol:'decision'},{label:'Adjust the system',symbol:'adjustment'}]},...words},
+ {type:'comparison-bars',data:{style:'proportional',unit:'Illustrative values',items:[{label:'First value',value:0,display:'0'},{label:'Second value',value:.001,display:'0.001'},{label:'Third value',value:.002,display:'0.002'}]},...words},
+ {type:'image',src:'/lesson-media/daytime-moon-horizon.png',width:1080,height:900,...words},
+];
+---
+<BaseLayout title="Figure toolkit calibration" noindex>
+ <h1>Figure toolkit calibration</h1>
+ <div class="toolkit-fixture-list">{figures.map((figure,index)=><section data-fixture={index}><LessonFigure figure={figure} id={`toolkit-${index}`}/></section>)}</div>
+</BaseLayout>
+<style>.toolkit-fixture-list{max-width:420px;margin-inline:auto}</style>

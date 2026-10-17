@@ -1,4 +1,6 @@
 import type { ValidationIssue } from './schema';
+import { FIGURE_SYMBOLS, TOOLKIT_TYPES, validateToolkitData } from '../figures/toolkit-contract.mjs';
+import { RASTER_LIMITS, LOCAL_RASTER_PATH } from '../figures/raster.mjs';
 
 export interface FigureText {
   alt: string;
@@ -9,16 +11,19 @@ export interface FigureText {
 }
 export interface FlowStep { label: string; detail?: string; }
 export interface ComparisonItem { label: string; value: number; display: string; }
+export interface ConceptNode { label: string; symbol: keyof typeof FIGURE_SYMBOLS; }
 export type LessonFigure = FigureText & (
   | { type: 'seasons-orbit'; data: { tiltDegrees: 23.4 | 23.5 } }
   | { type: 'process-flow'; data: { style: 'filter-reclaim'; steps: FlowStep[] } }
   | { type: 'cycle-flow'; data: { style: 'feedback-loop' | 'heat-transfer'; steps: FlowStep[] } }
-  | { type: 'comparison-bars'; data: { style: 'doubling-growth'; items: ComparisonItem[]; unit?: string } }
+  | { type: 'comparison-bars'; data: { style: 'doubling-growth' | 'proportional'; items: ComparisonItem[]; unit?: string } }
+  | { type: 'concept-flow'; data: { pattern: 'sequence' | 'cycle' | 'branch'; nodes: ConceptNode[] } }
+  | { type: 'orbital-motion'; data: { style: 'shared-free-fall' } }
   | { type: 'image'; src: string; width: number; height: number }
 );
 export interface TeenActivity { prompt: string; options: string[]; answer: number; explanation: string; }
-export const FIGURE_LIMITS = Object.freeze({ maxBytes: 500 * 1024, maxDimension: 2400, maxPixels: 4_000_000 });
-export const LOCAL_FIGURE_PATH = /^\/lesson-media\/[a-z0-9]+(?:-[a-z0-9]+)*\.(?:png|webp)$/;
+export const FIGURE_LIMITS = RASTER_LIMITS;
+export const LOCAL_FIGURE_PATH = LOCAL_RASTER_PATH;
 const object = (v: unknown): v is Record<string, unknown> => !!v && typeof v === 'object' && !Array.isArray(v);
 const plain = (v: unknown, max: number): v is string => typeof v === 'string' && v.trim().length > 0 && v.length <= max
   && !/[<>`]|!\[|\[[^\]]*\]\(|\*\*|(?:^|\n)\s*(?:#|[-*]\s)/.test(v) && !/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/.test(v);
@@ -52,11 +57,13 @@ export function validatePresentationExtensions(value: Record<string,unknown>, pa
     if (!object(f)) fail('figure','Expected one structured figure.');
     else {
       const common = ['type','alt','caption','description','afterParagraph'];
-      const structured=['seasons-orbit','process-flow','cycle-flow','comparison-bars'].includes(String(f.type));
+      const structured=['seasons-orbit','process-flow','cycle-flow','comparison-bars',...TOOLKIT_TYPES].includes(String(f.type));
       keys(f,[...common,...(structured?['data']:f.type==='image'?['src','width','height']:[])],`${path}.figure`,issues);
       for(const [key,max] of [['alt',200],['caption',240],['description',900]] as const) if(!plain(f[key],max)) fail(`figure.${key}`,`Expected non-empty plain text (maximum ${max} characters).`);
       if(f.afterParagraph!==undefined && (!Number.isInteger(f.afterParagraph) || Number(f.afterParagraph)<1 || Number(f.afterParagraph)>50)) fail('figure.afterParagraph','Expected a prose paragraph position from 1 to 50.');
-      if(f.type==='seasons-orbit') {
+      if(TOOLKIT_TYPES.includes(String(f.type)) || (f.type==='comparison-bars' && object(f.data) && f.data.style==='proportional')) {
+        for(const message of validateToolkitData(String(f.type), f.data)) fail('figure.data',message);
+      } else if(f.type==='seasons-orbit') {
         if(!object(f.data)) fail('figure.data','Expected seasons diagram data.');
         else {
           keys(f.data,['tiltDegrees'],`${path}.figure.data`,issues);
