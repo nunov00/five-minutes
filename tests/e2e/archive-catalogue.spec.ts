@@ -27,13 +27,13 @@ for (const lesson of lessons) for (const edition of ['adult', 'teen'] as const) 
         await expect(figure).toHaveCount(1);
         if (presentation.figure.type === 'image') {
           const image = figure.locator('img');
+          await image.scrollIntoViewIfNeeded();
           await expect(image).toBeVisible();
           await expect(image).toHaveAttribute('alt', presentation.figure.alt);
-          const dimensions = await image.evaluate(element => {
+          await expect.poll(() => image.evaluate(element => {
             const image = element as HTMLImageElement;
             return { complete: image.complete, width: image.naturalWidth, height: image.naturalHeight };
-          });
-          expect(dimensions).toEqual({ complete: true, width: presentation.figure.width, height: presentation.figure.height });
+          })).toEqual({ complete: true, width: presentation.figure.width, height: presentation.figure.height });
         }
         if (testInfo.project.name === 'desktop-chromium') {
           await figure.screenshot({

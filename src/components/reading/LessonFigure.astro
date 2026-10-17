@@ -1,5 +1,6 @@
 ---
 import type { LessonFigure } from '../../lib/content/presentation-extensions';
+import ToolkitFigure from './ToolkitFigure.astro';
 interface Props { figure: LessonFigure; id: string; }
 const {figure,id}=Astro.props;
 const tilt=figure.type==='seasons-orbit'?figure.data.tiltDegrees:0;
@@ -8,11 +9,12 @@ const axes=(cx:number)=>({northX:cx+56*Math.sin(angle),southX:cx-56*Math.sin(ang
 const panels=[{key:'june',month:'June',earth:78,sun:242,hemisphere:'North'},{key:'december',month:'December',earth:222,sun:58,hemisphere:'South'}];
 const flow=figure.type==='process-flow'||figure.type==='cycle-flow'?figure.data.steps:[];
 const bars=figure.type==='comparison-bars'?figure.data.items:[];
-const visualStyle=figure.type==='process-flow'||figure.type==='cycle-flow'||figure.type==='comparison-bars'?figure.data.style:'';
+const visualStyle=figure.type==='process-flow'||figure.type==='cycle-flow'||figure.type==='comparison-bars'||figure.type==='orbital-motion'?figure.data.style:figure.type==='concept-flow'?figure.data.pattern:'';
+const toolkit=figure.type==='concept-flow'||figure.type==='orbital-motion'||(figure.type==='comparison-bars'&&figure.data.style==='proportional');
 const cycleCentre=visualStyle==='heat-transfer'?'Heat moves':visualStyle==='feedback-loop'?'Check · adjust':'';
 ---
 <figure class="lesson-figure" data-figure-type={figure.type} data-figure-style={visualStyle||undefined} aria-labelledby={`${id}-caption`}>
- {figure.type==='image' ? <img src={figure.src} width={figure.width} height={figure.height} alt={figure.alt} loading="lazy" decoding="async"/> : figure.type==='seasons-orbit' ? <>
+ {toolkit ? <ToolkitFigure figure={figure} id={id}/> : figure.type==='image' ? <img src={figure.src} width={figure.width} height={figure.height} alt={figure.alt} loading="lazy" decoding="async"/> : figure.type==='seasons-orbit' ? <>
   <div class="season-panels" role="img" aria-label={figure.alt} aria-describedby={`${id}-description`}>
    {panels.map(panel=>{
     const axis=axes(panel.earth);
@@ -75,7 +77,7 @@ const cycleCentre=visualStyle==='heat-transfer'?'Heat moves':visualStyle==='feed
     </li>)}
    </ol>
   </div>
- </div> : <div class:list={["structured-figure","comparison-bars",`visual-${visualStyle}`]} role="img" aria-label={figure.alt} aria-describedby={`${id}-description`}>
+ </div> : figure.type==='comparison-bars' && <div class:list={["structured-figure","comparison-bars",`visual-${visualStyle}`]} role="img" aria-label={figure.alt} aria-describedby={`${id}-description`}>
   <ol class="growth-map" data-visual-canvas aria-hidden="true">
    {bars.map((item,index)=><li data-visual-label style={`--growth-stage:${index}`}>
     <span class="growth-label" data-visual-copy>{item.label}</span><strong data-visual-copy>{item.display}</strong>

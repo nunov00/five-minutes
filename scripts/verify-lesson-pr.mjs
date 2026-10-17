@@ -1,6 +1,7 @@
 import { TextDecoder } from 'node:util';
 import { pathToFileURL } from 'node:url';
-import { evaluateLessonPullRequest, LessonGuardError } from './lesson-guard-core.mjs';
+import { evaluateLessonPullRequest, LessonGuardError, GUARD_LIMITS } from './lesson-guard-core.mjs';
+import { RASTER_LIMITS } from '../src/lib/figures/raster.mjs';
 
 const API = 'https://api.github.com';
 
@@ -46,22 +47,28 @@ async function requestJson(path, fetchImpl, token) {
   }
 }
 
-export function strictBase64Text(payload, path) {
+export function strictBase64Bytes(payload, path, maxBytes) {
   if (!payload || payload.type !== 'file' || payload.encoding !== 'base64' || typeof payload.content !== 'string' || !Number.isSafeInteger(payload.size)) {
     throw new LessonGuardError(`${path} content response is incomplete.`);
   }
   const compact = payload.content.replace(/\s/g, '');
+  if(payload.size<0||payload.size>maxBytes||compact.length>4*Math.ceil(maxBytes/3))throw new LessonGuardError(`${path} exceeds its byte limit.`);
   if (!/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(compact)) {
     throw new LessonGuardError(`${path} content is not canonical base64.`);
   }
   const bytes = Buffer.from(compact, 'base64');
+  if(bytes.length!==payload.size||bytes.toString('base64')!==compact)throw new LessonGuardError(`${path} size/base64 does not match its content.`);
+  return {bytes,size:bytes.length};
+}
+
+export function strictBase64Text(payload, path) {
+  const {bytes}=strictBase64Bytes(payload,path,path.endsWith('route-ownership.json')?8*1024*1024:GUARD_LIMITS.markdownBytes);
   let text;
   try {
     text = new TextDecoder('utf-8', { fatal: true }).decode(bytes);
   } catch {
     throw new LessonGuardError(`${path} is not strict UTF-8 text.`);
   }
-  if (bytes.length !== payload.size) throw new LessonGuardError(`${path} size does not match its content.`);
   return { text, size: bytes.length };
 }
 
@@ -90,10 +97,13 @@ export async function collectGuardInput({ env = process.env, fetchImpl = fetch, 
     throw new LessonGuardError('Pinned comparison response is incomplete.');
   }
   const files = compare.files;
-  if (files.length !== 4) throw new LessonGuardError('Automated lesson candidate must change exactly four files.');
+  if (files.length<4||files.length>4+GUARD_LIMITS.imageFiles)throw new LessonGuardError('Automated lesson candidate requires 4–6 bounded files.');
 
-  const matches = files.map((file) => /^src\/content\/lessons\/(\d{4})\/([^/]+)\/(adult\.md|lesson\.yaml|teen\.md)$/.exec(file.filename)).filter(Boolean);
+  const matches = files.map((file) => /^src\/content\/lessons\/(\d{4})\/([a-z0-9]+(?:-[a-z0-9]+)*)\/(adult\.md|lesson\.yaml|teen\.md)$/.exec(file.filename)).filter(Boolean);
   const candidatePaths = [...new Set(matches.map((match) => `src/content/lessons/${match[1]}/${match[2]}/${match[3]}`))];
+  const imagePaths=files.filter(file=>/^public\/lesson-media\/[a-z0-9-]+\.(?:png|webp)$/.test(file.filename)).map(file=>file.filename);
+  if(candidatePaths.length!==3||imagePaths.length>GUARD_LIMITS.imageFiles||new Set(imagePaths).size!==imagePaths.length
+    ||files.length!==candidatePaths.length+imagePaths.length+1||!files.some(file=>file.filename==='src/content/route-ownership.json'))throw new LessonGuardError('Candidate file scope exceeds the lesson and bounded-image contract.');
   const headTree = await api(`/repos/${owner}/${repo}/git/trees/${encodeURIComponent(triggerHeadSha)}?recursive=1`);
   if (!Array.isArray(headTree?.tree) || headTree.truncated) throw new LessonGuardError('Candidate tree response is incomplete or truncated.');
   const treeByPath = new Map(headTree.tree.map((entry) => [entry.path, entry]));
@@ -105,6 +115,13 @@ export async function collectGuardInput({ env = process.env, fetchImpl = fetch, 
   }
 
   const registryPath = 'src/content/route-ownership.json';
+  for(const path of imagePaths){
+    const entry=treeByPath.get(path);
+    if(entry?.type!=='blob'||entry?.mode!=='100644')throw new LessonGuardError('Raster must be a regular non-executable file.');
+    const encodedPath=path.split('/').map(encodeURIComponent).join('/');
+    const loaded=strictBase64Bytes(await api(`/repos/${owner}/${repo}/contents/${encodedPath}?ref=${encodeURIComponent(triggerHeadSha)}`),path,RASTER_LIMITS.maxBytes);
+    blobs[path]={mode:entry.mode,type:entry.type,size:loaded.size,bytes:loaded.bytes};
+  }
   const [baseRegistry, headRegistry] = await Promise.all([
     content(api, owner, repo, registryPath, currentBase.object.sha),
     content(api, owner, repo, registryPath, triggerHeadSha),

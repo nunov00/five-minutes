@@ -3,6 +3,13 @@ import { expect, test } from './support/fixtures';
 const readerKey = 'five-minutes.reader-state';
 const seasons = '/teen/why-earth-has-seasons';
 
+test('the reusable toolkit remains accessible in WebKit',async({page})=>{
+ await page.setViewportSize({width:320,height:700});await page.goto('/figure-fixtures/toolkit');
+ await expect(page.locator('.lesson-figure')).toHaveCount(7);
+ for(const figure of await page.locator('.lesson-figure').all())await expect(figure.getByRole('img')).toHaveAccessibleName(/\S/);
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+});
+
 test.describe('M6 integration in WebKit', () => {
   test('neutral hand-offs and restored pages do not trap Back navigation', async ({ page }) => {
     await page.goto('/');
