@@ -63,7 +63,7 @@ Check dates for facts that can change. For contested or consequential claims, se
 
 ## Adult and Teen relationship
 
-Adult and Teen are two presentations of one lesson identity. They share facts, sources, taxonomy and the central insight, but they need not share an outline. Adapt the route into the idea: a Teen presentation can start from school, games, a phone or another familiar situation when that example genuinely clarifies the concept. Adult can move more quickly into abstraction. Neither edition is the default or the complete version.
+Adult and Teen are two presentations of one lesson identity. They use shared sources and taxonomy to teach the same central insight, but their outlines and supporting detail may differ. Their factual accounts must be consistent, and any additional claims in either edition must be supported by the shared source record. Adapt the route into the idea: a Teen presentation can start from school, games, a phone or another familiar situation when that example genuinely clarifies the concept. Adult can move more quickly into abstraction. Neither edition is the default or the complete version.
 
 Both editions must preserve qualifications that affect truth. Simpler language means shorter sentences, explained terms and well-chosen examples; it does not mean removing the mechanism or pretending that a complex idea has no limits.
 
@@ -84,6 +84,8 @@ Review findings use the project-wide severity language:
 - **BLOCKER** — publication would be unsafe or untrustworthy. Examples include a material factual error, invented or misrepresented source, harmful instruction, plagiarism, identity/route conflict or a missing edition. The lesson must not publish.
 - **IMPORTANT** — the lesson does not yet meet the editorial contract. Examples include an unsupported central claim, confusing causal gap, misleading title, weak retrieval question, patronising Teen voice or substantial duplication. An accurate but generic lesson also needs revision when it lacks a clear reason to care, a memorable explanation or a satisfying payoff, or when Adult adds no meaningful understanding beyond Teen. Identify the missing reader outcome and a targeted revision; do not dismiss the gap as stylistic preference. Revise before publication.
 - **MINOR** — local polish that does not undermine accuracy, comprehension or the lesson's value. It may publish if the finding is explicitly recorded and accepted under the project's merge rules.
+
+For a narrow correction to a published lesson that is not a substantial editorial pass, pre-existing weaknesses in interest, memorability/payoff or Adult's additional depth may be deferred only when the correction neither introduces nor worsens them. Record those weaknesses in a linked follow-up issue rather than requiring an unrelated rewrite before the correction can merge. Review both editions and retain all other applicable gates, including factual accuracy, source support, safety, essential causal reasoning and figure verification. New lessons and substantial editorial passes must meet the full reader-value standard.
 
 A lesson is **Ready** only when there are no unresolved BLOCKER or IMPORTANT findings and all automated gates pass. When evidence is uncertain, the reviewer fails closed and requests revision or escalation rather than converting uncertainty into a low score.
 
@@ -135,7 +137,7 @@ Before requesting review:
 
 ## Short editorial examples
 
-Owner calibration direction, 17 October 2026. These are illustrative drafting contrasts, not quotations from the published lessons, factual review records or approved replacement copy. Verify any proposed factual addition against the lesson's actual sources before publishing it. Existing figure assessments must use the current lesson head, not this historical discussion.
+Owner calibration direction, 17 October 2026. These are illustrative drafting contrasts, not quotations from the published lessons, factual review records or approved replacement copy. Verify any proposed factual addition against the lesson's actual sources before publishing it. All three topics already exist in the catalogue; these rows are neither new-topic suggestions nor figure decisions for those lessons. Assess figures from the actual current lesson and rendered page.
 
 | Topic | Flat treatment | More useful direction | Adult substance to develop |
 | --- | --- | --- | --- |
