@@ -35,7 +35,7 @@ const topicCards=topics.map(topic=>{
   <p class="eyebrow">{edition==='adult'?'Adult':'Teen'} edition{pageCount>1?` · Page ${pageNumber} of ${pageCount}`:''}</p>
   <h1 id="discovery-heading">{heading}</h1>
   {kind==='library'&&<>
-   <p class="lede">The dated archive of every published idea.</p>
+   <p class="lede">Every published idea, ready to explore.</p>
    <nav class="filter-links" aria-label="Library topics">{topics.map(t=><a href={discoveryPath(edition,'topics',t.token)}>{t.label}</a>)}</nav>
    <div class="lesson-list">{lessons.map(lesson=><LessonCard lesson={lesson} edition={edition}/>)}</div>
    {fallback && <SurpriseLinks edition={edition} catalogue={artifacts.catalogue} adultFallback={fallback.adult.path} teenFallback={fallback.teen.path}/>}

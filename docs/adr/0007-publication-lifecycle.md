@@ -1,5 +1,8 @@
 # ADR-0007: Publication lifecycle and Today semantics
 
+
+18 October 2026 editorial renewal amendment: ADR-0012 and the shared backlog-first contract in docs/automation/publication-task-contracts.md supersede earlier new-only/import-exclusion/correction-exclusion wording ONLY for the selected daily backlog candidate. Existing review, source, off-switch, exact-head, same-day and guarded-merge safeguards remain. Direction is Owner-approved; activation waits for the implementation PR's mandatory different-provider review and checks.
+
 Status: Accepted
 Date: 2026-10-02
 Amended: 2026-10-04; 2026-10-09 (same-provider review permitted); 2026-10-12 (activation configuration wording); 2026-10-14 (figure/activity assessment and safe structured figures); 2026-10-14 (optional Copilot review evidence); 2026-10-15 (Owner-approved morning publication target); 2026-10-16 (Owner-approved manual archive import direction, #138); 2026-10-17 (bounded recovery and earlier morning schedule); 2026-10-17 (all-reviewer feedback assessment and pre-merge refresh); 2026-10-18 (bounded Writer revision loop and midnight preparation)

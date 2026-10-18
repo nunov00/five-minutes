@@ -1,3 +1,5 @@
+import { BACKLOG_PATH } from './editorial-backlog.mjs';
+import { parseDocument } from 'yaml';
 import { TextDecoder } from 'node:util';
 import { pathToFileURL } from 'node:url';
 import { evaluateLessonPullRequest, LessonGuardError, GUARD_LIMITS } from './lesson-guard-core.mjs';
@@ -62,7 +64,7 @@ export function strictBase64Bytes(payload, path, maxBytes) {
 }
 
 export function strictBase64Text(payload, path) {
-  const {bytes}=strictBase64Bytes(payload,path,path.endsWith('route-ownership.json')?8*1024*1024:GUARD_LIMITS.markdownBytes);
+  const {bytes}=strictBase64Bytes(payload,path,path.endsWith('route-ownership.json')?8*1024*1024:path===BACKLOG_PATH?256*1024:GUARD_LIMITS.markdownBytes);
   let text;
   try {
     text = new TextDecoder('utf-8', { fatal: true }).decode(bytes);
@@ -97,13 +99,15 @@ export async function collectGuardInput({ env = process.env, fetchImpl = fetch, 
     throw new LessonGuardError('Pinned comparison response is incomplete.');
   }
   const files = compare.files;
-  if (files.length<4||files.length>4+GUARD_LIMITS.imageFiles)throw new LessonGuardError('Automated lesson candidate requires 4–6 bounded files.');
+  if (files.length<4||files.length>5+GUARD_LIMITS.imageFiles)throw new LessonGuardError('Automated lesson candidate requires 4–6 bounded files.');
 
   const matches = files.map((file) => /^src\/content\/lessons\/(\d{4})\/([a-z0-9]+(?:-[a-z0-9]+)*)\/(adult\.md|lesson\.yaml|teen\.md)$/.exec(file.filename)).filter(Boolean);
   const candidatePaths = [...new Set(matches.map((match) => `src/content/lessons/${match[1]}/${match[2]}/${match[3]}`))];
+  const renewal = files.some(f=>f.filename===BACKLOG_PATH);
+  const revision = renewal && matches.some(match=>files.find(f=>f.filename===match[0])?.status==='modified');
   const imagePaths=files.filter(file=>/^public\/lesson-media\/[a-z0-9-]+\.(?:png|webp)$/.test(file.filename)).map(file=>file.filename);
   if(candidatePaths.length!==3||imagePaths.length>GUARD_LIMITS.imageFiles||new Set(imagePaths).size!==imagePaths.length
-    ||files.length!==candidatePaths.length+imagePaths.length+1||!files.some(file=>file.filename==='src/content/route-ownership.json'))throw new LessonGuardError('Candidate file scope exceeds the lesson and bounded-image contract.');
+    ||files.length!==candidatePaths.length+imagePaths.length+(revision?0:1)+(renewal?1:0)||(!revision&&!files.some(file=>file.filename==='src/content/route-ownership.json')))throw new LessonGuardError('Candidate file scope exceeds the lesson and bounded-image contract.');
   const headTree = await api(`/repos/${owner}/${repo}/git/trees/${encodeURIComponent(triggerHeadSha)}?recursive=1`);
   if (!Array.isArray(headTree?.tree) || headTree.truncated) throw new LessonGuardError('Candidate tree response is incomplete or truncated.');
   const treeByPath = new Map(headTree.tree.map((entry) => [entry.path, entry]));
@@ -114,6 +118,28 @@ export async function collectGuardInput({ env = process.env, fetchImpl = fetch, 
     blobs[path] = { mode: treeEntry?.mode, type: treeEntry?.type, size: loaded.size, text: loaded.text };
   }
 
+  const baseBacklog = await content(api, owner, repo, BACKLOG_PATH, currentBase.object.sha);
+  if (renewal) {
+    const entry=treeByPath.get(BACKLOG_PATH), loaded=await content(api,owner,repo,BACKLOG_PATH,triggerHeadSha);
+    blobs[BACKLOG_PATH]={mode:entry?.mode,type:entry?.type,size:loaded.size,text:loaded.text};
+  }
+  let baseLessonText, baseAdultText, baseTeenText;
+  if (revision) {
+    for (const path of candidatePaths) {
+      const loaded=await content(api,owner,repo,path,currentBase.object.sha);
+      if(path.endsWith('/lesson.yaml')) baseLessonText=loaded.text;
+      else if(path.endsWith('/adult.md')) baseAdultText=loaded.text;
+      else baseTeenText=loaded.text;
+    }
+    // Reused rasters are fetched from the exact head; their absence from the diff proves byte identity to main.
+    for (const path of candidatePaths.filter(p=>p.endsWith('.md'))) {
+      const text=blobs[path].text, end=text.indexOf('\n---\n',4);
+      const doc=parseDocument(text.slice(4,end),{schema:'core',uniqueKeys:true});
+      if(doc.errors.length||doc.warnings.length)throw new LessonGuardError('Invalid presentation YAML.');
+      const figure=doc.toJS({maxAliasCount:0})?.figure;
+      if(figure?.type==='image' && /^\/lesson-media\/[a-z0-9-]+\.(png|webp)$/.test(figure.src) && !imagePaths.includes(`public${figure.src}`)) imagePaths.push(`public${figure.src}`);
+    }
+  }
   const registryPath = 'src/content/route-ownership.json';
   for(const path of imagePaths){
     const entry=treeByPath.get(path);
@@ -128,6 +154,7 @@ export async function collectGuardInput({ env = process.env, fetchImpl = fetch, 
   ]);
   const registryEntry = treeByPath.get(registryPath);
   return {
+    baseBacklogText:baseBacklog.text, baseLessonText, baseAdultText, baseTeenText,
     pr: { headRef: pr.head.ref, headSha: pr.head.sha, labels },
     triggerHeadSha,
     currentBaseSha: currentBase.object.sha,
