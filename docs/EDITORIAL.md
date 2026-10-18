@@ -116,6 +116,14 @@ Do not report a numeric quality score, an averaged rubric percentage or a precis
 
 The canonical review record is the GitHub pull-request review on the exact commit. Any accepted MINOR finding and its rationale must be recorded in the same PR conversation or merge record. `provenance.reviews` may preserve earlier lesson-level review or substantive-revision events already incorporated into the reviewed commit; it is not updated after the final exact-head review, because doing so would create a new unreviewed head.
 
+## Drafting and critical self-edit
+
+Before drafting, prepare a short working brief: the worthwhile question, the reasoning that answers it, a concrete reader connection or memory anchor, and the supported additional understanding Adult will develop beyond Teen. A named fact, longer wording or technical label is not an additional explanation. If the causal chain or Adult layer cannot be explained and sourced, improve the angle before writing. This brief guides the work; it is not a fixed lesson outline or reader-facing text.
+
+After drafting, read Teen and Adult independently as finished lessons, then compare them. Identify the actual passages delivering the hook, causal steps, payoff and Adult depth. Test whether the reasoning still works without the analogy. Check retrieval against the central takeaway and challenge every activity distractor as a plausible misconception. Remove self-assessments such as "the memorable reversal" and let the explanation earn its value. Revise missing reader outcomes before requesting review; filling out a quality checklist is not evidence that the text achieves them. Use the calibrated examples below to judge substance while varying topics and voice.
+
+For a requested rewrite, assess all applicable findings together, re-fetch sources for changed material claims and explain each finding's disposition with passage/evidence references. Disagree with unsupported suggestions explicitly rather than adding jargon, numbers or tangents automatically. Preserve Teen's complete explanation when deepening Adult. The later Reviewer verifies the revised result independently. ADR-0007 and the task contract bound scheduled unpublished-candidate revisions; this editorial guidance never grants merge authority.
+
 ## Author checklist
 
 Before requesting review:

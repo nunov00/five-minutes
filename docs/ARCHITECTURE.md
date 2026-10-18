@@ -95,7 +95,7 @@ The optional feedback surface collects only a category and bounded message. It h
 
 Routine automated publication follows ADR-0007's subscription-based, fail-closed contract:
 
-Schedule -> research -> Adult + Teen draft and provenance -> lesson-only Pull Request -> named automated checks -> same-run editorial review in a separate reviewer run (independent, or a same-provider separate-pass review) and exact-head guarded merge -> deployment.
+Midnight Writer -> research and critical self-edit -> Adult + Teen draft and provenance -> lesson-only Pull Request -> named automated checks -> separate Reviewer at 02:00 with available external feedback -> Ready and same-run guarded merge, or IMPORTANT findings -> bounded Writer revision of the same open candidate -> fresh checks and a complete later Reviewer pass -> deployment. The loop has at most three editorial revision rounds per identity/Zurich date; Block, staleness or exhausted failed review ends the candidate.
 
 The writer and reviewer currently act through the Owner's GitHub identity, so separation of powers is procedural and reinforced by the lesson-only guard, current-`main` base requirement, named-check verification and `expectedHeadSha` merge. Saved reviews, comments and labels never authorise a later merge. Auto-merge is not used.
 
