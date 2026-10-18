@@ -1,0 +1,39 @@
+schemaVersion: 2
+id: 664b5b2f-9973-4fd8-a3d5-6dee49278465
+slug: why-wastewater-plants-recycle-sludge
+aliases: []
+publishedAt: 2026-10-18T03:00:00+02:00
+topic: technology
+subtopic: engineering
+concepts: [wastewater-treatment, activated-sludge, microorganisms, aeration]
+related:
+  manual:
+    - id: e38e6794-fa4d-466c-9aa8-b6c6f6e386e1
+      reason: Compare the balance of microbial growth and removal with feedback control, where measurements guide adjustments.
+    - id: 3cebf076-45ac-49ea-9b01-bd0917fb1c13
+      reason: Explore another case in which living organisms reshape the conditions around them.
+  exclude: []
+sources:
+  - title: Primer for Municipal Wastewater Treatment Systems
+    url: https://www.epa.gov/sites/default/files/2015-09/documents/primer.pdf
+    publisher: United States Environmental Protection Agency
+    accessedAt: 2026-10-18
+    note: Pages 12–13 support suspended-growth treatment, aeration and mixing, settling, biomass return and excess removal. The wider primer supports screening and later disinfection or advanced treatment.
+  - title: Process Control Manual for Aerobic Biological Wastewater Treatment Facilities
+    url: https://nepis.epa.gov/Exe/ZyPURL.cgi?Dockey=9100NX8X.txt
+    publisher: United States Environmental Protection Agency
+    accessedAt: 2026-10-18
+    note: Return Activated Sludge Control (II-25) explains longer microbial than water residence; Process Description (III-3) describes several hours of aeration; Nitrification (II-20), Constant MCRT Control (II-49–50) and Waste Activated Sludge Control (II-35–36) support slower growth, retention over days and control through wasting.
+  - title: How does a sewage treatment plant work?
+    url: https://www.bmluk.gv.at/en/topics/water/water-quality-and-water-protection/how-does-a-sewage-treatment-plant-work.html
+    publisher: Austrian Federal Ministry of Agriculture and Forestry, Climate and Environmental Protection, Regions and Water Management
+    accessedAt: 2026-10-18
+    note: Biological treatment and Secondary clarifier independently support oxygen-assisted microbial treatment, settling, return sludge to retain the community and removal of excess growth.
+provenance:
+  createdAt: 2026-10-18T02:00:31+02:00
+  createdBy:
+    type: ai
+    provider: openai
+    model: gpt-6.1-sol
+    promptVersion: automated-writer-v4
+  reviews: []
