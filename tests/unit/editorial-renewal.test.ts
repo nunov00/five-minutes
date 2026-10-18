@@ -119,3 +119,61 @@ describe('revision date and resurfacing',()=>{
   expect(releaseTimestamp(selectTodayLesson(catalogue))).toBe(release);
  });
 });
+
+describe('ranked pipeline refresh boundary',()=>{
+ const idea=(key:string)=>({key,kind:'new',slug:key,state:'queued',priority:200,queuedAt:'2026-10-18T00:00:00Z',reason:'A useful everyday puzzle.',criteria:['Explain the mechanism.']});
+ const brief=(key:string)=>({key,headline:'Why does this happen?',description:'Explain a concrete mechanism.',hook:'An everyday surprise.',rankReason:'Strong curiosity and clear learning value.',relevance:'Evergreen editorial judgement; no measured trend claimed.',evidenceUrls:[]});
+ const pipeline=(keys:string[])=>({assessedAt:'2026-10-18T00:30:00Z',summary:'Reassessed against the full pool.',ranking:keys.map(brief),...(keys.length<10?{shortfall:'A small test pool has fewer than ten viable ideas.'}:{})});
+ function rankedCandidate(kind='revision') {
+  const v=revision(kind==='new'?'import':'revision');
+  const base=JSON.parse(v.baseBacklogText),head=JSON.parse(v.blobs[queuePath].text);
+  if(kind==='new') {
+   for(const e of [base.entries[0],head.entries[0]]) {e.kind='new';delete e.lessonId;delete e.sourceUrl;delete e.originalDate;}
+   changeMetadata(v,m=>{delete m.archive;delete m.revisedAt;});
+  }
+  base.entries.push(idea('another-idea'));base.pipeline=pipeline(['selected','another-idea']);
+  head.entries.push(idea('another-idea'));head.pipeline=pipeline(['another-idea']);
+  v.baseBacklogText=JSON.stringify(base);v.blobs[queuePath]=textBlob(JSON.stringify(head));return v;
+ }
+ it('uses reviewed rank instead of the legacy priority and keeps the full pool',()=>{
+  const q={version:1,entries:[{...idea('old-idea'),priority:0},idea('new-idea')],pipeline:pipeline(['new-idea','old-idea'])};
+  expect(nextBacklogEntry(parseBacklog(JSON.stringify(q)))?.key).toBe('new-idea');
+ });
+ it.each(['revision','new'])('accepts a ranked %s selection and next shortlist in the same guarded candidate',kind=>{
+  expect(evaluateLessonPullRequest(rankedCandidate(kind))).toMatchObject({applicable:true,lessonId:id});
+ });
+ it('permits bounded appended new ideas while retaining the prior records',()=>{
+  const v=rankedCandidate(),q=JSON.parse(v.blobs[queuePath].text);
+  q.entries.push(idea('fresh-puzzle'));q.pipeline=pipeline(['fresh-puzzle','another-idea']);v.blobs[queuePath]=textBlob(JSON.stringify(q));
+  expect(evaluateLessonPullRequest(v)).toMatchObject({applicable:true});
+ });
+ it.each(['delete entry','alter criteria','extra completion','change selected record','remove pipeline','duplicate rank','completed rank','unknown rank','unexplained shortfall','future assessment','stale assessment','six additions','new revision','duplicate slug','new provenance','choose candidate ranking'])('rejects %s',problem=>{
+  const v=rankedCandidate(),q=JSON.parse(v.blobs[queuePath].text);
+  if(problem==='delete entry')q.entries.pop();
+  if(problem==='alter criteria')q.entries[1].criteria=['No review needed.'];
+  if(problem==='extra completion')Object.assign(q.entries[1],{state:'complete',completedAt:release,destinationId:id,destinationSlug:slug});
+  if(problem==='change selected record')q.entries[0].reason='Different requirements.';
+  if(problem==='remove pipeline')delete q.pipeline;
+  if(problem==='duplicate rank')q.pipeline.ranking.push(brief('another-idea'));
+  if(problem==='completed rank')q.pipeline.ranking.push(brief('selected'));
+  if(problem==='unknown rank')q.pipeline.ranking.push(brief('invented'));
+  if(problem==='unexplained shortfall')delete q.pipeline.shortfall;
+  if(problem==='future assessment')q.pipeline.assessedAt='2026-10-18T12:00:00Z';
+  if(problem==='stale assessment')q.pipeline.assessedAt='2026-10-17T00:30:00Z';
+  if(problem==='six additions')for(let n=0;n<6;n++)q.entries.push(idea(`extra-${n}`));
+  if(problem==='new revision')q.entries.push({...idea('extra-idea'),kind:'revision',lessonId:id});
+  if(problem==='duplicate slug')q.entries.push({...idea('extra-idea'),slug:'another-idea'});
+  if(problem==='new provenance')q.entries.push({...idea('extra-idea'),sourceUrl:'https://example.org'});
+  if(problem==='choose candidate ranking') {const b=JSON.parse(v.baseBacklogText);b.pipeline=pipeline(['another-idea','selected']);v.baseBacklogText=JSON.stringify(b);}
+  v.blobs[queuePath]=textBlob(JSON.stringify(q));expect(()=>evaluateLessonPullRequest(v)).toThrow();
+ });
+ it('rejects forged import/revision provenance on a selected new idea',()=>{
+  const v=rankedCandidate('new');changeMetadata(v,m=>m.revisedAt=m.publishedAt);
+  expect(()=>evaluateLessonPullRequest(v)).toThrow(/provenance/);
+ });
+ it('rejects a fabricated pre-publication identity on a new idea',()=>{
+  // CLI end-to-end return cases are exercised in backlog-owner-return.test.ts;
+  // the pool itself rejects a fabricated pre-publication identity on new ideas.
+  expect(()=>parseBacklog(JSON.stringify({version:1,entries:[{...idea('fresh-idea'),lessonId:id}],pipeline:pipeline(['fresh-idea'])}))).toThrow();
+ });
+});
