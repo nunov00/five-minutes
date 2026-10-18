@@ -1,3 +1,4 @@
+import { isValidTimestamp } from './publication-time.mjs';
 import { parseDocument } from 'yaml';
 import { readFile, writeFile, readdir } from 'node:fs/promises';
 import { pathToFileURL } from 'node:url';
@@ -42,11 +43,12 @@ export function parseBacklog(text) {
   return value;
 }
 
+const zurichDay=value=>new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Zurich',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date(value));
 const briefText = (value, max) => typeof value === 'string' && value.trim().length > 0 && value.length <= max && !/[\u0000-\u001f<>`]/.test(value);
 function validatePipeline(backlog) {
   const p=backlog.pipeline;
   if (!p || typeof p !== 'object' || Object.keys(p).some(k=>!['assessedAt','summary','ranking','shortfall'].includes(k))
-    || !/^\d{4}-\d{2}-\d{2}T/.test(p.assessedAt) || !Number.isFinite(Date.parse(p.assessedAt)) || !briefText(p.summary,1500)
+    || !isValidTimestamp(p.assessedAt) || !briefText(p.summary,1500)
     || !Array.isArray(p.ranking) || p.ranking.length>20 || (p.ranking.length<10 && !briefText(p.shortfall,1000))
     || (p.shortfall!==undefined && !briefText(p.shortfall,1000))) throw new Error('Invalid ranked editorial pipeline.');
   const seen=new Set();
@@ -72,7 +74,7 @@ export function nextBacklogEntry(backlog) {
 }
 
 /** Complete the trusted-base selection, preserving every old record; only the next shortlist and up to five new ideas may change. */
-export function verifyBacklogCompletion(baseText, headText, metadata, releaseAt) {
+export function verifyBacklogCompletion(baseText, headText, metadata, releaseAt, {reservedRoutes, now} = {}) {
   const base = parseBacklog(baseText), head = parseBacklog(headText), selected = nextBacklogEntry(base);
   if (!selected) throw new Error('No queued lesson to complete.');
   const expected = structuredClone(base);
@@ -80,12 +82,14 @@ export function verifyBacklogCompletion(baseText, headText, metadata, releaseAt)
   Object.assign(completed, {state:'complete', completedAt:releaseAt, destinationId:metadata.id, destinationSlug:metadata.slug});
   if(base.pipeline && !head.pipeline) throw new Error('Ranked pipeline cannot be removed.');
   if(head.pipeline) {
+    if(!Array.isArray(reservedRoutes) || !Number.isFinite(Date.parse(now))) throw new Error('Pinned route ownership and run time are required for a pipeline refresh.');
     const additions=head.entries.slice(base.entries.length);
     if(additions.length>5 || additions.some(e=>e.kind!=='new' || e.state!=='queued' || e.completedAt!==undefined || e.destinationId!==undefined || e.destinationSlug!==undefined
       || Object.keys(e).some(k=>!['key','kind','slug','title','state','priority','queuedAt','reason','criteria'].includes(k)))) throw new Error('Daily refresh may append only five queued new ideas.');
-    const slugs=new Set(base.entries.map(e=>e.destinationSlug??e.slug));
+    const slugs=new Set([...reservedRoutes, metadata.slug, ...base.entries.flatMap(e=>[e.slug,e.destinationSlug,...(e.legacySlugs??[])].filter(Boolean))]);
     for(const entry of additions) {
-      if(slugs.has(entry.slug)) throw new Error('New idea duplicates an existing pool slug.');
+      if(slugs.has(entry.slug)) throw new Error('New idea duplicates an existing pool or reserved route slug.');
+      if(entry.priority<1 || !isValidTimestamp(entry.queuedAt) || zurichDay(entry.queuedAt)!==zurichDay(now) || Date.parse(entry.queuedAt)>Date.parse(now)) throw new Error('New ideas require non-Owner priority and an honest current-run-day queuedAt.');
       slugs.add(entry.slug);
     }
     expected.entries.push(...additions);
@@ -146,7 +150,7 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
     delete entry.completedAt; delete entry.destinationId; delete entry.destinationSlug;
     if(backlog.pipeline) {
       backlog.pipeline.assessedAt=new Date().toISOString();
-      backlog.pipeline.summary='Owner return recorded; reassess this lesson against the pool before merging this administration PR. '+reason;
+      backlog.pipeline.summary='Owner return recorded; reassess this lesson against the pool before merging this administration PR.';
     }
     parseBacklog(JSON.stringify(backlog));
     await writeFile(BACKLOG_PATH, JSON.stringify(backlog,null,2)+'\n');

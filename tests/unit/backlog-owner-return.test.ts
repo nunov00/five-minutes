@@ -32,4 +32,21 @@ describe('Owner returning a lesson',()=>{
 
   } finally { rmSync(directory,{recursive:true,force:true}); }
  });
+ it('preserves arbitrary Owner reason text without injecting it into the bounded pipeline summary',()=>{
+  const directory=mkdtempSync(join(tmpdir(),'five-minutes-return-ranked-'));
+  try {
+   mkdirSync(join(directory,'editorial'));
+   const entry={key:'published',kind:'revision',lessonId:id,slug:'published',state:'accepted',priority:20,queuedAt:'2026-10-17T00:00:00Z',reason:'Earlier assessment',criteria:['Earlier criterion']};
+   const next={...entry,key:'next',slug:'next',state:'queued'};
+   const pipeline={assessedAt:'2026-10-18T00:30:00Z',summary:'Initial ranking.',shortfall:'Only one test candidate.',ranking:[{key:'next',headline:'A puzzle',description:'A useful explanation.',hook:'Reader curiosity.',rankReason:'Broad appeal.',relevance:'Evergreen.',evidenceUrls:[]}]};
+   writeFileSync(join(directory,'editorial/backlog.json'),JSON.stringify({version:1,entries:[entry,next],pipeline}));
+   const reason=('The `example` has <gaps> and needs more depth. '+ 'More detail. '.repeat(150)).trim();
+   execFileSync(process.execPath,[script,'return','published',reason],{cwd:directory});
+   const queue=parseBacklog(readFileSync(join(directory,'editorial/backlog.json'),'utf8'));
+   expect(queue.entries[0]).toMatchObject({kind:'revision',lessonId:id,state:'queued',reason});
+   expect(queue.pipeline.summary).not.toContain(reason);
+   expect(queue.pipeline.ranking).toEqual(pipeline.ranking);
+  } finally {rmSync(directory,{recursive:true,force:true});}
+ });
+
 });

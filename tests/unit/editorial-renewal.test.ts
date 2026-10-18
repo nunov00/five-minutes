@@ -176,4 +176,32 @@ describe('ranked pipeline refresh boundary',()=>{
   // the pool itself rejects a fabricated pre-publication identity on new ideas.
   expect(()=>parseBacklog(JSON.stringify({version:1,entries:[{...idea('fresh-idea'),lessonId:id}],pipeline:pipeline(['fresh-idea'])}))).toThrow();
  });
+ it.each(['registry alias','original import slug','legacy pool alias'])('rejects a new idea colliding with %s',collision=>{
+  const v=rankedCandidate(),base=JSON.parse(v.baseBacklogText),head=JSON.parse(v.blobs[queuePath].text);
+  const reserved='gps-and-relativity';
+  if(collision==='registry alias') {
+   const owners=JSON.parse(v.baseRegistryText);owners[reserved]=id;v.baseRegistryText=JSON.stringify(owners);v.headRegistryBlob=textBlob(JSON.stringify(owners));
+  } else if(collision==='original import slug') {
+   const e={...idea('old-import'),kind:'import',slug:reserved,sourceUrl:`https://five-minutes.vitoria-nuno.chatgpt.site/lesson/${reserved}`,originalDate:'2026-08-04',state:'complete',completedAt:release,destinationId:id,destinationSlug:slug};
+   base.entries.push(e);head.entries.push({...e});
+  } else {
+   base.entries[1].legacySlugs=[reserved];head.entries[1].legacySlugs=[reserved];
+  }
+  head.entries.push({...idea('fresh-puzzle'),slug:reserved});head.pipeline=pipeline(['fresh-puzzle','another-idea']);
+  v.baseBacklogText=JSON.stringify(base);v.blobs[queuePath]=textBlob(JSON.stringify(head));
+  expect(()=>evaluateLessonPullRequest(v)).toThrow(/reserved route/);
+ });
+ it.each(['2026-10-18T00:30:00','2026-02-30T00:30:00Z'])('rejects ambiguous or invalid assessment %s',assessedAt=>{
+  const v=rankedCandidate(),q=JSON.parse(v.blobs[queuePath].text);q.pipeline.assessedAt=assessedAt;v.blobs[queuePath]=textBlob(JSON.stringify(q));
+  expect(()=>evaluateLessonPullRequest(v)).toThrow(/pipeline/);
+ });
+ it.each([['priority',0],['queuedAt','2026-10-17T00:00:00Z'],['queuedAt','2026-10-18T12:00:00Z'],['queuedAt','2026-10-18T00:00:00']])('rejects dishonest addition %s=%s',(field,value)=>{
+  const v=rankedCandidate(),q=JSON.parse(v.blobs[queuePath].text);q.entries.push({...idea('fresh-puzzle'),[field as string]:value});v.blobs[queuePath]=textBlob(JSON.stringify(q));
+  expect(()=>evaluateLessonPullRequest(v)).toThrow(/current-run-day/);
+ });
+ it('accepts explicit offsets just after Zurich midnight even when the UTC date differs',()=>{
+  const v=rankedCandidate(),q=JSON.parse(v.blobs[queuePath].text);q.pipeline.assessedAt='2026-10-18T00:00:01+02:00';q.entries.push({...idea('fresh-puzzle'),queuedAt:'2026-10-17T22:00:01Z'});v.blobs[queuePath]=textBlob(JSON.stringify(q));
+  expect(evaluateLessonPullRequest(v)).toMatchObject({applicable:true});
+ });
+
 });
