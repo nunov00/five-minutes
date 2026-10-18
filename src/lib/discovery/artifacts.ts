@@ -3,7 +3,7 @@ import type { LessonBundle } from '../content/schema';
 import { taxonomySubtopic, taxonomyTopic } from '../taxonomy';
 import { lessonPath, type LessonEdition } from '../urls';
 import type { BrowserCatalogueEntry, SearchDocument } from './types';
-import { editorialTimestamp } from '../editorial-order';
+import { editorialTimestamp, legacyPublicationDate } from '../editorial-order';
 
 export interface DiscoveryArtifact<T> {
   path: string;
@@ -24,8 +24,8 @@ function artifact<T>(prefix: string, payload: T): DiscoveryArtifact<T> {
   return { path: `/discovery/${prefix}.${hash}.json`, payload };
 }
 
-function compareNewest(a: { publishedAt: string; id: string; archiveDate?: string }, b: { publishedAt: string; id: string; archiveDate?: string }) {
-  const byDate = Date.parse(editorialTimestamp(b)) - Date.parse(editorialTimestamp(a));
+function compareNewest(a: { publishedAt: string; id: string; originalDate?: string }, b: { publishedAt: string; id: string; originalDate?: string }) {
+  const byDate = Date.parse(editorialTimestamp({publishedAt:b.publishedAt,archiveDate:b.originalDate})) - Date.parse(editorialTimestamp({publishedAt:a.publishedAt,archiveDate:a.originalDate}));
   return byDate || (a.id < b.id ? 1 : a.id > b.id ? -1 : 0);
 }
 
@@ -40,7 +40,9 @@ function searchDocument(lesson: LessonBundle, edition: LessonEdition): SearchDoc
     edition,
     path: lessonPath(edition, lesson.metadata.slug),
     publishedAt: new Date(lesson.metadata.publishedAt).toISOString(),
+    ...(lesson.metadata.revisedAt ? { revisedAt: lesson.metadata.revisedAt } : {}),
     ...(lesson.metadata.archive ? { archiveDate: lesson.metadata.archive.catalogueDate } : {}),
+    ...(legacyPublicationDate(lesson.metadata) ? { originalDate: legacyPublicationDate(lesson.metadata) } : {}),
     topic: topic.token,
     topicLabel: topic.label,
     subtopic: subtopic.token,
@@ -59,7 +61,9 @@ export function buildDiscoveryArtifacts(lessons: readonly LessonBundle[]): Disco
     return {
       id: lesson.metadata.id,
       publishedAt: new Date(lesson.metadata.publishedAt).toISOString(),
-      ...(lesson.metadata.archive ? { archiveDate: lesson.metadata.archive.catalogueDate } : {}),
+      ...(lesson.metadata.revisedAt ? { revisedAt: lesson.metadata.revisedAt } : {}),
+    ...(lesson.metadata.archive ? { archiveDate: lesson.metadata.archive.catalogueDate } : {}),
+    ...(legacyPublicationDate(lesson.metadata) ? { originalDate: legacyPublicationDate(lesson.metadata) } : {}),
       topic: lesson.metadata.topic,
       subtopic: lesson.metadata.subtopic,
       adult: { title: lesson.adult.title, path: lessonPath('adult', lesson.metadata.slug) },

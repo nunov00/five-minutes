@@ -4,15 +4,15 @@ import type { CatalogueEntry } from './delivery-manifest';
 export const EDITORIAL_TIMEZONE = 'Europe/Zurich';
 
 /**
- * ADR-0007: Today is the newest non-archive lesson by `publishedAt`.
+ * ADR-0007: Today is the newest daily release by `revisedAt` or `publishedAt`.
  * Equal timestamps are broken by lesson ID so the static build stays deterministic.
  */
 export function selectTodayLesson(catalogue: readonly CatalogueEntry[]): CatalogueEntry {
-  const originals = catalogue.filter((entry) => entry.archiveDate === undefined);
+  const originals = catalogue.filter((entry) => entry.archiveDate === undefined || entry.revisedAt !== undefined);
   if (originals.length === 0) throw new Error('Cannot select Today without published lessons eligible for Today.');
   let today = originals[0];
   for (const entry of originals.slice(1)) {
-    const newer = Date.parse(entry.publishedAt) - Date.parse(today.publishedAt);
+    const newer = Date.parse(releaseTimestamp(entry)) - Date.parse(releaseTimestamp(today));
     if (newer > 0 || (newer === 0 && entry.id > today.id)) today = entry;
   }
   return today;
@@ -26,9 +26,9 @@ export function selectEarlierLessons(
 ): CatalogueEntry[] {
   if (!Number.isInteger(limit) || limit < 0) throw new Error('Earlier lesson limit must be a non-negative integer.');
   return catalogue
-    .filter((entry) => entry.id !== todayId && entry.archiveDate === undefined)
+    .filter((entry) => entry.id !== todayId && (entry.archiveDate === undefined || entry.revisedAt !== undefined))
     .sort((a, b) => {
-      const newer = Date.parse(b.publishedAt) - Date.parse(a.publishedAt);
+      const newer = Date.parse(releaseTimestamp(b)) - Date.parse(releaseTimestamp(a));
       return newer || (a.id < b.id ? 1 : a.id > b.id ? -1 : 0);
     })
     .slice(0, limit);
@@ -46,4 +46,8 @@ export function formatEditorialDate(timestamp: string): string {
   const time = Date.parse(timestamp);
   if (Number.isNaN(time)) throw new Error(`Invalid publication timestamp: ${timestamp}.`);
   return editorialDate.format(time);
+}
+
+export function releaseTimestamp(entry: { publishedAt: string; revisedAt?: string }): string {
+  return entry.revisedAt ?? entry.publishedAt;
 }

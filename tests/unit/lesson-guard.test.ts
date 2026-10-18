@@ -73,6 +73,7 @@ function fixture() {
   return {
     pr: { headRef: `lesson/${slug}`, headSha, labels: ['editorial-review-requested', 'review:mandatory'] },
     triggerHeadSha: headSha,
+    baseBacklogText: JSON.stringify({version:1,entries:[]}),
     currentBaseSha: baseSha,
     mergeBaseSha: baseSha,
     behindBy: 0,
@@ -248,6 +249,7 @@ describe('lesson-guard GitHub adapter', () => {
   it('collects a complete candidate without executing its files', async () => {
     const value = fixture();
     const texts: Record<string,string> = {
+      ['editorial/backlog.json']: JSON.stringify({version:1,entries:[]}),
       [`${root}/adult.md`]: value.blobs[`${root}/adult.md`].text,
       [`${root}/lesson.yaml`]: value.blobs[`${root}/lesson.yaml`].text,
       [`${root}/teen.md`]: value.blobs[`${root}/teen.md`].text,
