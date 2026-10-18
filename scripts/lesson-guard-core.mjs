@@ -286,14 +286,17 @@ export function evaluateLessonPullRequest(input) {
   }
   if (!renewal && (metadata.archive !== undefined || metadata.revisedAt !== undefined)) fail('New lessons cannot supply archive/import or revision metadata.');
   if (input.baseBacklogText === undefined) fail('Trusted base backlog is required.');
-  if (!renewal && input.baseBacklogText !== undefined && parseBacklog(input.baseBacklogText).entries.some(entry=>['queued','parked'].includes(entry.state))) fail('Queued lessons must be completed before a new idea.');
-  if (renewal && !isValidTimestamp(metadata.revisedAt)) fail('Backlog lessons require revisedAt.');
+  if (!renewal && input.baseBacklogText !== undefined && (parseBacklog(input.baseBacklogText).pipeline || parseBacklog(input.baseBacklogText).entries.some(entry=>['queued','parked'].includes(entry.state)))) fail('Queued lessons must be completed through the trusted-base selection.');
+  if (renewal && metadata.revisedAt !== undefined && !isValidTimestamp(metadata.revisedAt)) fail('Invalid revisedAt.');
   if (renewal && Date.parse(metadata.revisedAt) < Date.parse(metadata.publishedAt)) fail('Revision cannot precede publication.');
   let selected;
   if (renewal) {
     const headBacklogText = requireTextBlob(blobs, BACKLOG_PATH, 256*1024);
-    try { selected = verifyBacklogCompletion(input.baseBacklogText, headBacklogText, metadata, metadata.revisedAt); }
+    try { selected = verifyBacklogCompletion(input.baseBacklogText, headBacklogText, metadata, metadata.revisedAt ?? metadata.publishedAt); }
     catch(error) { fail(error.message); }
+    const pipeline=parseBacklog(headBacklogText).pipeline;
+    if(pipeline && (zurichDate(new Date(pipeline.assessedAt))!==zurichDate(new Date(now)) || Date.parse(pipeline.assessedAt)>Date.parse(now))) fail('Pipeline assessment must be from this run day, not the future.');
+    if (selected.kind !== 'new' && !isValidTimestamp(metadata.revisedAt)) fail('Renewed lessons require revisedAt.');
     if ((selected.kind === 'revision') !== revision) fail('Backlog kind and lesson diff disagree.');
     if (revision) {
       const original = parseYamlObject(input.baseLessonText, 'Base lesson.yaml', METADATA_KEYS);
@@ -304,9 +307,9 @@ export function evaluateLessonPullRequest(input) {
         if (JSON.stringify(original.provenance?.[key]) !== JSON.stringify(metadata.provenance?.[key])) fail(`Revision must preserve provenance.${key}.`);
       }
       if (Date.parse(metadata.revisedAt) <= Date.parse(original.revisedAt ?? original.publishedAt)) fail('Revision timestamp must advance.');
-    } else if (metadata.publishedAt !== metadata.revisedAt) fail('First transfer publication and revision timestamps must match.');
+    } else if (selected.kind === 'import' && metadata.publishedAt !== metadata.revisedAt) fail('First transfer publication and revision timestamps must match.');
   }
-  const publishedAt = new Date(renewal ? metadata.revisedAt : metadata.publishedAt);
+  const publishedAt = new Date(metadata.revisedAt ?? metadata.publishedAt);
   const nowDate = new Date(now);
   if (!Number.isFinite(publishedAt.valueOf()) || !Number.isFinite(nowDate.valueOf())) fail('Publication time is invalid.');
   const publicationDate = zurichDate(publishedAt);

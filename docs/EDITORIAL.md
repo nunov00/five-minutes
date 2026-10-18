@@ -158,3 +158,7 @@ The transferable pattern is a clearer explanation with a worthwhile consequence,
 ## Calibration corpus
 
 Issue #49 established the representative corpus in two stages. The first stage used the existing GPS lesson plus four publishable calibration lessons spanning science, technology and society. In project chat on 3 October 2026, the Owner reviewed the rubric and content direction, required usefulness, factual accuracy and audience attention to be explicit quality gates, and then authorised expansion. The second stage expanded the same change to 12 lesson identities across broader topics and subtopics. PR #58 and issue #49 hold the durable decision record. The additional entries add editorial range; they are not filler added to reach a count.
+
+## Ranked candidate pipeline
+
+Read `docs/editorial-pipeline.md` for candidate selection, changing relevance and the daily queue-review checklist. Review both the published lesson candidate and its proposed next shortlist in the same PR. A pipeline headline is an editorial proposal, not verified factual content or permission to expand the automated topic boundary. Preserve all outstanding revision requirements; new ideas compete on reader value. Record the explicit PIPELINE outcome alongside the lesson review.
