@@ -23,6 +23,13 @@ describe('Owner returning a lesson',()=>{
    expect(queue.entries).toHaveLength(1);
    expect(nextBacklogEntry(queue)).toMatchObject({kind:'revision',lessonId:id,slug:'published',state:'queued',priority:0,reason:'The example is not clear enough.'});
    expect(queue.entries[0].destinationId).toBeUndefined();
+   if(kind==='completed-transfer') {
+    execFileSync(process.execPath,[script,'return','original','The old name should keep working.'],{cwd:directory});
+    const returned=parseBacklog(readFileSync(join(directory,'editorial/backlog.json'),'utf8'));
+    expect(returned.entries).toHaveLength(1);
+    expect(returned.entries[0]).toMatchObject({kind:'revision',lessonId:id,slug:'published',legacySlugs:['original'],reason:'The old name should keep working.'});
+   }
+
   } finally { rmSync(directory,{recursive:true,force:true}); }
  });
 });
