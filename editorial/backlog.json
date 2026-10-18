@@ -392,14 +392,17 @@
       "title": "Why a Damaged QR Code Can Still Work",
       "originalDate": "2026-09-07",
       "sourceUrl": "https://five-minutes.vitoria-nuno.chatgpt.site/lesson/error-correcting-codes",
-      "state": "queued",
+      "state": "complete",
       "priority": 124,
       "queuedAt": "2026-10-18T10:22:43Z",
       "reason": "Remaining original catalogue lesson: transfer through the daily editorial cycle.",
       "criteria": [
         "Research and rewrite both editions against current EDITORIAL.md; verify current catalogue overlap before creating an identity.",
         "Assess useful figures and Teen prediction; complete source, rendered and separate-run publication review."
-      ]
+      ],
+      "completedAt": "2026-10-19T02:00:00+02:00",
+      "destinationId": "312498a8-dce4-437c-9fae-70dbae1206da",
+      "destinationSlug": "why-damaged-qr-codes-can-still-work"
     },
     {
       "key": "legacy-shipping-container",
@@ -1158,18 +1161,9 @@
     }
   ],
   "pipeline": {
-    "assessedAt": "2026-10-18T14:55:14Z",
-    "summary": "Reassessed after Claude review against recent releases: QR codes, window condensation and queueing lead; the heat-pump revision remains fifth because it was published on 13 October. Ten candidates remain, with all 71 prior pool records and three new ideas preserved. Rankings are editorial judgements, not measured demand.",
+    "assessedAt": "2026-10-19T00:06:49+02:00",
+    "summary": "Reassessed the full remaining pool after selecting the QR-code transfer. Window condensation, queueing and noise cancellation now lead: each offers a distinct everyday puzzle and a clear causal explanation. Aircraft pressurisation moves ahead of the recent heat-pump revision for topic freshness. Shannon information enters tenth but is held back to avoid adjacent information-coding coverage. Ten viable candidates remain; no new records were needed. Rankings are editorial judgements, not measured demand.",
     "ranking": [
-      {
-        "key": "legacy-error-correcting-codes",
-        "headline": "Why a damaged QR code can still work",
-        "description": "Show how deliberately added redundancy can recover missing information, and distinguish it from simply repeating the whole message.",
-        "hook": "A torn corner does not always destroy the message.",
-        "rankReason": "Lead with a concrete visual puzzle and prediction: distinct from the lessons released since 13 October, without repeating a very recent revision. Check authoritative source access before drafting.",
-        "relevance": "Evergreen; compare with recent computing lessons before retaining this position.",
-        "evidenceUrls": []
-      },
       {
         "key": "idea-why-windows-mist-up",
         "headline": "Why your windows mist up before the room feels damp",
@@ -1198,21 +1192,21 @@
         "evidenceUrls": []
       },
       {
-        "key": "lesson-6bd86c0f-7cde-467c-abd1-ef6c8a2b51b1",
-        "headline": "How can cold outdoor air heat your home?",
-        "description": "Follow a refrigerant around the cycle to explain how electricity moves heat and why colder weather changes the work required.",
-        "hook": "A machine can deliver more heat than the electrical energy it consumes.",
-        "rankReason": "Retain the useful Adult-depth revision, but its original 13 October release is too recent to lead again. Fifth place balances its seasonal usefulness with broader recent coverage and separation from the window-condensation idea.",
-        "relevance": "Seasonal relevance to northern-hemisphere heating; evergreen physics. No claim of a verified news trend.",
-        "evidenceUrls": []
-      },
-      {
         "key": "legacy-aircraft-pressurisation",
         "headline": "Why aircraft windows have rounded corners",
         "description": "Connect cabin pressure, repeated loading and stress concentrations to the shape of a window opening.",
         "hook": "A small change in shape can change where stress builds up.",
-        "rankReason": "Clear engineering stakes and diagram potential; avoid reducing historical aircraft failures to one cause.",
+        "rankReason": "Moves ahead of the recent heat-pump revision for topic freshness. It has clear engineering stakes and diagram potential; avoid reducing historical aircraft failures to one cause.",
         "relevance": "Evergreen; do not tie to an accident without verified evidence and a separate scope decision.",
+        "evidenceUrls": []
+      },
+      {
+        "key": "lesson-6bd86c0f-7cde-467c-abd1-ef6c8a2b51b1",
+        "headline": "How can cold outdoor air heat your home?",
+        "description": "Follow a refrigerant around the cycle to explain how electricity moves heat and why colder weather changes the work required.",
+        "hook": "A machine can deliver more heat than the electrical energy it consumes.",
+        "rankReason": "Retain the useful Adult-depth revision, but its 13 October release is recent and window condensation already leads the shortlist. Fifth place preserves seasonal value without clustering related heat topics.",
+        "relevance": "Seasonal relevance to northern-hemisphere heating; evergreen physics. No claim of a verified news trend.",
         "evidenceUrls": []
       },
       {
@@ -1249,6 +1243,15 @@
         "hook": "Improving the score can make the underlying result worse.",
         "rankReason": "Broad relevance and a strong behavioural mechanism; needs a carefully bounded example and more depth than a slogan.",
         "relevance": "Evergreen; no unsupported link to a current policy or public controversy.",
+        "evidenceUrls": []
+      },
+      {
+        "key": "legacy-shannon-information",
+        "headline": "Why an unlikely message carries more information",
+        "description": "Use surprise to explain Shannon information, separating the technical measure from everyday importance or meaning.",
+        "hook": "A forecast of rain tells you more when rain was very unlikely.",
+        "rankReason": "A strong quantitative idea with a compact worked example, added to keep ten viable candidates. It stays tenth because the selected QR lesson already covers neighbouring information-coding territory.",
+        "relevance": "Evergreen mathematics and computing; no claim about current communications technology.",
         "evidenceUrls": []
       }
     ]
