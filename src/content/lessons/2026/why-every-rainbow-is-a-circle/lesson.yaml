@@ -1,0 +1,56 @@
+schemaVersion: 2
+id: b740183b-adaf-4ce4-ad6b-1eb12345f7d8
+slug: why-every-rainbow-is-a-circle
+aliases: []
+publishedAt: '2026-10-18T07:11:02Z'
+topic: science
+subtopic: physics
+concepts:
+- rainbows
+- refraction
+- reflection
+- observer-geometry
+related:
+  manual:
+  - id: d29d0ef2-aa2a-49fa-a75b-dea39430cd3e
+    reason: Compare another observation whose explanation depends on the reference direction used by the observer.
+  - id: b6fbc2e0-bcad-4ad7-8336-2fed9576e788
+    reason: Explore another case where geometry changes how a familiar shape appears.
+  exclude: []
+sources:
+- title: What Causes a Rainbow?
+  url: https://www.nesdis.noaa.gov/about/k-12-education/optical-phenomena/what-causes-rainbow
+  publisher: NOAA National Environmental Satellite, Data, and Information Service
+  accessedAt: '2026-10-18'
+  note: Explains refraction, internal reflection, color separation, the observer-dependent view, the roughly 42-degree
+    primary bow, color ordering, and why a full rainbow is a circle.
+- title: How Do Rainbows Form?
+  url: https://www.weather.gov/fgz/Rainbow
+  publisher: NOAA National Weather Service, Flagstaff
+  accessedAt: '2026-10-18'
+  note: Supports the concentration of primary-bow rays near 42 degrees, red outside, refraction/reflection and the influence
+    of solar height on the visible arc.
+- title: 'Rainbows: optical wonders'
+  url: https://weather.metoffice.gov.uk/learn-about/weather/optical-effects/rainbows
+  publisher: Met Office
+  accessedAt: '2026-10-18'
+  note: Supports refraction, colour separation, the ground obscuring the lower circle and full-circle viewing when sunlit
+    droplets exist below an elevated observer.
+provenance:
+  createdAt: '2026-10-18T07:11:02Z'
+  createdBy:
+    type: ai
+    provider: openai
+    model: gpt-6.1-sol
+    promptVersion: owner-requested-shadow-recovery-v1
+  reviews: []
+archive:
+  sourceUrl: https://github.com/nunov00/five-minutes/pull/99
+  catalogueDate: '2026-10-12'
+imageRights:
+- src: /lesson-media/why-every-rainbow-is-a-circle.png
+  origin: original-code
+  creator: OpenAI Codex for Five Minutes
+  licence: Original explanatory artwork created for this publication; no third-party artwork reused.
+  evidence: Drawn with Pillow from geometric primitives and DejaVu Sans text during the 18 October 2026 recovery. Source
+    claims are in this lesson; creation method and rendered artwork reviewed on the recovery PR.

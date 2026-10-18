@@ -1,0 +1,74 @@
+schemaVersion: 2
+id: 5a6e9db0-63d5-4f28-8973-86f55ca8d81d
+slug: why-lakes-freeze-from-the-top-down
+aliases: []
+publishedAt: '2026-10-18T07:11:02Z'
+topic: science
+subtopic: ecology
+concepts:
+- water-density
+- freezing
+- convection
+- lake-ice
+- thermal-stratification
+related:
+  manual:
+  - id: 15944494-03f6-40a5-b7ab-2fd7192b6836
+    reason: Follow the molecular explanation of why the ice lid floats; this lesson instead explains the liquid-water
+      layering before freezing.
+  - id: c50774ec-4593-4557-b8df-ecc65e504566
+    reason: Connect seasonal changes in incoming sunlight with a lake’s changing temperature layers.
+  exclude: []
+sources:
+- title: How and when do Madison lakes freeze?
+  url: https://wxguys.ssec.wisc.edu/2024/11/25/madison-lakes-freeze/
+  publisher: University of Wisconsin–Madison, The Weather Guys
+  accessedAt: '2026-10-18'
+  note: Supports cooling-driven sinking above about 4°C, the density reversal below 4°C, surface freezing and deeper
+    lakes requiring more cooling.
+- title: Density Stratification
+  url: https://www.waterontheweb.org/under/lakeecology/05_stratification.html
+  publisher: Water on the Web, University of Minnesota Duluth educational project
+  accessedAt: '2026-10-18'
+  note: Supports maximum density near 4°C, winter inverse layering, wind isolation by ice, seasonal turnover and variation
+    between lakes.
+- title: How and Why Lakes Stratify and Turn Over
+  url: https://www.iisd.org/ela/blog/lakes-stratify-turn-explain-science-behind-phenomena/
+  publisher: IISD Experimental Lakes Area
+  accessedAt: '2026-10-18'
+  note: Supports density barriers, energy needed for mixing, oxygen replenishment during turnover and regional limits
+    on the two-turnover model.
+- title: 'Fish Fry Day: How Do Fish Live Under the Ice?'
+  url: https://blog.limnology.wisc.edu/2015/01/30/fish-fry-day-how-do-fish-live-under-the-ice/
+  publisher: University of Wisconsin–Madison, Center for Limnology
+  accessedAt: '2026-10-18'
+  note: Supports liquid winter habitat and oxygen limitation, including microbial oxygen consumption beneath an ice cover.
+- title: Ice safety
+  url: https://dnr.wisconsin.gov/Education/OutdoorSkills/IceSafety
+  publisher: Wisconsin Department of Natural Resources
+  accessedAt: '2026-10-18'
+  note: Supports the warning that appearance alone cannot establish ice safety.
+- title: 'Black Rock Forest Hike: Aleck Meadow Pond'
+  url: https://www.giss.nasa.gov/edu/icp/education/modules/carbon/topic1/common/stop4.html
+  publisher: NASA Goddard Institute for Space Studies
+  accessedAt: '2026-10-18'
+  note: Historical educational material supporting floating surface ice as insulation and liquid habitat beneath; not
+    relied on for a universal mixing sequence.
+provenance:
+  createdAt: '2026-10-18T07:11:02Z'
+  createdBy:
+    type: ai
+    provider: openai
+    model: gpt-6.1-sol
+    promptVersion: owner-requested-shadow-recovery-v1
+  reviews: []
+archive:
+  sourceUrl: https://github.com/nunov00/five-minutes/pull/101
+  catalogueDate: '2026-10-12'
+imageRights:
+- src: /lesson-media/why-lakes-freeze-from-the-top-down.png
+  origin: original-code
+  creator: OpenAI Codex for Five Minutes
+  licence: Original explanatory artwork created for this publication; no third-party artwork reused.
+  evidence: Drawn with Pillow from geometric primitives and DejaVu Sans text during the 18 October 2026 recovery. Source
+    claims are in this lesson; creation method and rendered artwork reviewed on the recovery PR.
