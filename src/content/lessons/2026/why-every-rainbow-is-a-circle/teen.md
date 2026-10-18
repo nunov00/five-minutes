@@ -3,9 +3,9 @@ title: Why You Cannot Catch the End of a Rainbow
 description: The coloured arch is part of a circle built around your viewpoint, not something standing in a field.
 takeaway: A rainbow follows your viewpoint because your eyes select light arriving at particular angles from water
   droplets.
-question: What would you need to see the lower part of a rainbow’s circle from an aircraft?
-answer: Sunlit water droplets would need to be visible below you at the right viewing angles. Being high up helps,
-  but height alone does not create the missing colours.
+question: Why does moving across a field change which droplets make the rainbow you see?
+answer: The useful viewing angles are measured from your eyes. Moving changes your viewpoint, so a different set
+  of droplets sends the rainbow light towards you.
 searchTerms:
 - rainbow full circle
 - why rainbows move
@@ -26,13 +26,13 @@ figure:
     portion. From an elevated viewpoint a complete circle can be seen if illuminated droplets are present below
     the observer. The ring represents directions, not droplets arranged in a physical hoop.
 activity:
-  prompt: You move sideways while looking at a rainbow. Which explanation fits what happens?
+  prompt: The Sun is behind you on a flight. Does being high above the ground guarantee a full-circle rainbow?
   options:
-  - Different droplets now send rainbow light to your eyes
-  - The same coloured droplets move sideways with you
-  answer: 0
-  explanation: The useful angles are measured from your eyes. Move your eyes and a different set of droplets can
-    send you the right light; the rain does not need to follow you.
+  - Yes, altitude is enough
+  - No, altitude is not enough
+  answer: 1
+  explanation: A full circle also needs sunlit droplets visible below you at the right viewing angles. Height can
+    open the view, but it does not supply those droplets or the light.
 ---
 A rainbow seems to end behind a nearby tree. Could you run round the tree and stand inside the colours?
 

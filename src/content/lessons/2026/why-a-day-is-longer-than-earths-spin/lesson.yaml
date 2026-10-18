@@ -52,5 +52,6 @@ imageRights:
   origin: original-code
   creator: OpenAI Codex for Five Minutes
   licence: Original explanatory artwork created for this publication; no third-party artwork reused.
-  evidence: Drawn with Pillow from geometric primitives and DejaVu Sans text during the 18 October 2026 recovery. Source
-    claims are in this lesson; creation method and rendered artwork reviewed on the recovery PR.
+  evidence: Original Pillow geometry and DejaVu Sans text, created for Five Minutes on 18 October 2026 and redrawn after
+    Claude review. One fixed Sun, two Earth positions on an orbital arc, and successive marker orientations show the
+    extra rotation. No third-party artwork reused; schematic exaggeration is disclosed.

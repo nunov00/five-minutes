@@ -36,6 +36,18 @@ sources:
   accessedAt: '2026-10-18'
   note: Supports refraction, colour separation, the ground obscuring the lower circle and full-circle viewing when sunlit
     droplets exist below an elevated observer.
+- title: Rainbows
+  url: https://farside.ph.utexas.edu/teaching/302l/lectures/node131.html
+  publisher: University of Texas at Austin, Richard Fitzpatrick
+  accessedAt: '2026-10-18'
+  note: 'Ray tracing through different droplet entry points: maximum outgoing angle near 42° from the backward direction,
+    ray bunching, and sharp outer versus diffuse inner primary-bow edges.'
+- title: Rainbows — Optics tutorial
+  url: https://www.st-andrews.ac.uk/~bds2/optics/rainbow
+  publisher: University of St Andrews, B. Sinclair
+  accessedAt: '2026-10-18'
+  note: Independently supports the turning point and concentration of rays; distinguishes the approximately 138° minimum
+    deviation from the 42° antisolar viewing angle. Historical tutorial; no old software is required or used.
 provenance:
   createdAt: '2026-10-18T07:11:02Z'
   createdBy:
@@ -52,5 +64,6 @@ imageRights:
   origin: original-code
   creator: OpenAI Codex for Five Minutes
   licence: Original explanatory artwork created for this publication; no third-party artwork reused.
-  evidence: Drawn with Pillow from geometric primitives and DejaVu Sans text during the 18 October 2026 recovery. Source
-    claims are in this lesson; creation method and rendered artwork reviewed on the recovery PR.
+  evidence: Original Pillow geometry and DejaVu Sans text, created for Five Minutes on 18 October 2026. Revised after
+    Claude review to label the horizontal horizon directly. No third-party artwork reused; physical geometry checked
+    against the lesson sources.

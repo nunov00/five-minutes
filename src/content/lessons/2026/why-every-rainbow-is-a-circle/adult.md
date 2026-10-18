@@ -34,6 +34,12 @@ Sunlight entering a water droplet bends, reflects inside it and bends again on l
 
 For a primary rainbow, the light reaching your eye is especially concentrated near particular angles: red appears about 42 degrees from the direction directly opposite the Sun, with violet at a slightly smaller angle. The droplets send light in many directions; the rainbow is the bright concentration, not the only light they return.
 
+## Why the light gathers near 42 degrees
+
+Follow parallel rays of one colour into a round droplet, shifting their entry points from the middle towards the edge. After one internal reflection, their exit directions swing farther from the exact backward direction, reach a maximum angle, then swing back. For red light, that turning point is near 42 degrees.
+
+Near the turning point, changing where a ray enters barely changes its exit angle. Many incoming rays therefore emerge within a narrow range of directions, concentrating light into a bright bow. Other rays return at smaller angles, but this one-reflection path has an outer angular limit. That helps explain the primary bow's sharp outer edge and softer inner edge. It does not mean the sky beyond the bow receives no other light.
+
 ## An angle can draw a circle
 
 Picture a line from the Sun through your eye and onwards. Its far end points towards the **antisolar point**, directly opposite the Sun. Now keep your gaze about 42 degrees away from that line while sweeping it all the way round. The possible directions trace a circle.
