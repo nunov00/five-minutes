@@ -1,4 +1,4 @@
-import { BACKLOG_PATH, parseBacklog, nextBacklogEntry, verifyBacklogCompletion } from './editorial-backlog.mjs';
+import { BACKLOG_PATH, parseBacklog, verifyBacklogCompletion } from './editorial-backlog.mjs';
 import { parseDocument } from 'yaml';
 import { TOOLKIT_TYPES, validateToolkitData } from '../src/lib/figures/toolkit-contract.mjs';
 import { LOCAL_RASTER_PATH, RASTER_LIMITS, validateRasterBytes } from '../src/lib/figures/raster.mjs';
@@ -286,7 +286,7 @@ export function evaluateLessonPullRequest(input) {
   }
   if (!renewal && (metadata.archive !== undefined || metadata.revisedAt !== undefined)) fail('New lessons cannot supply archive/import or revision metadata.');
   if (input.baseBacklogText === undefined) fail('Trusted base backlog is required.');
-  if (!renewal && input.baseBacklogText !== undefined && nextBacklogEntry(parseBacklog(input.baseBacklogText))) fail('Queued lessons must be completed before a new idea.');
+  if (!renewal && input.baseBacklogText !== undefined && parseBacklog(input.baseBacklogText).entries.some(entry=>['queued','parked'].includes(entry.state))) fail('Queued lessons must be completed before a new idea.');
   if (renewal && !isValidTimestamp(metadata.revisedAt)) fail('Backlog lessons require revisedAt.');
   if (renewal && Date.parse(metadata.revisedAt) < Date.parse(metadata.publishedAt)) fail('Revision cannot precede publication.');
   let selected;

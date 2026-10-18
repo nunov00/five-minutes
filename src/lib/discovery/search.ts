@@ -71,7 +71,7 @@ export function searchDocuments(
     if (matchedTokens !== queryTokens.length) return [];
     return [{ document, score }];
   }).sort((a, b) => b.score - a.score
-    || Date.parse(editorialTimestamp(b.document)) - Date.parse(editorialTimestamp(a.document))
+    || Date.parse(editorialTimestamp({publishedAt:b.document.publishedAt,archiveDate:b.document.originalDate})) - Date.parse(editorialTimestamp({publishedAt:a.document.publishedAt,archiveDate:a.document.originalDate}))
     || a.document.id.localeCompare(b.document.id))
     .slice(0, limit);
 }

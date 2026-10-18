@@ -2,6 +2,7 @@
 import LessonFigure from '../../components/reading/LessonFigure.astro';
 import TeenActivity from '../../components/reading/TeenActivity.astro';
 import { figurePosition } from '../../lib/figures/placement';
+import { legacyPublicationDate } from '../../lib/editorial-order';
 import LessonDates from '../../components/LessonDates.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import type { LoadedLesson } from '../../lib/content/loader';
@@ -49,7 +50,7 @@ const positioned=presentation.figure?figurePosition(html,presentation.figure.aft
 <BaseLayout title={`${presentation.title} · ${EDITION_LABELS[edition]} edition · Five Minutes`} description={presentation.description} edition={edition} editionPaths={editionPaths} wide={!!presentation.figure}>
   <article class:list={['reading-article', {'has-figure': !!presentation.figure}]} data-reader-lesson data-lesson-id={lesson.metadata.id} data-edition={edition}>
     <header class="reader-header">
-      <p class="eyebrow"><LessonDates publishedAt={lesson.metadata.publishedAt} archiveDate={lesson.metadata.archive?.catalogueDate} revisedAt={lesson.metadata.revisedAt} /></p>
+      <p class="eyebrow"><LessonDates publishedAt={lesson.metadata.publishedAt} originalDate={legacyPublicationDate(lesson.metadata)} revisedAt={lesson.metadata.revisedAt} /></p>
       <h1>{presentation.title}</h1>
       <p class="lede">{presentation.description}</p>
     </header>

@@ -73,6 +73,16 @@ describe('editorial queue and bounded daily publication',()=>{
   const v=revision('import'); v.files=v.files.filter(f=>f.filename!==queuePath);delete v.blobs[queuePath];changeMetadata(v,m=>{delete m.revisedAt;delete m.archive;});
   expect(()=>evaluateLessonPullRequest(v)).toThrow(/Queued lessons/);
  });
+ it('cannot replace a parked-only backlog with a fresh topic',()=>{
+  const v=revision('import'); const q=JSON.parse(v.baseBacklogText);
+  q.entries[0].state='parked';q.entries[0].blocker={reason:'Source unavailable',issueUrl:'https://github.com/nunov00/five-minutes/issues/161',failedDays:['2026-10-16','2026-10-17']};v.baseBacklogText=JSON.stringify(q);
+  v.files=v.files.filter(f=>f.filename!==queuePath);delete v.blobs[queuePath];changeMetadata(v,m=>{delete m.revisedAt;delete m.archive;});
+  expect(()=>evaluateLessonPullRequest(v)).toThrow(/Queued lessons/);
+ });
+ it('cannot park a lesson through the ordinary completion candidate',()=>{
+  const v=revision();const q=JSON.parse(v.blobs[queuePath].text);q.entries[0].state='parked';q.entries[0].blocker={reason:'No source',issueUrl:'https://github.com/nunov00/five-minutes/issues/161',failedDays:['2026-10-16','2026-10-17']};v.blobs[queuePath]=textBlob(JSON.stringify(q));
+  expect(()=>evaluateLessonPullRequest(v)).toThrow(/Only the selected/);
+ });
  it('requires original transfer provenance to match the queue',()=>{
   const v=revision('import');changeMetadata(v,m=>m.archive.catalogueDate='2026-08-05');expect(()=>evaluateLessonPullRequest(v)).toThrow(/provenance/);
  });
