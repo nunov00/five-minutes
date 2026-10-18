@@ -1,3 +1,4 @@
+import { isValidTimestamp } from './publication-time.mjs';
 import { BACKLOG_PATH, parseBacklog, verifyBacklogCompletion } from './editorial-backlog.mjs';
 import { parseDocument } from 'yaml';
 import { TOOLKIT_TYPES, validateToolkitData } from '../src/lib/figures/toolkit-contract.mjs';
@@ -15,7 +16,6 @@ export const GUARD_LIMITS = Object.freeze({
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-const RFC3339 = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2})(?:\.(\d+))?)?(Z|[+-]\d{2}:\d{2})$/;
 const LESSON_PATH = /^src\/content\/lessons\/(\d{4})\/([a-z0-9]+(?:-[a-z0-9]+)*)\/(adult\.md|lesson\.yaml|teen\.md)$/;
 const REGISTRY_PATH = 'src/content/route-ownership.json';
 const REQUIRED_LABELS = ['editorial-review-requested', 'review:mandatory'];
@@ -179,22 +179,6 @@ function zurichDate(value) {
   return `${read('year')}-${read('month')}-${read('day')}`;
 }
 
-function isValidTimestamp(value) {
-  if (typeof value !== 'string') return false;
-  const match = RFC3339.exec(value);
-  if (!match) return false;
-  const [, year, month, day, hour, minute, second = '0', , offset] = match;
-  const y = Number(year), mo = Number(month), d = Number(day);
-  const h = Number(hour), mi = Number(minute), sec = Number(second);
-  if (mo < 1 || mo > 12 || h > 23 || mi > 59 || sec > 59) return false;
-  const daysInMonth = new Date(Date.UTC(y, mo, 0)).getUTCDate();
-  if (d < 1 || d > daysInMonth) return false;
-  if (offset !== 'Z') {
-    const [oh, om] = offset.slice(1).split(':').map(Number);
-    if (oh > 23 || om > 59) return false;
-  }
-  return !Number.isNaN(Date.parse(value));
-}
 
 function requireTextBlob(blobs, path, maxBytes) {
   const blob = blobs[path];
@@ -289,10 +273,11 @@ export function evaluateLessonPullRequest(input) {
   if (!renewal && input.baseBacklogText !== undefined && (parseBacklog(input.baseBacklogText).pipeline || parseBacklog(input.baseBacklogText).entries.some(entry=>['queued','parked'].includes(entry.state)))) fail('Queued lessons must be completed through the trusted-base selection.');
   if (renewal && metadata.revisedAt !== undefined && !isValidTimestamp(metadata.revisedAt)) fail('Invalid revisedAt.');
   if (renewal && Date.parse(metadata.revisedAt) < Date.parse(metadata.publishedAt)) fail('Revision cannot precede publication.');
+  const baseRegistry = parseRegistry(baseRegistryText, 'Base route ownership');
   let selected;
   if (renewal) {
     const headBacklogText = requireTextBlob(blobs, BACKLOG_PATH, 256*1024);
-    try { selected = verifyBacklogCompletion(input.baseBacklogText, headBacklogText, metadata, metadata.revisedAt ?? metadata.publishedAt); }
+    try { selected = verifyBacklogCompletion(input.baseBacklogText, headBacklogText, metadata, metadata.revisedAt ?? metadata.publishedAt, {reservedRoutes:Object.keys(baseRegistry), now}); }
     catch(error) { fail(error.message); }
     const pipeline=parseBacklog(headBacklogText).pipeline;
     if(pipeline && (zurichDate(new Date(pipeline.assessedAt))!==zurichDate(new Date(now)) || Date.parse(pipeline.assessedAt)>Date.parse(now))) fail('Pipeline assessment must be from this run day, not the future.');
@@ -339,7 +324,6 @@ export function evaluateLessonPullRequest(input) {
   for(const filename of referenced)imageBytes+=blobs[filename].size;
   if(imageBytes>GUARD_LIMITS.imageTotalBytes)fail('Raster figures exceed the aggregate image byte budget.');
 
-  const baseRegistry = parseRegistry(baseRegistryText, 'Base route ownership');
   if (!isPlainObject(headRegistryBlob)) fail('Candidate route ownership file data is incomplete.');
   const headRegistryText = requireTextBlob({ [REGISTRY_PATH]: headRegistryBlob }, REGISTRY_PATH, Number.MAX_SAFE_INTEGER);
   const headRegistry = parseRegistry(headRegistryText, 'Candidate route ownership');

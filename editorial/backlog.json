@@ -1158,16 +1158,16 @@
     }
   ],
   "pipeline": {
-    "assessedAt": "2026-10-18T14:37:41Z",
-    "summary": "Initial editorial judgement: reader curiosity and learning value first, then variety, teaching potential and evidence readiness. Mix existing revisions, transfers and three new ideas. All prior records remain intact. Reassess after the daily selection; seasonal reasons are provisional, not measured demand or verified trends.",
+    "assessedAt": "2026-10-18T14:55:14Z",
+    "summary": "Reassessed after Claude review against recent releases: QR codes, window condensation and queueing lead; the heat-pump revision remains fifth because it was published on 13 October. Ten candidates remain, with all 71 prior pool records and three new ideas preserved. Rankings are editorial judgements, not measured demand.",
     "ranking": [
       {
-        "key": "lesson-6bd86c0f-7cde-467c-abd1-ef6c8a2b51b1",
-        "headline": "How can cold outdoor air heat your home?",
-        "description": "Follow a refrigerant around the cycle to explain how electricity moves heat and why colder weather changes the work required.",
-        "hook": "A machine can deliver more heat than the electrical energy it consumes.",
-        "rankReason": "Strong everyday puzzle and seasonal usefulness; renew the existing lesson with a stronger causal Adult layer.",
-        "relevance": "Seasonal relevance to northern-hemisphere heating; evergreen physics. No claim of a verified news trend.",
+        "key": "legacy-error-correcting-codes",
+        "headline": "Why a damaged QR code can still work",
+        "description": "Show how deliberately added redundancy can recover missing information, and distinguish it from simply repeating the whole message.",
+        "hook": "A torn corner does not always destroy the message.",
+        "rankReason": "Lead with a concrete visual puzzle and prediction: distinct from the lessons released since 13 October, without repeating a very recent revision. Check authoritative source access before drafting.",
+        "relevance": "Evergreen; compare with recent computing lessons before retaining this position.",
         "evidenceUrls": []
       },
       {
@@ -1177,15 +1177,6 @@
         "hook": "The window can be wet while the rest of the room looks dry.",
         "rankReason": "A fresh household puzzle with a clear dew-point diagram; distinct from evaporation and heat-pump cycles.",
         "relevance": "Evergreen household relevance, with seasonal interest in cooler weather; not a measured popularity claim.",
-        "evidenceUrls": []
-      },
-      {
-        "key": "legacy-error-correcting-codes",
-        "headline": "Why a damaged QR code can still work",
-        "description": "Show how deliberately added redundancy can recover missing information, and distinguish it from simply repeating the whole message.",
-        "hook": "A torn corner does not always destroy the message.",
-        "rankReason": "Immediate visual puzzle and strong prediction potential; a transfer can offer as much reader value as a new idea.",
-        "relevance": "Evergreen; compare with recent computing lessons before retaining this position.",
         "evidenceUrls": []
       },
       {
@@ -1204,6 +1195,15 @@
         "hook": "Adding sound can make a room seem quieter.",
         "rankReason": "A strong new sensory puzzle with explanatory wave figures; check that it remains distinct from resonance.",
         "relevance": "Evergreen everyday technology; not tied to a product launch.",
+        "evidenceUrls": []
+      },
+      {
+        "key": "lesson-6bd86c0f-7cde-467c-abd1-ef6c8a2b51b1",
+        "headline": "How can cold outdoor air heat your home?",
+        "description": "Follow a refrigerant around the cycle to explain how electricity moves heat and why colder weather changes the work required.",
+        "hook": "A machine can deliver more heat than the electrical energy it consumes.",
+        "rankReason": "Retain the useful Adult-depth revision, but its original 13 October release is too recent to lead again. Fifth place balances its seasonal usefulness with broader recent coverage and separation from the window-condensation idea.",
+        "relevance": "Seasonal relevance to northern-hemisphere heating; evergreen physics. No claim of a verified news trend.",
         "evidenceUrls": []
       },
       {
