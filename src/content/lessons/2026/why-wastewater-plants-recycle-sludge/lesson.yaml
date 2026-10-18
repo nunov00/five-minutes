@@ -1,0 +1,39 @@
+schemaVersion: 2
+id: 664b5b2f-9973-4fd8-a3d5-6dee49278465
+slug: why-wastewater-plants-recycle-sludge
+aliases: []
+publishedAt: 2026-10-18T03:00:00+02:00
+topic: technology
+subtopic: engineering
+concepts: [wastewater-treatment, activated-sludge, microorganisms, aeration]
+related:
+  manual:
+    - id: e38e6794-fa4d-466c-9aa8-b6c6f6e386e1
+      reason: See how another engineered system uses a returning loop to keep a process working.
+    - id: 3cebf076-45ac-49ea-9b01-bd0917fb1c13
+      reason: Explore another case in which living organisms reshape the conditions around them.
+  exclude: []
+sources:
+  - title: Primer for Municipal Wastewater Treatment Systems
+    url: https://www.epa.gov/sites/default/files/2015-09/documents/primer.pdf
+    publisher: United States Environmental Protection Agency
+    accessedAt: 2026-10-18
+    note: Supports the physical and biological stages, oxygen-supported microbial breakdown, suspended-growth treatment and separation of excess biomass.
+  - title: Process Control Manual for Aerobic Biological Wastewater Treatment Facilities
+    url: https://nepis.epa.gov/Exe/ZyPURL.cgi?Dockey=9100NX8X.txt
+    publisher: United States Environmental Protection Agency
+    accessedAt: 2026-10-18
+    note: Supports the activated-sludge mechanism, the roles of aeration and settling, and returning settled microorganisms to keep them in the system longer than the flowing water.
+  - title: How does a sewage treatment plant work?
+    url: https://www.bmluk.gv.at/en/topics/water/water-quality-and-water-protection/how-does-a-sewage-treatment-plant-work.html
+    publisher: Austrian Federal Ministry of Agriculture and Forestry, Climate and Environmental Protection, Regions and Water Management
+    accessedAt: 2026-10-18
+    note: Independently supports oxygen-assisted biological treatment, secondary settling, return sludge and removal of excess biomass.
+provenance:
+  createdAt: 2026-10-18T02:00:31+02:00
+  createdBy:
+    type: ai
+    provider: openai
+    model: gpt-6.1-sol
+    promptVersion: automated-writer-v4
+  reviews: []
