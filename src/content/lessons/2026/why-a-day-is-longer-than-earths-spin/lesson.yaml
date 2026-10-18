@@ -1,0 +1,56 @@
+schemaVersion: 2
+id: d29d0ef2-aa2a-49fa-a75b-dea39430cd3e
+slug: why-a-day-is-longer-than-earths-spin
+aliases: []
+publishedAt: '2026-10-18T07:11:02Z'
+topic: science
+subtopic: astronomy
+concepts:
+- earth-rotation
+- sidereal-day
+- solar-day
+- timekeeping
+related:
+  manual:
+  - id: c50774ec-4593-4557-b8df-ecc65e504566
+    reason: Both lessons show how Earth's orbit changes what we observe from its surface.
+  - id: 99b24089-9f36-404c-8b44-8cb594115dac
+    reason: Solar time explains why accurate clocks transformed navigation by longitude.
+  exclude: []
+sources:
+- title: 'Chapter 2: Reference Systems'
+  url: https://science.nasa.gov/learn/basics-of-space-flight/chapter2-1/
+  publisher: NASA Science
+  accessedAt: '2026-10-18'
+  note: Explains rotation versus revolution, the 24-hour mean solar day and the roughly four-minute difference from sidereal
+    rotation.
+- title: Astronomical Almanac Glossary
+  url: https://aa.usno.navy.mil/faq/asa_glossary
+  publisher: US Naval Observatory
+  accessedAt: '2026-10-18'
+  note: Defines the mean sidereal day as about 23 hours 56 minutes 4 seconds and distinguishes apparent from mean solar
+    time.
+- title: The Equation of Time
+  url: https://aa.usno.navy.mil/faq/eqtime
+  publisher: US Naval Observatory
+  accessedAt: '2026-10-18'
+  note: Explains the changing orbital viewpoint, roughly one degree per day, apparent versus mean solar time, obliquity
+    and eccentricity, and the distinction from modern civil time.
+provenance:
+  createdAt: '2026-10-18T07:11:02Z'
+  createdBy:
+    type: ai
+    provider: openai
+    model: gpt-6.1-sol
+    promptVersion: owner-requested-shadow-recovery-v1
+  reviews: []
+archive:
+  sourceUrl: https://github.com/nunov00/five-minutes/pull/97
+  catalogueDate: '2026-10-12'
+imageRights:
+- src: /lesson-media/why-a-day-is-longer-than-earths-spin.png
+  origin: original-code
+  creator: OpenAI Codex for Five Minutes
+  licence: Original explanatory artwork created for this publication; no third-party artwork reused.
+  evidence: Drawn with Pillow from geometric primitives and DejaVu Sans text during the 18 October 2026 recovery. Source
+    claims are in this lesson; creation method and rendered artwork reviewed on the recovery PR.
