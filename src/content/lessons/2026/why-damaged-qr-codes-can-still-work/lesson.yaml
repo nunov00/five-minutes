@@ -1,0 +1,53 @@
+schemaVersion: 2
+id: 312498a8-dce4-437c-9fae-70dbae1206da
+slug: why-damaged-qr-codes-can-still-work
+aliases: []
+publishedAt: 2026-10-19T02:00:00+02:00
+revisedAt: 2026-10-19T02:00:00+02:00
+archive:
+  sourceUrl: https://five-minutes.vitoria-nuno.chatgpt.site/lesson/error-correcting-codes
+  catalogueDate: 2026-09-07
+topic: technology
+subtopic: computing
+concepts: [error-correction, qr-codes, reed-solomon-codes, redundancy]
+related:
+  manual:
+    - id: 5d0eaefd-39c4-404e-9dbb-7e75e88474f6
+      reason: Both lessons show how an encoding changes information so it remains useful after some detail is lost.
+    - id: 034c4a38-3d76-482a-83d8-ce1d8d59b5c2
+      reason: Password hashing and error correction solve different computing problems by transforming data in deliberate ways.
+  exclude: []
+sources:
+  - title: Error correction feature
+    url: https://www.qrcode.com/en/about/error_correction.html
+    publisher: DENSO WAVE
+    accessedAt: 2026-10-19
+    note: Official QR Code documentation supporting Reed–Solomon error correction, codewords, selectable correction levels, recovery from bounded damage and the capacity trade-off.
+  - title: Information capacity and versions of the QR Code
+    url: https://www.qrcode.com/en/about/version.html
+    publisher: DENSO WAVE
+    accessedAt: 2026-10-19
+    note: Official documentation supporting the relationship among message amount, error-correction level, module count and QR symbol size.
+  - title: What is a QR Code?
+    url: https://www.qrcode.com/en/about/
+    publisher: DENSO WAVE
+    accessedAt: 2026-10-19
+    note: Official overview supporting the role of the three corner position-detection patterns in locating and orienting a QR symbol before its data can be read.
+  - title: Exploring communications technology — Reed-Solomon codes and error correction
+    url: https://www.open.edu/openlearn/digital-computing/exploring-communications-technology/content-section-2.2
+    publisher: The Open University
+    accessedAt: 2026-10-19
+    note: Accessible account of message bytes, appended check bytes, receiver-side error location and correction, and the trade-off between redundancy and message capacity.
+  - title: Lecture 20 — Reed-Solomon Codes
+    url: https://ocw.mit.edu/courses/18-200-principles-of-discrete-applied-mathematics-spring-2024/resources/18200-lecture-20-version-2_mp4/
+    publisher: MIT OpenCourseWare
+    accessedAt: 2026-10-19
+    note: University lecture supporting the polynomial construction, distance and decoding principles behind Reed–Solomon codes.
+provenance:
+  createdAt: 2026-10-19T00:06:49+02:00
+  createdBy:
+    type: ai
+    provider: openai
+    model: gpt-6.1-sol
+    promptVersion: automated-writer-v4
+  reviews: []
