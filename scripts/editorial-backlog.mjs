@@ -90,7 +90,10 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
       }
       if (!entry) throw new Error('No published lesson matches that key/slug/ID.');
     }
-    if (entry.destinationId) { entry.kind='revision'; entry.lessonId=entry.destinationId; entry.slug=entry.destinationSlug; }
+    if (entry.destinationId) {
+      if (entry.kind==='import' && entry.slug!==entry.destinationSlug) entry.legacySlugs=[...new Set([...(entry.legacySlugs??[]),entry.slug])];
+      entry.kind='revision'; entry.lessonId=entry.destinationId; entry.slug=entry.destinationSlug;
+    }
     entry.state='queued'; entry.priority=0; entry.reason=reason; entry.criteria=[reason]; entry.queuedAt=new Date().toISOString();
     delete entry.blocker;
     delete entry.completedAt; delete entry.destinationId; delete entry.destinationSlug;
