@@ -1,10 +1,11 @@
 ---
+import LessonDates from '../components/LessonDates.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SurpriseLinks from '../components/SurpriseLinks.astro';
 import { getBuildMetadata } from '../lib/content/build-content';
 import { buildDiscoveryArtifacts } from '../lib/discovery/artifacts';
 import { taxonomyTopic } from '../lib/taxonomy';
-import { formatEditorialDate, selectEarlierLessons, selectTodayLesson } from '../lib/today';
+import { selectEarlierLessons, selectTodayLesson } from '../lib/today';
 
 const { lessons, manifest } = await getBuildMetadata();
 const today = selectTodayLesson(manifest.catalogue);
@@ -27,7 +28,7 @@ const earlier = selectEarlierLessons(manifest.catalogue, today.id).map((entry) =
 ---
 <BaseLayout title="Today · Five Minutes" editionPaths={{adult:today.adult.path,teen:today.teen.path}} todaySurface>
   <section aria-labelledby="today-heading" data-lesson-id={today.id}>
-    <p class="eyebrow"><time datetime={today.publishedAt}>{formatEditorialDate(today.publishedAt)}</time></p>
+    <p class="eyebrow"><LessonDates {...today} /></p>
     <h1 id="today-heading">Today's idea</h1>
     {editions.map(({ edition, path, presentation }) => (
       <article class="card" data-today-edition={edition}>
@@ -41,7 +42,7 @@ const earlier = selectEarlierLessons(manifest.catalogue, today.id).map((entry) =
       <ol class="earlier-list">
         {earlier.map((entry) => (
           <li data-earlier-id={entry.id}>
-            <p class="earlier-meta"><time datetime={entry.publishedAt}>{formatEditorialDate(entry.publishedAt)}</time> · {entry.topicLabel}</p>
+            <p class="earlier-meta"><LessonDates {...entry} /> · {entry.topicLabel}</p>
             <div class="earlier-links">
               <a data-earlier-edition="adult" href={entry.adult.path}>{entry.adult.title}</a>
               <a data-earlier-edition="teen" href={entry.teen.path}>{entry.teen.title}</a>

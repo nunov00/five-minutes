@@ -2,12 +2,12 @@
 import LessonFigure from '../../components/reading/LessonFigure.astro';
 import TeenActivity from '../../components/reading/TeenActivity.astro';
 import { figurePosition } from '../../lib/figures/placement';
+import LessonDates from '../../components/LessonDates.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import type { LoadedLesson } from '../../lib/content/loader';
 import { getBuildContent } from '../../lib/content/build-content';
 import { relatedLessons } from '../../lib/discovery/related';
 import { EDITION_LABELS } from '../../lib/reading';
-import { formatEditorialDate } from '../../lib/today';
 import { lessonPath, type LessonEdition } from '../../lib/urls';
 
 interface Props {
@@ -49,7 +49,7 @@ const positioned=presentation.figure?figurePosition(html,presentation.figure.aft
 <BaseLayout title={`${presentation.title} · ${EDITION_LABELS[edition]} edition · Five Minutes`} description={presentation.description} edition={edition} editionPaths={editionPaths} wide={!!presentation.figure}>
   <article class:list={['reading-article', {'has-figure': !!presentation.figure}]} data-reader-lesson data-lesson-id={lesson.metadata.id} data-edition={edition}>
     <header class="reader-header">
-      {lesson.metadata.archive ? <p class="eyebrow">Archive · <time datetime={lesson.metadata.archive.catalogueDate}>{formatEditorialDate(lesson.metadata.archive.catalogueDate)}</time> · Adapted <time datetime={lesson.metadata.publishedAt}>{formatEditorialDate(lesson.metadata.publishedAt)}</time></p> : <p class="eyebrow"><time datetime={lesson.metadata.publishedAt}>{formatEditorialDate(lesson.metadata.publishedAt)}</time></p>}
+      <p class="eyebrow"><LessonDates publishedAt={lesson.metadata.publishedAt} archiveDate={lesson.metadata.archive?.catalogueDate} revisedAt={lesson.metadata.revisedAt} /></p>
       <h1>{presentation.title}</h1>
       <p class="lede">{presentation.description}</p>
     </header>

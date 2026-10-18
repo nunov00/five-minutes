@@ -1,3 +1,4 @@
+import { BACKLOG_PATH, parseBacklog, nextBacklogEntry, verifyBacklogCompletion } from './editorial-backlog.mjs';
 import { parseDocument } from 'yaml';
 import { TOOLKIT_TYPES, validateToolkitData } from '../src/lib/figures/toolkit-contract.mjs';
 import { LOCAL_RASTER_PATH, RASTER_LIMITS, validateRasterBytes } from '../src/lib/figures/raster.mjs';
@@ -20,7 +21,7 @@ const REGISTRY_PATH = 'src/content/route-ownership.json';
 const REQUIRED_LABELS = ['editorial-review-requested', 'review:mandatory'];
 const METADATA_KEYS = new Set([
   'schemaVersion', 'id', 'slug', 'aliases', 'publishedAt', 'topic', 'subtopic',
-  'concepts', 'related', 'sources', 'provenance', 'imageRights',
+  'concepts', 'related', 'sources', 'provenance', 'imageRights', 'revisedAt', 'archive',
 ]);
 const ADULT_KEYS = new Set(['title', 'description', 'takeaway', 'question', 'answer', 'searchTerms', 'figure']);
 const TEEN_KEYS = new Set([...ADULT_KEYS, 'activity']);
@@ -232,16 +233,19 @@ export function evaluateLessonPullRequest(input) {
     fail('Automated lesson candidate must be based on the current main head.');
   }
   if (!Array.isArray(files) || !isPlainObject(blobs)) fail('Changed-file data is incomplete.');
-  if(files.length<4||files.length>4+GUARD_LIMITS.imageFiles)fail('Automated lesson candidate requires four lesson/registry files and at most two images.');
+  const backlogFiles = files.filter(f => f.filename === BACKLOG_PATH);
+  const renewal = backlogFiles.length === 1;
+  const revision = renewal && files.some(f => LESSON_PATH.test(f.filename) && f.status === 'modified');
+  if(files.length<4||files.length>5+GUARD_LIMITS.imageFiles)fail('Automated candidate requires the bounded lesson, registry/backlog files and at most two images.');
 
   const lessonFiles = files.filter((file) => typeof file?.filename === 'string' && LESSON_PATH.test(file.filename));
   const registryFiles = files.filter((file) => file?.filename === REGISTRY_PATH);
   const imageFiles=files.filter(file=>typeof file?.filename==='string'&&file.filename.startsWith('public/lesson-media/'));
-  if (lessonFiles.length !== 3 || registryFiles.length !== 1 || lessonFiles.length+registryFiles.length+imageFiles.length!==files.length) {
-    fail('Candidate may add one lesson directory, its bounded images, and modify only route ownership outside it.');
+  if (lessonFiles.length !== 3 || registryFiles.length !== (revision ? 0 : 1) || lessonFiles.length+registryFiles.length+imageFiles.length+backlogFiles.length!==files.length) {
+    fail('Candidate may change only one lesson, its bounded new images, and the applicable registry/backlog delta.');
   }
-  if (lessonFiles.some((file) => file.status !== 'added') || imageFiles.some(file=>file.status!=='added') || registryFiles[0].status !== 'modified') {
-    fail('Lesson files must be added and route ownership must be the only modified file.');
+  if (lessonFiles.some((file) => file.status !== (revision ? 'modified' : 'added')) || imageFiles.some(file=>file.status!=='added') || (!revision && registryFiles[0].status !== 'modified') || backlogFiles.some(f => f.status !== 'modified')) {
+    fail('Lesson files must all be added or all modified for the selected backlog revision; other file statuses are restricted.');
   }
   for (const file of files) {
     if (!Number.isSafeInteger(file.additions) || !Number.isSafeInteger(file.deletions) || !Number.isSafeInteger(file.changes)) {
@@ -260,7 +264,7 @@ export function evaluateLessonPullRequest(input) {
   }
   const year = [...years][0];
   const slug = [...slugs][0];
-  if (slug !== branchSlug) fail('Branch, directory and lesson slug must match.');
+  if (slug !== branchSlug && (!renewal || branchSlug !== `${slug}-${zurichDate(new Date(now))}`)) fail('Branch, directory and lesson slug must match (or use the current-day backlog retry suffix).');
 
   const root = `src/content/lessons/${year}/${slug}`;
   const yamlPath = `${root}/lesson.yaml`;
@@ -276,26 +280,54 @@ export function evaluateLessonPullRequest(input) {
   if (metadata.schemaVersion !== 2) fail('Automated lessons must use schemaVersion 2.');
   if (typeof metadata.id !== 'string' || !UUID.test(metadata.id)) fail('Automated lesson ID must be a canonical lowercase UUID.');
   if (metadata.slug !== slug || !SLUG.test(metadata.slug)) fail('Branch, directory and metadata slug must match.');
-  if (!Array.isArray(metadata.aliases) || metadata.aliases.length !== 0) fail('Automated new lessons must start with no aliases.');
+  if (!Array.isArray(metadata.aliases) || (!revision && metadata.aliases.length !== 0)) fail('Automated new lessons must start with no aliases.');
   if (!isValidTimestamp(metadata.publishedAt)) {
     fail('Automated lesson requires an unambiguous RFC 3339 publishedAt timestamp.');
   }
-  const publishedAt = new Date(metadata.publishedAt);
+  if (!renewal && (metadata.archive !== undefined || metadata.revisedAt !== undefined)) fail('New lessons cannot supply archive/import or revision metadata.');
+  if (input.baseBacklogText === undefined) fail('Trusted base backlog is required.');
+  if (!renewal && input.baseBacklogText !== undefined && nextBacklogEntry(parseBacklog(input.baseBacklogText))) fail('Queued lessons must be completed before a new idea.');
+  if (renewal && !isValidTimestamp(metadata.revisedAt)) fail('Backlog lessons require revisedAt.');
+  if (renewal && Date.parse(metadata.revisedAt) < Date.parse(metadata.publishedAt)) fail('Revision cannot precede publication.');
+  let selected;
+  if (renewal) {
+    const headBacklogText = requireTextBlob(blobs, BACKLOG_PATH, 256*1024);
+    try { selected = verifyBacklogCompletion(input.baseBacklogText, headBacklogText, metadata, metadata.revisedAt); }
+    catch(error) { fail(error.message); }
+    if ((selected.kind === 'revision') !== revision) fail('Backlog kind and lesson diff disagree.');
+    if (revision) {
+      const original = parseYamlObject(input.baseLessonText, 'Base lesson.yaml', METADATA_KEYS);
+      for (const key of ['id','slug','aliases','publishedAt','topic','subtopic','archive']) {
+        if (JSON.stringify(original[key]) !== JSON.stringify(metadata[key])) fail(`Revision must preserve ${key}.`);
+      }
+      for (const key of ['createdAt','createdBy']) {
+        if (JSON.stringify(original.provenance?.[key]) !== JSON.stringify(metadata.provenance?.[key])) fail(`Revision must preserve provenance.${key}.`);
+      }
+      if (Date.parse(metadata.revisedAt) <= Date.parse(original.revisedAt ?? original.publishedAt)) fail('Revision timestamp must advance.');
+    } else if (metadata.publishedAt !== metadata.revisedAt) fail('First transfer publication and revision timestamps must match.');
+  }
+  const publishedAt = new Date(renewal ? metadata.revisedAt : metadata.publishedAt);
   const nowDate = new Date(now);
   if (!Number.isFinite(publishedAt.valueOf()) || !Number.isFinite(nowDate.valueOf())) fail('Publication time is invalid.');
   const publicationDate = zurichDate(publishedAt);
   if (publicationDate !== zurichDate(nowDate)) fail('Publication date must be the current Europe/Zurich date.');
-  if (!publicationDate.startsWith(`${year}-`)) fail('Lesson directory year must match publishedAt in Europe/Zurich.');
+  if (!(revision ? zurichDate(new Date(metadata.publishedAt)) : publicationDate).startsWith(`${year}-`)) fail('Lesson directory year must match publishedAt in Europe/Zurich.');
 
   const presentations=[parseFrontmatter(adultText,'adult.md',ADULT_KEYS),parseFrontmatter(teenText,'teen.md',TEEN_KEYS)];
   const images=presentations.map(p=>p.figure).filter(f=>f?.type==='image');
   for(const message of validateImageRights(metadata.imageRights,images.map(f=>f.src)))fail(message);
   const referenced=new Set(images.map(f=>`public${f.src}`));
-  if(referenced.size!==imageFiles.length||imageFiles.some(f=>!referenced.has(f.filename)))fail('Every added image must be referenced by this lesson and every image reference must be newly added.');
+  if((!revision && referenced.size!==imageFiles.length)||imageFiles.some(f=>!referenced.has(f.filename)))fail('Every added image must be referenced by this lesson and every image reference must be newly added.');
+  if (revision) {
+    const originalPresentations = [parseFrontmatter(input.baseAdultText,'base adult.md',ADULT_KEYS), parseFrontmatter(input.baseTeenText,'base teen.md',TEEN_KEYS)];
+    const originalImages = new Set(originalPresentations.filter(p=>p.figure?.type==='image').map(p=>`public${p.figure.src}`));
+    for (const path of referenced) if (!imageFiles.some(f=>f.filename===path) && !originalImages.has(path)) fail('Revision cannot borrow an unrelated existing raster.');
+  }
   let imageBytes=0;
+  const revisionSuffix = renewal ? `(?:-r${publicationDate.replaceAll('-', '')})?` : '';
   for(const f of images){
     const filename=`public${f.src}`;
-    if(!new RegExp(`^public/lesson-media/${slug}(?:-adult|-teen)?\\.(?:png|webp)$`).test(filename))fail('Image filenames must belong to this lesson slug.');
+    if(imageFiles.some(file => file.filename === filename) && !new RegExp(`^public/lesson-media/${slug}${revisionSuffix}(?:-adult|-teen)?\\.(?:png|webp)$`).test(filename))fail('Image filenames must belong to this lesson slug.');
     const blob=blobs[filename];
     if(!blob||blob.mode!=='100644'||blob.type!=='blob'||!Number.isSafeInteger(blob.size)||blob.size<1||blob.size>RASTER_LIMITS.maxBytes
       ||!Buffer.isBuffer(blob.bytes)||blob.bytes.length!==blob.size)fail('Raster must be a bounded regular binary blob with trustworthy size.');
@@ -308,14 +340,14 @@ export function evaluateLessonPullRequest(input) {
   if (!isPlainObject(headRegistryBlob)) fail('Candidate route ownership file data is incomplete.');
   const headRegistryText = requireTextBlob({ [REGISTRY_PATH]: headRegistryBlob }, REGISTRY_PATH, Number.MAX_SAFE_INTEGER);
   const headRegistry = parseRegistry(headRegistryText, 'Candidate route ownership');
-  if (Object.hasOwn(baseRegistry, slug)) fail('Automated lesson slug already has a route owner.');
-  if (Object.values(baseRegistry).includes(metadata.id)) fail('Automated lesson ID already exists in route ownership.');
+  if (!revision && Object.hasOwn(baseRegistry, slug)) fail('Automated lesson slug already has a route owner.');
+  if (!revision && Object.values(baseRegistry).includes(metadata.id)) fail('Automated lesson ID already exists in route ownership.');
   for (const [route, owner] of Object.entries(baseRegistry)) {
     if (headRegistry[route] !== owner) fail('Candidate must not remove or reassign route ownership.');
   }
   const additions = Object.entries(headRegistry).filter(([route]) => !Object.hasOwn(baseRegistry, route));
-  if (additions.length !== 1 || additions[0][0] !== slug || additions[0][1] !== metadata.id) {
-    fail('Candidate must append exactly its slug and ID to route ownership.');
+  if (revision ? (additions.length !== 0 || baseRegistry[slug] !== metadata.id) : (additions.length !== 1 || additions[0][0] !== slug || additions[0][1] !== metadata.id)) {
+    fail('Candidate must preserve route ownership, appending exactly its slug and ID only for a new identity.');
   }
 
   return { applicable: true, slug, lessonId: metadata.id, message: `Automated lesson contract passed for ${slug}.` };

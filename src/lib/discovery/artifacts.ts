@@ -40,6 +40,7 @@ function searchDocument(lesson: LessonBundle, edition: LessonEdition): SearchDoc
     edition,
     path: lessonPath(edition, lesson.metadata.slug),
     publishedAt: new Date(lesson.metadata.publishedAt).toISOString(),
+    ...(lesson.metadata.revisedAt ? { revisedAt: lesson.metadata.revisedAt } : {}),
     ...(lesson.metadata.archive ? { archiveDate: lesson.metadata.archive.catalogueDate } : {}),
     topic: topic.token,
     topicLabel: topic.label,
@@ -59,7 +60,8 @@ export function buildDiscoveryArtifacts(lessons: readonly LessonBundle[]): Disco
     return {
       id: lesson.metadata.id,
       publishedAt: new Date(lesson.metadata.publishedAt).toISOString(),
-      ...(lesson.metadata.archive ? { archiveDate: lesson.metadata.archive.catalogueDate } : {}),
+      ...(lesson.metadata.revisedAt ? { revisedAt: lesson.metadata.revisedAt } : {}),
+    ...(lesson.metadata.archive ? { archiveDate: lesson.metadata.archive.catalogueDate } : {}),
       topic: lesson.metadata.topic,
       subtopic: lesson.metadata.subtopic,
       adult: { title: lesson.adult.title, path: lessonPath('adult', lesson.metadata.slug) },

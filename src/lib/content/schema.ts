@@ -27,6 +27,7 @@ export interface LessonMetadata {
   slug: string;
   aliases: string[];
   publishedAt: string;
+  revisedAt?: string;
   archive?: { sourceUrl: string; catalogueDate: string };
   topic: string;
   subtopic: string;
@@ -85,7 +86,7 @@ const TOKEN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const PRESENTATION_KEYS = new Set(['title', 'description', 'takeaway', 'question', 'answer', 'searchTerms', 'figure', 'activity']);
 const METADATA_KEYS = new Set([
   'schemaVersion', 'id', 'slug', 'aliases', 'publishedAt', 'topic', 'subtopic',
-  'concepts', 'related', 'sources', 'provenance', 'archive', 'imageRights',
+  'concepts', 'related', 'sources', 'provenance', 'archive', 'imageRights', 'revisedAt',
 ]);
 
 function issue(issues: ValidationIssue[], path: string, code: string, message: string) {
@@ -173,6 +174,10 @@ export function validateLessonMetadata(value: unknown, path = 'metadata'): Valid
   if (!isValidTimestamp(value.publishedAt)) {
     issue(issues, `${path}.publishedAt`, 'timestamp', 'Expected an unambiguous ISO publication timestamp.');
   }
+  if (value.revisedAt !== undefined && (!isValidTimestamp(value.revisedAt)
+    || (isValidTimestamp(value.publishedAt) && Date.parse(value.revisedAt) < Date.parse(value.publishedAt)))) {
+    issue(issues, `${path}.revisedAt`, 'revision-date', 'Revision must be a valid timestamp at or after publication.');
+  }
   if (value.archive !== undefined) {
     if (!isObject(value.archive)) {
       issue(issues, `${path}.archive`, 'archive', 'Expected sourceUrl and catalogueDate.');
@@ -246,7 +251,7 @@ export function validateLessonBundle(bundle: unknown): ValidationResult {
   if (bundle.teen !== undefined) issues.push(...validatePresentation(bundle.teen, 'teen', 'teen').issues);
   if(isObject(bundle.metadata)){
     const paths=[bundle.adult,bundle.teen].flatMap(p=>isObject(p)&&isObject(p.figure)&&p.figure.type==='image'?[p.figure.src]:[]);
-    for(const message of validateImageRights(bundle.metadata.imageRights,paths,!bundle.metadata.archive))issue(issues,'metadata.imageRights','image-rights',message);
+    for(const message of validateImageRights(bundle.metadata.imageRights,paths,!bundle.metadata.archive || bundle.metadata.revisedAt !== undefined))issue(issues,'metadata.imageRights','image-rights',message);
   }
 
   return { valid: issues.length === 0, issues };

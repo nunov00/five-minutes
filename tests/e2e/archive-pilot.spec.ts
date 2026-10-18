@@ -1,17 +1,21 @@
+import { readFileSync } from 'node:fs';
+import { loadPublishedLessons } from '../../src/lib/content/loader';
 import { test, expect } from './support/fixtures';
 
 const slugs = ['why-experts-skip-the-obvious-step', 'why-tails-is-not-due', 'why-the-moon-appears-in-daylight'];
 
+const pilot = (await loadPublishedLessons('src/content/lessons', JSON.parse(readFileSync('src/content/route-ownership.json','utf8')))).filter(l => slugs.includes(l.metadata.slug));
+
 test('archive pilot is readable in both editions and does not replace Today or Earlier', async ({ page }) => {
   await page.goto('/');
-  for (const slug of slugs) {
+  for (const { metadata: { slug } } of pilot.filter(l => !l.metadata.revisedAt)) {
     await expect(page.locator(`[data-today-edition] a[href$="/${slug}"]`)).toHaveCount(0);
     await expect(page.locator(`.earlier-list a[href$="/${slug}"]`)).toHaveCount(0);
   }
   for (const edition of ['adult', 'teen']) for (const slug of slugs) {
     await page.goto(`/${edition}/${slug}`);
-    await expect(page.locator('.reader-header .eyebrow')).toContainText('Archive');
-    await expect(page.locator('.reader-header .eyebrow')).toContainText('Adapted');
+    await expect(page.locator('.reader-header .eyebrow')).not.toContainText('Archive');
+    await expect(page.locator('.reader-header .eyebrow')).not.toContainText('Adapted');
     await expect(page.locator('.lesson-body').first()).toBeVisible();
     await page.locator('[data-recall-reveal] > summary').click();
     await expect(page.locator('[data-recall] .answer')).toBeVisible();
