@@ -21,7 +21,7 @@ describe('archive discovery', () => {
     const original = validLesson();
     original.metadata.publishedAt = '2026-10-03T00:30:00+02:00';
     const archive = validLesson();
-    archive.metadata.archive = { sourceUrl: 'https://example.com/old', catalogueDate: '2026-10-03' };
+    archive.metadata.archive = { sourceUrl: 'https://five-minutes.vitoria-nuno.chatgpt.site/lesson/example', catalogueDate: '2026-10-03' };
     archive.metadata.id = '018f47a2-5d7b-7c31-9d4f-0d9a8b6c2e12';
     archive.metadata.publishedAt = '2026-10-16T00:00:00Z';
     expect(newestLessons([archive, original])[0]).toBe(original);
@@ -33,7 +33,7 @@ describe('archive discovery', () => {
     archive.metadata.slug = 'archive-example';
     archive.metadata.aliases = [];
     archive.metadata.publishedAt = '2026-10-16T06:00:00Z';
-    archive.metadata.archive = { sourceUrl: 'https://example.com/old', catalogueDate: '2026-08-04' };
+    archive.metadata.archive = { sourceUrl: 'https://five-minutes.vitoria-nuno.chatgpt.site/lesson/example', catalogueDate: '2026-08-04' };
     const lessons = [archive, original];
     expect(newestLessons(lessons).map(l => l.metadata.id)).toEqual([original.metadata.id, archive.metadata.id]);
     const manifest = buildDeliveryManifest(lessons);

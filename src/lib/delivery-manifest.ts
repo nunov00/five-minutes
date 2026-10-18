@@ -1,11 +1,13 @@
 import type { LessonBundle, RedirectEntry } from './content/schema';
 import { buildRedirectManifest } from './content/schema';
+import { legacyPublicationDate } from './editorial-order';
 import { lessonPath, type LessonEdition } from './urls';
 
 export interface CataloguePresentation { title: string; path: string; }
 export interface CatalogueEntry {
   id: string; slug: string; aliases: readonly string[]; publishedAt: string;
   archiveDate?: string;
+  originalDate?: string;
   revisedAt?: string;
   topic: string; subtopic: string; adult: CataloguePresentation; teen: CataloguePresentation;
 }
@@ -43,6 +45,7 @@ export function buildDeliveryManifest(lessons: readonly LessonBundle[]): Deliver
       publishedAt: new Date(metadata.publishedAt).toISOString(), topic: metadata.topic, subtopic: metadata.subtopic,
       ...(metadata.revisedAt ? { revisedAt: metadata.revisedAt } : {}),
     ...(metadata.archive ? { archiveDate: metadata.archive.catalogueDate } : {}),
+    ...(legacyPublicationDate(metadata) ? { originalDate: legacyPublicationDate(metadata) } : {}),
       adult: { title: adult.title, path: adultPath }, teen: { title: teen.title, path: teenPath },
     });
   }

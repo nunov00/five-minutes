@@ -4,6 +4,7 @@ import { pathToFileURL } from 'node:url';
 
 export const BACKLOG_PATH = 'editorial/backlog.json';
 const TOKEN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+const canonicalToken=value=>typeof value==='string' && TOKEN.test(value);
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
 export function parseBacklog(text) {
   const document = parseDocument(text, {schema:'json', strict:true, uniqueKeys:true});
@@ -13,8 +14,8 @@ export function parseBacklog(text) {
   const keys = new Set();
   for (const entry of value.entries) {
     if (!entry || typeof entry !== 'object' || keys.has(entry.key) || typeof entry.key !== 'string'
-      || !TOKEN.test(entry.slug) || !['revision','import'].includes(entry.kind)
-      || !['queued','complete','accepted','covered'].includes(entry.state)
+      || !canonicalToken(entry.slug) || !['revision','import'].includes(entry.kind)
+      || !['queued','parked','complete','accepted','covered'].includes(entry.state)
       || !Number.isInteger(entry.priority) || entry.priority < 0
       || typeof entry.reason !== 'string' || !entry.reason.trim()
       || !Array.isArray(entry.criteria) || entry.criteria.length === 0 || entry.criteria.some(c => typeof c !== 'string' || !c.trim())
@@ -25,14 +26,21 @@ export function parseBacklog(text) {
       if (url.origin !== 'https://five-minutes.vitoria-nuno.chatgpt.site' || url.username || url.password || url.pathname !== `/lesson/${entry.slug}` || url.search || url.hash
         || !/^\d{4}-\d{2}-\d{2}$/.test(entry.originalDate) || new Date(`${entry.originalDate}T00:00:00Z`).toISOString().slice(0,10) !== entry.originalDate) throw new Error('Invalid original lesson record.');
     }
-    if (entry.state === 'complete' && (!UUID.test(entry.destinationId) || !TOKEN.test(entry.destinationSlug) || !Number.isFinite(Date.parse(entry.completedAt)))) throw new Error('Invalid backlog completion.');
+    if (entry.legacySlugs !== undefined && (!Array.isArray(entry.legacySlugs) || entry.legacySlugs.some(slug=>!canonicalToken(slug)))) throw new Error('Invalid legacy lesson alias.');
+    if (entry.state === 'accepted' && entry.kind !== 'revision') throw new Error('Accepted entries require an existing lesson identity.');
+    if (entry.state === 'covered' && (!UUID.test(entry.destinationId) || !canonicalToken(entry.destinationSlug))) throw new Error('Covered entries require an existing destination.');
+    if (entry.state === 'parked' && (!entry.blocker || typeof entry.blocker.reason !== 'string' || !entry.blocker.reason.trim()
+      || !/^https:\/\/github\.com\/nunov00\/five-minutes\/issues\/[1-9][0-9]*$/.test(entry.blocker.issueUrl)
+      || !Array.isArray(entry.blocker.failedDays) || new Set(entry.blocker.failedDays).size < 2
+      || entry.blocker.failedDays.some(day=>!/^\d{4}-\d{2}-\d{2}$/.test(day) || new Date(`${day}T00:00:00Z`).toISOString().slice(0,10)!==day))) throw new Error('Parked entries need a blocker issue and at least two distinct failed days.');
+    if (entry.state === 'complete' && (!UUID.test(entry.destinationId) || !canonicalToken(entry.destinationSlug) || !Number.isFinite(Date.parse(entry.completedAt)))) throw new Error('Invalid backlog completion.');
     keys.add(entry.key);
   }
   return value;
 }
 
 export function nextBacklogEntry(backlog) {
-  return backlog.entries.filter(e => e.state === 'queued').sort((a,b) => a.priority-b.priority || (a.queuedAt < b.queuedAt ? -1 : a.queuedAt > b.queuedAt ? 1 : 0) || (a.key < b.key ? -1 : a.key > b.key ? 1 : 0))[0];
+  return backlog.entries.filter(e => e.state === 'queued').sort((a,b) => a.priority-b.priority || (Date.parse(a.queuedAt)-Date.parse(b.queuedAt)) || (a.key < b.key ? -1 : a.key > b.key ? 1 : 0))[0];
 }
 
 /** A daily candidate can complete exactly the first queued entry; it cannot edit its brief or any other entry. */
@@ -53,8 +61,19 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   const backlog = parseBacklog(await readFile(BACKLOG_PATH,'utf8'));
   const [command, identifier, ...words] = process.argv.slice(2);
   if (command === 'next') console.log(JSON.stringify(nextBacklogEntry(backlog) ?? null, null, 2));
+  else if (command === 'park') {
+    const entry=backlog.entries.find(e=>e.key===identifier || e.slug===identifier);
+    const [issueUrl, days, ...reasonWords]=words;
+    if(!entry || entry.state!=='queued') throw new Error('Only a queued entry can be parked.');
+    const selected=nextBacklogEntry(backlog);
+    if(selected?.key!==entry.key) throw new Error('Only the currently blocked first entry may be parked.');
+    entry.state='parked'; entry.blocker={issueUrl,failedDays:(days??'').split(','),reason:reasonWords.join(' ')};
+    parseBacklog(JSON.stringify(backlog));
+    await writeFile(BACKLOG_PATH,JSON.stringify(backlog,null,2)+'\n');
+    console.log('Parking change prepared locally. A normal reviewed Manager PR is required; no publication occurred.');
+  }
   else if (command === 'return') {
-    let entry = backlog.entries.find(e => e.key === identifier || e.slug === identifier || e.lessonId === identifier || e.destinationSlug === identifier);
+    let entry = backlog.entries.find(e => e.key === identifier || e.slug === identifier || e.lessonId === identifier || e.destinationSlug === identifier || e.legacySlugs?.includes(identifier));
     const reason = words.join(' ').trim();
     if (!reason) throw new Error('Use return <lesson key/slug/ID> <reason>.');
     if (!entry) {
@@ -73,9 +92,10 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
     }
     if (entry.destinationId) { entry.kind='revision'; entry.lessonId=entry.destinationId; entry.slug=entry.destinationSlug; }
     entry.state='queued'; entry.priority=0; entry.reason=reason; entry.criteria=[reason]; entry.queuedAt=new Date().toISOString();
+    delete entry.blocker;
     delete entry.completedAt; delete entry.destinationId; delete entry.destinationSlug;
     parseBacklog(JSON.stringify(backlog));
     await writeFile(BACKLOG_PATH, JSON.stringify(backlog,null,2)+'\n');
     console.log('Backlog change prepared locally. Submit through a normal reviewed PR; no publication occurred.');
-  } else throw new Error('Use next or return <lesson> <reason>.');
+  } else throw new Error('Use next, return <lesson> <reason>, or park <lesson> <issue URL> <failed days,comma-separated> <reason>.');
 }
