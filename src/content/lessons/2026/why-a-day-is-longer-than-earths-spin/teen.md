@@ -17,14 +17,16 @@ figure:
   width: 1000
   height: 1100
   afterParagraph: 1
-  alt: After one star-relative spin, Earth has moved along its orbit. The same surface marker must turn farther
-    to face the Sun.
-  caption: One spin restores the star alignment. A little more rotation restores solar noon. Orbit advance is greatly
-    exaggerated.
-  description: Top view, not to scale. At the first solar noon a surface marker faces the Sun. Earth then advances
-    along its orbit while making one complete rotation relative to distant stars. The marker points in its original
-    direction, but the Sun now lies in a different direction from Earth. Continuing the rotation brings the marker
-    back into alignment with the Sun. The real extra turn is about one degree, not the large angle drawn.
+  alt: A fixed Sun and two Earth positions show orbital advance. At the second position, one spin leaves the marker
+    misaligned; an extra turn faces the Sun.
+  caption: The Sun stays fixed while Earth advances. Orange marks one full spin; green marks the extra turn back
+    towards the Sun. Orbital advance is greatly exaggerated.
+  description: Top view, not to scale. At position 1, a surface marker faces the fixed Sun at solar noon. Earth
+    advances along the orbital arc to position 2 while making one full rotation relative to distant stars. The orange
+    marker again points left, parallel to its initial direction, but misses the Sun. A further turn brings the green
+    marker into alignment with the Sun. Orange and green at position 2 show successive orientations, not two simultaneous
+    markers. The real daily orbital advance is about one degree; the much larger drawn angle makes the changing
+    alignment visible.
 activity:
   prompt: Imagine Earth kept spinning but no longer travelled around the Sun. What would happen to the gap between
     a spin and a solar day?
