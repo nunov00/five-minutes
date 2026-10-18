@@ -1113,6 +1113,144 @@
       "criteria": [
         "Retain unless an Owner return or later evidence identifies a substantive weakness."
       ]
+    },
+    {
+      "key": "idea-why-windows-mist-up",
+      "kind": "new",
+      "slug": "why-windows-mist-up",
+      "title": "Why your windows mist up before the room feels damp",
+      "state": "queued",
+      "priority": 200,
+      "queuedAt": "2026-10-18T14:37:41Z",
+      "reason": "Explain dew point using a cold window and show why temperature matters as well as moisture.",
+      "criteria": [
+        "Verify authoritative accessible sources and current catalogue overlap.",
+        "Teach the mechanism in distinct Adult and Teen editions; assess useful figures and Teen prediction."
+      ]
+    },
+    {
+      "key": "idea-how-noise-cancelling-headphones-work",
+      "kind": "new",
+      "slug": "how-noise-cancelling-headphones-work",
+      "title": "How headphones can cancel a sound with another sound",
+      "state": "queued",
+      "priority": 200,
+      "queuedAt": "2026-10-18T14:37:41Z",
+      "reason": "Explain superposition, timing and why a steady engine hum is easier to cancel than a sudden voice.",
+      "criteria": [
+        "Verify authoritative accessible sources and current catalogue overlap.",
+        "Teach the mechanism in distinct Adult and Teen editions; assess useful figures and Teen prediction."
+      ]
+    },
+    {
+      "key": "idea-why-usb-c-cables-charge-differently",
+      "kind": "new",
+      "slug": "why-usb-c-cables-charge-differently",
+      "title": "Why two USB-C cables can charge the same phone differently",
+      "state": "queued",
+      "priority": 200,
+      "queuedAt": "2026-10-18T14:37:41Z",
+      "reason": "Separate the connector shape from negotiated power and cable capabilities, without recommending products or promising model-specific charging speeds.",
+      "criteria": [
+        "Verify authoritative accessible sources and current catalogue overlap.",
+        "Teach the mechanism in distinct Adult and Teen editions; assess useful figures and Teen prediction."
+      ]
     }
-  ]
+  ],
+  "pipeline": {
+    "assessedAt": "2026-10-18T14:55:14Z",
+    "summary": "Reassessed after Claude review against recent releases: QR codes, window condensation and queueing lead; the heat-pump revision remains fifth because it was published on 13 October. Ten candidates remain, with all 71 prior pool records and three new ideas preserved. Rankings are editorial judgements, not measured demand.",
+    "ranking": [
+      {
+        "key": "legacy-error-correcting-codes",
+        "headline": "Why a damaged QR code can still work",
+        "description": "Show how deliberately added redundancy can recover missing information, and distinguish it from simply repeating the whole message.",
+        "hook": "A torn corner does not always destroy the message.",
+        "rankReason": "Lead with a concrete visual puzzle and prediction: distinct from the lessons released since 13 October, without repeating a very recent revision. Check authoritative source access before drafting.",
+        "relevance": "Evergreen; compare with recent computing lessons before retaining this position.",
+        "evidenceUrls": []
+      },
+      {
+        "key": "idea-why-windows-mist-up",
+        "headline": "Why your windows mist up before the room feels damp",
+        "description": "Explain dew point using a cold window and show why temperature matters as well as moisture.",
+        "hook": "The window can be wet while the rest of the room looks dry.",
+        "rankReason": "A fresh household puzzle with a clear dew-point diagram; distinct from evaporation and heat-pump cycles.",
+        "relevance": "Evergreen household relevance, with seasonal interest in cooler weather; not a measured popularity claim.",
+        "evidenceUrls": []
+      },
+      {
+        "key": "legacy-queueing-theory",
+        "headline": "Why the last few empty spaces make a queue much slower",
+        "description": "Use irregular arrivals and limited spare capacity to show why a system near full use can have disproportionately long waits.",
+        "hook": "A service can be efficient on average and still keep you waiting.",
+        "rankReason": "Broad relevance across shops, roads and computers; one concrete worked example can make the mechanism memorable.",
+        "relevance": "Evergreen; no claim about current transport or service conditions.",
+        "evidenceUrls": []
+      },
+      {
+        "key": "idea-how-noise-cancelling-headphones-work",
+        "headline": "How headphones can cancel a sound with another sound",
+        "description": "Explain superposition, timing and why a steady engine hum is easier to cancel than a sudden voice.",
+        "hook": "Adding sound can make a room seem quieter.",
+        "rankReason": "A strong new sensory puzzle with explanatory wave figures; check that it remains distinct from resonance.",
+        "relevance": "Evergreen everyday technology; not tied to a product launch.",
+        "evidenceUrls": []
+      },
+      {
+        "key": "lesson-6bd86c0f-7cde-467c-abd1-ef6c8a2b51b1",
+        "headline": "How can cold outdoor air heat your home?",
+        "description": "Follow a refrigerant around the cycle to explain how electricity moves heat and why colder weather changes the work required.",
+        "hook": "A machine can deliver more heat than the electrical energy it consumes.",
+        "rankReason": "Retain the useful Adult-depth revision, but its original 13 October release is too recent to lead again. Fifth place balances its seasonal usefulness with broader recent coverage and separation from the window-condensation idea.",
+        "relevance": "Seasonal relevance to northern-hemisphere heating; evergreen physics. No claim of a verified news trend.",
+        "evidenceUrls": []
+      },
+      {
+        "key": "legacy-aircraft-pressurisation",
+        "headline": "Why aircraft windows have rounded corners",
+        "description": "Connect cabin pressure, repeated loading and stress concentrations to the shape of a window opening.",
+        "hook": "A small change in shape can change where stress builds up.",
+        "rankReason": "Clear engineering stakes and diagram potential; avoid reducing historical aircraft failures to one cause.",
+        "relevance": "Evergreen; do not tie to an accident without verified evidence and a separate scope decision.",
+        "evidenceUrls": []
+      },
+      {
+        "key": "lesson-15944494-03f6-40a5-b7ab-2fd7192b6836",
+        "headline": "Why freezing water expands instead of shrinking",
+        "description": "Build the explanation from the open structure of ice to its lower density, retaining the existing identity and strengthening its Adult depth.",
+        "hook": "The solid takes up more room than the liquid it came from.",
+        "rankReason": "Worthwhile existing revision with a clear visual mechanism; lower than the leading heating puzzle to avoid consecutive cold-water topics.",
+        "relevance": "Evergreen seasonal puzzle; avoid repeating the separate lake-freezing lesson.",
+        "evidenceUrls": []
+      },
+      {
+        "key": "idea-why-usb-c-cables-charge-differently",
+        "headline": "Why two USB-C cables can charge the same phone differently",
+        "description": "Separate the connector shape from negotiated power and cable capabilities, without recommending products or promising model-specific charging speeds.",
+        "hook": "Identical-looking plugs do not promise identical capabilities.",
+        "rankReason": "Useful everyday misunderstanding with a negotiation-flow figure; requires current official standards evidence before writing.",
+        "relevance": "Evergreen mechanism, but standards details need a fresh check; no current product claims verified at ideation.",
+        "evidenceUrls": []
+      },
+      {
+        "key": "lesson-b6fbc2e0-bcad-4ad7-8336-2fed9576e788",
+        "headline": "Why a bigger Greenland on a map does not mean a bigger country",
+        "description": "Show which properties a flat map can preserve and which it must distort, using a concrete projection comparison.",
+        "hook": "The world map quietly changes the apparent size of familiar places.",
+        "rankReason": "Strong existing revision with visual payoff and a different topic from the preceding technology and physics ideas.",
+        "relevance": "Evergreen; judge recent geography coverage at the next refresh.",
+        "evidenceUrls": []
+      },
+      {
+        "key": "lesson-7cd5dca8-857f-49e5-8fd5-16a03658b0b7",
+        "headline": "What goes wrong when a useful measure becomes the target?",
+        "description": "Follow one concrete example from a useful indicator to changed behaviour that makes the indicator less useful.",
+        "hook": "Improving the score can make the underlying result worse.",
+        "rankReason": "Broad relevance and a strong behavioural mechanism; needs a carefully bounded example and more depth than a slogan.",
+        "relevance": "Evergreen; no unsupported link to a current policy or public controversy.",
+        "evidenceUrls": []
+      }
+    ]
+  }
 }
