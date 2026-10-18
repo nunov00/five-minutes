@@ -70,5 +70,6 @@ imageRights:
   origin: original-code
   creator: OpenAI Codex for Five Minutes
   licence: Original explanatory artwork created for this publication; no third-party artwork reused.
-  evidence: Drawn with Pillow from geometric primitives and DejaVu Sans text during the 18 October 2026 recovery. Source
-    claims are in this lesson; creation method and rendered artwork reviewed on the recovery PR.
+  evidence: Original Pillow lake cross-sections and DejaVu Sans text, created for Five Minutes on 18 October 2026. Revised
+    after Claude review with a precise density title and distinct cold/deeper-water shading under ice. No third-party
+    artwork reused; source and rendered checks recorded on the correction PR.

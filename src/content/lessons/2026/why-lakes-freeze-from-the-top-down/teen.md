@@ -29,8 +29,8 @@ activity:
   prompt: Two samples of fresh liquid water are at 1°C and 4°C. If carefully layered without stirring, which is
     denser and tends to sit below?
   options:
-  - The 1°C water, because colder water is always denser
-  - The 4°C water, because fresh water is densest near 4°C
+  - The water at 1°C
+  - The water at 4°C
   answer: 1
   explanation: Colder water is not always denser. Below about 4°C, further cooling reduces fresh water’s density,
     so the 1°C sample can sit above the 4°C sample.
