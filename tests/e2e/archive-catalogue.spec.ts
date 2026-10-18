@@ -17,8 +17,8 @@ for (const lesson of lessons) for (const edition of ['adult', 'teen'] as const) 
       await page.setViewportSize({ width, height: width < 1000 ? 800 : 1000 });
       const response = await page.goto(`/${edition}/${lesson.metadata.slug}`);
       expect(response?.status()).toBe(200);
-      await expect(page.locator('.reader-header .eyebrow')).toContainText('Archive');
-      await expect(page.locator('.reader-header .eyebrow')).toContainText('Adapted');
+      await expect(page.locator('.reader-header .eyebrow')).not.toContainText('Archive');
+      await expect(page.locator('.reader-header .eyebrow')).not.toContainText('Adapted');
       await expect(page.locator('.lesson-body').first()).toBeVisible();
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 
@@ -62,9 +62,9 @@ for (const lesson of lessons) for (const edition of ['adult', 'teen'] as const) 
   });
 }
 
-test('archive catalogue stays outside Today and Earlier', async ({ page }) => {
+test('unrevised transferred lessons stay outside Today and Earlier', async ({ page }) => {
   await page.goto('/');
-  for (const lesson of lessons) {
+  for (const lesson of lessons.filter(l => !l.metadata.revisedAt)) {
     await expect(page.locator(`[data-today-edition] a[href$="/${lesson.metadata.slug}"]`)).toHaveCount(0);
     await expect(page.locator(`.earlier-list a[href$="/${lesson.metadata.slug}"]`)).toHaveCount(0);
   }

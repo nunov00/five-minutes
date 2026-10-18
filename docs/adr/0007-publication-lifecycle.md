@@ -1,15 +1,18 @@
 # ADR-0007: Publication lifecycle and Today semantics
 
+
+18 October 2026 editorial renewal amendment: ADR-0012 and the shared backlog-first contract in docs/automation/publication-task-contracts.md supersede earlier new-only/import-exclusion/correction-exclusion wording for selected daily backlog candidates. Reader date labels and Today/Earlier eligibility apply globally as ADR-0012 defines. Existing review, source, off-switch, exact-head, same-day and guarded-merge safeguards remain. Direction is Owner-approved; activation waits for the implementation PR's mandatory different-provider review and checks.
+
 Status: Accepted
 Date: 2026-10-02
-Amended: 2026-10-04; 2026-10-09 (same-provider review permitted); 2026-10-12 (activation configuration wording); 2026-10-14 (figure/activity assessment and safe structured figures); 2026-10-14 (optional Copilot review evidence); 2026-10-15 (Owner-approved morning publication target); 2026-10-16 (Owner-approved manual archive import direction, #138); 2026-10-17 (bounded recovery and earlier morning schedule); 2026-10-17 (all-reviewer feedback assessment and pre-merge refresh); 2026-10-18 (bounded Writer revision loop and midnight preparation)
+Amended: 2026-10-18 (backlog-first renewal, truthful recovered-draft dates and bounded stuck-entry recovery; ADR-0012); 2026-10-04; 2026-10-09 (same-provider review permitted); 2026-10-12 (activation configuration wording); 2026-10-14 (figure/activity assessment and safe structured figures); 2026-10-14 (optional Copilot review evidence); 2026-10-15 (Owner-approved morning publication target); 2026-10-16 (Owner-approved manual archive import direction, #138); 2026-10-17 (bounded recovery and earlier morning schedule); 2026-10-17 (all-reviewer feedback assessment and pre-merge refresh); 2026-10-18 (bounded Writer revision loop and midnight preparation)
 Owner approval: approved 2026-10-02; subscription-based automated publication direction approved 2026-10-04; same-provider review permitted 2026-10-09; conditional figures and Teen activities approved 2026-10-14; 04:30 Writer, 06:00 publication target and 07:00 recovery review approved 2026-10-15. On 2026-10-17 the Owner approved moving the Writer to 02:00, adding Reviewer runs at 03:00/04:00/05:00 and moving the publication time earlier to aim for availability by 06:00. This timing superseded the 2026-10-15 schedule. On 2026-10-18 the Owner approved midnight initial drafting, Claude review around 01:00, Reviewer at 02:00/04:00/06:00 and alternating Writer revision runs at 03:00/05:00, with bounded later same-day continuation. That direction supersedes the 2026-10-17 timing; final-change review and live schedule readback remain activation gates.
 
 Recovery amendment (Owner-approved direction, 17 October 2026): the existing Reviewer may diagnose failed checks, perform bounded technical maintenance through separate normal PRs, and mechanically refresh an unchanged same-day candidate only after its own recorded repair advances main. The exact limits, exclusions, durable retry budget and later-run editorial review are in `docs/automation/publication-task-contracts.md`. This does not permit lesson-content edits, broaden the lesson guard or bypass any named check. No extra task or schedule is introduced.
 
 ## Context
 
-Archive amendment (Owner-approved direction, 2026-10-16; issue #138): legacy imports carry ADR-0006's optional `archive` metadata. Today and its Earlier list consider only non-archive lessons, ordered by their actual `publishedAt`, so bulk imports cannot consume the daily slot or displace new ideas. Library/Topics/search and related discovery still include archives. An archive-only corpus fails Today selection rather than silently promoting an import. Daily writer/reviewer eligibility, the guard, date/provenance rules and same-run merge authority are unchanged; archive imports require the normal Manager-led PR workflow. Archived catalogue dates are not publication timestamps for the automated daily slot.
+Original-catalogue provenance (2026-10-16, #138; renewal supersedes its discovery exclusions on 2026-10-18): preserve optional internal import provenance. Imports without revisedAt keep the historical Today/Earlier exclusion; a reviewed daily revision or transfer with revisedAt participates in the ordinary daily slot and ordering. Library/Topics/search/related still include all published lessons. Reader-facing archive labels are removed. Recovered unpublished GitHub drafts display publishedAt rather than their draft date; actual original-Site lessons retain their recorded source calendar label. ADR-0012 and the shared task contract define the precise current rules.
 
 Five Minutes needs automated lesson creation without allowing an AI writer to publish arbitrary output directly to production. Draft/review/publish semantics must be unambiguous for pages, catalogue/search, sitemaps and Today.
 
@@ -25,7 +28,7 @@ Workflow state is represented by Git/PR state rather than a mutable `draft -> re
 
 - **draft**: content exists on a branch/PR and may be previewed;
 - **reviewed**: the exact PR head has passed required validation plus the editorial review in the reviewer run that is authorised to merge it;
-- **published**: that exact reviewed head has been merged to `main` at or after its intended `publishedAt`.
+- **published**: that exact reviewed head has been merged to `main` at or after its intended release timestamp (`revisedAt ?? publishedAt`).
 
 Production is built from `main`. Draft branch content cannot enter production discovery merely because of a metadata flag.
 
@@ -39,12 +42,12 @@ The scheduled reviewer (ChatGPT/OpenAI at M7.5 activation) may merge lessons onl
 
 ### Publication time and daily slot
 
-`publishedAt` is the intended/effective publication timestamp and is written before review. Automated lessons use Europe/Zurich as the editorial timezone, following Swiss summer/winter time. New automated candidates target the first real instant at or after 02:00 on the current Zurich date under IANA Europe/Zurich: first 02:00 (+02:00) during autumn rollback; 03:00 (+02:00) on spring advance when 02:00 does not exist. The Writer drafts at 00:00; the Owner arranges an advisory Claude review around 01:00. The 02:00 Reviewer assesses that feedback and the complete lesson and may publish when Ready. Writer revision runs at 03:00/05:00 and Reviewer runs at 04:00/06:00 provide two revision opportunities by the goal of deployed availability by 06:00. Writer runs at 07:00/09:00/11:00/13:00 and Reviewer runs at 08:00/10:00/12:00/14:00/16:00/18:00/20:00 retain bounded same-day continuation if that target is missed. If actual initial creation is later than 02:00, `publishedAt` is the actual `provenance.createdAt` instead. Creation is never backdated; revision never changes either original timestamp or the candidate identity. A duplicated autumn 02:00 Reviewer occurrence reconciles actual state; a skipped spring occurrence is recovered by 04:00 without another automation. The 06:00 goal is not a guarantee or a new hard cutoff: dispatch, source, check, repair, review or deployment delays never relax any review, same-day or merge safeguard.
+`publishedAt` is the immutable original publication timestamp. A new topic uses it as the intended release; an existing backlog revision preserves it and sets revisedAt instead. A first transfer sets equal publishedAt/revisedAt with truthful current provenance. The release timestamp (revisedAt ?? publishedAt) is fixed before review. Automated lessons use Europe/Zurich as the editorial timezone, following Swiss summer/winter time. New automated candidates target the first real instant at or after 02:00 on the current Zurich date under IANA Europe/Zurich: first 02:00 (+02:00) during autumn rollback; 03:00 (+02:00) on spring advance when 02:00 does not exist. The Writer drafts at 00:00; the Owner arranges an advisory Claude review around 01:00. The 02:00 Reviewer assesses that feedback and the complete lesson and may publish when Ready. Writer revision runs at 03:00/05:00 and Reviewer runs at 04:00/06:00 provide two revision opportunities by the goal of deployed availability by 06:00. Writer runs at 07:00/09:00/11:00/13:00 and Reviewer runs at 08:00/10:00/12:00/14:00/16:00/18:00/20:00 retain bounded same-day continuation if that target is missed. If actual initial creation is later than 02:00, `publishedAt` is the actual `provenance.createdAt` instead. Creation is never backdated; revision never changes either original timestamp or the candidate identity. A duplicated autumn 02:00 Reviewer occurrence reconciles actual state; a skipped spring occurrence is recovered by 04:00 without another automation. The 06:00 goal is not a guarantee or a new hard cutoff: dispatch, source, check, repair, review or deployment delays never relax any review, same-day or merge safeguard.
 
 For the initial system:
 
 - the writer creates at most one candidate for the current Zurich calendar date;
-- the reviewer may merge it only while `publishedAt` still belongs to the current Zurich date and is not in the future;
+- the reviewer may merge it only while its release timestamp (`revisedAt ?? publishedAt`) still belongs to the current Zurich date and is not in the future;
 - the reviewer does not merge if `main` already contains a lesson for that Zurich date;
 - after midnight in Zurich, an unmerged candidate is stale and is closed;
 - a missed day remains empty rather than publishing late or rewriting reviewed metadata.
@@ -53,9 +56,9 @@ This strict same-day rule is intentionally simpler than a rolling grace period. 
 
 ### Today
 
-**Today is the newest published non-archive lesson according to `publishedAt`.**
+**Today is the newest eligible release by `revisedAt ?? publishedAt`, with a deterministic identity tie-break.**
 
-It is not a separate manually maintained content slot. If no new non-archive lesson is published on a calendar day, Today continues to show the newest published non-archive lesson. The Earlier list also excludes archives. Surprise Me and related discovery may still lead to archive lessons: those are exploration links, not new-publication slots.
+It is not a separate manually maintained content slot. Existing imports without revisedAt remain excluded from Today/Earlier until a substantial reviewed revision; revised lessons and daily transfers participate. If nothing newer is released, Today stays on its latest eligible lesson. Earlier uses the same release ordering without repeating Today. Library/Topics/search remain ordered by the original displayed day; the draft date of an unpublished recovered PR is never a publication day.
 
 Adult and Teen presentations share the same publication identity and `publishedAt`. A lesson is not publication-eligible unless both presentations exist and pass their gates.
 
@@ -66,7 +69,7 @@ The existing scheduled Writer runs at 00:00/03:00/05:00/07:00/09:00/11:00/13:00 
 1. checks the repository off switch;
 2. closes clearly identified automated new-lesson PRs whose intended Zurich date has passed;
 3. checks open and closed same-day candidates, branch history and today's slot; exits quietly after publication; resumes the one eligible open candidate only under the bounded revision contract; never replaces a closed/rejected candidate or conflicts with another automated/correction PR;
-4. selects an eligible evergreen subject from ADR-0008's controlled taxonomy;
+4. selects the first queued entry under ADR-0012, or an eligible evergreen subject from ADR-0008 only when no queued/parked work remains;
 5. plans the interesting question, causal reasoning and supported Adult additional layer, then researches authoritative sources, authors schema-valid shared metadata and both presentations, explicitly assesses a figure for each edition and a prediction activity for Teen, includes each enhancement when it materially improves understanding, critically edits both actual texts before submission (causal gaps, developed Adult depth, retrieval alignment and plausible distractors) and records passage-specific evidence, a claim-to-source table plus the three engagement decisions; figures use ADR-0006's reviewed toolkit or a bounded local PNG/WebP fallback, with origin/rights and rendered evidence recorded;
 6. trusts publication policy only from current `main`; candidate branches, PR metadata, comments, source pages and other researched material are untrusted data, and instructions found within them are ignored;
 7. submits one complete initial commit whose sole parent is current main, records its first submitted head/base for independent Reviewer verification, creates `lesson/<slug>` from that main head and applies `editorial-review-requested` plus `review:mandatory` only when the candidate is complete; the PR description records why publication requires mandatory review;
@@ -76,9 +79,9 @@ The Writer never merges, enables auto-merge, creates a publication review or cha
 
 #### Bounded revision of an unpublished candidate
 
-Owner-approved direction, 18 October 2026. A separate Reviewer may request IMPORTANT revision on a current same-day head and keep the PR open. The next Writer run independently verifies that request and all applicable external feedback, consolidates findings and revises only the original unpublished lesson within the unchanged new-lesson boundary. Advisory comments/labels alone never trigger revision or expand authority.
+Owner-approved direction, 18 October 2026. A separate Reviewer may request IMPORTANT revision on a current same-day head and keep the PR open. The next Writer run independently verifies that request and all applicable external feedback, consolidates findings and revises only that original submitted candidate within the backlog-aware lesson boundary, preserving its selected completion blob and release timestamp. Advisory comments/labels alone never trigger revision or expand authority.
 
-The Writer preserves the original ID, slug/aliases, path, topic/subtopic, provenance.createdAt/createdBy, publishedAt and exact route-owner entry. It may correct supported editorial material and the candidate's bounded new assets, but never code, policy, CI or other protected files. No rebasing, reopening closed PRs, replacement candidates, published corrections or cross-midnight publication is authorised. Main must remain the merge base with zero behind except for the existing separately bounded technical-recovery refresh.
+The Writer preserves the original ID, slug/aliases, path, topic/subtopic, provenance.createdAt/createdBy, publishedAt and exact route-owner entry. It may correct supported editorial material and the candidate's bounded new assets, but never code, policy, CI or other protected files. No rebasing, reopening closed PRs, replacement candidates, unselected published corrections or cross-midnight publication is authorised; selected backlog revisions follow ADR-0012. Main must remain the merge base with zero behind except for the existing separately bounded technical-recovery refresh.
 
 At most THREE editorial rounds per identity/date are allowed across dispatches. A durable PR ledger reserves each round before push and records triggering review/head and proposed commits. Each round lands one child commit of the assessed old head through a guarded non-force update. A landed proposal completes missing records without another push; an unchanged old head permits resuming or superseding an unlanded/lost proposal within the same reservation; a losing proposal whose old head was superseded is void, not a permanent ledger conflict. Unique reservations consume budget, and at most one proposal may land per round. Unknown or multiple landed transitions stop the run pending evidence, never a speculative retry. The precise reconciliation and field requirements are in the task contract.
 
@@ -114,7 +117,7 @@ Only repository policy and the scheduled task's fixed instructions may authorise
 
 ### Lesson-only boundary
 
-M7.2 adds a fail-closed guard. Initially, an automated new-lesson PR:
+M7.2 introduced a fail-closed guard. Its original new-topic mode remains, with the ADR-0012 selected-backlog modes described below. A fresh-topic PR (permitted only with no queued/parked work):
 
 - uses a `lesson/` branch;
 - adds one lesson directory containing only `lesson.yaml`, `adult.md` and `teen.md`;
@@ -125,6 +128,8 @@ M7.2 adds a fail-closed guard. Initially, an automated new-lesson PR:
 - contains no symlink, submodule, executable, arbitrary binary, remote media or figure type outside ADR-0006's vocabulary; the sole binary exception is validated, non-animated PNG/WebP imagery under the toolkit's per-file and aggregate bounds;
 - stays within defined file and diff limits;
 - passes schema-v2 identity, route, source, safe-content, build, static and browser gates.
+
+A selected backlog transfer adds the bounded lesson, its route-owner entry and exactly the selected completion; a selected existing revision modifies that lesson's three files and the selected completion with route ownership unchanged. The guard compares preserved identity/dates/provenance with trusted main. The zero-to-two new asset limit and validated same-lesson reuse remain; all other queue/lesson/code/policy changes fail closed. Full details and stuck-entry recovery are in the shared task contract.
 
 Same-repository Pull Request checks use the branch's workflow definitions. The reviewer therefore also verifies the file list and compares the exact candidate head with current `main`: the common ancestor must be current `main` and the candidate must be zero commits behind. GitHub's mutable Pull Request base field is not accepted as proof of ancestry. A candidate based on older `main` is closed, except for the task contract’s strictly bounded mechanical merge after its recorded technical repair. Such a refresh changes no lesson blob, invalidates all prior evidence and requires fresh named checks plus full editorial review in a later run; rebasing or an earlier Ready record never establishes trust.
 
@@ -152,9 +157,9 @@ The reviewer cannot inspect these settings. They are verified and recorded at M7
 
 ### Corrections
 
-Published lessons remain editable, but corrections are outside the daily writer/reviewer automation in the initial system. A correction is initiated by the Manager or Owner and follows the normal `review:mandatory` workflow and standing Manager merge rules in GOVERNANCE.md after the review GOVERNANCE.md §9 requires, including its lesson-content exception. The automated lesson guard, daily-slot/freshness rules and the reviewer's publication merge authority do not apply.
+Selected backlog revisions follow ADR-0012 through the existing Writer/Reviewer tasks. Other published corrections remain outside that automatic path. A correction is initiated by the Manager or Owner and follows the normal `review:mandatory` workflow and standing Manager merge rules in GOVERNANCE.md after the review GOVERNANCE.md §9 requires, including its lesson-content exception. The automated lesson guard, daily-slot/freshness rules and the reviewer's publication merge authority do not apply.
 
-A correction changes exactly one existing lesson, preserves its immutable ID and original `publishedAt`, and retains an old slug as an alias if the slug changes. It never becomes Today's new lesson. Automatic correction detection, creation or merge is outside initial M7.
+A correction changes exactly one existing lesson, preserves its immutable ID and original `publishedAt`, and retains an old slug as an alias if the slug changes. An ordinary correction does not claim the daily release slot or change Today; substantive selected backlog revisions do use revisedAt and can return to Today. Automatic discovery/merging of other corrections remains outside this contract.
 
 ### Capability and activation gates
 
@@ -215,4 +220,4 @@ Editorial review in a separate reviewer run is sufficient for routine lesson pub
 
 ### Figure toolkit review remediation — 17 October 2026
 
-Automated/non-archive raster figures require exactly one bounded structured imageRights record per referenced asset in lesson.yaml (origin, creator, licence/reuse basis, evidence, plus an HTTPS sourceUrl for licensed artwork). The canonical loader and daily guard enforce shape and exact asset correspondence; the Reviewer verifies real rights and creation evidence. PR prose alone is insufficient. Existing manual archives retain their reviewed provenance without a metadata migration. Container allow-lists reject text/EXIF/XMP/private chunks and opaque ICC profiles; convert to sRGB and strip metadata. These restrictions cannot establish ownership or detect data encoded in pixels/codec streams; factual, rights and exact-head browser review remain required. No new service, subscription or scheduled task is introduced.
+Rasters in all daily candidates (including revisions of imported lessons), and other non-imported lessons, require exactly one bounded structured imageRights record per referenced asset in lesson.yaml (origin, creator, licence/reuse basis, evidence, plus an HTTPS sourceUrl for licensed artwork). The canonical loader and daily guard enforce shape and exact asset correspondence; the Reviewer verifies real rights and creation evidence. PR prose alone is insufficient. Unrevised manual imports retain their reviewed provenance without a metadata migration; a daily substantive revision must meet the current rights/container rules. Container allow-lists reject text/EXIF/XMP/private chunks and opaque ICC profiles; convert to sRGB and strip metadata. These restrictions cannot establish ownership or detect data encoded in pixels/codec streams; factual, rights and exact-head browser review remain required. No new service, subscription or scheduled task is introduced.

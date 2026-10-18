@@ -21,7 +21,7 @@ function candidate(figure:unknown=orbit){
  const yaml=stringify({schemaVersion:2,id,slug,aliases:[],publishedAt:'2026-10-17T03:00:00+02:00',topic:'science',subtopic:'physics',concepts:['test'],related:{manual:[],exclude:[]},sources:[],provenance:{createdAt:'2026-10-17T02:15:00+02:00',createdBy:{type:'ai',provider:'openai',model:'test',promptVersion:'test'},reviews:[]}});
  const body=`---\n${stringify({title:'Test',description:'Description',takeaway:'Insight',question:'Why?',answer:'Because',searchTerms:['test'],figure})}---\nBody.\n`;
  const paths=[`${root}/adult.md`,`${root}/lesson.yaml`,`${root}/teen.md`];
- return {pr:{headRef:`lesson/${slug}`,headSha:head,labels:['editorial-review-requested','review:mandatory']},triggerHeadSha:head,currentBaseSha:base,mergeBaseSha:base,behindBy:0,
+ return {baseBacklogText:JSON.stringify({version:1,entries:[]}),pr:{headRef:`lesson/${slug}`,headSha:head,labels:['editorial-review-requested','review:mandatory']},triggerHeadSha:head,currentBaseSha:base,mergeBaseSha:base,behindBy:0,
   files:[...paths.map(filename=>({filename,status:'added',additions:20,deletions:0,changes:20})),{filename:'src/content/route-ownership.json',status:'modified',additions:1,deletions:0,changes:1}],
   blobs:Object.fromEntries(paths.map(path=>[path,textBlob(path.endsWith('.yaml')?yaml:body)])) as Record<string,any>,baseRegistryText:'{}',headRegistryBlob:textBlob(JSON.stringify({[slug]:id})),now:'2026-10-17T05:00:00+02:00'};
 }
@@ -95,7 +95,7 @@ describe('reusable figure contracts and trusted-base parity',()=>{
    else{
     const u=new URL(url),path=decodeURIComponent(u.pathname.split('/contents/')[1]),ref=u.searchParams.get('ref');
     expect([base,head]).toContain(ref);
-    const text=path==='src/content/route-ownership.json'?(ref===base?v.baseRegistryText:v.headRegistryBlob.text):v.blobs[path]?.text;
+    const text=path==='editorial/backlog.json'?JSON.stringify({version:1,entries:[]}):path==='src/content/route-ownership.json'?(ref===base?v.baseRegistryText:v.headRegistryBlob.text):v.blobs[path]?.text;
     const bytes=text===undefined?v.blobs[path]?.bytes:Buffer.from(text);
     if(!bytes)throw Error(`Unexpected path ${path}`);
     data={type:'file',encoding:'base64',content:bytes.toString('base64'),size:bytes.length};

@@ -1,5 +1,8 @@
 # Operations and Delivery
 
+
+18 October 2026 editorial renewal amendment: ADR-0012 and the shared backlog-first contract in docs/automation/publication-task-contracts.md supersede earlier new-only/import-exclusion/correction-exclusion wording for selected daily backlog candidates. Reader date labels and Today/Earlier eligibility apply globally as ADR-0012 defines. Existing review, source, off-switch, exact-head, same-day and guarded-merge safeguards remain. Direction is Owner-approved; activation waits for the implementation PR's mandatory different-provider review and checks.
+
 ## Repository structure
 
 ```text

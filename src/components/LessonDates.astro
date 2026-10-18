@@ -1,0 +1,8 @@
+---
+import { formatEditorialDate } from '../lib/today';
+import { editorialTimestamp } from '../lib/editorial-order';
+interface Props { publishedAt: string; originalDate?: string; revisedAt?: string; }
+const { publishedAt, originalDate, revisedAt } = Astro.props;
+const original = editorialTimestamp({ publishedAt, archiveDate: originalDate });
+---
+<time datetime={original}>{formatEditorialDate(original)}</time>{revisedAt && <> · Revised on <time datetime={revisedAt}>{formatEditorialDate(revisedAt)}</time></>}

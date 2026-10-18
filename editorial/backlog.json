@@ -1,0 +1,1118 @@
+{
+  "version": 1,
+  "entries": [
+    {
+      "key": "legacy-kidneys-urine",
+      "kind": "import",
+      "slug": "kidneys-urine",
+      "title": "How Your Kidneys Concentrate Urine",
+      "originalDate": "2026-08-31",
+      "sourceUrl": "https://five-minutes.vitoria-nuno.chatgpt.site/lesson/kidneys-urine",
+      "state": "queued",
+      "priority": 121,
+      "queuedAt": "2026-10-18T10:22:43Z",
+      "reason": "Remaining original catalogue lesson: transfer through the daily editorial cycle.",
+      "criteria": [
+        "Research and rewrite both editions against current EDITORIAL.md; verify current catalogue overlap before creating an identity.",
+        "Assess useful figures and Teen prediction; complete source, rendered and separate-run publication review."
+      ]
+    },
+    {
+      "key": "legacy-habit-loops",
+      "kind": "import",
+      "slug": "habit-loops",
+      "title": "Habit Loops — How Behaviour Becomes Automatic",
+      "originalDate": "2026-07-31",
+      "sourceUrl": "https://five-minutes.vitoria-nuno.chatgpt.site/lesson/habit-loops",
+      "state": "queued",
+      "priority": 100,
+      "queuedAt": "2026-10-18T10:22:43Z",
+      "reason": "Remaining original catalogue lesson: transfer through the daily editorial cycle.",
+      "criteria": [
+        "Research and rewrite both editions against current EDITORIAL.md; verify current catalogue overlap before creating an identity.",
+        "Assess useful figures and Teen prediction; complete source, rendered and separate-run publication review."
+      ]
+    },
+    {
+      "key": "legacy-sleep-memory",
+      "kind": "import",
+      "slug": "sleep-memory",
+      "title": "Sleep and Memory — What Happens After You Study",
+      "originalDate": "2026-08-01",
+      "sourceUrl": "https://five-minutes.vitoria-nuno.chatgpt.site/lesson/sleep-memory",
+      "state": "queued",
+      "priority": 101,
+      "queuedAt": "2026-10-18T10:22:43Z",
+      "reason": "Remaining original catalogue lesson: transfer through the daily editorial cycle.",
+      "criteria": [
+        "Research and rewrite both editions against current EDITORIAL.md; verify current catalogue overlap before creating an identity.",
+        "Assess useful figures and Teen prediction; complete source, rendered and separate-run publication review."
+      ]
+    },
+    {
+      "key": "legacy-walking-creativity",
+      "kind": "import",
+      "slug": "walking-creativity",
+      "title": "Walking and Creative Thinking — Why Movement Can Help",
+      "originalDate": "2026-08-02",
+      "sourceUrl": "https://five-minutes.vitoria-nuno.chatgpt.site/lesson/walking-creativity",
+      "state": "queued",
+      "priority": 102,
+      "queuedAt": "2026-10-18T10:22:43Z",
+      "reason": "Remaining original catalogue lesson: transfer through the daily editorial cycle.",
+      "criteria": [
+        "Research and rewrite both editions against current EDITORIAL.md; verify current catalogue overlap before creating an identity.",
+        "Assess useful figures and Teen prediction; complete source, rendered and separate-run publication review."
+      ]
+    },
+    {
+      "key": "legacy-pareto-principle",
+      "kind": "import",
+      "slug": "pareto-principle",
+      "title": "The Pareto Principle — Where Effort Has the Most Effect",
+      "originalDate": "2026-08-03",
+      "sourceUrl": "https://five-minutes.vitoria-nuno.chatgpt.site/lesson/pareto-principle",
+      "state": "queued",
+      "priority": 103,
+      "queuedAt": "2026-10-18T10:22:43Z",
+      "reason": "Remaining original catalogue lesson: transfer through the daily editorial cycle.",
+      "criteria": [
+        "Research and rewrite both editions against current EDITORIAL.md; verify current catalogue overlap before creating an identity.",
+        "Assess useful figures and Teen prediction; complete source, rendered and separate-run publication review."
+      ]
+    },
+    {
+      "key": "legacy-circle-competence",
+      "kind": "import",
+      "slug": "circle-competence",
+      "title": "The Circle of Competence — Know What You Know",
+      "originalDate": "2026-08-06",
+      "sourceUrl": "https://five-minutes.vitoria-nuno.chatgpt.site/lesson/circle-competence",
+      "state": "queued",
+      "priority": 104,
+      "queuedAt": "2026-10-18T10:22:43Z",
+      "reason": "Remaining original catalogue lesson: transfer through the daily editorial cycle.",
+      "criteria": [
+        "Research and rewrite both editions against current EDITORIAL.md; verify current catalogue overlap before creating an identity.",
+        "Assess useful figures and Teen prediction; complete source, rendered and separate-run publication review."
+      ]
+    },
+    {
+      "key": "legacy-cognitive-offloading",
+      "kind": "import",
+      "slug": "cognitive-offloading",
+      "title": "Cognitive Offloading — When GPS Does the Navigating",
+      "originalDate": "2026-08-07",
+      "sourceUrl": "https://five-minutes.vitoria-nuno.chatgpt.site/lesson/cognitive-offloading",
+      "state": "queued",
+      "priority": 105,
+      "queuedAt": "2026-10-18T10:22:43Z",
+      "reason": "Remaining original catalogue lesson: transfer through the daily editorial cycle.",
+      "criteria": [
+        "Research and rewrite both editions against current EDITORIAL.md; verify current catalogue overlap before creating an identity.",
+        "Assess useful figures and Teen prediction; complete source, rendered and separate-run publication review."
+      ]
+    },
+    {
+      "key": "legacy-time-perception",
+      "kind": "import",
+      "slug": "time-perception",
+      "title": "Time Perception — Why Years Can Feel Faster",
+      "originalDate": "2026-08-08",
+      "sourceUrl": "https://five-minutes.vitoria-nuno.chatgpt.site/lesson/time-perception",
+      "state": "queued",
+      "priority": 106,
+      "queuedAt": "2026-10-18T10:22:43Z",
+      "reason": "Remaining original catalogue lesson: transfer through the daily editorial cycle.",
+      "criteria": [
+        "Research and rewrite both editions against current EDITORIAL.md; verify current catalogue overlap before creating an identity.",
+        "Assess useful figures and Teen prediction; complete source, rendered and separate-run publication review."
+      ]
+    },
+    {
+      "key": "legacy-confirmation-bias",
+      "kind": "import",
+      "slug": "confirmation-bias",
+      "title": "Confirmation Bias — The Evidence We Prefer",
+      "originalDate": "2026-08-09",
+      "sourceUrl": "https://five-minutes.vitoria-nuno.chatgpt.site/lesson/confirmation-bias",
+      "state": "queued",
+      "priority": 107,
+      "queuedAt": "2026-10-18T10:22:43Z",
+      "reason": "Remaining original catalogue lesson: transfer through the daily editorial cycle.",
+      "criteria": [
+        "Research and rewrite both editions against current EDITORIAL.md; verify current catalogue overlap before creating an identity.",
+        "Assess useful figures and Teen prediction; complete source, rendered and separate-run publication review."
+      ]
+    },
+    {
+      "key": "legacy-predictive-processing",
+      "kind": "import",
+      "slug": "predictive-processing",
+      "title": "Why You Cannot Easily Tickle Yourself",
+      "originalDate": "2026-08-11",
+      "sourceUrl": "https://five-minutes.vitoria-nuno.chatgpt.site/lesson/predictive-processing",
+      "state": "queued",
+      "priority": 108,
+      "queuedAt": "2026-10-18T10:22:43Z",
+      "reason": "Remaining original catalogue lesson: transfer through the daily editorial cycle.",
+      "criteria": [
+        "Research and rewrite both editions against current EDITORIAL.md; verify current catalogue overlap before creating an identity.",
+        "Assess useful figures and Teen prediction; complete source, rendered and separate-run publication review."
+      ]
+    },
+    {
+      "key": "legacy-brooks-law",
+      "kind": "import",
+      "slug": "brooks-law",
+      "title": "Brooks’s Law — Why More People Can Delay a Project",
+      "originalDate": "2026-08-12",
+      "sourceUrl": "https://five-minutes.vitoria-nuno.chatgpt.site/lesson/brooks-law",
+      "state": "queued",
+      "priority": 109,
+      "queuedAt": "2026-10-18T10:22:43Z",
+      "reason": "Remaining original catalogue lesson: transfer through the daily editorial cycle.",
+      "criteria": [
+        "Research and rewrite both editions against current EDITORIAL.md; verify current catalogue overlap before creating an identity.",
+        "Assess useful figures and Teen prediction; complete source, rendered and separate-run publication review."
+      ]
+    },
+    {
+      "key": "legacy-diminishing-returns",
+      "kind": "import",
+      "slug": "diminishing-returns",
+      "title": "Diminishing Returns — When More Brings Less",
+      "originalDate": "2026-08-14",
+      "sourceUrl": "https://five-minutes.vitoria-nuno.chatgpt.site/lesson/diminishing-returns",
+      "state": "queued",
+      "priority": 110,
+      "queuedAt": "2026-10-18T10:22:43Z",
+      "reason": "Remaining original catalogue lesson: transfer through the daily editorial cycle.",
+      "criteria": [
+        "Research and rewrite both editions against current EDITORIAL.md; verify current catalogue overlap before creating an identity.",
+        "Assess useful figures and Teen prediction; complete source, rendered and separate-run publication review."
+      ]
+    },
+    {
+      "key": "legacy-smallpox-eradication",
+      "kind": "import",
+      "slug": "smallpox-eradication",
+      "title": "How Ring Vaccination Helped Eradicate Smallpox",
+      "originalDate": "2026-08-17",
+      "sourceUrl": "https://five-minutes.vitoria-nuno.chatgpt.site/lesson/smallpox-eradication",
+      "state": "queued",
+      "priority": 111,
+      "queuedAt": "2026-10-18T10:22:43Z",
+      "reason": "Remaining original catalogue lesson: transfer through the daily editorial cycle.",
+      "criteria": [
+        "Research and rewrite both editions against current EDITORIAL.md; verify current catalogue overlap before creating an identity.",
+        "Assess useful figures and Teen prediction; complete source, rendered and separate-run publication review."
+      ]
+    },
+    {
+      "key": "legacy-wifi-propagation",
+      "kind": "import",
+      "slug": "wifi-propagation",
+      "title": "Why 2.4 GHz and 5 GHz Wi-Fi Behave Differently",
+      "originalDate": "2026-08-18",
+      "sourceUrl": "https://five-minutes.vitoria-nuno.chatgpt.site/lesson/wifi-propagation",
+      "state": "queued",
+      "priority": 112,
+      "queuedAt": "2026-10-18T10:22:43Z",
+      "reason": "Remaining original catalogue lesson: transfer through the daily editorial cycle.",
+      "criteria": [
+        "Research and rewrite both editions against current EDITORIAL.md; verify current catalogue overlap before creating an identity.",
+        "Assess useful figures and Teen prediction; complete source, rendered and separate-run publication review."
+      ]
+    },
+    {
+      "key": "legacy-roman-concrete",
+      "kind": "import",
+      "slug": "roman-concrete",
+      "title": "Roman Concrete — How Some Cracks Can Seal",
+      "originalDate": "2026-08-19",
+      "sourceUrl": "https://five-minutes.vitoria-nuno.chatgpt.site/lesson/roman-concrete",
+      "state": "queued",
+      "priority": 113,
+      "queuedAt": "2026-10-18T10:22:43Z",
+      "reason": "Remaining original catalogue lesson: transfer through the daily editorial cycle.",
+      "criteria": [
+        "Research and rewrite both editions against current EDITORIAL.md; verify current catalogue overlap before creating an identity.",
+        "Assess useful figures and Teen prediction; complete source, rendered and separate-run publication review."
+      ]
+    },
+    {
+      "key": "legacy-aircraft-pressurisation",
+      "kind": "import",
+      "slug": "aircraft-pressurisation",
+      "title": "Aircraft Cabins — Pressure and Rounded Windows",
+      "originalDate": "2026-08-20",
+      "sourceUrl": "https://five-minutes.vitoria-nuno.chatgpt.site/lesson/aircraft-pressurisation",
+      "state": "queued",
+      "priority": 114,
+      "queuedAt": "2026-10-18T10:22:43Z",
+      "reason": "Remaining original catalogue lesson: transfer through the daily editorial cycle.",
+      "criteria": [
+        "Research and rewrite both editions against current EDITORIAL.md; verify current catalogue overlap before creating an identity.",
+        "Assess useful figures and Teen prediction; complete source, rendered and separate-run publication review."
+      ]
+    },
+    {
+      "key": "legacy-circadian-clocks",
+      "kind": "import",
+      "slug": "circadian-clocks",
+      "title": "Circadian Clocks — How Your Body Tracks the Day",
+      "originalDate": "2026-08-21",
+      "sourceUrl": "https://five-minutes.vitoria-nuno.chatgpt.site/lesson/circadian-clocks",
+      "state": "queued",
+      "priority": 115,
+      "queuedAt": "2026-10-18T10:22:43Z",
+      "reason": "Remaining original catalogue lesson: transfer through the daily editorial cycle.",
+      "criteria": [
+        "Research and rewrite both editions against current EDITORIAL.md; verify current catalogue overlap before creating an identity.",
+        "Assess useful figures and Teen prediction; complete source, rendered and separate-run publication review."
+      ]
+    },
+    {
+      "key": "legacy-queueing-theory",
+      "kind": "import",
+      "slug": "queueing-theory",
+      "title": "Queueing Theory — Why Near-Full Systems Feel Slow",
+      "originalDate": "2026-08-23",
+      "sourceUrl": "https://five-minutes.vitoria-nuno.chatgpt.site/lesson/queueing-theory",
+      "state": "queued",
+      "priority": 116,
+      "queuedAt": "2026-10-18T10:22:43Z",
+      "reason": "Remaining original catalogue lesson: transfer through the daily editorial cycle.",
+      "criteria": [
+        "Research and rewrite both editions against current EDITORIAL.md; verify current catalogue overlap before creating an identity.",
+        "Assess useful figures and Teen prediction; complete source, rendered and separate-run publication review."
+      ]
+    },
+    {
+      "key": "legacy-simpsons-paradox",
+      "kind": "import",
+      "slug": "simpsons-paradox",
+      "title": "Simpson’s Paradox — When Grouped Data Reverses",
+      "originalDate": "2026-08-24",
+      "sourceUrl": "https://five-minutes.vitoria-nuno.chatgpt.site/lesson/simpsons-paradox",
+      "state": "queued",
+      "priority": 117,
+      "queuedAt": "2026-10-18T10:22:43Z",
+      "reason": "Remaining original catalogue lesson: transfer through the daily editorial cycle.",
+      "criteria": [
+        "Research and rewrite both editions against current EDITORIAL.md; verify current catalogue overlap before creating an identity.",
+        "Assess useful figures and Teen prediction; complete source, rendered and separate-run publication review."
+      ]
+    },
+    {
+      "key": "legacy-braess-paradox",
+      "kind": "import",
+      "slug": "braess-paradox",
+      "title": "Braess’s Paradox — When a New Road Slows Traffic",
+      "originalDate": "2026-08-26",
+      "sourceUrl": "https://five-minutes.vitoria-nuno.chatgpt.site/lesson/braess-paradox",
+      "state": "queued",
+      "priority": 118,
+      "queuedAt": "2026-10-18T10:22:43Z",
+      "reason": "Remaining original catalogue lesson: transfer through the daily editorial cycle.",
+      "criteria": [
+        "Research and rewrite both editions against current EDITORIAL.md; verify current catalogue overlap before creating an identity.",
+        "Assess useful figures and Teen prediction; complete source, rendered and separate-run publication review."
+      ]
+    },
+    {
+      "key": "legacy-false-memories",
+      "kind": "import",
+      "slug": "false-memories",
+      "title": "False Memories — Why Remembering Is Reconstruction",
+      "originalDate": "2026-08-27",
+      "sourceUrl": "https://five-minutes.vitoria-nuno.chatgpt.site/lesson/false-memories",
+      "state": "queued",
+      "priority": 119,
+      "queuedAt": "2026-10-18T10:22:43Z",
+      "reason": "Remaining original catalogue lesson: transfer through the daily editorial cycle.",
+      "criteria": [
+        "Research and rewrite both editions against current EDITORIAL.md; verify current catalogue overlap before creating an identity.",
+        "Assess useful figures and Teen prediction; complete source, rendered and separate-run publication review."
+      ]
+    },
+    {
+      "key": "legacy-banana-monoculture",
+      "kind": "import",
+      "slug": "banana-monoculture",
+      "title": "Bananas and Monoculture — The Risk of Similar Plants",
+      "originalDate": "2026-08-29",
+      "sourceUrl": "https://five-minutes.vitoria-nuno.chatgpt.site/lesson/banana-monoculture",
+      "state": "queued",
+      "priority": 120,
+      "queuedAt": "2026-10-18T10:22:43Z",
+      "reason": "Remaining original catalogue lesson: transfer through the daily editorial cycle.",
+      "criteria": [
+        "Research and rewrite both editions against current EDITORIAL.md; verify current catalogue overlap before creating an identity.",
+        "Assess useful figures and Teen prediction; complete source, rendered and separate-run publication review."
+      ]
+    },
+    {
+      "key": "legacy-insurance-large-numbers",
+      "kind": "import",
+      "slug": "insurance-large-numbers",
+      "title": "Insurance and the Law of Large Numbers",
+      "originalDate": "2026-09-02",
+      "sourceUrl": "https://five-minutes.vitoria-nuno.chatgpt.site/lesson/insurance-large-numbers",
+      "state": "queued",
+      "priority": 122,
+      "queuedAt": "2026-10-18T10:22:43Z",
+      "reason": "Remaining original catalogue lesson: transfer through the daily editorial cycle.",
+      "criteria": [
+        "Research and rewrite both editions against current EDITORIAL.md; verify current catalogue overlap before creating an identity.",
+        "Assess useful figures and Teen prediction; complete source, rendered and separate-run publication review."
+      ]
+    },
+    {
+      "key": "legacy-shannon-information",
+      "kind": "import",
+      "slug": "shannon-information",
+      "title": "Information as Surprise — Shannon’s Idea",
+      "originalDate": "2026-09-06",
+      "sourceUrl": "https://five-minutes.vitoria-nuno.chatgpt.site/lesson/shannon-information",
+      "state": "queued",
+      "priority": 123,
+      "queuedAt": "2026-10-18T10:22:43Z",
+      "reason": "Remaining original catalogue lesson: transfer through the daily editorial cycle.",
+      "criteria": [
+        "Research and rewrite both editions against current EDITORIAL.md; verify current catalogue overlap before creating an identity.",
+        "Assess useful figures and Teen prediction; complete source, rendered and separate-run publication review."
+      ]
+    },
+    {
+      "key": "legacy-error-correcting-codes",
+      "kind": "import",
+      "slug": "error-correcting-codes",
+      "title": "Why a Damaged QR Code Can Still Work",
+      "originalDate": "2026-09-07",
+      "sourceUrl": "https://five-minutes.vitoria-nuno.chatgpt.site/lesson/error-correcting-codes",
+      "state": "queued",
+      "priority": 124,
+      "queuedAt": "2026-10-18T10:22:43Z",
+      "reason": "Remaining original catalogue lesson: transfer through the daily editorial cycle.",
+      "criteria": [
+        "Research and rewrite both editions against current EDITORIAL.md; verify current catalogue overlap before creating an identity.",
+        "Assess useful figures and Teen prediction; complete source, rendered and separate-run publication review."
+      ]
+    },
+    {
+      "key": "legacy-shipping-container",
+      "kind": "import",
+      "slug": "shipping-container",
+      "title": "The Shipping Container and World Trade",
+      "originalDate": "2026-09-08",
+      "sourceUrl": "https://five-minutes.vitoria-nuno.chatgpt.site/lesson/shipping-container",
+      "state": "queued",
+      "priority": 125,
+      "queuedAt": "2026-10-18T10:22:43Z",
+      "reason": "Remaining original catalogue lesson: transfer through the daily editorial cycle.",
+      "criteria": [
+        "Research and rewrite both editions against current EDITORIAL.md; verify current catalogue overlap before creating an identity.",
+        "Assess useful figures and Teen prediction; complete source, rendered and separate-run publication review."
+      ]
+    },
+    {
+      "key": "legacy-haber-bosch",
+      "kind": "import",
+      "slug": "haber-bosch",
+      "title": "Haber–Bosch — Fertiliser From Air",
+      "originalDate": "2026-09-09",
+      "sourceUrl": "https://five-minutes.vitoria-nuno.chatgpt.site/lesson/haber-bosch",
+      "state": "queued",
+      "priority": 126,
+      "queuedAt": "2026-10-18T10:22:43Z",
+      "reason": "Remaining original catalogue lesson: transfer through the daily editorial cycle.",
+      "criteria": [
+        "Research and rewrite both editions against current EDITORIAL.md; verify current catalogue overlap before creating an identity.",
+        "Assess useful figures and Teen prediction; complete source, rendered and separate-run publication review."
+      ]
+    },
+    {
+      "key": "legacy-tail-latency",
+      "kind": "import",
+      "slug": "tail-latency",
+      "title": "Tail Latency — What Averages Hide",
+      "originalDate": "2026-09-10",
+      "sourceUrl": "https://five-minutes.vitoria-nuno.chatgpt.site/lesson/tail-latency",
+      "state": "queued",
+      "priority": 127,
+      "queuedAt": "2026-10-18T10:22:43Z",
+      "reason": "Remaining original catalogue lesson: transfer through the daily editorial cycle.",
+      "criteria": [
+        "Research and rewrite both editions against current EDITORIAL.md; verify current catalogue overlap before creating an identity.",
+        "Assess useful figures and Teen prediction; complete source, rendered and separate-run publication review."
+      ]
+    },
+    {
+      "key": "legacy-neural-networks",
+      "kind": "import",
+      "slug": "neural-networks",
+      "title": "Neural Networks — How They Learn Patterns",
+      "originalDate": "2026-09-13",
+      "sourceUrl": "https://five-minutes.vitoria-nuno.chatgpt.site/lesson/neural-networks",
+      "state": "queued",
+      "priority": 128,
+      "queuedAt": "2026-10-18T10:22:43Z",
+      "reason": "Remaining original catalogue lesson: transfer through the daily editorial cycle.",
+      "criteria": [
+        "Research and rewrite both editions against current EDITORIAL.md; verify current catalogue overlap before creating an identity.",
+        "Assess useful figures and Teen prediction; complete source, rendered and separate-run publication review."
+      ]
+    },
+    {
+      "key": "legacy-cocktail-party",
+      "kind": "import",
+      "slug": "cocktail-party",
+      "title": "The Cocktail Party Effect — Following One Voice",
+      "originalDate": "2026-09-15",
+      "sourceUrl": "https://five-minutes.vitoria-nuno.chatgpt.site/lesson/cocktail-party",
+      "state": "queued",
+      "priority": 129,
+      "queuedAt": "2026-10-18T10:22:43Z",
+      "reason": "Remaining original catalogue lesson: transfer through the daily editorial cycle.",
+      "criteria": [
+        "Research and rewrite both editions against current EDITORIAL.md; verify current catalogue overlap before creating an identity.",
+        "Assess useful figures and Teen prediction; complete source, rendered and separate-run publication review."
+      ]
+    },
+    {
+      "key": "legacy-antibiotic-resistance",
+      "kind": "import",
+      "slug": "antibiotic-resistance",
+      "title": "Antibiotic Resistance — Evolution in Real Time",
+      "originalDate": "2026-09-16",
+      "sourceUrl": "https://five-minutes.vitoria-nuno.chatgpt.site/lesson/antibiotic-resistance",
+      "state": "queued",
+      "priority": 130,
+      "queuedAt": "2026-10-18T10:22:43Z",
+      "reason": "Remaining original catalogue lesson: transfer through the daily editorial cycle.",
+      "criteria": [
+        "Research and rewrite both editions against current EDITORIAL.md; verify current catalogue overlap before creating an identity.",
+        "Assess useful figures and Teen prediction; complete source, rendered and separate-run publication review."
+      ]
+    },
+    {
+      "key": "legacy-signal-detection",
+      "kind": "import",
+      "slug": "signal-detection",
+      "title": "Signal Detection — Misses and False Alarms",
+      "originalDate": "2026-09-17",
+      "sourceUrl": "https://five-minutes.vitoria-nuno.chatgpt.site/lesson/signal-detection",
+      "state": "queued",
+      "priority": 131,
+      "queuedAt": "2026-10-18T10:22:43Z",
+      "reason": "Remaining original catalogue lesson: transfer through the daily editorial cycle.",
+      "criteria": [
+        "Research and rewrite both editions against current EDITORIAL.md; verify current catalogue overlap before creating an identity.",
+        "Assess useful figures and Teen prediction; complete source, rendered and separate-run publication review."
+      ]
+    },
+    {
+      "key": "legacy-coriolis-effect",
+      "kind": "import",
+      "slug": "coriolis-effect",
+      "title": "The Coriolis Effect — Earth’s Turning Frame",
+      "originalDate": "2026-09-18",
+      "sourceUrl": "https://five-minutes.vitoria-nuno.chatgpt.site/lesson/coriolis-effect",
+      "state": "queued",
+      "priority": 132,
+      "queuedAt": "2026-10-18T10:22:43Z",
+      "reason": "Remaining original catalogue lesson: transfer through the daily editorial cycle.",
+      "criteria": [
+        "Research and rewrite both editions against current EDITORIAL.md; verify current catalogue overlap before creating an identity.",
+        "Assess useful figures and Teen prediction; complete source, rendered and separate-run publication review."
+      ]
+    },
+    {
+      "key": "legacy-concrete-hydration",
+      "kind": "import",
+      "slug": "concrete-hydration",
+      "title": "Concrete Hydration — Why Water Builds Strength",
+      "originalDate": "2026-09-19",
+      "sourceUrl": "https://five-minutes.vitoria-nuno.chatgpt.site/lesson/concrete-hydration",
+      "state": "queued",
+      "priority": 133,
+      "queuedAt": "2026-10-18T10:22:43Z",
+      "reason": "Remaining original catalogue lesson: transfer through the daily editorial cycle.",
+      "criteria": [
+        "Research and rewrite both editions against current EDITORIAL.md; verify current catalogue overlap before creating an identity.",
+        "Assess useful figures and Teen prediction; complete source, rendered and separate-run publication review."
+      ]
+    },
+    {
+      "key": "legacy-law-small-numbers",
+      "kind": "import",
+      "slug": "law-small-numbers",
+      "title": "The Law of Small Numbers — Why Tiny Samples Mislead",
+      "originalDate": "2026-09-20",
+      "sourceUrl": "https://five-minutes.vitoria-nuno.chatgpt.site/lesson/law-small-numbers",
+      "state": "queued",
+      "priority": 134,
+      "queuedAt": "2026-10-18T10:22:43Z",
+      "reason": "Remaining original catalogue lesson: transfer through the daily editorial cycle.",
+      "criteria": [
+        "Research and rewrite both editions against current EDITORIAL.md; verify current catalogue overlap before creating an identity.",
+        "Assess useful figures and Teen prediction; complete source, rendered and separate-run publication review."
+      ]
+    },
+    {
+      "key": "legacy-demographic-transition",
+      "kind": "import",
+      "slug": "demographic-transition",
+      "title": "Why a Population Can Grow as Families Get Smaller",
+      "originalDate": "2026-09-26",
+      "sourceUrl": "https://five-minutes.vitoria-nuno.chatgpt.site/lesson/demographic-transition",
+      "state": "queued",
+      "priority": 135,
+      "queuedAt": "2026-10-18T10:22:43Z",
+      "reason": "Remaining original catalogue lesson: transfer through the daily editorial cycle.",
+      "criteria": [
+        "Research and rewrite both editions against current EDITORIAL.md; verify current catalogue overlap before creating an identity.",
+        "Assess useful figures and Teen prediction; complete source, rendered and separate-run publication review."
+      ]
+    },
+    {
+      "key": "legacy-blood-type-matching",
+      "kind": "import",
+      "slug": "blood-type-matching",
+      "title": "Why Blood Types Must Be Matched",
+      "originalDate": "2026-09-27",
+      "sourceUrl": "https://five-minutes.vitoria-nuno.chatgpt.site/lesson/blood-type-matching",
+      "state": "queued",
+      "priority": 136,
+      "queuedAt": "2026-10-18T10:22:43Z",
+      "reason": "Remaining original catalogue lesson: transfer through the daily editorial cycle.",
+      "criteria": [
+        "Research and rewrite both editions against current EDITORIAL.md; verify current catalogue overlap before creating an identity.",
+        "Assess useful figures and Teen prediction; complete source, rendered and separate-run publication review."
+      ]
+    },
+    {
+      "key": "legacy-secret-ballot",
+      "kind": "import",
+      "slug": "secret-ballot",
+      "title": "Why Your Vote Is Secret",
+      "originalDate": "2026-09-28",
+      "sourceUrl": "https://five-minutes.vitoria-nuno.chatgpt.site/lesson/secret-ballot",
+      "state": "queued",
+      "priority": 137,
+      "queuedAt": "2026-10-18T10:22:43Z",
+      "reason": "Remaining original catalogue lesson: transfer through the daily editorial cycle.",
+      "criteria": [
+        "Research and rewrite both editions against current EDITORIAL.md; verify current catalogue overlap before creating an identity.",
+        "Assess useful figures and Teen prediction; complete source, rendered and separate-run publication review."
+      ]
+    },
+    {
+      "key": "legacy-dark-adaptation",
+      "kind": "import",
+      "slug": "dark-adaptation",
+      "title": "How Your Eyes Adjust to the Dark",
+      "originalDate": "2026-09-29",
+      "sourceUrl": "https://five-minutes.vitoria-nuno.chatgpt.site/lesson/dark-adaptation",
+      "state": "queued",
+      "priority": 138,
+      "queuedAt": "2026-10-18T10:22:43Z",
+      "reason": "Remaining original catalogue lesson: transfer through the daily editorial cycle.",
+      "criteria": [
+        "Research and rewrite both editions against current EDITORIAL.md; verify current catalogue overlap before creating an identity.",
+        "Assess useful figures and Teen prediction; complete source, rendered and separate-run publication review."
+      ]
+    },
+    {
+      "key": "legacy-hidden-costs-externalities",
+      "kind": "import",
+      "slug": "hidden-costs-externalities",
+      "title": "The Costs a Price Can Leave Out",
+      "originalDate": "2026-09-29",
+      "sourceUrl": "https://five-minutes.vitoria-nuno.chatgpt.site/lesson/hidden-costs-externalities",
+      "state": "queued",
+      "priority": 139,
+      "queuedAt": "2026-10-18T10:22:43Z",
+      "reason": "Remaining original catalogue lesson: transfer through the daily editorial cycle.",
+      "criteria": [
+        "Research and rewrite both editions against current EDITORIAL.md; verify current catalogue overlap before creating an identity.",
+        "Assess useful figures and Teen prediction; complete source, rendered and separate-run publication review."
+      ]
+    },
+    {
+      "key": "legacy-regression-to-mean",
+      "kind": "import",
+      "slug": "regression-to-mean",
+      "title": "Why Extreme Results Often Move Back Towards Average",
+      "originalDate": "2026-09-30",
+      "sourceUrl": "https://five-minutes.vitoria-nuno.chatgpt.site/lesson/regression-to-mean",
+      "state": "queued",
+      "priority": 140,
+      "queuedAt": "2026-10-18T10:22:43Z",
+      "reason": "Remaining original catalogue lesson: transfer through the daily editorial cycle.",
+      "criteria": [
+        "Research and rewrite both editions against current EDITORIAL.md; verify current catalogue overlap before creating an identity.",
+        "Assess useful figures and Teen prediction; complete source, rendered and separate-run publication review."
+      ]
+    },
+    {
+      "key": "legacy-tendon-springs",
+      "kind": "import",
+      "slug": "tendon-springs",
+      "title": "How Tendons Return Energy Like Springs",
+      "originalDate": "2026-10-03",
+      "sourceUrl": "https://five-minutes.vitoria-nuno.chatgpt.site/lesson/tendon-springs",
+      "state": "queued",
+      "priority": 142,
+      "queuedAt": "2026-10-18T10:22:43Z",
+      "reason": "Remaining original catalogue lesson: transfer through the daily editorial cycle.",
+      "criteria": [
+        "Research and rewrite both editions against current EDITORIAL.md; verify current catalogue overlap before creating an identity.",
+        "Assess useful figures and Teen prediction; complete source, rendered and separate-run publication review."
+      ]
+    },
+    {
+      "key": "legacy-pluralistic-ignorance",
+      "kind": "import",
+      "slug": "pluralistic-ignorance",
+      "title": "Pluralistic Ignorance — When Everyone Misreads the Room",
+      "originalDate": "2026-10-03",
+      "sourceUrl": "https://five-minutes.vitoria-nuno.chatgpt.site/lesson/pluralistic-ignorance",
+      "state": "queued",
+      "priority": 141,
+      "queuedAt": "2026-10-18T10:22:43Z",
+      "reason": "Remaining original catalogue lesson: transfer through the daily editorial cycle.",
+      "criteria": [
+        "Research and rewrite both editions against current EDITORIAL.md; verify current catalogue overlap before creating an identity.",
+        "Assess useful figures and Teen prediction; complete source, rendered and separate-run publication review."
+      ]
+    },
+    {
+      "key": "lesson-7cd5dca8-857f-49e5-8fd5-16a03658b0b7",
+      "kind": "revision",
+      "lessonId": "7cd5dca8-857f-49e5-8fd5-16a03658b0b7",
+      "slug": "goodharts-law",
+      "state": "queued",
+      "priority": 25,
+      "queuedAt": "2026-10-18T10:21:24Z",
+      "reason": "The call-centre hook works, but Adult ends in a checklist and its extra layer is mostly attribution.",
+      "criteria": [
+        "Develop why a proxy breaks when incentives change, with one concrete consequence beyond Teen; resolve the opening without a list.",
+        "Re-fetch material sources and review both editions, figures and activity decisions against the complete current standard."
+      ],
+      "legacySlugs": [
+        "goodharts-law"
+      ]
+    },
+    {
+      "key": "lesson-99b24089-9f36-404c-8b44-8cb594115dac",
+      "kind": "revision",
+      "lessonId": "99b24089-9f36-404c-8b44-8cb594115dac",
+      "slug": "how-a-clock-found-longitude",
+      "state": "queued",
+      "priority": 12,
+      "queuedAt": "2026-10-18T10:21:24Z",
+      "reason": "Adult opens with definitions and stops at the historical result; neither edition clearly works through east versus west.",
+      "criteria": [
+        "Build around a concrete ship-position puzzle; explain the direction of the time difference and develop Adult's clock-error consequence.",
+        "Re-fetch material sources and review both editions, figures and activity decisions against the complete current standard."
+      ],
+      "legacySlugs": [
+        "longitude-problem"
+      ]
+    },
+    {
+      "key": "lesson-e38e6794-fa4d-466c-9aa8-b6c6f6e386e1",
+      "kind": "revision",
+      "lessonId": "e38e6794-fa4d-466c-9aa8-b6c6f6e386e1",
+      "slug": "how-feedback-control-works",
+      "state": "queued",
+      "priority": 21,
+      "queuedAt": "2026-10-18T10:21:24Z",
+      "reason": "Both editions already explain disturbances, error, overshoot and delay; Adult's additional understanding is not developed beyond Teen.",
+      "criteria": [
+        "Preserve the useful oven example and diagram; develop one supported Adult layer such as delay interacting with correction, rather than repeating Teen.",
+        "Re-fetch material sources and review both editions, figures and activity decisions against the complete current standard."
+      ],
+      "legacySlugs": [
+        "feedback-control"
+      ]
+    },
+    {
+      "key": "lesson-6bd86c0f-7cde-467c-abd1-ef6c8a2b51b1",
+      "kind": "revision",
+      "lessonId": "6bd86c0f-7cde-467c-abd1-ef6c8a2b51b1",
+      "slug": "how-heat-pumps-move-heat",
+      "state": "queued",
+      "priority": 20,
+      "queuedAt": "2026-10-18T10:21:24Z",
+      "reason": "Teen explains the cycle, energy balance and reversible operation as fully as Adult; Adult adds little understanding.",
+      "criteria": [
+        "Keep Teen complete; develop Adult's supported trade-off between temperature lift and work/efficiency with a concrete example.",
+        "Re-fetch material sources and review both editions, figures and activity decisions against the complete current standard."
+      ]
+    },
+    {
+      "key": "lesson-5d0eaefd-39c4-404e-9dbb-7e75e88474f6",
+      "kind": "revision",
+      "lessonId": "5d0eaefd-39c4-404e-9dbb-7e75e88474f6",
+      "slug": "how-jpeg-makes-photos-smaller",
+      "state": "queued",
+      "priority": 11,
+      "queuedAt": "2026-10-18T10:21:24Z",
+      "reason": "Adult jumps from pixels to a discrete cosine transform without an accessible worked image; both editions finish with artefact lists.",
+      "criteria": [
+        "Use a concrete image detail to explain representation and rounding; assess an image/diagram that reveals the trade-off and give Adult a developed extra layer.",
+        "Re-fetch material sources and review both editions, figures and activity decisions against the complete current standard."
+      ]
+    },
+    {
+      "key": "lesson-3cebf076-45ac-49ea-9b01-bd0917fb1c13",
+      "kind": "revision",
+      "lessonId": "3cebf076-45ac-49ea-9b01-bd0917fb1c13",
+      "slug": "how-keystone-species-reshape-ecosystems",
+      "state": "queued",
+      "priority": 22,
+      "queuedAt": "2026-10-18T10:21:24Z",
+      "reason": "The otter opening is strong, but Adult repeats Teen's chain and caveat with added labels rather than further explanation.",
+      "criteria": [
+        "Develop a concrete, sourced boundary or indirect-effect consequence for Adult; assess a faithful food-web visual and useful Teen prediction.",
+        "Re-fetch material sources and review both editions, figures and activity decisions against the complete current standard."
+      ]
+    },
+    {
+      "key": "lesson-a9181b9d-e382-44c1-9d61-a3913dd1eb70",
+      "kind": "revision",
+      "lessonId": "a9181b9d-e382-44c1-9d61-a3913dd1eb70",
+      "slug": "how-kidneys-filter-blood",
+      "state": "queued",
+      "priority": 15,
+      "queuedAt": "2026-10-18T10:21:24Z",
+      "reason": "The recycling mechanism and diagram work; Adult's extra paragraph lists regulatory/hormonal jobs without explaining one.",
+      "criteria": [
+        "Develop one supported regulation example beyond Teen and return to the opening; preserve the distinction from the separate kidney-concentration lesson.",
+        "Re-fetch material sources and review both editions, figures and activity decisions against the complete current standard."
+      ]
+    },
+    {
+      "key": "lesson-92a1a093-db19-441d-8e71-ea54d9744c83",
+      "kind": "revision",
+      "lessonId": "92a1a093-db19-441d-8e71-ea54d9744c83",
+      "slug": "how-stainless-steel-renews-its-protection",
+      "state": "accepted",
+      "priority": 200,
+      "queuedAt": "2026-10-18T10:21:24Z",
+      "reason": "Visible scratch versus invisible film hook; Adult develops repassivation, oxygen access and chloride/crevice limits.",
+      "criteria": [
+        "Retain unless an Owner return or later evidence identifies a substantive weakness."
+      ],
+      "legacySlugs": [
+        "stainless-steel"
+      ]
+    },
+    {
+      "key": "lesson-d29d0ef2-aa2a-49fa-a75b-dea39430cd3e",
+      "kind": "revision",
+      "lessonId": "d29d0ef2-aa2a-49fa-a75b-dea39430cd3e",
+      "slug": "why-a-day-is-longer-than-earths-spin",
+      "state": "accepted",
+      "priority": 200,
+      "queuedAt": "2026-10-18T10:21:24Z",
+      "reason": "Moving-finish-line hook, worked four-minute derivation and Adult solar-noon/mean-day complication.",
+      "criteria": [
+        "Retain unless an Owner return or later evidence identifies a substantive weakness."
+      ]
+    },
+    {
+      "key": "lesson-3d9b52ca-9082-4d28-9679-837e595df094",
+      "kind": "revision",
+      "lessonId": "3d9b52ca-9082-4d28-9679-837e595df094",
+      "slug": "why-astronauts-float-in-orbit",
+      "state": "queued",
+      "priority": 14,
+      "queuedAt": "2026-10-18T10:21:24Z",
+      "reason": "Teen's falling-cabin image is clearer than Adult; Adult adds microgravity terminology but not a developed explanation of the support force people feel.",
+      "criteria": [
+        "Use the shared-fall image in Adult, distinguish gravitational pull from support/contact force, and retain the reviewed orbital diagram.",
+        "Re-fetch material sources and review both editions, figures and activity decisions against the complete current standard."
+      ]
+    },
+    {
+      "key": "lesson-1021a4c8-9e35-47ca-9de8-fdc69f790738",
+      "kind": "revision",
+      "lessonId": "1021a4c8-9e35-47ca-9de8-fdc69f790738",
+      "slug": "why-bridges-need-room-to-move",
+      "state": "accepted",
+      "priority": 200,
+      "queuedAt": "2026-10-18T10:21:24Z",
+      "reason": "Gap-as-protection hook, worked expansion and restraint consequence; Adult develops actual design and inspection limits.",
+      "criteria": [
+        "Retain unless an Owner return or later evidence identifies a substantive weakness."
+      ],
+      "legacySlugs": [
+        "thermal-expansion"
+      ]
+    },
+    {
+      "key": "lesson-c50774ec-4593-4557-b8df-ecc65e504566",
+      "kind": "revision",
+      "lessonId": "c50774ec-4593-4557-b8df-ecc65e504566",
+      "slug": "why-earth-has-seasons",
+      "state": "queued",
+      "priority": 17,
+      "queuedAt": "2026-10-18T10:21:24Z",
+      "reason": "The opposite-hemisphere hook and figure work, but both editions teach effectively the same depth and end at the January fact.",
+      "criteria": [
+        "Develop one useful Adult layer about sunlight geometry or seasonal response, with a consequence that resolves the question.",
+        "Re-fetch material sources and review both editions, figures and activity decisions against the complete current standard."
+      ]
+    },
+    {
+      "key": "lesson-b6fbc2e0-bcad-4ad7-8336-2fed9576e788",
+      "kind": "revision",
+      "lessonId": "b6fbc2e0-bcad-4ad7-8336-2fed9576e788",
+      "slug": "why-every-flat-map-lies",
+      "state": "queued",
+      "priority": 18,
+      "queuedAt": "2026-10-18T10:21:24Z",
+      "reason": "The orange analogy works, but Adult's conformal terminology adds little developed reasoning beyond Teen's Mercator explanation.",
+      "criteria": [
+        "Show a concrete comparison and explain one projection trade-off beyond the shared analogy; assess a faithful map comparison.",
+        "Re-fetch material sources and review both editions, figures and activity decisions against the complete current standard."
+      ],
+      "legacySlugs": [
+        "map-projections"
+      ]
+    },
+    {
+      "key": "lesson-b740183b-adaf-4ce4-ad6b-1eb12345f7d8",
+      "kind": "revision",
+      "lessonId": "b740183b-adaf-4ce4-ad6b-1eb12345f7d8",
+      "slug": "why-every-rainbow-is-a-circle",
+      "state": "accepted",
+      "priority": 200,
+      "queuedAt": "2026-10-18T10:21:24Z",
+      "reason": "Unreachable endpoint resolves through observer geometry; Adult now develops the angular concentration and cone relationship.",
+      "criteria": [
+        "Retain unless an Owner return or later evidence identifies a substantive weakness."
+      ]
+    },
+    {
+      "key": "lesson-65fd10bc-6efe-4c74-8da4-6ac8a5600301",
+      "kind": "revision",
+      "lessonId": "65fd10bc-6efe-4c74-8da4-6ac8a5600301",
+      "slug": "why-experts-skip-the-obvious-step",
+      "state": "accepted",
+      "priority": 200,
+      "queuedAt": "2026-10-18T10:21:24Z",
+      "reason": "DNS/backup and fractions examples expose a missing bridge; Adult separates the experiment from the communication application.",
+      "criteria": [
+        "Retain unless an Owner return or later evidence identifies a substantive weakness."
+      ],
+      "legacySlugs": [
+        "curse-knowledge"
+      ]
+    },
+    {
+      "key": "lesson-1629895d-f11a-4bb7-afe5-8c8df5c07123",
+      "kind": "revision",
+      "lessonId": "1629895d-f11a-4bb7-afe5-8c8df5c07123",
+      "slug": "why-exponential-growth-feels-sudden",
+      "state": "queued",
+      "priority": 23,
+      "queuedAt": "2026-10-18T10:21:24Z",
+      "reason": "The doubling example is memorable; Adult repeats Teen's doubling-time insight and limits without a further developed layer.",
+      "criteria": [
+        "Develop one supported application or boundary beyond Teen while preserving the focused doubling explanation and scale honesty.",
+        "Re-fetch material sources and review both editions, figures and activity decisions against the complete current standard."
+      ]
+    },
+    {
+      "key": "lesson-0199a5b7-6e21-7a42-9c3d-8f1b2e4a6c70",
+      "kind": "revision",
+      "lessonId": "0199a5b7-6e21-7a42-9c3d-8f1b2e4a6c70",
+      "slug": "why-gps-needs-einstein",
+      "state": "queued",
+      "priority": 13,
+      "queuedAt": "2026-10-18T10:21:24Z",
+      "reason": "Both editions contain the same clock mechanism and 7/45/38 microsecond comparison; Adult has no distinct explanatory layer.",
+      "criteria": [
+        "Preserve the phone hook; develop a supported timing-to-position or receiver-clock explanation and assess an explanatory figure.",
+        "Re-fetch material sources and review both editions, figures and activity decisions against the complete current standard."
+      ],
+      "legacySlugs": [
+        "gps-einstein"
+      ]
+    },
+    {
+      "key": "lesson-15944494-03f6-40a5-b7ab-2fd7192b6836",
+      "kind": "revision",
+      "lessonId": "15944494-03f6-40a5-b7ab-2fd7192b6836",
+      "slug": "why-ice-floats-on-water",
+      "state": "queued",
+      "priority": 10,
+      "queuedAt": "2026-10-18T10:21:24Z",
+      "reason": "Both editions explain open packing, but Adult does not explain why water's attractions favour that structure rather than tighter packing.",
+      "criteria": [
+        "Develop the molecular arrangement with a supported, accessible account of directional bonding; assess a useful figure and resolve a concrete consequence.",
+        "Re-fetch material sources and review both editions, figures and activity decisions against the complete current standard."
+      ]
+    },
+    {
+      "key": "lesson-5a6e9db0-63d5-4f28-8973-86f55ca8d81d",
+      "kind": "revision",
+      "lessonId": "5a6e9db0-63d5-4f28-8973-86f55ca8d81d",
+      "slug": "why-lakes-freeze-from-the-top-down",
+      "state": "accepted",
+      "priority": 200,
+      "queuedAt": "2026-10-18T10:21:24Z",
+      "reason": "Pre-freezing cold-water puzzle resolves at 4°C; Adult develops resistance to mixing, wind and oxygen limits.",
+      "criteria": [
+        "Retain unless an Owner return or later evidence identifies a substantive weakness."
+      ]
+    },
+    {
+      "key": "lesson-532a34e6-cbc9-4c65-9316-c716749c66e2",
+      "kind": "revision",
+      "lessonId": "532a34e6-cbc9-4c65-9316-c716749c66e2",
+      "slug": "why-metal-feels-colder-than-wood",
+      "state": "accepted",
+      "priority": 200,
+      "queuedAt": "2026-10-18T10:21:24Z",
+      "reason": "Chair puzzle explains heat flow rather than temperature; Adult develops contact/storage limits and reverses the temperature gradient.",
+      "criteria": [
+        "Retain unless an Owner return or later evidence identifies a substantive weakness."
+      ],
+      "legacySlugs": [
+        "thermal-conductivity"
+      ]
+    },
+    {
+      "key": "lesson-034c4a38-3d76-482a-83d8-ce1d8d59b5c2",
+      "kind": "revision",
+      "lessonId": "034c4a38-3d76-482a-83d8-ce1d8d59b5c2",
+      "slug": "why-password-hashes-need-salt",
+      "state": "queued",
+      "priority": 19,
+      "queuedAt": "2026-10-18T10:21:24Z",
+      "reason": "Both editions explain the same salt and costly-hash mechanisms; Adult adds no developed explanatory layer beyond Teen.",
+      "criteria": [
+        "Preserve Teen's concrete stolen-database example; develop one sourced Adult layer about why unique salts prevent reuse of precomputed work, or how a password-hashing cost parameter changes attack economics.",
+        "Review both complete editions and assess useful figures and activities against current EDITORIAL.md."
+      ]
+    },
+    {
+      "key": "lesson-037395c2-7035-4e44-bf37-2e9c5c542da1",
+      "kind": "revision",
+      "lessonId": "037395c2-7035-4e44-bf37-2e9c5c542da1",
+      "slug": "why-power-lines-use-high-voltage",
+      "state": "queued",
+      "priority": 16,
+      "queuedAt": "2026-10-18T10:21:24Z",
+      "reason": "Adult has a useful numerical comparison, but begins with wire resistance and ends with generic engineering trade-offs.",
+      "criteria": [
+        "Build the explanation around a tangible transmission problem; preserve and contextualise the current/loss calculation and assess a proportional visual.",
+        "Re-fetch material sources and review both editions, figures and activity decisions against the complete current standard."
+      ],
+      "legacySlugs": [
+        "high-voltage"
+      ]
+    },
+    {
+      "key": "lesson-cd638bb5-5105-4f69-80f4-307d5995e66a",
+      "kind": "revision",
+      "lessonId": "cd638bb5-5105-4f69-80f4-307d5995e66a",
+      "slug": "why-small-pushes-can-build-big-movements",
+      "state": "accepted",
+      "priority": 200,
+      "queuedAt": "2026-10-18T10:21:24Z",
+      "reason": "Swing timing explains energy transfer; Adult develops damping response peaks, steady-state balance and diagnosis.",
+      "criteria": [
+        "Retain unless an Owner return or later evidence identifies a substantive weakness."
+      ],
+      "legacySlugs": [
+        "resonance"
+      ]
+    },
+    {
+      "key": "lesson-6905c8d7-1cd9-4d9f-af69-30cc92616d2f",
+      "kind": "revision",
+      "lessonId": "6905c8d7-1cd9-4d9f-af69-30cc92616d2f",
+      "slug": "why-sweat-needs-to-evaporate",
+      "state": "accepted",
+      "priority": 200,
+      "queuedAt": "2026-10-18T10:21:24Z",
+      "reason": "Shower/breeze hook distinguishes sweat supply from evaporation; Adult explains energy and the humid boundary layer.",
+      "criteria": [
+        "Retain unless an Owner return or later evidence identifies a substantive weakness."
+      ],
+      "legacySlugs": [
+        "evaporative-cooling"
+      ]
+    },
+    {
+      "key": "lesson-b62dafd3-523e-4e40-a8e9-5afc55b00302",
+      "kind": "revision",
+      "lessonId": "b62dafd3-523e-4e40-a8e9-5afc55b00302",
+      "slug": "why-tails-is-not-due",
+      "state": "accepted",
+      "priority": 200,
+      "queuedAt": "2026-10-18T10:21:24Z",
+      "reason": "Worked 55/105 example distinguishes proportional dilution from repayment; Adult adds uncertainty about an unknown coin.",
+      "criteria": [
+        "Retain unless an Owner return or later evidence identifies a substantive weakness."
+      ],
+      "legacySlugs": [
+        "gamblers-fallacy"
+      ]
+    },
+    {
+      "key": "lesson-24b8d784-84b3-40ee-b873-40e9d67b52f9",
+      "kind": "revision",
+      "lessonId": "24b8d784-84b3-40ee-b873-40e9d67b52f9",
+      "slug": "why-testing-yourself-works",
+      "state": "queued",
+      "priority": 24,
+      "queuedAt": "2026-10-18T10:21:24Z",
+      "reason": "The recognition-versus-recall hook works, but both editions use the same study and practical advice with little additional Adult explanation.",
+      "criteria": [
+        "Develop one sourced condition, boundary or application of retrieval beyond Teen; preserve feedback and avoid presenting difficulty alone as proof of learning.",
+        "Re-fetch material sources and review both editions, figures and activity decisions against the complete current standard."
+      ],
+      "legacySlugs": [
+        "retrieval-practice"
+      ]
+    },
+    {
+      "key": "lesson-883e567b-8ad6-4789-9a87-667dc8800303",
+      "kind": "revision",
+      "lessonId": "883e567b-8ad6-4789-9a87-667dc8800303",
+      "slug": "why-the-moon-appears-in-daylight",
+      "state": "accepted",
+      "priority": 200,
+      "queuedAt": "2026-10-18T10:21:24Z",
+      "reason": "Shared-horizon hook separates visibility from phase; Adult adds phase-dependent rise patterns and essential viewing caution.",
+      "criteria": [
+        "Retain unless an Owner return or later evidence identifies a substantive weakness."
+      ],
+      "legacySlugs": [
+        "daytime-moon"
+      ]
+    },
+    {
+      "key": "lesson-664b5b2f-9973-4fd8-a3d5-6dee49278465",
+      "kind": "revision",
+      "lessonId": "664b5b2f-9973-4fd8-a3d5-6dee49278465",
+      "slug": "why-wastewater-plants-recycle-sludge",
+      "state": "accepted",
+      "priority": 200,
+      "queuedAt": "2026-10-18T10:21:24Z",
+      "reason": "Backwards-pipe puzzle resolves through microbial retention; Adult explains the separate water/solids clocks and wasting control.",
+      "criteria": [
+        "Retain unless an Owner return or later evidence identifies a substantive weakness."
+      ]
+    }
+  ]
+}
