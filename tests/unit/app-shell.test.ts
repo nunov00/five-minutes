@@ -9,10 +9,10 @@ describe('app shell', () => {
     const html = await container.renderToString(HomePage);
 
     expect(html).toMatch(/<html lang="en"/);
-    expect(html).toContain('<title>Today · Five Minutes</title>');
+    expect(html).toContain('<title>Worth knowing · Five Minutes</title>');
     expect(html).toMatch(/<meta name="description" content="[^"]+"/);
     // Vitest renders in dev mode, which annotates elements with source attributes.
-    expect(html).toMatch(/<h1[^>]*>Today's idea<\/h1>/);
+    expect(html).toMatch(/<h1[^>]*>Worth knowing<\/h1>/);
     expect(html).toMatch(/<a[^>]*class="brand"[^>]*href="\/"/);
     expect(html).toMatch(/<a[^>]*href="#main"/);
     expect(html).toMatch(/<a[^>]*href="\/feedback"[^>]*>Send anonymous feedback<\/a>/);
