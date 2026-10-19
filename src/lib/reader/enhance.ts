@@ -62,7 +62,7 @@ function restore() {
       if (entry?.version === 1) target = validatedOrigin(entry.path, bounds);
     } catch { /* corrupt/blocked session storage */ }
     returnLink.href = target ?? '/';
-    returnLink.textContent = target ? 'Return to discovery' : 'Back to Today';
+    returnLink.textContent = target ? 'Return to discovery' : 'Back to home';
   }
   recordOrigin();
 }
