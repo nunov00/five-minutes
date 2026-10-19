@@ -69,7 +69,7 @@ test.describe('installable PWA shell', () => {
 
     await page.goto(startUrl);
     const origins = new Set([new URL(page.url()).origin]);
-    await expect(page.getByRole('heading', { level: 1, name: "Today's idea" })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1, name: "Worth knowing" })).toBeVisible();
 
     // No browser chrome in standalone display: every step uses links on the page.
     await page.getByRole('navigation', { name: 'Edition' }).getByRole('link', { name: 'Teen' }).click();
@@ -79,12 +79,12 @@ test.describe('installable PWA shell', () => {
     await page.getByRole('navigation', { name: 'Edition' }).getByRole('link', { name: 'Adult' }).click();
     await expect(page.locator('article[data-lesson-id]')).toHaveAttribute('data-edition', 'adult');
     inScope();
-    await page.getByRole('link', { name: 'Back to Today' }).click();
-    await expect(page.getByRole('heading', { level: 1, name: "Today's idea" })).toBeVisible();
+    await page.getByRole('link', { name: 'Back to home' }).click();
+    await expect(page.getByRole('heading', { level: 1, name: "Worth knowing" })).toBeVisible();
     inScope();
     await page.getByRole('link', { name: /^Read:/ }).click();
     await page.getByRole('banner').getByRole('link', { name: 'Five Minutes' }).click();
-    await expect(page.getByRole('heading', { level: 1, name: "Today's idea" })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1, name: "Worth knowing" })).toBeVisible();
     inScope();
     origins.add(new URL(page.url()).origin);
     expect([...origins]).toHaveLength(1);
@@ -93,7 +93,7 @@ test.describe('installable PWA shell', () => {
   test('standalone-safe: an unknown URL offers a way back to Today', async ({ page }) => {
     const response = await page.goto('/does-not-exist');
     expect(response?.status()).toBe(404);
-    await page.getByRole('link', { name: "Go to Today's idea" }).click();
-    await expect(page.getByRole('heading', { level: 1, name: "Today's idea" })).toBeVisible();
+    await page.getByRole('link', { name: "Go to Worth knowing" }).click();
+    await expect(page.getByRole('heading', { level: 1, name: "Worth knowing" })).toBeVisible();
   });
 });
