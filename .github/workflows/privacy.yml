@@ -1,0 +1,147 @@
+# Privacy check: keeps personal data and secrets out of the repository.
+# Runs on every PR in every profile (personal-data rule in AGENTS.md; GOVERNANCE.md →
+# Personal data and secrets where the repository has it). It fails when a PR commit is
+# authored or committed with a personal email, when any PR commit (merges included) adds
+# a real email address to a file, a file name or a commit message, or when gitleaks finds
+# a secret in the PR's commits (merges included). It checks every commit, not just the final diff, because
+# history keeps what a later commit removes. Its log names commits and counts only, never paths
+# or addresses, because the log may be public. A heuristic, not proof: it does not cover
+# PR or issue text, binary files or every kind of personal data. A few seconds of Actions
+# time per PR; no third-party actions.
+name: Privacy check
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: privacy-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+env:
+  # Commit emails allowed on PR commits (extended regex). Add an agent's noreply
+  # address here if it commits under its own identity.
+  ALLOWED_COMMIT_EMAILS: '@users\.noreply\.github\.com$|^noreply@github\.com$|^noreply@anthropic\.com$|^noreply@openai\.com$'
+  # Email addresses allowed in files and commit messages: placeholders and noreply addresses.
+  ALLOWED_FILE_EMAILS: '@(example\.(com|org|net)|[a-z0-9.-]+\.(example|invalid|test|localhost)|users\.noreply\.github\.com|noreply\.github\.com)$|^noreply@'
+  # Generated files that carry third-party package metadata.
+  SKIP_FILES: '(^|/)(package-lock\.json|pnpm-lock\.yaml|yarn\.lock|uv\.lock|poetry\.lock)$'
+  GITLEAKS_VERSION: 8.21.2
+  GITLEAKS_SHA256: 5bc41815076e6ed6ef8fbecc9d9b75bcae31f39029ceb55da08086315316e3ba
+  # Extra git log options for gitleaks: a merge commit's own changes are scanned too
+  # (by default git log shows no patch for merges).
+  GITLEAKS_LOG_OPTS: --diff-merges=remerge
+
+jobs:
+  privacy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Commit emails
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          bad=$(git log --format='%h %ae %ce' "$BASE..$HEAD" \
+            | awk '$2 !~ ENVIRON["ALLOWED_COMMIT_EMAILS"] || $3 !~ ENVIRON["ALLOWED_COMMIT_EMAILS"] { print $1 }')
+          if [ -n "$bad" ]; then
+            echo "::error::Commit(s) with an author or committer email that is not a noreply address: $(echo $bad)"
+            echo "Configure your GitHub noreply address (GitHub → Settings → Emails) before committing."
+            echo "To fix commits already pushed, recreate them with that address on a branch you own;"
+            echo "follow the repository's own rules where they restrict rewriting (for example automated lesson branches)."
+            echo "The addresses are not printed here because this log may be public."
+            exit 1
+          fi
+          echo "All commit emails are noreply addresses."
+
+      - name: Email addresses in PR commits
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          # Each commit is scanned on its own (an address added and later removed is still in
+          # history). Three separate awk runs with no marker lines, so no input can pose as
+          # parser input: added lines (--remerge-diff, so a merge shows only what it added
+          # itself), file names the commit adds (absent from every parent, taken from git's
+          # name list, so empty and binary files count) and the commit message. Merges with
+          # more than two parents are refused, since --remerge-diff skips them. Prints
+          # "<commit>: <where> (<count>)" only, with the commit taken from git rev-list.
+          # --no-renames everywhere: a renamed file is scanned as new content, so moving an
+          # address out of a skipped lockfile is caught. Any git error fails the check.
+          set -o pipefail
+          scan='
+            function scan(text, where,   e) {
+              while (match(text, /[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*\.[A-Za-z][A-Za-z]+/)) {
+                e = substr(text, RSTART, RLENGTH)
+                if (tolower(e) !~ ENVIRON["ALLOWED_FILE_EMAILS"]) n[where]++
+                text = substr(text, RSTART + RLENGTH)
+              }
+            }
+            mode == "message" { scan($0, "commit message"); next }
+            mode == "names" { scan($0, "file name"); next }
+            /^diff / { hdr = 1; file = ""; next }
+            hdr && /^@@/ { hdr = 0; next }
+            hdr && /^\+\+\+ / { file = substr($0, 5); sub(/^b\//, "", file); next }
+            hdr { next }
+            /^\+/ && file != "" && file !~ ENVIRON["SKIP_FILES"] { scan(substr($0, 2), "added lines") }
+            END { for (k in n) print k " (" n[k] ")" }'
+          # Names in commit $1 that none of its parents have.
+          added_names() {
+            c=$1; shift
+            if [ $# = 0 ]; then
+              git diff-tree -r --root --no-commit-id --name-only --no-renames --diff-filter=A -z "$c" 2>/dev/null | tr '\0' '\n'
+            else
+              for p in "$@"; do
+                git diff-tree -r --name-only --no-renames --diff-filter=A -z "$p" "$c" 2>/dev/null | tr '\0' '\n' | sort -u || return 1
+              done | sort | uniq -c | awk -v n=$# '{ c = $1; sub(/^ *[0-9]+ /, ""); if (c == n) print }'
+            fi
+          }
+          found=0
+          report() {
+            [ "$found" = 1 ] || {
+              echo "::error::PR commits add real email addresses, or could not be scanned. Remove the addresses from every commit or use a placeholder (name@example.com)."
+              echo "Commit: where (count). Paths and addresses are not printed because this log may be public."
+            }
+            found=1
+            echo "$2" | sed "s/^/$1: /"
+          }
+          commits=$(git rev-list "$BASE..$HEAD")
+          for c in $commits; do
+            short=$(git rev-parse --short "$c")
+            parents=$(git rev-list --parents -n 1 "$c")
+            set -- $parents; shift
+            if [ $# -gt 2 ]; then
+              report "$short" "merge with more than two parents, not scanned (merge one branch at a time)"
+              continue
+            fi
+            # Each result is assigned on its own, so a failing git command fails the check. Git's
+            # own errors are silenced because they can name paths.
+            diff=$(git show --format= -p --unified=0 --remerge-diff --no-renames --no-color --no-ext-diff "$c" 2>/dev/null | awk -v mode=diff "$scan") \
+              && names=$(added_names "$c" "$@" | awk -v mode=names "$scan") \
+              && msg=$(git log -1 --format=%B "$c" 2>/dev/null | awk -v mode=message "$scan") \
+              || { report "$short" "git error, commit not scanned"; continue; }
+            for out in "$diff" "$names" "$msg"; do
+              [ -z "$out" ] || report "$short" "$out"
+            done
+          done
+          [ "$found" = 0 ] || exit 1
+          echo "No real email addresses added in any PR commit."
+
+      - name: Secrets (gitleaks)
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          curl -sSfL -o gitleaks.tgz "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          echo "${GITLEAKS_SHA256}  gitleaks.tgz" | sha256sum -c -
+          tar -xzf gitleaks.tgz -C "$RUNNER_TEMP" gitleaks
+          rm gitleaks.tgz
+          # --redact keeps any secret it finds out of this log.
+          "$RUNNER_TEMP/gitleaks" git . --log-opts="$GITLEAKS_LOG_OPTS $BASE..$HEAD" --redact --no-banner
