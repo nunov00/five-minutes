@@ -31,7 +31,21 @@ test.describe('Today → lesson → edition switch → Takeaway → Test yoursel
 
     const expected = routes.filter((route) => route.lessonId === lessonId);
     await expect(adult.getByRole('link', { name: /^Read:/ })).toHaveAttribute('href', expected.find((route) => route.edition === 'adult')?.path ?? '');
-    await expect(today.locator(':scope > .eyebrow time')).toHaveText(/^\d{1,2} [A-Z][a-z]+ \d{4}$/);
+    const displayedDates = today.locator(':scope > .eyebrow time');
+    const displayedDateCount = await displayedDates.count();
+    expect(displayedDateCount).toBeGreaterThanOrEqual(1);
+    expect(displayedDateCount).toBeLessThanOrEqual(2);
+    for (let index = 0; index < displayedDateCount; index += 1) {
+      await expect(displayedDates.nth(index)).toHaveText(/^\d{1,2} [A-Z][a-z]+ \d{4}$/);
+    }
+    if (displayedDateCount === 2) {
+      await expect(today.locator(':scope > .eyebrow')).toContainText('Revised on');
+      const originalDate = Date.parse(await displayedDates.nth(0).getAttribute('datetime') ?? '');
+      const revisedDate = Date.parse(await displayedDates.nth(1).getAttribute('datetime') ?? '');
+      expect(Number.isNaN(originalDate)).toBe(false);
+      expect(Number.isNaN(revisedDate)).toBe(false);
+      expect(revisedDate).toBeGreaterThanOrEqual(originalDate);
+    }
     await expect(today).not.toContainText('Adult edition');
     await expect(today).not.toContainText('Teen edition');
     const earlier = page.getByRole('region', { name: 'Earlier' });
