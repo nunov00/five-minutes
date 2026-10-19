@@ -1122,14 +1122,17 @@
       "kind": "new",
       "slug": "why-windows-mist-up",
       "title": "Why your windows mist up before the room feels damp",
-      "state": "queued",
+      "state": "complete",
       "priority": 200,
       "queuedAt": "2026-10-18T14:37:41Z",
       "reason": "Explain dew point using a cold window and show why temperature matters as well as moisture.",
       "criteria": [
         "Verify authoritative accessible sources and current catalogue overlap.",
         "Teach the mechanism in distinct Adult and Teen editions; assess useful figures and Teen prediction."
-      ]
+      ],
+      "completedAt": "2026-10-20T02:00:00+02:00",
+      "destinationId": "6a9cfeae-3772-4dbe-bee9-d0d9bf35d10b",
+      "destinationSlug": "why-windows-mist-up"
     },
     {
       "key": "idea-how-noise-cancelling-headphones-work",
@@ -1161,18 +1164,9 @@
     }
   ],
   "pipeline": {
-    "assessedAt": "2026-10-19T00:06:49+02:00",
-    "summary": "Reassessed the full remaining pool after selecting the QR-code transfer. Window condensation, queueing and noise cancellation now lead: each offers a distinct everyday puzzle and a clear causal explanation. Aircraft pressurisation moves ahead of the recent heat-pump revision for topic freshness. Shannon information enters tenth but is held back to avoid adjacent information-coding coverage. Ten viable candidates remain; no new records were needed. Rankings are editorial judgements, not measured demand.",
+    "assessedAt": "2026-10-20T00:04:14+02:00",
+    "summary": "Reassessed the full remaining pool after selecting window condensation. Queueing, noise cancellation and rounded aircraft windows now lead because each offers a distinct everyday puzzle and a concrete causal mechanism. Recent heat-pump and ice revisions remain lower to avoid clustering temperature topics. Dark adaptation enters tenth as a strong sensory mechanism and restores a ten-item shortlist. No new records were needed. Rankings are editorial judgements, not measured demand.",
     "ranking": [
-      {
-        "key": "idea-why-windows-mist-up",
-        "headline": "Why your windows mist up before the room feels damp",
-        "description": "Explain dew point using a cold window and show why temperature matters as well as moisture.",
-        "hook": "The window can be wet while the rest of the room looks dry.",
-        "rankReason": "A fresh household puzzle with a clear dew-point diagram; distinct from evaporation and heat-pump cycles.",
-        "relevance": "Evergreen household relevance, with seasonal interest in cooler weather; not a measured popularity claim.",
-        "evidenceUrls": []
-      },
       {
         "key": "legacy-queueing-theory",
         "headline": "Why the last few empty spaces make a queue much slower",
@@ -1250,8 +1244,17 @@
         "headline": "Why an unlikely message carries more information",
         "description": "Use surprise to explain Shannon information, separating the technical measure from everyday importance or meaning.",
         "hook": "A forecast of rain tells you more when rain was very unlikely.",
-        "rankReason": "A strong quantitative idea with a compact worked example, added to keep ten viable candidates. It stays tenth because the selected QR lesson already covers neighbouring information-coding territory.",
+        "rankReason": "A strong quantitative idea with a compact worked example; it follows the more immediate everyday puzzles and must clearly separate technical information from meaning.",
         "relevance": "Evergreen mathematics and computing; no claim about current communications technology.",
+        "evidenceUrls": []
+      },
+      {
+        "key": "legacy-dark-adaptation",
+        "headline": "Why your eyes need time to adjust to darkness",
+        "description": "Follow pupil response and the slower recovery of retinal sensitivity to explain why vision changes over minutes rather than instantly.",
+        "hook": "Stepping into a dark room changes what you can see long after your pupils first widen.",
+        "rankReason": "A strong sensory puzzle with a clear fast-versus-slow mechanism and practical prediction; placed tenth while authoritative sources and catalogue overlap are refreshed.",
+        "relevance": "Evergreen human biology; no medical diagnosis or current trend claim.",
         "evidenceUrls": []
       }
     ]

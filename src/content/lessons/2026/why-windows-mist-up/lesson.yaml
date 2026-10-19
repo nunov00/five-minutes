@@ -1,0 +1,46 @@
+schemaVersion: 2
+id: 6a9cfeae-3772-4dbe-bee9-d0d9bf35d10b
+slug: why-windows-mist-up
+aliases: []
+publishedAt: 2026-10-20T02:00:00+02:00
+topic: science
+subtopic: physics
+concepts: [condensation, dew-point, relative-humidity, heat-transfer]
+related:
+  manual:
+    - id: 532a34e6-cbc9-4c65-9316-c716749c66e2
+      reason: Both lessons begin with a surface that feels or behaves differently because heat crosses its boundary.
+    - id: 6905c8d7-1cd9-4d9f-af69-30cc92616d2f
+      reason: Evaporation and condensation are opposite phase changes whose rates depend on the air beside a surface.
+    - id: 6bd86c0f-7cde-467c-abd1-ef6c8a2b51b1
+      reason: Both lessons use temperature differences and heat flow to explain an everyday heating-season puzzle.
+  exclude: []
+sources:
+  - title: Weather Education
+    url: https://www.weather.gov/jkl/education
+    publisher: US National Weather Service
+    accessedAt: 2026-10-20
+    note: Defines dew point as the temperature to which air must be cooled at constant pressure and unchanged water-vapour content to reach saturation, when condensation can occur.
+  - title: Dew Point vs Humidity
+    url: https://www.weather.gov/arx/why_dewpoint_vs_humidity
+    publisher: US National Weather Service
+    accessedAt: 2026-10-20
+    note: Supports the distinction between relative humidity and moisture content, including the 80°F air, 60°F dew-point and 50% relative-humidity example.
+  - title: Discussion on Humidity
+    url: https://www.weather.gov/lmk/humidity?unit=m
+    publisher: US National Weather Service
+    accessedAt: 2026-10-20
+    note: Explains that relative humidity compares actual water vapour with the temperature-dependent saturation amount, so cooling the same moist air raises relative humidity.
+  - title: Purchasing Energy-Efficient Residential Windows, Doors, and Skylights
+    url: https://www.energy.gov/cmei/femp/purchasing-energy-efficient-residential-windows-doors-and-skylights
+    publisher: US Department of Energy
+    accessedAt: 2026-10-20
+    note: Supports the practical connection among a window's interior-surface temperature, condensation resistance, air leakage and cold outdoor conditions.
+provenance:
+  createdAt: 2026-10-20T00:04:14+02:00
+  createdBy:
+    type: ai
+    provider: openai
+    model: gpt-6.1-sol
+    promptVersion: automated-writer-v4
+  reviews: []
