@@ -13,7 +13,7 @@ const search = pathname==='/search';
 const discovery = editionDiscoveryPath(pathname,'adult')!==null;
 const discoveryLocation = pathname.replace(/^\/editions\/(adult|teen)/,'');
 const navigation = [
-  { href: '/', label: 'Today', current: pathname === '/' },
+  { href: '/', label: 'Worth knowing', current: pathname === '/' },
   { href: discoveryPath(edition ?? null,'library'), label: 'Library', current: discovery && discoveryLocation.startsWith('/library') },
   { href: discoveryPath(edition ?? null,'topics'), label: 'Topics', current: discovery && discoveryLocation.startsWith('/topics') },
   { href: '/search', label: 'Search', current: search },
