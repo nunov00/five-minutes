@@ -13,7 +13,7 @@ Five Minutes is a content-oriented learning publication. The architecture should
 
 Core journey:
 
-Open -> Today's idea -> Read -> Understand -> Test yourself -> Explore another idea
+Open -> Worth knowing -> Read -> Understand -> Test yourself -> Explore another idea
 
 ## Architectural principles
 
