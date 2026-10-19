@@ -8,7 +8,7 @@ test.describe('home / app shell', () => {
     await expect(page).toHaveTitle(/Five Minutes/);
     await expect(page.getByRole('banner').getByRole('link', { name: 'Five Minutes' })).toHaveAttribute('href', '/');
     await expect(page.getByRole('main')).toBeVisible();
-    await expect(page.getByRole('heading', { level: 1, name: "Today's idea" })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1, name: "Worth knowing" })).toBeVisible();
   });
 
   test('offers a keyboard skip link to the main content', async ({ page }) => {
