@@ -21,20 +21,22 @@ figure:
 ---
 A coffee stain covers part of a QR code, yet a phone still opens the link. The missing squares have not become readable. The code was designed so that the surviving information can sometimes determine what the damaged part must have contained.
 
-The black and white modules are first interpreted as bits and grouped into eight-bit **codewords**. Some codewords carry the message and its formatting. Others are calculated from the message by a method called **Reed–Solomon error correction**. Those extra codewords are deliberate redundancy, but they are not a second complete copy.
+The black and white modules are first interpreted as bits and grouped into eight-bit **codewords**. Some codewords carry the message, including a short header describing how it is encoded. Others are calculated from the message by a method called **Reed–Solomon error correction**. Those extra codewords are deliberate redundancy, but they are not a second complete copy.
 
 ## Several checks, not one checksum
 
 A simple checksum might reveal that something changed without saying where. Reed–Solomon coding creates several algebraic relationships across a block of codewords. When a scanner reads a different value, each relationship fails in a particular way. Taken together, those discrepancies can contain enough information to locate changed codewords and calculate their original values.
 
-Here is a toy illustration of the idea, not the arithmetic used by a QR decoder. Suppose three values are stored along with two checks: their sum, and a weighted sum in which the first value counts once, the second twice and the third three times. If one value changes, the ordinary sum reveals the size of the change. The weighted sum changes by one, two or three times that amount, revealing its position. Two independent relationships can therefore do more than one.
+Here is a toy illustration of the idea, not the arithmetic used by a QR decoder. Suppose three values are stored along with two checks: their sum, and a weighted sum in which the first value counts once, the second twice and the third three times. If one value changes, the ordinary sum reveals the size of the change. The weighted sum changes by one, two or three times that amount, revealing its position.
 
-Actual Reed–Solomon codes perform a more powerful version of this reasoning with polynomials over a finite set of values. A valid block corresponds to a tightly constrained set of possible codewords. Damage moves the scanned block away from that set. Provided it has not moved too far, decoding finds the valid block consistent with the error pattern.
+Why are two checks useful here? One changed value introduces two unknowns: **where** the error is and **how much** the value changed. The two independent discrepancies supply information about both. More errors introduce more unknowns and demand more correction information. DENSO WAVE gives a simplified example in which correcting 50 codewords requires 100 Reed–Solomon codewords—twice the number to be corrected.
+
+Actual Reed–Solomon codes perform a more powerful version of this reasoning with polynomials over a finite set of values. A valid block belongs to a tightly constrained set. Damage moves the scanned block away from that set. Within the code's correction bound, decoding identifies the nearest valid block: the one requiring the fewest codeword changes.
 
 ## Protection spends space
 
-QR codes offer several error-correction levels. A higher level devotes more codewords to correction. For the same message, that can require a larger symbol; for a fixed symbol size, it leaves less room for message data. The design is buying resilience with capacity.
+QR codes offer several error-correction levels. DENSO WAVE describes Level M as able to restore about 15% of total codewords and Level Q about 25%. The stronger level devotes more codewords to correction. For the same message, that can require a larger symbol; for a fixed symbol size, it leaves less room for message data. The design is buying resilience with capacity.
 
-There is still a limit. A quoted correction level is not a promise that the same percentage of any visible patch may be removed. The grid must first be located and sampled, and damage affects codewords rather than neat areas of the image. Blur, poor contrast or destruction of important structural patterns can stop a scan before the correction mathematics gets a usable block.
+Those percentages are not a promise that the same fraction of any visible patch may be removed. They refer to total codewords, while a damaged patch can affect codewords unevenly. The grid must also be located and sampled before correction begins. Blur, poor contrast or destruction of important structural patterns can stop a scan before the mathematics gets a usable block.
 
 So a phone is not guessing the covered link from context. It is solving a deliberately over-specified encoding problem: enough of the code survives to make the missing values the only answer that fits.
