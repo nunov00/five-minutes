@@ -1,5 +1,7 @@
 # Five Minutes Architecture
 
+Reader-facing naming (19 October 2026): `/` is labelled **Home** in navigation and permanently headed **Something worth knowing**, even when publication is delayed. Lesson fallback links say **Back to home**; the 404 link says **Go to the home page**. References to Today below describe the existing internal homepage surface or historical decisions; selection, routes, dates and automation are unchanged.
+
 19 October 2026 single-task amendment: once activated, the Coordinator task in `docs/automation/publication-task-contracts.md` supersedes the separate scheduled-task/session requirements and alternating role timing below. One scheduled parent performs Writer work and delegates the complete Reviewer role to a fresh real child with `fork_turns="none"`; only that child may review and merge the exact head in the same child invocation. Each changed head requires a new child. All source/render/feedback checks, revision/history budgets, off switch, same-day and expected-head safeguards remain. Legacy role sections and schedules remain rollback references. Activation requires mandatory different-provider review, green checks, merge and verified task readback; direction alone does not activate it.
 
 
@@ -13,7 +15,7 @@ Five Minutes is a content-oriented learning publication. The architecture should
 
 Core journey:
 
-Open -> Today's idea -> Read -> Understand -> Test yourself -> Explore another idea
+Open -> Something worth knowing -> Read -> Understand -> Test yourself -> Explore another idea
 
 ## Architectural principles
 

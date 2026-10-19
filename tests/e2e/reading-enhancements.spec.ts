@@ -33,7 +33,7 @@ test('activities reset on reload, Back and the restoration handler without stori
  async function choose(){await page.getByText('What do you think?',{exact:true}).click();await page.getByRole('radio',{name:'The Northern Hemisphere',exact:true}).check();}
  async function reset(){await expect(page.locator('[data-activity]')).not.toHaveAttribute('open','');await expect(page.locator('[data-activity-reveal]')).not.toHaveAttribute('open','');for(const input of await page.getByRole('radio',{includeHidden:true}).all())await expect(input).not.toBeChecked();await expect(page.locator('[data-activity-selection]')).toHaveText('');}
  await page.goto(seasons);await choose();await page.reload();await reset();
- await choose();await page.getByRole('navigation',{name:'Main navigation'}).getByRole('link',{name:'Today',exact:true}).click();await page.goBack();await expect(page).toHaveURL(seasons);await reset();
+ await choose();await page.getByRole('navigation',{name:'Main navigation'}).getByRole('link',{name:'Home',exact:true}).click();await page.goBack();await expect(page).toHaveURL(seasons);await reset();
  await choose();await page.evaluate(()=>window.dispatchEvent(new PageTransitionEvent('pageshow',{persisted:true})));await reset();
  const state=await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!),key);expect(Object.keys(state).sort()).toEqual(['appearance','edition','read','recent','saved','version']);expect(state.saved).toEqual([]);
 });

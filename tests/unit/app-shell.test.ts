@@ -4,15 +4,16 @@ import BaseLayout from '../../src/layouts/BaseLayout.astro';
 import HomePage from '../../src/pages/index.astro';
 
 describe('app shell', () => {
-  it('renders the Today page inside the base layout', async () => {
+  it('renders the home page inside the base layout', async () => {
     const container = await AstroContainer.create();
     const html = await container.renderToString(HomePage);
 
     expect(html).toMatch(/<html lang="en"/);
-    expect(html).toContain('<title>Today · Five Minutes</title>');
+    expect(html).toContain('<title>Something worth knowing | Five Minutes</title>');
     expect(html).toMatch(/<meta name="description" content="[^"]+"/);
     // Vitest renders in dev mode, which annotates elements with source attributes.
-    expect(html).toMatch(/<h1[^>]*>Today's idea<\/h1>/);
+    expect(html).toMatch(/<h1[^>]*>Something worth knowing<\/h1>/);
+    expect(html).toMatch(/<a[^>]*href="\/"[^>]*aria-current="page"[^>]*>Home<\/a>/);
     expect(html).toMatch(/<a[^>]*class="brand"[^>]*href="\/"/);
     expect(html).toMatch(/<a[^>]*href="#main"/);
     expect(html).toMatch(/<a[^>]*href="\/feedback"[^>]*>Send anonymous feedback<\/a>/);
