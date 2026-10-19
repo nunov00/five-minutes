@@ -1,0 +1,9 @@
+# Gitleaks settings for the privacy check (.github/workflows/privacy.yml).
+[extend]
+useDefault = true
+
+[allowlist]
+# Lesson and route IDs are UUIDs (editorial/backlog.json, src/content/route-ownership.json);
+# gitleaks' generic-api-key rule mistakes them for keys.
+description = "Lesson and route UUIDs"
+regexes = ['''^(lesson-)?[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$''']
