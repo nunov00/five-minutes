@@ -1,14 +1,15 @@
 import { expect, test } from './support/fixtures';
 
 test.describe('home / app shell', () => {
-  test('loads the Today page inside the Five Minutes shell', async ({ page }) => {
+  test('loads the home page inside the Five Minutes shell', async ({ page }) => {
     const response = await page.goto('/');
     expect(response?.ok(), 'home page HTTP status').toBe(true);
 
-    await expect(page).toHaveTitle(/Five Minutes/);
+    await expect(page).toHaveTitle('Something worth knowing | Five Minutes');
+    await expect(page.getByRole('navigation', { name: 'Main navigation' }).getByRole('link', { name: 'Home', exact: true })).toHaveAttribute('aria-current', 'page');
     await expect(page.getByRole('banner').getByRole('link', { name: 'Five Minutes' })).toHaveAttribute('href', '/');
     await expect(page.getByRole('main')).toBeVisible();
-    await expect(page.getByRole('heading', { level: 1, name: "Today's idea" })).toBeVisible();
+    await expect(page.getByRole('heading', { level: 1, name: "Something worth knowing" })).toBeVisible();
   });
 
   test('offers a keyboard skip link to the main content', async ({ page }) => {

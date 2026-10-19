@@ -26,10 +26,10 @@ const earlier = selectEarlierLessons(manifest.catalogue, today.id).map((entry) =
   return { ...entry, topicLabel: topic.label };
 });
 ---
-<BaseLayout title="Today · Five Minutes" editionPaths={{adult:today.adult.path,teen:today.teen.path}} todaySurface>
+<BaseLayout title="Something worth knowing | Five Minutes" editionPaths={{adult:today.adult.path,teen:today.teen.path}} todaySurface>
   <section aria-labelledby="today-heading" data-lesson-id={today.id}>
     <p class="eyebrow"><LessonDates {...today} /></p>
-    <h1 id="today-heading">Today's idea</h1>
+    <h1 id="today-heading">Something worth knowing</h1>
     {editions.map(({ edition, path, presentation }) => (
       <article class="card" data-today-edition={edition}>
         <h2>{presentation.title}</h2>

@@ -85,7 +85,7 @@ test.describe('Today → lesson → edition switch → Takeaway → Test yoursel
     await expect(page).toHaveURL('/');
     await page.getByRole('link', { name: /^Read:/ }).click();
     await expect(page).toHaveURL(/\/adult\//);
-    await page.getByRole('link', { name: 'Back to Today' }).click();
+    await page.getByRole('link', { name: 'Back to home' }).click();
     await expect(page.locator('[data-today-edition="adult"]')).toBeVisible();
     await expect(page.locator('[data-today-edition="teen"]')).toBeHidden();
   });
@@ -161,8 +161,8 @@ test.describe('Today → lesson → edition switch → Takeaway → Test yoursel
 
     await editionNav.getByRole('link', { name: 'Adult' }).click();
     await expect(page).toHaveURL(/\/adult\/[a-z0-9-]+$/);
-    await page.getByRole('link', { name: 'Back to Today' }).click();
-    await expect(page.getByRole('heading', { level: 1, name: "Today's idea" })).toBeVisible();
+    await page.getByRole('link', { name: 'Back to home' }).click();
+    await expect(page.getByRole('heading', { level: 1, name: "Something worth knowing" })).toBeVisible();
   });
 
   test('sampled reading pages have one title heading and recall-before-takeaway', async ({ page }) => {
