@@ -1,5 +1,7 @@
 # Operations and Delivery
 
+19 October 2026 single-task amendment: once activated, the Coordinator task in `docs/automation/publication-task-contracts.md` supersedes the separate scheduled-task/session requirements and alternating role timing below. One scheduled parent performs Writer work and delegates the complete Reviewer role to a fresh real child with `fork_turns="none"`; only that child may review and merge the exact head in the same child invocation. Each changed head requires a new child. All source/render/feedback checks, revision/history budgets, off switch, same-day and expected-head safeguards remain. Legacy role sections and schedules remain rollback references. Activation requires mandatory different-provider review, green checks, merge and verified task readback; direction alone does not activate it.
+
 
 18 October 2026 ranked-pipeline amendment: `docs/editorial-pipeline.md` supersedes backlog-first selection and permits the bounded data-only next-shortlist refresh in the daily lesson PR; new ideas and revisions compete on merit and changing relevance. All other pre-existing pool records remain intact. Editorial renewal amendment: ADR-0012 and the shared ranked-pipeline contract in docs/automation/publication-task-contracts.md supersede earlier new-only/import-exclusion/correction-exclusion wording for selected daily backlog candidates. Reader date labels and Today/Earlier eligibility apply globally as ADR-0012 defines. Existing review, source, off-switch, exact-head, same-day and guarded-merge safeguards remain. Direction is Owner-approved; activation waits for the implementation PR's mandatory different-provider review and checks.
 
@@ -241,7 +243,7 @@ Verified against Cloudflare's [Durable Objects pricing](https://developers.cloud
 
 ### AI subscriptions
 
-- ChatGPT scheduled tasks are limited to **5 active automations** per plan. A sixth was refused with `too_many_active_automations`. Production uses 4 (two standing unrelated tasks plus the Writer and Reviewer), leaving 1 spare. Any new recurring task must fit this budget.
+- ChatGPT scheduled tasks are limited to **5 active automations** per plan. A sixth was refused with `too_many_active_automations`. The live count must be read from the task service; other projects share this allowance. The legacy Five Minutes entry mode consumes two slots; the activated Coordinator consumes one and frees one slot. Do not infer remaining account capacity from this repository. Any new recurring task must fit this budget.
 - Neither subscription exposes a usage or allowance meter. Run duration and the absence of surfaced throttling are the recorded proxies. The Owner declined to test exhaustion deliberately; exhaustion is accepted residual risk, and publication fails closed.
 - Scheduled tasks can start late or fail to dispatch promptly. Every scheduled job must be idempotent and safe when late or missed.
 - All agents act through the Owner's single GitHub identity, so provider or model attribution is self-reported.
