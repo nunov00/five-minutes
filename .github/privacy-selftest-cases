@@ -1,0 +1,8 @@
+# Cases for templates/github/privacy-check-selftest.sh in nunov00/project-governance.
+# <0 to pass | 1 to fail>|<path>|<line>; {UUID} becomes a synthetic UUID, {Q} a double quote.
+0|editorial/backlog.json|    "key": "lesson-{UUID}",
+0|src/content/route-ownership.json|  "some-route": "{UUID}",
+1|editorial/backlog.json|    "api_key": "{UUID}",
+1|src/content/route-ownership.json|  "api_key": "{UUID}",
+1|src/content/other.json|    "key": "lesson-{UUID}",
+1|config.txt|api_key = "{UUID}"
