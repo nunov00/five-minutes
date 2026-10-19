@@ -12,7 +12,7 @@ Follow `AGENTS.md`, `docs/GOVERNANCE.md`, `docs/ARCHITECTURE.md`, applicable `do
 - Verify that static routes, manifests, catalogue/search artefacts and Cloudflare adapters remain consistent; provider-specific runtime code must not leak into core application logic.
 - For UI changes, consider phone layouts, accessibility, keyboard navigation, progressive enhancement, and behaviour without JavaScript where required. Request rendered-page evidence when visual correctness cannot be established from code.
 - For lesson or figure changes, apply EDITORIAL.md: factual/source support, useful explanation, Adult/Teen quality, accurate diagrams, legibility, alt text and exact-head phone/wide rendering. Do not treat passing schema tests as proof of editorial quality.
-- Assess focused unit/integration tests and relevant Playwright journeys. Flag removed/weakened checks, unsafe `pull_request_target` behaviour, or missing regression coverage. Required checks are `baseline`, `e2e` and `lesson-guard`; never suggest bypassing them.
+- Assess focused unit/integration tests and relevant Playwright journeys. Flag removed/weakened checks, unsafe `pull_request_target` behaviour, or missing regression coverage. Required checks are `baseline`, `e2e`, `lesson-guard` and `privacy`; never suggest bypassing them.
 - Prefer concise findings over a long generic checklist. State explicitly when an observation needs manual or rendered verification rather than claiming it was tested.
 
 ## Review independence
