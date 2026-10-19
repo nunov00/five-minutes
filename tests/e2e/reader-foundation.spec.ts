@@ -71,7 +71,7 @@ test('the first chooser choice replaces the handoff so one Back reaches Today', 
   await expect(page).toHaveURL(`/editions/teen/${route.toLowerCase()}`);
   await page.goBack();
   await expect(page).toHaveURL('/');
-  await expect(page.getByRole('heading', {name:"Today's idea",exact:true})).toBeVisible();
+  await expect(page.getByRole('heading', {name:"Worth knowing",exact:true})).toBeVisible();
  }
  // The same initial handoff applies to the header selector on the chooser.
  await page.evaluate(k => localStorage.removeItem(k), key);
