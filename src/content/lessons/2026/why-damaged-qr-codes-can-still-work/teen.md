@@ -7,7 +7,7 @@ answer: Several check codewords connect different parts of the data. The way tho
 searchTerms: [how QR codes work, scratched QR code, QR error correction, why damaged QR scans]
 activity:
   prompt: The message stays the same, but a QR maker chooses stronger error correction. What trade-off should you expect?
-  options: [More space is used for checks, The phone can ignore the square pattern, The message is stored as an identical second copy]
+  options: [More space is used for checks, The same-sized code can hold a longer message, The message is stored as an identical second copy]
   answer: 0
   explanation: Stronger correction uses more check codewords. That improves the amount of damage the code may survive, but it reduces message capacity or requires a larger QR symbol.
 figure:
