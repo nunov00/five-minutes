@@ -40,7 +40,7 @@ test.describe('M6 integration in WebKit', () => {
     await activity.getByRole('radio', { name: 'The Southern Hemisphere' }).check();
     await expect(activity.locator('[data-activity-reveal]')).toHaveAttribute('open', '');
 
-    await page.getByRole('navigation', { name: 'Main navigation' }).getByRole('link', { name: 'Today', exact: true }).click();
+    await page.getByRole('navigation', { name: 'Main navigation' }).getByRole('link', { name: 'Worth knowing', exact: true }).click();
     await page.goBack();
     await expect(page).toHaveURL(seasons);
     await expect(activity).not.toHaveAttribute('open', '');
@@ -77,8 +77,8 @@ test.describe('M6 integration in WebKit', () => {
     await plain.getByText('Reveal the explanation', { exact: true }).click();
     await plain.locator('[data-recall-reveal] > summary').click();
     await expect(plain.getByRole('region', { name: 'Takeaway', exact: true })).toBeVisible();
-    await plain.getByRole('link', { name: 'Back to Today' }).click();
-    await expect(plain.getByRole('heading', { level: 1, name: "Today's idea" })).toBeVisible();
+    await plain.getByRole('link', { name: 'Back to home' }).click();
+    await expect(plain.getByRole('heading', { level: 1, name: "Worth knowing" })).toBeVisible();
     await expect(plain.locator('[data-today-edition="adult"]')).toBeVisible();
     await expect(plain.locator('[data-today-edition="teen"]')).toBeHidden();
     expect(await plain.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
