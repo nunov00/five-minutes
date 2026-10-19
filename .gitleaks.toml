@@ -2,8 +2,22 @@
 [extend]
 useDefault = true
 
-[allowlist]
-# Lesson and route IDs are UUIDs (editorial/backlog.json, src/content/route-ownership.json);
-# gitleaks' generic-api-key rule mistakes them for keys.
-description = "Lesson and route UUIDs"
-regexes = ['''^(lesson-)?[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$''']
+# gitleaks' generic-api-key rule mistakes lesson and route UUIDs for keys. Each exception
+# applies only to one file AND one exact line shape, so a UUID-shaped secret anywhere else
+# (another file, another field name) is still reported.
+[[rules]]
+id = "generic-api-key"
+
+[[rules.allowlists]]
+description = "Lesson keys in the editorial backlog"
+condition = "AND"
+paths = ['''^editorial/backlog\.json$''']
+regexTarget = "line"
+regexes = ['''^\s*"key": "lesson-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",?\s*$''']
+
+[[rules.allowlists]]
+description = "Slug-to-UUID route ownership map"
+condition = "AND"
+paths = ['''^src/content/route-ownership\.json$''']
+regexTarget = "line"
+regexes = ['''^\s*"[a-z0-9]+(-[a-z0-9]+)*": "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}",?\s*$''']
