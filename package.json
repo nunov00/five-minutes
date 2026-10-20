@@ -17,7 +17,8 @@
     "cf:verify-capacity": "node deploy/cloudflare/verify-capacity.mjs",
     "verify:static": "node scripts/verify-static-integrity.mjs",
     "backlog": "node scripts/editorial-backlog.mjs",
-    "test:lesson-guard": "vitest run tests/unit/lesson-guard.test.ts"
+    "lesson:submission": "node scripts/lesson-submission.mjs",
+    "test:lesson-guard": "vitest run tests/unit/lesson-guard.test.ts tests/unit/lesson-submission.test.ts"
   },
   "dependencies": {
     "astro": "7.3.5",

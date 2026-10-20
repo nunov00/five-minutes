@@ -47,6 +47,7 @@ Use Node.js 22 (see `.nvmrc`) and the committed lockfile:
 - `npm run check` — Astro/TypeScript diagnostics;
 - `npm test` — unit/integration tests (Vitest, `tests/**/*.test.ts`);
 - `npm run test:lesson-guard` — focused hostile-input tests for the M7 automated lesson boundary;
+- `npm run lesson:submission -- prepare <main-SHA> --repo <candidate-checkout>` — run from trusted current-main tooling before initial remote submission; derives the branch and reuses the guard. See the task contract for live-state checks and `checks` mode.
 - `npm run build` — production static build into `dist/`;
 - `npm run test:e2e` — Playwright browser journeys (`tests/e2e/**/*.spec.ts`) against the built site via `astro preview`; build the browser fixture with `FIVE_MINUTES_TEST_LIBRARY_PAGE_SIZE=5 npm run build` first (the pagination journeys require a second Library page), and install Chromium plus WebKit once with `npx playwright install chromium webkit`. Agents: Astro backgrounds `astro preview` for AI agents, so start `npm run preview` first (Playwright reuses it) and stop it afterwards with `npx astro preview stop`;
 - `npm run dist:count` — number of deployable files in `dist/` (run after `npm run build`);
