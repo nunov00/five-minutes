@@ -35,10 +35,15 @@ function fail(message) { throw new LessonGuardError(message); }
 // Read committed Git objects and compare raw worktree bytes; never run candidate conversions.
 export function prepareLessonSubmission({ cwd = process.cwd(), base, now = new Date().toISOString(), retry = false } = {}) {
   if (!SHA.test(base ?? '')) fail('Supply the freshly verified main commit SHA.');
-  const git = (...args) => execFileSync('git', ['--no-optional-locks', '-c', 'core.fsmonitor=false', '-c', 'core.hooksPath=/dev/null', ...args], { cwd, env: { ...process.env, GIT_NO_REPLACE_OBJECTS: '1' }, maxBuffer: 16 * 1024 * 1024 });
+  const git = (...args) => execFileSync('git', ['--no-pager', '--no-lazy-fetch', '--no-optional-locks', '-c', 'log.showSignature=false', '-c', 'core.fsmonitor=false', '-c', 'core.hooksPath=/dev/null', ...args], { cwd, env: { ...process.env, GIT_NO_REPLACE_OBJECTS: '1', GIT_NO_LAZY_FETCH: '1' }, maxBuffer: 16 * 1024 * 1024 });
   const text = (...args) => git(...args).toString('utf8').trim();
   const head = text('rev-parse', '--verify', 'HEAD^{commit}');
-  if (text('show', '-s', '--format=%P', head) !== base) fail('Initial candidate must have exactly one parent: current main.');
+  // `git show` may run a configured signature verifier, even with --format=%P.
+  // Parse only top-level raw commit headers; signature continuations and the
+  // message cannot supply parents, and a first-parent read would allow merges.
+  const headers = git('cat-file', 'commit', head).toString('utf8').split('\n\n', 1)[0].split('\n');
+  const parents = headers.filter(line => /^parent(?:\s|$)/.test(line));
+  if (parents.length !== 1 || parents[0] !== `parent ${base}`) fail('Initial candidate must have exactly one parent: current main.');
 
   const fields = git('diff', '--no-ext-diff', '--no-textconv', '--no-renames', '--name-status', '-z', base, head).toString('utf8').split('\0');
   const files = [];
@@ -135,7 +140,7 @@ export function prepareLessonSubmission({ cwd = process.cwd(), base, now = new D
       blobs[imagePath] = { mode: entry.mode, type: entry.type, size: bytes.length, bytes };
     }
   }
-  const baseText = path => git('show', `${base}:${path}`).toString('utf8');
+  const baseText = path => git('cat-file', 'blob', `${base}:${path}`).toString('utf8');
   const input = {
     pr: { headRef: branch, headSha: head, labels: ['editorial-review-requested', 'review:mandatory'] },
     triggerHeadSha: head, currentBaseSha: base,

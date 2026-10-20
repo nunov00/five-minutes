@@ -81,6 +81,41 @@ describe('initial lesson submission preflight', () => {
     }
     expect(() => prepareLessonSubmission({ ...repo, now })).toThrow(/clean/);
   });
+  it.each([0, 1, 2])('reads all parents of a signed %i-parent candidate without invoking GPG', count => {
+    const repo = candidate();
+    const old = repo.git('rev-parse', 'HEAD');
+    const marker = join(repo.cwd, '.git', 'gpg-executed');
+    const verifier = join(repo.cwd, '.git', 'candidate-gpg');
+    writeFileSync(verifier, `#!/bin/sh\ntouch '${marker}'\nexit 0\n`);
+    chmodSync(verifier, 0o755);
+    const original = repo.git('cat-file', 'commit', old);
+    const parents = count === 0 ? '' : `parent ${repo.base}\n${count === 2 ? `parent ${old}\n` : ''}`;
+    const raw = original.replace(`parent ${repo.base}\n`, parents)
+      .replace('\n\n', `\ngpgsig -----BEGIN PGP SIGNATURE-----\n synthetic-signature\n parent ${old}\n -----END PGP SIGNATURE-----\n\n`)
+      + `\nparent ${old}\n`; // Message/continuation text must not count as parents.
+    const signed = execFileSync('git', ['hash-object', '-t', 'commit', '-w', '--stdin'], { cwd: repo.cwd, input: raw }).toString().trim();
+    repo.git('update-ref', 'HEAD', signed, old);
+    repo.git('config', 'log.showSignature', 'true');
+    repo.git('config', 'gpg.program', verifier);
+    if (count === 1) expect(prepareLessonSubmission({ ...repo, now }).status).toBe('PREPARED');
+    else expect(() => prepareLessonSubmission({ ...repo, now })).toThrow(/exactly one parent/);
+    expect(existsSync(marker)).toBe(false);
+  });
+  it('does not invoke a configured remote helper to lazy-fetch a missing candidate blob', () => {
+    const repo = candidate();
+    const marker = join(repo.cwd, '.git', 'remote-executed');
+    const remote = join(repo.cwd, '.git', 'candidate-remote');
+    writeFileSync(remote, `#!/bin/sh\ntouch '${marker}'\nexit 1\n`);
+    chmodSync(remote, 0o755);
+    repo.git('config', 'extensions.partialClone', 'origin');
+    repo.git('config', 'remote.origin.promisor', 'true');
+    repo.git('config', 'remote.origin.url', `ext::/bin/sh ${remote}`);
+    repo.git('config', 'protocol.ext.allow', 'always');
+    const sha = repo.git('rev-parse', `HEAD:src/content/lessons/2026/${slug}/adult.md`);
+    rmSync(join(repo.cwd, '.git', 'objects', sha.slice(0, 2), sha.slice(2)));
+    expect(() => prepareLessonSubmission({ ...repo, now })).toThrow();
+    expect(existsSync(marker)).toBe(false);
+  });
   it('accepts the correct branch but rejects the original date-prefix mistake', () => {
     expect(prepareLessonSubmission({ ...candidate(), now }).branch).toBe(`lesson/${slug}`);
     expect(() => prepareLessonSubmission({ ...candidate(`lesson/2026-10-05-${slug}`), now })).toThrow(/differs from the generated branch/);
