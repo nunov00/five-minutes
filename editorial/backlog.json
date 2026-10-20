@@ -1122,14 +1122,17 @@
       "kind": "new",
       "slug": "why-windows-mist-up",
       "title": "Why your windows mist up before the room feels damp",
-      "state": "queued",
+      "state": "complete",
       "priority": 200,
       "queuedAt": "2026-10-18T14:37:41Z",
       "reason": "Explain dew point using a cold window and show why temperature matters as well as moisture.",
       "criteria": [
         "Verify authoritative accessible sources and current catalogue overlap.",
         "Teach the mechanism in distinct Adult and Teen editions; assess useful figures and Teen prediction."
-      ]
+      ],
+      "completedAt": "2026-10-20T02:00:00+02:00",
+      "destinationId": "6a9cfeae-3772-4dbe-bee9-d0d9bf35d10b",
+      "destinationSlug": "why-windows-mist-up"
     },
     {
       "key": "idea-how-noise-cancelling-headphones-work",
@@ -1161,18 +1164,9 @@
     }
   ],
   "pipeline": {
-    "assessedAt": "2026-10-19T00:06:49+02:00",
-    "summary": "Reassessed the full remaining pool after selecting the QR-code transfer. Window condensation, queueing and noise cancellation now lead: each offers a distinct everyday puzzle and a clear causal explanation. Aircraft pressurisation moves ahead of the recent heat-pump revision for topic freshness. Shannon information enters tenth but is held back to avoid adjacent information-coding coverage. Ten viable candidates remain; no new records were needed. Rankings are editorial judgements, not measured demand.",
+    "assessedAt": "2026-10-20T00:04:14+02:00",
+    "summary": "After selecting window condensation, queueing, noise cancellation and rounded aircraft windows lead for their distinct everyday puzzles and causal explanations. Recent heat-pump and ice revisions remain lower to avoid clustering temperature topics. Review I4 replaces the excluded dark-adaptation shortlist reference with the existing Wi-Fi propagation candidate in tenth place; both historical pool records remain unchanged. Ten candidates remain and no new records were added. Rankings are editorial judgements, not measured demand.",
     "ranking": [
-      {
-        "key": "idea-why-windows-mist-up",
-        "headline": "Why your windows mist up before the room feels damp",
-        "description": "Explain dew point using a cold window and show why temperature matters as well as moisture.",
-        "hook": "The window can be wet while the rest of the room looks dry.",
-        "rankReason": "A fresh household puzzle with a clear dew-point diagram; distinct from evaporation and heat-pump cycles.",
-        "relevance": "Evergreen household relevance, with seasonal interest in cooler weather; not a measured popularity claim.",
-        "evidenceUrls": []
-      },
       {
         "key": "legacy-queueing-theory",
         "headline": "Why the last few empty spaces make a queue much slower",
@@ -1205,7 +1199,7 @@
         "headline": "How can cold outdoor air heat your home?",
         "description": "Follow a refrigerant around the cycle to explain how electricity moves heat and why colder weather changes the work required.",
         "hook": "A machine can deliver more heat than the electrical energy it consumes.",
-        "rankReason": "Retain the useful Adult-depth revision, but its 13 October release is recent and window condensation already leads the shortlist. Fifth place preserves seasonal value without clustering related heat topics.",
+        "rankReason": "Retain the useful Adult-depth revision, but its 13 October release is recent and window condensation is today's selected lesson. Fourth place preserves seasonal value behind the next three different mechanisms.",
         "relevance": "Seasonal relevance to northern-hemisphere heating; evergreen physics. No claim of a verified news trend.",
         "evidenceUrls": []
       },
@@ -1250,8 +1244,17 @@
         "headline": "Why an unlikely message carries more information",
         "description": "Use surprise to explain Shannon information, separating the technical measure from everyday importance or meaning.",
         "hook": "A forecast of rain tells you more when rain was very unlikely.",
-        "rankReason": "A strong quantitative idea with a compact worked example, added to keep ten viable candidates. It stays tenth because the selected QR lesson already covers neighbouring information-coding territory.",
+        "rankReason": "A strong quantitative idea with a compact worked example; it follows the more immediate everyday puzzles and must clearly separate technical information from meaning.",
         "relevance": "Evergreen mathematics and computing; no claim about current communications technology.",
+        "evidenceUrls": []
+      },
+      {
+        "key": "legacy-wifi-propagation",
+        "headline": "Why Wi-Fi signals behave differently across your home",
+        "description": "Compare radio frequencies, obstacles and signal loss to explain why coverage and a connection's advertised capability are different questions.",
+        "hook": "The same router can give a different connection on the other side of a wall.",
+        "rankReason": "An eligible existing technology candidate replaces dark adaptation under review I4. Radio propagation offers an everyday mechanism distinct from acoustic cancellation, mechanical resonance and Shannon information; tenth place leaves room for fresh authoritative sourcing before authoring.",
+        "relevance": "Evergreen radio physics; verify frequency and obstacle comparisons from primary sources when selected, without current product or performance promises.",
         "evidenceUrls": []
       }
     ]
