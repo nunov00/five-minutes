@@ -6,10 +6,10 @@ question: Why does water appear on a cold window instead of floating as droplets
 answer: The glass cools only the thin layer of air beside it to the dew point. Water vapour in that layer condenses onto the cold surface while the warmer room air can remain below 100% relative humidity.
 searchTerms: [why windows fog up, dew point for teens, condensation on glass, relative humidity explained]
 activity:
-  prompt: The room air has a dew point of 16°C. Which clean pane is most likely to mist first?
-  options: [A pane whose inside surface is 12°C, Every pane because they share the same room air, A pane whose inside surface is 22°C]
+  prompt: A room stays at 21°C with a 16°C dew point. Clean panes stay at 12°C and 18°C. On which can room-air vapour condense?
+  options: [Only on the 12°C pane because it is below the dew point, On both panes because both are colder than the room, On neither pane because the room air is not saturated]
   answer: 0
-  explanation: The 12°C pane is below the 16°C dew point, so it can cool nearby air past saturation. “Same room air” misses the different surface temperatures; choosing the warm pane reverses the role of cooling in condensation.
+  explanation: Only the 12°C pane is below the 16°C dew point. Being colder than the 21°C room is not enough, so the 18°C pane stays above the threshold. The whole room need not be saturated; cooling beside the colder pane can bring that local air to saturation.
 figure:
   type: concept-flow
   data:
@@ -40,6 +40,6 @@ Suppose the room air's dew point is 16°C. A pane with an inside surface at 18°
 
 A shower, cooking pot or clothes rack can add vapour, raising the dew point. Colder weather can pull more heat through a window, lowering its inside-surface temperature. Either change can make the two temperatures cross.
 
-This explains why “just wipe it” is temporary: wiping removes drops but not the vapour or cold surface that produced them. Ventilation can carry moist indoor air away, while better-insulating glass can keep the inside pane warmer. Neither is magic; condensation depends on the actual moisture and temperatures.
+This explains why “just wipe it” is temporary: wiping removes drops but not the vapour or cold surface that produced them. Replacing moist indoor air with drier air can lower the dew point, while better-insulating glass can keep the inside pane warmer. Neither is magic; condensation depends on the actual moisture and temperatures.
 
 The common shortcut “the room is damp” misses the small-scale mechanism. The window is wet because the air touching it crossed a temperature threshold that the bulk of the room never reached.

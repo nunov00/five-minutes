@@ -17,7 +17,7 @@ figure:
   afterParagraph: 2
   alt: Moist room air reaches a cold window, loses heat to the glass, reaches its dew point in the layer beside the surface, and leaves liquid droplets on the pane.
   caption: "Condensation is local: the thin layer beside the pane can reach saturation even when the room as a whole does not."
-  description: Water vapour is mixed through the room air. At a cold interior pane, heat flows from the adjacent air into the glass and towards the colder outdoors. As that boundary layer cools, the saturation vapour pressure falls. When the layer reaches the dew-point temperature set by its water-vapour content, further cooling transfers some vapour into liquid droplets on the pane.
+  description: Water vapour is mixed through the room air. At a cold interior pane, the adjacent air loses heat to the glass. Cooling raises that air's relative humidity without adding water vapour. It reaches saturation at the dew point; below that temperature, some vapour condenses into liquid droplets on the pane. The warmer air farther from the glass need not be saturated.
 ---
 You enter a bedroom on a cold morning. The air does not feel steamy, yet beads of water cover the lower edge of the window. The room and the glass are touching the same air, so why is only the window wet?
 
@@ -29,15 +29,17 @@ Relative humidity is a ratio. It compares the water vapour actually present with
 
 The US National Weather Service gives a useful numerical contrast: air at 80°F (about 27°C) with a 60°F (about 16°C) dew point has roughly 50% relative humidity. The room air is far from saturated. But if the inner pane and the air layer touching it fall below 60°F, that local layer crosses the same dew point and water can condense there.
 
-This does not mean the entire room suddenly cooled to the pane's temperature. Heat moves through a boundary layer only millimetres to centimetres thick. Molecules arriving near the cold glass lose energy through collisions; the air immediately beside the surface approaches the glass temperature. Once its saturation vapour pressure falls to the actual partial pressure of water vapour, liquid droplets become the stable destination for some of that water.
+This does not mean the entire room cooled to the pane's temperature. The air touching the colder glass loses heat to it. That local cooling can bring the air beside the surface to saturation while the warmer air elsewhere in the room remains below 100% relative humidity.
 
 ## Two controls, not one
 
-Condensation can therefore be reduced from either side of an inequality:
+The threshold is simple: condensation can form when the inside surface is colder than the air's dew point. There are two ways to change that comparison:
 
-- **Lower the indoor dew point.** Cooking, showers, drying clothes and breathing add water vapour. Ventilation or dehumidification removes some, lowering the temperature at which saturation begins.
-- **Raise the interior glass temperature.** Better-insulating glazing, a warmer room-side frame and fewer cold air leaks reduce heat loss and keep the inner surface farther above the dew point.
+- **Lower the indoor dew point.** Cooking, showers, drying clothes and breathing add water vapour. Extracting moist air at its source, replacing it with drier air or using a dehumidifier can remove some, lowering the temperature at which saturation begins.
+- **Raise the interior surface temperature.** Better-insulating glazing and window frames reduce heat loss and help keep the room-side surface above the dew point.
 
-Wiping the glass removes liquid after condensation has happened; it does not change either control. Heating the room can lower its measured relative humidity, but if the glass remains below the unchanged dew point, the pane can still be wet. Likewise, a highly insulating window can resist condensation at one humidity and outdoor temperature but not every possible combination. The Department of Energy therefore describes condensation resistance as comparative, not absolute.
+These controls explain a misleading improvement on a humidity meter. Imagine room air at 21°C with a dew point of 16°C, beside a pane at 12°C. Warm the room air to 24°C without adding or removing vapour, at the same pressure: its relative humidity falls, but its dew point remains 16°C. If the pane is still at 12°C, condensation can continue. If heating also warms the pane above 16°C, the threshold is no longer crossed. The lower humidity percentage alone does not tell you which happened.
 
-The first droplets often mark the coldest local spots: pane edges, metal spacers or places with weak air circulation. That pattern is evidence about temperature as well as moisture. The window mists before the room feels damp because your comfort reflects the bulk air, while condensation obeys the much colder few millimetres next to the glass.
+The US Department of Energy describes condensation-resistance ratings for windows: higher values mean less condensation when it is cold outside. For the particular pane in front of you, the useful comparison is still its surface temperature against the indoor dew point.
+
+Wiping the bedroom window removes the drops, but leaves the conditions that produced them. The wet glass and the ordinary-feeling room are not a contradiction: one surface has crossed a temperature threshold that the rest of the room has not.

@@ -20,7 +20,7 @@ sources:
     url: https://www.weather.gov/jkl/education
     publisher: US National Weather Service
     accessedAt: 2026-10-20
-    note: Defines dew point as the temperature to which air must be cooled at constant pressure and unchanged water-vapour content to reach saturation, when condensation can occur.
+    note: Defines dew point at constant pressure and unchanged water-vapour content; explains conduction from warmer to colder material through molecular energy transfer near a surface.
   - title: Dew Point vs Humidity
     url: https://www.weather.gov/arx/why_dewpoint_vs_humidity
     publisher: US National Weather Service
@@ -35,7 +35,12 @@ sources:
     url: https://www.energy.gov/cmei/femp/purchasing-energy-efficient-residential-windows-doors-and-skylights
     publisher: US Department of Energy
     accessedAt: 2026-10-20
-    note: Supports the practical connection among a window's interior-surface temperature, condensation resistance, air leakage and cold outdoor conditions.
+    note: Describes window heat transmission and air leakage, and states that higher condensation-resistance ratings mean less interior-surface condensation in cold conditions.
+  - title: Condensation
+    url: https://www.yourhome.gov.au/passive-design/condensation
+    publisher: Australian Government, Your Home
+    accessedAt: 2026-10-20
+    note: Independent building guidance connects cold surfaces and dew point, identifies household vapour sources, and explains moisture extraction, dehumidification, insulation and glazing as condensation controls.
 provenance:
   createdAt: 2026-10-20T00:04:14+02:00
   createdBy:
