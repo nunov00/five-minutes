@@ -1,5 +1,7 @@
 import { execFileSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
+import { readFileSync, lstatSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { parseDocument } from 'yaml';
 import { evaluateLessonPullRequest, lessonBranchName, LessonGuardError } from './lesson-guard-core.mjs';
@@ -9,16 +11,33 @@ const BACKLOG = 'editorial/backlog.json';
 const LESSON = /^src\/content\/lessons\/\d{4}\/([a-z0-9-]+)\/(adult\.md|teen\.md|lesson\.yaml)$/;
 const SHA = /^[0-9a-f]{40}$/;
 export const PUBLICATION_CHECKS = Object.freeze(['baseline', 'e2e', 'lesson-guard', 'privacy']);
+const EXPECTED_WORKFLOWS = {
+  baseline: ['ci.yml', 'pull_request'], e2e: ['ci.yml', 'pull_request'],
+  'lesson-guard': ['lesson-guard.yml', 'pull_request_target'], privacy: ['privacy.yml', 'pull_request'],
+};
+
+function expectedProducer(check, head, workflowRuns) {
+  if (check.app?.slug !== 'github-actions') return false;
+  const match = /^https:\/\/github\.com\/nunov00\/five-minutes\/actions\/runs\/([1-9]\d*)\/job\/[1-9]\d*$/.exec(check.details_url ?? '');
+  if (!match) return false;
+  const runs = workflowRuns.filter(run => run?.id === Number(match[1]));
+  if (runs.length !== 1) return false;
+  const run = runs[0];
+  const [file, event] = EXPECTED_WORKFLOWS[check.name];
+  return run.repository?.full_name === 'nunov00/five-minutes'
+    && run.head_repository?.full_name === 'nunov00/five-minutes'
+    && run.head_sha === head && run.path === `.github/workflows/${file}` && run.event === event;
+}
+
 
 function fail(message) { throw new LessonGuardError(message); }
 
-// Read Git objects only. Never execute candidate code, hooks, filters or remote operations.
+// Read committed Git objects and compare raw worktree bytes; never run candidate conversions.
 export function prepareLessonSubmission({ cwd = process.cwd(), base, now = new Date().toISOString(), retry = false } = {}) {
   if (!SHA.test(base ?? '')) fail('Supply the freshly verified main commit SHA.');
   const git = (...args) => execFileSync('git', ['--no-optional-locks', '-c', 'core.fsmonitor=false', '-c', 'core.hooksPath=/dev/null', ...args], { cwd, env: { ...process.env, GIT_NO_REPLACE_OBJECTS: '1' }, maxBuffer: 16 * 1024 * 1024 });
   const text = (...args) => git(...args).toString('utf8').trim();
   const head = text('rev-parse', '--verify', 'HEAD^{commit}');
-  if (text('status', '--porcelain', '--untracked-files=all')) fail('Commit the complete candidate first; working tree must be clean.');
   if (text('show', '-s', '--format=%P', head) !== base) fail('Initial candidate must have exactly one parent: current main.');
 
   const fields = git('diff', '--no-ext-diff', '--no-textconv', '--no-renames', '--name-status', '-z', base, head).toString('utf8').split('\0');
@@ -46,6 +65,39 @@ export function prepareLessonSubmission({ cwd = process.cwd(), base, now = new D
     if (!match) fail('Unrecognised Git tree entry.');
     return [match[4], { mode: match[1], type: match[2], sha: match[3] }];
   }));
+  // `git status` can execute clean/process filters even for unchanged files.
+  // Compare the index with HEAD and raw filesystem bytes instead. No Git
+  // command below converts a worktree file. Line-ending conversions are not
+  // applied: a PREPARED checkout must contain the exact committed bytes.
+  const dirty = () => fail('Commit the complete candidate first; working tree must be clean (exact committed bytes).');
+  const index = git('ls-files', '--stage', '-z').toString('utf8').split('\0').filter(Boolean);
+  if (index.length !== tree.size || git('ls-files', '--others', '--exclude-standard', '-z').length) dirty();
+  const directories = new Set();
+  for (const row of index) {
+    const match = /^(\d+) ([0-9a-f]{40}) (\d+)\t([\s\S]+)$/.exec(row);
+    if (!match) dirty();
+    const [, mode, sha, stage, path] = match;
+    const entry = tree.get(path);
+    if (stage !== '0' || !entry || entry.mode !== mode || entry.sha !== sha || entry.type !== 'blob') dirty();
+    const parts = path.split('/');
+    if (parts.some(part => !part || part === '.' || part === '..')) dirty();
+    try {
+      for (let i = 1; i < parts.length; i++) {
+        const dir = join(cwd, ...parts.slice(0, i));
+        if (!directories.has(dir)) {
+          if (!lstatSync(dir).isDirectory()) dirty(); // Reject symlink ancestors.
+          directories.add(dir);
+        }
+      }
+      const file = join(cwd, path);
+      const stat = lstatSync(file);
+      if (!stat.isFile() || !['100644', '100755'].includes(mode)
+        || Boolean(stat.mode & 0o111) !== (mode === '100755')) dirty();
+      const bytes = readFileSync(file);
+      const actual = createHash('sha1').update(`blob ${bytes.length}\0`).update(bytes).digest('hex');
+      if (actual !== sha) dirty();
+    } catch { dirty(); }
+  }
   const blob = path => {
     const entry = tree.get(path);
     if (!entry || entry.type !== 'blob') fail('Required candidate blob is missing.');
@@ -102,8 +154,8 @@ export function prepareLessonSubmission({ cwd = process.cwd(), base, now = new D
 
 // Input is the complete, paginated GitHub check-runs list, without an event filter.
 // Prefer the newest run/attempt, so a stale success cannot hide a pending rerun.
-export function assessPublicationChecks(head, checks) {
-  if (!SHA.test(head ?? '') || !Array.isArray(checks)) fail('Supply an exact head and complete check-runs array.');
+export function assessPublicationChecks(head, checks, workflowRuns = []) {
+  if (!SHA.test(head ?? '') || (!Array.isArray(checks) || !Array.isArray(workflowRuns))) fail('Supply an exact head and complete check-runs array.');
   const results = PUBLICATION_CHECKS.map(name => {
     const matching = checks.filter(c => c?.name === name && c.head_sha === head);
     if (matching.some(c => !Number.isSafeInteger(c.id) || (c.started_at != null && !Number.isFinite(Date.parse(c.started_at))))) fail('Check-run ordering metadata is incomplete.');
@@ -112,7 +164,7 @@ export function assessPublicationChecks(head, checks) {
     // Queued checks may have no start clock and still supersede an older success.
     const latest = matching[0];
     return { name, id: latest?.id ?? null,
-      state: !latest ? 'missing' : latest.status !== 'completed' ? 'pending' : latest.conclusion };
+      state: !latest ? 'missing' : !expectedProducer(latest, head, workflowRuns) ? 'unverified-producer' : latest.status !== 'completed' ? 'pending' : latest.conclusion };
   });
   return { head, readyForReview: results.every(c => c.state === 'success'), checks: results };
 }
@@ -130,8 +182,8 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
         else fail('Unknown or duplicate prepare option.');
       }
       result = prepareLessonSubmission({ base: value, cwd, retry });
-    } else if (command === 'checks' && options.length === 1) result = assessPublicationChecks(value, JSON.parse(readFileSync(options[0], 'utf8')));
-    else fail('Usage: lesson-submission.mjs prepare <main-SHA> [--repo <candidate-checkout>] [--retry] | checks <head-SHA> <complete-check-runs.json>');
+    } else if (command === 'checks' && options.length === 2) result = assessPublicationChecks(value, JSON.parse(readFileSync(options[0], 'utf8')), JSON.parse(readFileSync(options[1], 'utf8')));
+    else fail('Usage: lesson-submission.mjs prepare <main-SHA> [--repo <candidate-checkout>] [--retry] | checks <head-SHA> <complete-check-runs.json> <workflow-runs.json>');
     console.log(JSON.stringify(result, null, 2));
     if (result.readyForReview === false) process.exitCode = 1;
   } catch (error) {

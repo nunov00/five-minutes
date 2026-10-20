@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, mkdirSync, writeFileSync, rmSync, existsSync, chmodSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, writeFileSync, rmSync, existsSync, chmodSync, readFileSync, utimesSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, dirname } from 'node:path';
 import { prepareLessonSubmission, assessPublicationChecks, PUBLICATION_CHECKS } from '../../scripts/lesson-submission.mjs';
@@ -54,6 +54,33 @@ describe('initial lesson submission preflight', () => {
     expect(prepareLessonSubmission({ ...repo, now }).status).toBe('PREPARED');
     expect(existsSync(marker)).toBe(false);
   });
+  it.each(['clean', 'process'])('never runs a configured %s filter on unchanged or dirty bytes', driver => {
+    const repo = candidate();
+    const marker = join(repo.cwd, '.git', 'filter-executed');
+    repo.put('.git/info/attributes', '*.md filter=probe\n');
+    repo.git('config', `filter.probe.${driver}`, `sh -c 'touch "${marker}"; ${driver === "clean" ? "cat" : "exit 1"}'`);
+    repo.git('config', 'filter.probe.required', 'true');
+    const path = `src/content/lessons/2026/${slug}/adult.md`;
+    const bytes = readFileSync(join(repo.cwd, path));
+    const later = new Date(Date.now() + 10_000);
+    utimesSync(join(repo.cwd, path), later, later);
+    expect(prepareLessonSubmission({ ...repo, now }).status).toBe('PREPARED');
+    expect(existsSync(marker)).toBe(false);
+    repo.put(path, bytes.toString() + 'Uncommitted change.\n');
+    expect(() => prepareLessonSubmission({ ...repo, now })).toThrow(/clean/);
+    expect(existsSync(marker)).toBe(false);
+  });
+  it.each(['staged', 'removed', 'assume-unchanged'])('rejects %s worktree/index divergence without conversion', state => {
+    const repo = candidate();
+    const path = `src/content/lessons/2026/${slug}/adult.md`;
+    if (state === 'removed') rmSync(join(repo.cwd, path));
+    else {
+      if (state === 'assume-unchanged') repo.git('update-index', '--assume-unchanged', path);
+      repo.put(path, readFileSync(join(repo.cwd, path)).toString() + 'Uncommitted change.\n');
+      if (state === 'staged') repo.git('add', path);
+    }
+    expect(() => prepareLessonSubmission({ ...repo, now })).toThrow(/clean/);
+  });
   it('accepts the correct branch but rejects the original date-prefix mistake', () => {
     expect(prepareLessonSubmission({ ...candidate(), now }).branch).toBe(`lesson/${slug}`);
     expect(() => prepareLessonSubmission({ ...candidate(`lesson/2026-10-05-${slug}`), now })).toThrow(/differs from the generated branch/);
@@ -86,21 +113,37 @@ describe('initial lesson submission preflight', () => {
 });
 
 const head = 'c'.repeat(40);
-const success = () => PUBLICATION_CHECKS.map((name, i) => ({ name, id: i + 1, head_sha: head, status: 'completed', conclusion: 'success', started_at: now }));
+const success = () => PUBLICATION_CHECKS.map((name, i) => ({ name, id: i + 1, app: { slug: 'github-actions' }, details_url: `https://github.com/nunov00/five-minutes/actions/runs/${i + 10}/job/${i + 1}`, head_sha: head, status: 'completed', conclusion: 'success', started_at: now }));
+const runs = () => PUBLICATION_CHECKS.map((name, i) => ({
+  id: i + 10, repository: { full_name: 'nunov00/five-minutes' }, head_repository: { full_name: 'nunov00/five-minutes' }, head_sha: head,
+  path: `.github/workflows/${name === 'baseline' || name === 'e2e' ? 'ci' : name}.yml`,
+  event: name === 'lesson-guard' ? 'pull_request_target' : 'pull_request',
+}));
 describe('complete exact-head publication checks', () => {
   it('requires all four check names, regardless of workflow event', () => {
     const checks = success();
-    expect(assessPublicationChecks(head, checks).readyForReview).toBe(true);
-    expect(assessPublicationChecks(head, checks.filter(c => c.name !== 'lesson-guard')).readyForReview).toBe(false);
+    expect(assessPublicationChecks(head, checks, runs()).readyForReview).toBe(true);
+    expect(assessPublicationChecks(head, checks.filter(c => c.name !== 'lesson-guard'), runs()).readyForReview).toBe(false);
   });
   it('ignores successes on a different commit', () => {
-    expect(assessPublicationChecks(head, success().map(c => ({ ...c, head_sha: 'b'.repeat(40) }))).readyForReview).toBe(false);
+    expect(assessPublicationChecks(head, success().map(c => ({ ...c, head_sha: 'b'.repeat(40) })), runs()).readyForReview).toBe(false);
   });
   it.each(['queued', 'in_progress', 'completed'])('never hides a newer %s run behind old success', status => {
-    const checks = [...success(), { name: 'lesson-guard', id: 100, head_sha: head, status, conclusion: 'failure', started_at: null }];
-    expect(assessPublicationChecks(head, checks).readyForReview).toBe(false);
+    const checks = [...success(), { ...success()[2], id: 100, status, conclusion: 'failure', started_at: null }];
+    const result = assessPublicationChecks(head, checks, runs());
+    expect(result.readyForReview).toBe(false);
+    expect(result.checks.find(c => c.name === 'lesson-guard')?.state).toBe(status === 'completed' ? 'failure' : 'pending');
+  });
+  it('rejects missing producer evidence, a same-name foreign app and wrong workflow/event/head/repository', () => {
+    expect(assessPublicationChecks(head, success()).readyForReview).toBe(false);
+    const checks = success(); checks[0].app.slug = 'other-app';
+    expect(assessPublicationChecks(head, checks, runs()).readyForReview).toBe(false);
+    for (const change of [{ event: 'workflow_dispatch' }, { path: '.github/workflows/other.yml' }, { head_sha: 'b'.repeat(40) }, { repository: { full_name: 'other/repo' } }]) {
+      const evidence = runs(); Object.assign(evidence[0], change);
+      expect(assessPublicationChecks(head, success(), evidence).readyForReview).toBe(false);
+    }
   });
   it('fails closed on malformed ordering data', () => {
-    expect(() => assessPublicationChecks(head, [{ ...success()[0], id: undefined }])).toThrow();
+    expect(() => assessPublicationChecks(head, [{ ...success()[0], id: undefined }], runs())).toThrow();
   });
 });
