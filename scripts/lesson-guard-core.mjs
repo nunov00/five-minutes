@@ -33,6 +33,13 @@ export class LessonGuardError extends Error {
   }
 }
 
+export function lessonBranchName(slug, retryDate) {
+  if (typeof slug !== 'string' || !SLUG.test(slug)) throw new LessonGuardError('Invalid lesson slug.');
+  if (retryDate !== undefined && (typeof retryDate !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(retryDate)
+    || !isValidTimestamp(`${retryDate}T00:00:00Z`))) throw new LessonGuardError('Invalid lesson retry date.');
+  return `lesson/${slug}${retryDate === undefined ? '' : `-${retryDate}`}`;
+}
+
 function fail(message) {
   throw new LessonGuardError(message);
 }
@@ -206,7 +213,6 @@ export function evaluateLessonPullRequest(input) {
 
   const branch = /^lesson\/([a-z0-9]+(?:-[a-z0-9]+)*)$/.exec(pr.headRef);
   if (!branch) fail('Automated lesson branch must be exactly lesson/<slug>.');
-  const branchSlug = branch[1];
   for (const label of REQUIRED_LABELS) {
     if (!pr.labels.includes(label)) fail(`Automated lesson candidate is missing label ${label}.`);
   }
@@ -248,7 +254,7 @@ export function evaluateLessonPullRequest(input) {
   }
   const year = [...years][0];
   const slug = [...slugs][0];
-  if (slug !== branchSlug && (!renewal || branchSlug !== `${slug}-${zurichDate(new Date(now))}`)) fail('Branch, directory and lesson slug must match (or use the current-day backlog retry suffix).');
+  if (pr.headRef !== lessonBranchName(slug) && (!renewal || pr.headRef !== lessonBranchName(slug, zurichDate(new Date(now))))) fail('Branch, directory and lesson slug must match (or use the current-day backlog retry suffix).');
 
   const root = `src/content/lessons/${year}/${slug}`;
   const yamlPath = `${root}/lesson.yaml`;

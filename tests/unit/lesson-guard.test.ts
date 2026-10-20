@@ -111,6 +111,10 @@ describe('lesson-only publication guard', () => {
     const value = fixture(); value.pr.headRef = 'docs/update'; value.pr.labels = ['review:mandatory'];
     expect(evaluateLessonPullRequest(value)).toEqual({ applicable: false, message: 'Not an automated lesson candidate.' });
   });
+  it('rejects the incident date-prefixed branch while accepting lesson/<slug>', () => {
+    expect(evaluateLessonPullRequest(fixture())).toMatchObject({ applicable: true });
+    rejected(value => { value.pr.headRef = `lesson/2026-10-05-${slug}`; }, /Branch, directory and lesson slug must match/);
+  });
   it('accepts a valid bounded candidate', () => expect(evaluateLessonPullRequest(fixture())).toMatchObject({ applicable: true, slug, lessonId: id }));
  it.each([processFigure,processFigure.replace('type: process-flow','type: cycle-flow').replace('style: filter-reclaim','style: feedback-loop'),comparisonFigure])('accepts an app-owned structured figure without adding files', (figure) => {
     const value=fixture();const blob=value.blobs[`${root}/adult.md`];blob.text=blob.text.replace('searchTerms:', `${figure}searchTerms:`);blob.size=Buffer.byteLength(blob.text);
