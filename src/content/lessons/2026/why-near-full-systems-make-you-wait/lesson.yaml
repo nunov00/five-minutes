@@ -1,0 +1,40 @@
+schemaVersion: 2
+id: 1bca8c5d-3e1b-4272-b476-e091a7cb9d6a
+slug: why-near-full-systems-make-you-wait
+aliases: []
+publishedAt: 2026-10-21T02:07:49+02:00
+revisedAt: 2026-10-21T02:07:49+02:00
+topic: mathematics-thinking
+subtopic: mathematics
+concepts: [waiting-lines, capacity, utilisation, variability]
+related:
+  manual:
+    - id: 1629895d-f11a-4bb7-afe5-8c8df5c07123
+      reason: Both lessons explain why a relationship that looks gentle at first can become steep near a boundary.
+    - id: e38e6794-fa4d-466c-9aa8-b6c6f6e386e1
+      reason: Both lessons show how spare capacity helps a changing system absorb disturbances instead of accumulating them.
+    - id: b62dafd3-523e-4e40-a8e9-5afc55b00302
+      reason: Both lessons distinguish a long-run average from what random events do in a particular short sequence.
+  exclude: []
+sources:
+  - title: Class 3 — Capacity Lecture
+    url: https://ocw.mit.edu/courses/15-760b-introduction-to-operations-management-spring-2004/16dde953a29f89a4d2018361900ce886_lec3_capacity.pdf
+    publisher: MIT OpenCourseWare
+    accessedAt: 2026-10-21
+    note: Contrasts deterministic and bursty arrivals, defines capacity utilisation, presents Little's Law, and shows the strongly non-linear relationship between waiting time and utilisation.
+  - title: Queueing Theory and Modeling
+    url: https://business.columbia.edu/sites/default/files-efs/pubfiles/5474/queueing%20theory%20and%20modeling.pdf
+    publisher: Columbia Business School
+    accessedAt: 2026-10-21
+    note: Explains why delay rises increasingly quickly with utilisation, how arrival and service variability worsen delay, why average capacity must exceed average demand, and the assumptions behind simple queueing models.
+provenance:
+  createdAt: 2026-10-21T02:07:49+02:00
+  createdBy:
+    type: ai
+    provider: openai
+    model: gpt-6.1-sol
+    promptVersion: automated-writer-v4
+  reviews: []
+archive:
+  sourceUrl: https://five-minutes.vitoria-nuno.chatgpt.site/lesson/queueing-theory
+  catalogueDate: 2026-08-23

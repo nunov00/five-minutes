@@ -280,14 +280,17 @@
       "title": "Queueing Theory — Why Near-Full Systems Feel Slow",
       "originalDate": "2026-08-23",
       "sourceUrl": "https://five-minutes.vitoria-nuno.chatgpt.site/lesson/queueing-theory",
-      "state": "queued",
+      "state": "complete",
       "priority": 116,
       "queuedAt": "2026-10-18T10:22:43Z",
       "reason": "Remaining original catalogue lesson: transfer through the daily editorial cycle.",
       "criteria": [
         "Research and rewrite both editions against current EDITORIAL.md; verify current catalogue overlap before creating an identity.",
         "Assess useful figures and Teen prediction; complete source, rendered and separate-run publication review."
-      ]
+      ],
+      "completedAt": "2026-10-21T02:07:49+02:00",
+      "destinationId": "1bca8c5d-3e1b-4272-b476-e091a7cb9d6a",
+      "destinationSlug": "why-near-full-systems-make-you-wait"
     },
     {
       "key": "legacy-simpsons-paradox",
@@ -1161,21 +1164,26 @@
         "Verify authoritative accessible sources and current catalogue overlap.",
         "Teach the mechanism in distinct Adult and Teen editions; assess useful figures and Teen prediction."
       ]
+    },
+    {
+      "key": "idea-why-mirrors-seem-to-reverse-left-and-right",
+      "kind": "new",
+      "slug": "why-mirrors-seem-to-reverse-left-and-right",
+      "title": "Why mirrors seem to reverse left and right",
+      "state": "queued",
+      "priority": 200,
+      "queuedAt": "2026-10-21T02:07:49+02:00",
+      "reason": "Use reflection geometry and a physical turn-around comparison to explain why a mirror reverses front-to-back rather than choosing a horizontal direction.",
+      "criteria": [
+        "Verify authoritative accessible sources and current catalogue overlap.",
+        "Teach the mechanism in distinct Adult and Teen editions; assess a useful reflection figure and Teen prediction."
+      ]
     }
   ],
   "pipeline": {
-    "assessedAt": "2026-10-20T00:04:14+02:00",
-    "summary": "After selecting window condensation, queueing, noise cancellation and rounded aircraft windows lead for their distinct everyday puzzles and causal explanations. Recent heat-pump and ice revisions remain lower to avoid clustering temperature topics. Review I4 replaces the excluded dark-adaptation shortlist reference with the existing Wi-Fi propagation candidate in tenth place; both historical pool records remain unchanged. Ten candidates remain and no new records were added. Rankings are editorial judgements, not measured demand.",
+    "assessedAt": "2026-10-21T02:07:49+02:00",
+    "summary": "After selecting queueing theory, noise cancellation and rounded aircraft windows remain the strongest next everyday puzzles, followed by the seasonal heat-pump and ice revisions. The selected queueing entry leaves the shortlist, and one new mirror-reflection idea is appended in tenth place after a catalogue-overlap check. Ten viable candidates remain. Rankings are editorial judgements, not measured demand or a fresh source audit.",
     "ranking": [
-      {
-        "key": "legacy-queueing-theory",
-        "headline": "Why the last few empty spaces make a queue much slower",
-        "description": "Use irregular arrivals and limited spare capacity to show why a system near full use can have disproportionately long waits.",
-        "hook": "A service can be efficient on average and still keep you waiting.",
-        "rankReason": "Broad relevance across shops, roads and computers; one concrete worked example can make the mechanism memorable.",
-        "relevance": "Evergreen; no claim about current transport or service conditions.",
-        "evidenceUrls": []
-      },
       {
         "key": "idea-how-noise-cancelling-headphones-work",
         "headline": "How headphones can cancel a sound with another sound",
@@ -1199,7 +1207,7 @@
         "headline": "How can cold outdoor air heat your home?",
         "description": "Follow a refrigerant around the cycle to explain how electricity moves heat and why colder weather changes the work required.",
         "hook": "A machine can deliver more heat than the electrical energy it consumes.",
-        "rankReason": "Retain the useful Adult-depth revision, but its 13 October release is recent and window condensation is today's selected lesson. Fourth place preserves seasonal value behind the next three different mechanisms.",
+        "rankReason": "Retain the useful Adult-depth revision, but its 13 October release and the recent window-condensation lesson make another thermal topic less urgent. Third place preserves seasonal value behind two different mechanisms.",
         "relevance": "Seasonal relevance to northern-hemisphere heating; evergreen physics. No claim of a verified news trend.",
         "evidenceUrls": []
       },
@@ -1255,6 +1263,15 @@
         "hook": "The same router can give a different connection on the other side of a wall.",
         "rankReason": "An eligible existing technology candidate replaces dark adaptation under review I4. Radio propagation offers an everyday mechanism distinct from acoustic cancellation, mechanical resonance and Shannon information; tenth place leaves room for fresh authoritative sourcing before authoring.",
         "relevance": "Evergreen radio physics; verify frequency and obstacle comparisons from primary sources when selected, without current product or performance promises.",
+        "evidenceUrls": []
+      },
+      {
+        "key": "idea-why-mirrors-seem-to-reverse-left-and-right",
+        "headline": "Why does a mirror reverse left and right but not up and down?",
+        "description": "Use reflection geometry and the difference between reflection and physically turning around to show that a mirror reverses front-to-back, not one chosen horizontal direction.",
+        "hook": "A mirror seems to swap your left and right while leaving your head above your feet.",
+        "rankReason": "A strong everyday puzzle with clear prediction and figure potential; tenth place allows a fresh source and catalogue check before selection.",
+        "relevance": "Evergreen optics and spatial reasoning; no time-sensitive premise.",
         "evidenceUrls": []
       }
     ]
