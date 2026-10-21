@@ -1,0 +1,39 @@
+schemaVersion: 2
+id: 965b4d69-cdd0-48ac-a5cc-5a50e1dfe60a
+slug: how-noise-cancelling-headphones-work
+aliases: []
+publishedAt: 2026-10-22T02:00:00+02:00
+topic: technology
+subtopic: electrical-engineering
+concepts: [active-noise-control, destructive-interference, sound-waves, signal-processing]
+related:
+  manual:
+    - id: e38e6794-fa4d-466c-9aa8-b6c6f6e386e1
+      reason: Noise-cancelling headphones use measurements and correction, much like other feedback-control systems.
+    - id: cd638bb5-5105-4f69-80f4-307d5995e66a
+      reason: Both lessons depend on the timing of waves, but resonance adds energy while active noise control tries to reduce a sound wave.
+  exclude: []
+sources:
+  - title: Engineering Healthy Silence — Using Noise-Cancelling Headphones to Block Harmful Sound
+    url: https://illumin.usc.edu/engineering-healthy-silence-using-noise-cancelling-headphones-to-block-harmful-sound/
+    publisher: USC Viterbi School of Engineering
+    accessedAt: 2026-10-22
+    note: Accessible engineering account of superposition, microphones and digital signal processing, feedforward and feedback arrangements, timing errors, high-frequency limits and passive isolation.
+  - title: Finding a Better Way To Quiet Noisy Environments
+    url: https://jacobsschool.ucsd.edu/news/release/532
+    publisher: UC San Diego Jacobs School of Engineering
+    accessedAt: 2026-10-22
+    note: Describes the basic measurement, processing, anti-noise speaker and residual-error microphone path used in active noise control.
+  - title: Active noise control — a review of the field
+    url: https://pubmed.ncbi.nlm.nih.gov/1442563/
+    publisher: PubMed
+    accessedAt: 2026-10-22
+    note: Review supporting the physical basis of active noise control and its dependence on the acoustic arrangement and control system.
+provenance:
+  createdAt: 2026-10-22T00:07:08+02:00
+  createdBy:
+    type: ai
+    provider: openai
+    model: gpt-6.1-sol
+    promptVersion: automated-writer-v4
+  reviews: []
