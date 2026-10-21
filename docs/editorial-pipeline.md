@@ -10,6 +10,12 @@ Shortlist membership is not a promise of publication. Retain every older entry w
 
 New ideas use `kind: new`, a stable pool key and proposed slug checked against every registry route (including aliases), original/destination pool slug and legacy alias, but no fabricated lesson identity or import provenance. Daily additions use priority at least 1 (0 is reserved for Owner returns) and an actual RFC 3339 queuedAt on the run day, never backdated or in the future. Assign their real UUID and creation/publication dates only when selected. A completed new idea becomes a revision of its published destination if returned. Check the full published catalogue, historical pool and open PRs for conceptual overlap, not merely matching titles or slugs. Transfers still require substantive comparison with existing lessons before a new identity is created.
 
+## Recording lessons marked for review
+
+Use the existing revision entries in `editorial/backlog.json` as the single working list of published lessons marked for review. Record the feedback source, reviewed commit when known, severity and reason in `reason`, and concrete required changes and verification limits in `criteria`. Reuse the existing entry through the Owner-return path; a completed transfer becomes a revision of its published destination. Preserve earlier outstanding criteria when adding feedback. This uses the existing format and review process; it adds no new state or publication authority.
+
+Include these revisions in the normal pool assessment alongside transfers and new ideas. Record their shortlist position or reason for deferral in the administration PR. Content remains published while queued under ADR-0012. A linked historical issue may retain the original discussion, but close it as tracking moved only after the reviewed backlog change merges, with a link to the canonical entry; closure does not mean the lesson has been corrected. Ordinary review flags do not need individual issues. Necessary blocker/recovery issues under the task contract retain their existing role.
+
 ## Ranking judgement
 
 Judge these in order, without pretending to have objective numerical scores:

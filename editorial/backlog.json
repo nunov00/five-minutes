@@ -275,22 +275,23 @@
     },
     {
       "key": "legacy-queueing-theory",
-      "kind": "import",
-      "slug": "queueing-theory",
-      "title": "Queueing Theory — Why Near-Full Systems Feel Slow",
+      "kind": "revision",
+      "lessonId": "1bca8c5d-3e1b-4272-b476-e091a7cb9d6a",
+      "slug": "why-near-full-systems-make-you-wait",
+      "legacySlugs": ["queueing-theory"],
+      "title": "Why a Nearly Full System Makes You Wait",
       "originalDate": "2026-08-23",
       "sourceUrl": "https://five-minutes.vitoria-nuno.chatgpt.site/lesson/queueing-theory",
-      "state": "complete",
-      "priority": 116,
-      "queuedAt": "2026-10-18T10:22:43Z",
-      "reason": "Remaining original catalogue lesson: transfer through the daily editorial cycle.",
+      "state": "queued",
+      "priority": 0,
+      "queuedAt": "2026-10-21T11:29:37Z",
+      "reason": "Owner-requested review after Perplexity's retrospective on PR #179, assessed by ChatGPT on 21 October 2026. IMPORTANT: Adult names its central model assumptions without explaining them for non-specialists. MINOR: Teen title confuses processing utilisation with a physically full waiting area. Feedback migrated from issue #181; reviewed commit d6a755ad57fdd91a2980ac1b752a98736ab543de. The original transfer completed in PR #179 at 2026-10-21T02:07:49+02:00; this is a revision of that same published identity. Keep published while queued.",
       "criteria": [
-        "Research and rewrite both editions against current EDITORIAL.md; verify current catalogue overlap before creating an identity.",
-        "Assess useful figures and Teen prediction; complete source, rendered and separate-run publication review."
-      ],
-      "completedAt": "2026-10-21T02:07:49+02:00",
-      "destinationId": "1bca8c5d-3e1b-4272-b476-e091a7cb9d6a",
-      "destinationSlug": "why-near-full-systems-make-you-wait"
+        "IMPORTANT — Adult: explain gaps between arrivals, exponential distributions and steady state in short, accessible sentences; connect assumptions to model-specific predictions and regularly scheduled arrivals. If explaining memorylessness, distinguish time since the previous arrival and elapsed service time from a customer's time waiting in the queue.",
+        "MINOR — Teen: replace the almost-full queue title with wording about little spare processing capacity; check related metadata for consistency.",
+        "Recheck current main and both university sources recorded in lesson.yaml (Columbia Queueing Theory and Modeling; MIT capacity lecture). Preserve waiting-before-service versus total-time distinctions and verify 1, 4, 9 and 19 average service times at 50%, 80%, 90% and 95% utilisation.",
+        "Review both editions against the complete current editorial and clear-English standards; verify sources, rendered figures at phone and wide widths, and the Teen activity. Perplexity did not inspect rendered screenshots; its retrospective is not visual sign-off or publication approval. Preserve identity, routes, original dates and import provenance; complete normal daily revision checks and separate Reviewer approval."
+      ]
     },
     {
       "key": "legacy-simpsons-paradox",
@@ -1181,8 +1182,8 @@
     }
   ],
   "pipeline": {
-    "assessedAt": "2026-10-21T02:07:49+02:00",
-    "summary": "After selecting queueing theory, noise cancellation and rounded aircraft windows remain the strongest next everyday puzzles, followed by the seasonal heat-pump and ice revisions. The selected queueing entry leaves the shortlist, and one new mirror-reflection idea is appended in tenth place after a catalogue-overlap check. Ten viable candidates remain. Rankings are editorial judgements, not measured demand or a fresh source audit.",
+    "assessedAt": "2026-10-21T11:29:37Z",
+    "summary": "Owner review notes for the published queueing lesson are now retained in its revision entry, linked to the Perplexity retrospective and issue #181. It is added after the existing ten candidates because it was released today and its targeted clarification can wait while different topics lead. Existing candidate order is unchanged; eleven viable candidates remain. Remove the stale position number from the Wi-Fi explanation. Rankings are editorial judgements, not measured demand or a fresh source audit.",
     "ranking": [
       {
         "key": "idea-how-noise-cancelling-headphones-work",
@@ -1261,7 +1262,7 @@
         "headline": "Why Wi-Fi signals behave differently across your home",
         "description": "Compare radio frequencies, obstacles and signal loss to explain why coverage and a connection's advertised capability are different questions.",
         "hook": "The same router can give a different connection on the other side of a wall.",
-        "rankReason": "An eligible existing technology candidate replaces dark adaptation under review I4. Radio propagation offers an everyday mechanism distinct from acoustic cancellation, mechanical resonance and Shannon information; tenth place leaves room for fresh authoritative sourcing before authoring.",
+        "rankReason": "An eligible existing technology candidate replaces dark adaptation under review I4. Radio propagation offers an everyday mechanism distinct from acoustic cancellation, mechanical resonance and Shannon information; fresh authoritative sourcing is needed before authoring.",
         "relevance": "Evergreen radio physics; verify frequency and obstacle comparisons from primary sources when selected, without current product or performance promises.",
         "evidenceUrls": []
       },
@@ -1273,6 +1274,18 @@
         "rankReason": "A strong everyday puzzle with clear prediction and figure potential; tenth place allows a fresh source and catalogue check before selection.",
         "relevance": "Evergreen optics and spatial reasoning; no time-sensitive premise.",
         "evidenceUrls": []
+      },
+      {
+        "key": "legacy-queueing-theory",
+        "headline": "Why queues grow quickly when there is little spare capacity",
+        "description": "Clarify the published Adult model's assumptions and correct the Teen title while preserving the lesson's accurate calculations and central mechanism.",
+        "hook": "A checkout with almost no spare time struggles to catch up after a small rush.",
+        "rankReason": "Retain the IMPORTANT comprehension finding and MINOR title finding as actionable work. Place below the existing ten candidates because this lesson was released today; different topics offer more immediate variety. Reassess the value of this revision during each normal pool refresh.",
+        "relevance": "Evergreen; no factual calculation error identified in the retrospective. The published lesson remains accessible pending a fully reviewed revision.",
+        "evidenceUrls": [
+          "https://business.columbia.edu/sites/default/files-efs/pubfiles/5474/queueing%20theory%20and%20modeling.pdf",
+          "https://ocw.mit.edu/courses/15-760b-introduction-to-operations-management-spring-2004/16dde953a29f89a4d2018361900ce886_lec3_capacity.pdf"
+        ]
       }
     ]
   }
