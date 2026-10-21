@@ -29,6 +29,23 @@ A publishable lesson must meet every criterion below. Reviewers use judgement an
 | Title, deck and discoverability | Each edition has a specific, accurate title and a description that adds information. Search terms cover likely language a reader would use without stuffing synonyms. | Clickbait, vague titles, duplicated title/description, promises absent from the body or irrelevant search terms. |
 | Originality and non-duplication | The lesson has a distinct central insight and treatment. Before publication, compare its identity, title, concepts, takeaway and examples with the catalogue. Overlap is acceptable only when the new lesson answers a materially different question. | A new title hides the same lesson; familiar material is paraphrased without a fresh explanatory angle; Adult and Teen differ only cosmetically. |
 
+## Clear English for non-native readers
+
+Both editions must be understandable to a reader with intermediate English and general education, without repeatedly reaching for a dictionary. Follow British spelling and grammar. Prefer words widely understood internationally, and explain any necessary regional vocabulary. This applies to all reader-facing lesson text: titles, descriptions, prose, takeaway, retrieval questions and answers, activities and feedback, and figure labels, captions, alt text and full descriptions.
+
+- Prefer familiar, concrete words and direct verbs: “use” rather than “utilise”, “makes it worse” rather than “exacerbates”. Choose the wording that preserves the exact meaning in context; simple words are not interchangeable in every sentence.
+- Introduce a necessary technical term with a short explanation in ordinary language at first use in each edition. Expand unfamiliar acronyms. Keep useful scientific vocabulary, but do not make a term carry reasoning that the text has not explained.
+- Usually give each sentence one main idea. Split stacked clauses, dense noun phrases and long chains of qualifications. Vary sentence length naturally; no fixed word limit is required. Prefer active voice when it makes who does what clearer.
+- Avoid unexplained idioms, slang, figurative phrasal verbs and cultural references needed to understand the point. For example, use “a rough estimate” rather than “a ballpark figure”. A familiar concrete analogy can still help when the lesson explains the actual relationship.
+- Make connections explicit: show why one step causes the next, name what “this” or “it” refers to when ambiguous, and explain an unfamiliar comparison rather than expecting shared cultural knowledge.
+- Preserve factual precision, uncertainty and essential qualifications. Adult gains depth through reasoning, implications and useful limits, not harder vocabulary. Teen uses familiar examples and enough background without losing the complete explanation or becoming patronising.
+
+For example, “Water’s thermal inertia mitigates diurnal temperature fluctuations” can become “Water heats up and cools down slowly. This reduces the temperature difference between day and night” when that is the relationship the lesson's sources support. This is an illustration of clearer wording, not approved factual copy for every context.
+
+During the existing self-edit, read each edition from the perspective of an intermediate English reader. Replace avoidable difficulty and check the surrounding explanation after rewriting. Reviewers independently ask: **Could a reader with intermediate English understand this without repeatedly reaching for a dictionary?** Record a separate language judgement for Adult and Teen in the existing review, with a representative passage and its explained term or causal connection, or the concrete difficulty and proposed clearer wording. A generic “accessible” assertion is not evidence. Language is IMPORTANT when an intermediate English reader cannot follow a central explanation without repeatedly consulting a dictionary. Isolated wording that does not impair comprehension may be MINOR. A simplification that changes meaning is assessed under the existing factual-accuracy rules.
+
+Readability tools may flag long or complex sentences, but are optional diagnostics only. Do not add a numeric pass mark, vocabulary quota, mandatory tool or extra review/task. A score cannot prove comprehension or justify removing accurate reasoning.
+
 ## Writing for understanding and memory
 
 Build the lesson around one worthwhile insight, rather than a sequence of facts about a topic:
@@ -110,6 +127,8 @@ For factual and editorial review, record:
     - **Memory:** what specific image, example, connection or reasoning might each reader remember tomorrow, and does the ending deliver its payoff? This is editorial judgement, not a claim of measured retention.
     - **Adult depth:** what meaningful additional understanding does Adult provide beyond Teen?
 
+11. a separate language-accessibility judgement for Adult and Teen under **Clear English for non-native readers**, with passage-specific evidence and actionable rewrites where needed.
+
 These answers can be incorporated into the existing per-edition and attention notes; do not duplicate the review. Missing reader outcomes require actionable findings under the severity definitions above. Check the author's claims against the actual text rather than accepting their self-assessment.
 
 Do not report a numeric quality score, an averaged rubric percentage or a precision-style confidence number. Descriptive confidence is useful only when it explains what is uncertain and what evidence would resolve it.
@@ -136,7 +155,7 @@ Calibration from the QR lesson review, PR #165 (19 October 2026): “polynomials
 
 ### Revising after review
 
-Apply the three first-draft checks above to any passage or option the revision adds or changes.
+Apply the three first-draft checks and the clear-English self-edit above to any passage or option the revision adds or changes.
 
 For a requested rewrite, assess all applicable findings together, re-fetch sources for changed material claims and explain each finding's disposition with passage/evidence references. Disagree with unsupported suggestions explicitly rather than adding jargon, numbers or tangents automatically. Preserve Teen's complete explanation when deepening Adult. The later Reviewer verifies the revised result independently. ADR-0007 and the task contract bound scheduled unpublished-candidate revisions; this editorial guidance never grants merge authority.
 
@@ -151,7 +170,7 @@ Before requesting review:
 - remove any paragraph that does not improve understanding;
 - define necessary terms and test the explanation without its analogy;
 - check that each paragraph creates progress and that the ending delivers the promised payoff;
-- read each edition independently for flow and voice;
+- read each edition independently for flow, voice and intermediate-English accessibility under **Clear English for non-native readers**, including its metadata, questions, activities and figure text;
 - identify Adult's additional explanatory layer and check that Teen still contains the complete central explanation;
 - verify that the takeaway and retrieval answer express the same durable insight;
 - compare the proposed lesson with the existing catalogue for overlap;
