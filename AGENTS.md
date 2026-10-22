@@ -1,5 +1,8 @@
 # AGENTS.md
 
+22 October 2026 lightweight-entry amendment: after its mandatory review, checks, merge and verified Publisher prompt readback, `docs/automation/publication-entry.md` is the small scheduled entry point. Its bounded read-only checks may precede full policy loading solely to prove that today's release is already on current main, its production checks succeeded and both editions are live, then exit quietly. Missing or uncertain evidence loads the complete Coordinator contract and required policy before any further inspection/action. This grants no authoring/review/merge authority and changes no schedule, off switch or publication safeguards. The previous Coordinator bootstrap remains the rollback prompt.
+
+
 19 October 2026 single-task amendment: once activated, the Coordinator task in `docs/automation/publication-task-contracts.md` supersedes the separate scheduled-task/session requirements and alternating role timing below. One scheduled parent performs Writer work and delegates the complete Reviewer role to a fresh real child with `fork_turns="none"`; only that child may review and merge the exact head in the same child invocation. Each changed head requires a new child. All source/render/feedback checks, revision/history budgets, off switch, same-day and expected-head safeguards remain. Legacy role sections and schedules remain rollback references. Activation requires mandatory different-provider review, green checks, merge and verified task readback; direction alone does not activate it.
 
 
