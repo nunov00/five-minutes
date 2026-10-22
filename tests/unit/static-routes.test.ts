@@ -16,13 +16,13 @@ describe('static lesson routes', () => {
     expect(source).toContain('alternatePath');
   });
 
-  it('the real manifest has one Adult and one Teen canonical route per lesson', async () => {
+  it('the real manifest has one canonical route per lesson', async () => {
     const loaded = await loadPublishedLessons(join(process.cwd(), 'src/content/lessons'), routeOwnership);
     const bundles = loaded.map(({ metadata, adult, teen }) => ({ metadata, adult, teen }));
     const manifest = buildDeliveryManifest(bundles);
     for (const lesson of loaded) {
       const routes = manifest.routes.filter((route) => route.lessonId === lesson.metadata.id);
-      expect(routes.map((route) => route.edition).sort()).toEqual(['adult', 'teen']);
+      expect(routes.map((route) => route.edition).sort()).toEqual(['adult']);
     }
   });
 });

@@ -8,7 +8,6 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import type { LoadedLesson } from '../../lib/content/loader';
 import { getBuildContent } from '../../lib/content/build-content';
 import { relatedLessons } from '../../lib/discovery/related';
-import { EDITION_LABELS } from '../../lib/reading';
 import { lessonPath, type LessonEdition } from '../../lib/urls';
 
 interface Props {
@@ -47,14 +46,14 @@ const html = edition === 'adult' ? lesson.adultHtml : lesson.teenHtml;
 if (!presentation) throw new Error(`Missing ${edition} presentation for ${lesson.metadata.id}.`);
 const positioned=presentation.figure?figurePosition(html,presentation.figure.afterParagraph):null;
 ---
-<BaseLayout title={`${presentation.title} · ${EDITION_LABELS[edition]} edition · Five Minutes`} description={presentation.description} edition={edition} editionPaths={editionPaths} wide={!!presentation.figure}>
+<BaseLayout title={`${presentation.title} · Five Minutes`} description={presentation.description} edition={edition} editionPaths={editionPaths} wide={!!presentation.figure}>
   <article class:list={['reading-article', {'has-figure': !!presentation.figure}]} data-reader-lesson data-lesson-id={lesson.metadata.id} data-edition={edition}>
     <header class="reader-header">
       <p class="eyebrow"><LessonDates publishedAt={lesson.metadata.publishedAt} originalDate={legacyPublicationDate(lesson.metadata)} revisedAt={lesson.metadata.revisedAt} /></p>
       <h1>{presentation.title}</h1>
       <p class="lede">{presentation.description}</p>
     </header>
-    {edition==='teen' && presentation.activity && <TeenActivity activity={presentation.activity} id={`activity-${lesson.metadata.id}`}/>}
+    {presentation.activity && <TeenActivity activity={presentation.activity} id={`activity-${lesson.metadata.id}`}/>}
     {presentation.figure && positioned ? <div class="reading-with-figure">
       <div class="lesson-body figure-opening" set:html={positioned.opening}/>
       <LessonFigure figure={presentation.figure} id={`figure-${edition}-${lesson.metadata.id}`}/>

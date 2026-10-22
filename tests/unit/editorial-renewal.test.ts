@@ -21,10 +21,10 @@ function revision(kind='revision') {
   const head={...metadata,revisedAt:release};
   if(kind==='import') { head.publishedAt=release; head.provenance.createdAt='2026-10-18T00:00:00+02:00'; (head as any).archive={sourceUrl:entry.sourceUrl,catalogueDate:entry.originalDate}; }
   const body='---\ntitle: A concrete puzzle\ndescription: A useful description.\ntakeaway: A causal insight.\nquestion: Why?\nanswer: The mechanism.\nsearchTerms: [mechanism]\n---\nA concrete example explains the mechanism.\n';
-  const blobs:Record<string,any>={ [`${root}/lesson.yaml`]:textBlob(stringify(head)),[`${root}/adult.md`]:textBlob(body),[`${root}/teen.md`]:textBlob(body),[queuePath]:textBlob(JSON.stringify({version:1,entries:[completed]})) };
+  const blobs:Record<string,any>={ [`${root}/lesson.yaml`]:textBlob(stringify(head)),[`${root}/adult.md`]:textBlob(body),[queuePath]:textBlob(JSON.stringify({version:1,entries:[completed]})) };
   const registry=JSON.stringify({[slug]:id});
   return {pr:{headRef:`lesson/${slug}`,headSha:'c'.repeat(40),labels:['editorial-review-requested','review:mandatory']},triggerHeadSha:'c'.repeat(40),currentBaseSha:'b'.repeat(40),mergeBaseSha:'b'.repeat(40),behindBy:0,
-    baseBacklogText:JSON.stringify(baseQueue),baseLessonText,baseAdultText:body,baseTeenText:body,baseRegistryText:kind==='import'?'{}':registry,headRegistryBlob:textBlob(registry),blobs,
+    baseBacklogText:JSON.stringify(baseQueue),baseLessonText,baseAdultText:body,baseRegistryText:kind==='import'?'{}':registry,headRegistryBlob:textBlob(registry),blobs,
     files:[...Object.keys(blobs).map(filename=>({filename,status:filename===queuePath||kind==='revision'?'modified':'added',additions:10,deletions:1,changes:11})),...(kind==='import'?[{filename:'src/content/route-ownership.json',status:'modified',additions:1,deletions:0,changes:1}]:[])],
     now:'2026-10-18T03:00:00+02:00'};
 }
@@ -63,7 +63,7 @@ describe('editorial queue and bounded daily publication',()=>{
   if(problem==='unchanged revision date')changeMetadata(v,m=>m.revisedAt=m.publishedAt);
   if(problem==='unrelated code')v.files.push({filename:'src/evil.js',status:'added',additions:1,deletions:0,changes:1});
   if(problem==='route mutation')v.headRegistryBlob=textBlob('{}');
-  if(problem==='borrowed asset') { const figure={type:'image',src:'/lesson-media/unrelated.png',width:192,height:192,alt:'An image.',caption:'Caption.',description:'Description.'}; for(const e of ['adult','teen'])v.blobs[`${root}/${e}.md`]=textBlob(v.blobs[`${root}/${e}.md`].text.replace('searchTerms:',stringify({figure})+'searchTerms:'));changeMetadata(v,m=>m.imageRights=[{src:figure.src,origin:'original-code',creator:'Test',licence:'Original',evidence:'Test evidence.'}]); }
+  if(problem==='borrowed asset') { const figure={type:'image',src:'/lesson-media/unrelated.png',width:192,height:192,alt:'An image.',caption:'Caption.',description:'Description.'}; for(const e of ['adult'])v.blobs[`${root}/${e}.md`]=textBlob(v.blobs[`${root}/${e}.md`].text.replace('searchTerms:',stringify({figure})+'searchTerms:'));changeMetadata(v,m=>m.imageRights=[{src:figure.src,origin:'original-code',creator:'Test',licence:'Original',evidence:'Test evidence.'}]); }
   if(problem==='missing base backlog')delete (v as any).baseBacklogText;
   if(problem==='uncompleted queue')v.blobs[queuePath]=textBlob(v.baseBacklogText);
   if(problem==='changed criteria'||problem==='second completion') { const q=JSON.parse(v.blobs[queuePath].text); if(problem==='changed criteria')q.entries[0].criteria=['Trust me.'];else q.entries.push({...q.entries[0],key:'another'});v.blobs[queuePath]=textBlob(JSON.stringify(q)); }
@@ -95,7 +95,7 @@ describe('editorial queue and bounded daily publication',()=>{
    else if(url.includes('/compare/'))data={merge_base_commit:{sha:v.currentBaseSha},behind_by:0,files:v.files};
    else if(url.includes('/git/trees/'))data={truncated:false,tree:[...Object.keys(v.blobs),'src/content/route-ownership.json'].map(path=>({path,mode:'100644',type:'blob'}))};
    else {const u=new URL(url),path=decodeURIComponent(u.pathname.split('/contents/')[1]),base=u.searchParams.get('ref')===v.currentBaseSha;
-    const text=path==='src/content/route-ownership.json'?v.headRegistryBlob.text:base?(path===queuePath?v.baseBacklogText:path.endsWith('lesson.yaml')?v.baseLessonText:path.endsWith('adult.md')?v.baseAdultText:v.baseTeenText):v.blobs[path].text;
+    const text=path==='src/content/route-ownership.json'?v.headRegistryBlob.text:base?(path===queuePath?v.baseBacklogText:path.endsWith('lesson.yaml')?v.baseLessonText:v.baseAdultText):v.blobs[path].text;
     data={type:'file',encoding:'base64',size:Buffer.byteLength(text),content:Buffer.from(text).toString('base64')};}
    return {ok:true,status:200,json:async()=>data};
   };

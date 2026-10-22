@@ -49,7 +49,7 @@ function validateSteps(value: unknown, path: string, type: 'process-flow'|'cycle
   });
   if(labels.length===value.steps.length&&new Set(labels).size!==labels.length) fail('figure.data.steps','Flow-step labels must be unique.');
 }
-export function validatePresentationExtensions(value: Record<string,unknown>, path: string, edition: 'adult'|'teen'): ValidationIssue[] {
+export function validatePresentationExtensions(value: Record<string,unknown>, path: string, _edition: 'adult'|'teen'): ValidationIssue[] {
   const issues: ValidationIssue[] = [];
   const fail = (name:string,message:string) => issues.push({path:`${path}.${name}`,code:'presentation-extension',message});
   if ('figure' in value) {
@@ -100,8 +100,7 @@ export function validatePresentationExtensions(value: Record<string,unknown>, pa
   }
   if('activity' in value) {
     const a = value.activity;
-    if(edition!=='teen') fail('activity','Activities are Teen-only.');
-    if(!object(a)) fail('activity','Expected a structured Teen activity.');
+    if(!object(a)) fail('activity','Expected a structured activity.');
     else {
       keys(a,['prompt','options','answer','explanation'],`${path}.activity`,issues);
       if(!plain(a.prompt,140)) fail('activity.prompt','Expected a plain-text prompt of at most 140 characters.');

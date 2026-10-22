@@ -5,7 +5,7 @@ import { buildDiscoveryArtifacts } from '../../lib/discovery/artifacts';
 export const getStaticPaths = (async () => {
   const { lessons } = await getBuildMetadata();
   const artifacts = buildDiscoveryArtifacts(lessons);
-  return [artifacts.catalogue, artifacts.search.adult, artifacts.search.teen].map(({ path, payload }) => ({
+  return [artifacts.catalogue, artifacts.search.adult].map(({ path, payload }) => ({
     params: { artifact: path.split('/').at(-1)?.replace(/\.json$/, '') },
     props: { payload },
   }));

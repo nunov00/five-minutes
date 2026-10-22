@@ -4,8 +4,8 @@ import { discoveryPath, editionDiscoveryPath, type LessonEdition } from '../lib/
 import { getBuildMetadata } from '../lib/content/build-content';
 import { libraryPages } from '../lib/discovery/catalogue';
 import { TAXONOMY } from '../lib/taxonomy';
-interface Props { title?: string; description?: string; edition?: LessonEdition; editionPaths?: Record<LessonEdition,string>; neutralDiscovery?: boolean; noindex?: boolean; wide?: boolean; preferenceSurface?: boolean; todaySurface?: boolean; }
-const { title = 'Five Minutes', description = 'One worthwhile idea, made easy to discover, understand and explore.', edition, editionPaths, neutralDiscovery=false, noindex=false, wide=false, preferenceSurface=false, todaySurface=false } = Astro.props;
+interface Props { redirectTo?: string; title?: string; description?: string; edition?: LessonEdition; editionPaths?: Record<LessonEdition,string>; neutralDiscovery?: boolean; noindex?: boolean; wide?: boolean; preferenceSurface?: boolean; todaySurface?: boolean; }
+const { redirectTo, title = 'Five Minutes', description = 'One worthwhile idea, made easy to discover, understand and explore.', edition, neutralDiscovery=false, noindex=false, wide=false, preferenceSurface=false, todaySurface=false } = Astro.props;
 const pathname = Astro.url.pathname;
 const { lessons } = await getBuildMetadata();
 const bounds = { topics: TAXONOMY.filter(t=>lessons.some(l=>l.metadata.topic===t.token)).map(t=>t.token), libraryPages:libraryPages(lessons).length };
@@ -19,12 +19,12 @@ const navigation = [
   { href: '/search', label: 'Search', current: search },
   { href: '/saved', label: 'Saved', current: pathname === '/saved' },
 ];
-const choices = editionPaths ?? { adult: editionDiscoveryPath(pathname,'adult') ?? '/search?edition=adult', teen: editionDiscoveryPath(pathname,'teen') ?? '/search?edition=teen' };
 const canonical = !neutralDiscovery && !noindex && Astro.site ? new URL(pathname,Astro.site).href : undefined;
 ---
 <!doctype html>
-<html lang="en" data-edition={edition ?? (todaySurface ? 'adult' : undefined)} data-today={todaySurface?'true':undefined} data-neutral-discovery={neutralDiscovery ? 'true' : undefined} data-preference-surface={preferenceSurface?'true':undefined} data-search={search?'true':undefined} data-discovery={discovery||search?'true':undefined} data-discovery-bounds={JSON.stringify(bounds)}>
+<html lang="en" data-edition="adult" data-today={todaySurface?'true':undefined} data-neutral-discovery={neutralDiscovery ? 'true' : undefined} data-preference-surface={preferenceSurface?'true':undefined} data-search={search?'true':undefined} data-discovery={discovery||search?'true':undefined} data-discovery-bounds={JSON.stringify(bounds)}>
   <head>
+    {redirectTo && <meta http-equiv="refresh" content={`0;url=${redirectTo}`} data-redirect-target={redirectTo}/>}
     <meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light dark" /><meta name="description" content={description} /><title>{title}</title>
     {(neutralDiscovery || noindex) && <meta name="robots" content="noindex,follow"/>}
@@ -34,31 +34,21 @@ const canonical = !neutralDiscovery && !noindex && Astro.site ? new URL(pathname
     <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fbfaf7" />
     <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#15171a" />
     <script is:inline>
-      try { const raw=localStorage.getItem('five-minutes.reader-state');if(raw!==null&&raw.length<=1000000){const s=JSON.parse(raw),id=(v)=>typeof v==='string'&&/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(v),date=(v)=>typeof v==='string'&&/^\d{4}-\d{2}-\d{2}T/.test(v)&&Number.isFinite(Date.parse(v)),edition=(v)=>v==='adult'||v==='teen',appearance=(v)=>v==='system'||v==='light'||v==='dark',shared=s&&(s.edition===null||edition(s.edition))&&s.read&&typeof s.read==='object'&&!Array.isArray(s.read)&&Object.entries(s.read).every(([key,value])=>id(key)&&date(value))&&Array.isArray(s.recent)&&s.recent.length<=50&&s.recent.every((r)=>r&&id(r.id)&&edition(r.edition)&&date(r.visitedAt))&&new Set(s.recent.map((r)=>`${r.id}:${r.edition}`)).size===s.recent.length&&appearance(s.appearance),savedArray=Array.isArray(s.saved),validV1Shape=savedArray&&s.version===1&&s.saved.every(id)&&new Set(s.saved).size===s.saved.length,validV1Saved=validV1Shape&&JSON.stringify({...s,version:2,saved:s.saved.map((v)=>({id:v,edition:edition(s.edition)?s.edition:'adult'}))}).length<=1000000,validV2Saved=savedArray&&s.version===2&&s.saved.every((v)=>v&&id(v.id)&&edition(v.edition))&&new Set(s.saved.map((v)=>`${v.id}:${v.edition}`)).size===s.saved.length,saved=shared&&(validV1Saved||validV2Saved);if(saved){document.documentElement.dataset.appearance=s.appearance;if(document.documentElement.dataset.today==='true'&&edition(s.edition))document.documentElement.dataset.edition=s.edition;}} } catch {}
+      try { const raw=localStorage.getItem('five-minutes.reader-state');if(raw!==null&&raw.length<=1000000){const s=JSON.parse(raw),id=(v)=>typeof v==='string'&&/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(v),date=(v)=>typeof v==='string'&&/^\d{4}-\d{2}-\d{2}T/.test(v)&&Number.isFinite(Date.parse(v)),edition=(v)=>v==='adult'||v==='teen',appearance=(v)=>v==='system'||v==='light'||v==='dark',shared=s&&(s.edition===null||edition(s.edition))&&s.read&&typeof s.read==='object'&&!Array.isArray(s.read)&&Object.entries(s.read).every(([key,value])=>id(key)&&date(value))&&Array.isArray(s.recent)&&s.recent.length<=50&&s.recent.every((r)=>r&&id(r.id)&&edition(r.edition)&&date(r.visitedAt))&&new Set(s.recent.map((r)=>`${r.id}:${r.edition}`)).size===s.recent.length&&appearance(s.appearance),savedArray=Array.isArray(s.saved),validV1Shape=savedArray&&s.version===1&&s.saved.every(id)&&new Set(s.saved).size===s.saved.length,validV1Saved=validV1Shape&&JSON.stringify({...s,version:2,saved:s.saved.map((v)=>({id:v,edition:edition(s.edition)?s.edition:'adult'}))}).length<=1000000,validV2Saved=savedArray&&s.version===2&&s.saved.every((v)=>v&&id(v.id)&&edition(v.edition))&&new Set(s.saved.map((v)=>`${v.id}:${v.edition}`)).size===s.saved.length,saved=shared&&(validV1Saved||validV2Saved);if(saved){document.documentElement.dataset.appearance=s.appearance;}} } catch {}
     </script>
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
     <header class="site-header"><div class="container">
       <a class="brand" href="/">Five Minutes</a>
-      <div class="edition-control">
-        <span class="edition-control-label" aria-hidden="true">Edition</span>
-        <nav class="edition-switch" aria-label="Edition" data-global-selector>
-          {(['adult','teen'] as const).map(option=><a href={choices[option]} data-edition-choice={option} aria-current={option===(edition ?? (todaySurface ? 'adult' : undefined))?'page':undefined}>{option==='adult'?'Adult':'Teen'}</a>)}
-        </nav>
-      </div>
-      <script is:inline>
-        {const selected=document.documentElement.dataset.edition;document.querySelectorAll('[data-global-selector] [data-edition-choice]').forEach(link=>{if(link.getAttribute('data-edition-choice')===selected)link.setAttribute('aria-current','page');else link.removeAttribute('aria-current')})}
-      </script>
       <nav class="site-nav" aria-label="Main navigation">{navigation.map(item=><a href={item.href} aria-current={item.current?'page':undefined}>{item.label}</a>)}</nav>
     </div></header>
     <p id="preference-note" class="container quiet-note" hidden>Your choice will not be remembered on this device.</p>
     <details id="reader-recovery" class="container quiet-note" hidden>
       <summary>Recover local reader data</summary>
-      <p>Resetting discards saved lessons, read history, recent reading, appearance and edition preferences on this device. A newer version of the app may be able to read this data; leave it unchanged if you want to keep it.</p>
+      <p>Resetting discards saved lessons, read history, recent reading, appearance preferences on this device. A newer version of the app may be able to read this data; leave it unchanged if you want to keep it.</p>
       <button id="reset-reader-state" class="button button-secondary" type="button">Discard local reader data and reset</button>
     </details>
-    <p class="container quiet-note no-script-note">Edition links work, but your choice will not be remembered without JavaScript.</p>
     <main id="main" class:list={["site-main", "container", {"reader-wide":wide}]}><slot /></main>
     <footer class="site-footer"><div class="container"><a href="/analytics">Analytics</a><a href="/feedback">Send anonymous feedback</a></div></footer>
     <script>import '../lib/reader/enhance'; import '../lib/reader/surfaces'; import '../lib/analytics/client';</script>

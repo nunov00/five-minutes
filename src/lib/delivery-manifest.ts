@@ -27,14 +27,13 @@ export function buildDeliveryManifest(lessons: readonly LessonBundle[]): Deliver
   const catalogue: CatalogueEntry[] = [], routes: RouteManifestEntry[] = [];
 
   for (const lesson of lessons) {
-    const { metadata, adult, teen } = lesson;
-    if (!adult || !teen) throw new Error(`Cannot manifest incomplete lesson ${metadata.id}.`);
+    const { metadata, adult } = lesson;
+    if (!adult) throw new Error(`Cannot manifest incomplete lesson ${metadata.id}.`);
     if (ids.has(metadata.id)) throw new Error(`Duplicate lesson identity in delivery manifest: ${metadata.id}.`);
     ids.add(metadata.id);
-    const adultPath = lessonPath('adult', metadata.slug), teenPath = lessonPath('teen', metadata.slug);
+    const adultPath = lessonPath('adult', metadata.slug);
     const lessonRoutes: RouteManifestEntry[] = [
       { path: adultPath, lessonId: metadata.id, edition: 'adult', slug: metadata.slug },
-      { path: teenPath, lessonId: metadata.id, edition: 'teen', slug: metadata.slug },
     ];
     for (const route of lessonRoutes) {
       if (paths.has(route.path)) throw new Error(`Duplicate canonical route in delivery manifest: ${route.path}.`);
@@ -46,7 +45,7 @@ export function buildDeliveryManifest(lessons: readonly LessonBundle[]): Deliver
       ...(metadata.revisedAt ? { revisedAt: metadata.revisedAt } : {}),
     ...(metadata.archive ? { archiveDate: metadata.archive.catalogueDate } : {}),
     ...(legacyPublicationDate(metadata) ? { originalDate: legacyPublicationDate(metadata) } : {}),
-      adult: { title: adult.title, path: adultPath }, teen: { title: teen.title, path: teenPath },
+      adult: { title: adult.title, path: adultPath }, teen: { title: adult.title, path: adultPath },
     });
   }
 

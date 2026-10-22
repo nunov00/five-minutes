@@ -1,5 +1,7 @@
 # Ranked lesson pipeline
 
+22 October 2026: [ADR-0013](adr/0013-single-lesson-version.md) replaces audience editions with one published lesson. Ranking and review assess that single version; historical edition comparisons are not selection requirements.
+
 Owner-approved direction: 18 October 2026. Activation requires the implementation PR's qualifying different-provider review and exact-head checks. This extends ADR-0012; it replaces backlog-first selection, not its identity, date, review or publication safeguards.
 
 ## Pool and shortlist
@@ -21,9 +23,9 @@ Include these revisions in the normal pool assessment alongside transfers and ne
 Judge these in order, without pretending to have objective numerical scores:
 
 1. Reader appeal: an honest question, relatable stakes, a surprising observation or useful everyday misunderstanding. Curiosity leads; clickbait and novelty without substance fail.
-2. Learning value: a clear causal explanation or meaningful change in understanding, suitable for both editions.
+2. Learning value: a clear causal explanation or meaningful change in understanding, written for readers without specialist knowledge who use English as an additional language.
 3. Distinctiveness: breadth against recent releases and other leading candidates; compare central mechanisms, not just topic labels.
-4. Teaching potential: a concrete example, useful prediction and/or explanatory figure, plus meaningful Adult depth.
+4. Teaching potential: a concrete example, useful prediction and/or explanatory figure, plus a developed causal step, useful limit or implication.
 5. Evidence and readiness: accessible authoritative sources, current scope eligibility and practical feasibility in the daily run.
 
 Relevance is a changing input to these judgements. New published articles, genuine developments, seasonal context and verified trends can move candidates up or down. Reassess rather than preserving yesterday's order by habit. Revisions and transfers receive neither automatic preference nor a penalty for age. Check the whole outstanding pool for a stronger candidate; a displaced idea remains available. Use available aggregate readership/feedback as supporting evidence only, with its date, sample limitations and no invented demand estimates. Do not add analytics services, scraping jobs, paid models or another automation.

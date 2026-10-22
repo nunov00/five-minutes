@@ -99,14 +99,14 @@ export async function collectGuardInput({ env = process.env, fetchImpl = fetch, 
     throw new LessonGuardError('Pinned comparison response is incomplete.');
   }
   const files = compare.files;
-  if (files.length<4||files.length>5+GUARD_LIMITS.imageFiles)throw new LessonGuardError('Automated lesson candidate requires 4–6 bounded files.');
+  if (files.length<3||files.length>4+GUARD_LIMITS.imageFiles)throw new LessonGuardError('Automated lesson candidate requires bounded single-version lesson files.');
 
-  const matches = files.map((file) => /^src\/content\/lessons\/(\d{4})\/([a-z0-9]+(?:-[a-z0-9]+)*)\/(adult\.md|lesson\.yaml|teen\.md)$/.exec(file.filename)).filter(Boolean);
+  const matches = files.map((file) => /^src\/content\/lessons\/(\d{4})\/([a-z0-9]+(?:-[a-z0-9]+)*)\/(adult\.md|lesson\.yaml)$/.exec(file.filename)).filter(Boolean);
   const candidatePaths = [...new Set(matches.map((match) => `src/content/lessons/${match[1]}/${match[2]}/${match[3]}`))];
   const renewal = files.some(f=>f.filename===BACKLOG_PATH);
   const revision = renewal && matches.some(match=>files.find(f=>f.filename===match[0])?.status==='modified');
   const imagePaths=files.filter(file=>/^public\/lesson-media\/[a-z0-9-]+\.(?:png|webp)$/.test(file.filename)).map(file=>file.filename);
-  if(candidatePaths.length!==3||imagePaths.length>GUARD_LIMITS.imageFiles||new Set(imagePaths).size!==imagePaths.length
+  if(candidatePaths.length!==2||imagePaths.length>GUARD_LIMITS.imageFiles||new Set(imagePaths).size!==imagePaths.length
     ||files.length!==candidatePaths.length+imagePaths.length+(revision?0:1)+(renewal?1:0)||(!revision&&!files.some(file=>file.filename==='src/content/route-ownership.json')))throw new LessonGuardError('Candidate file scope exceeds the lesson and bounded-image contract.');
   const headTree = await api(`/repos/${owner}/${repo}/git/trees/${encodeURIComponent(triggerHeadSha)}?recursive=1`);
   if (!Array.isArray(headTree?.tree) || headTree.truncated) throw new LessonGuardError('Candidate tree response is incomplete or truncated.');
@@ -123,13 +123,12 @@ export async function collectGuardInput({ env = process.env, fetchImpl = fetch, 
     const entry=treeByPath.get(BACKLOG_PATH), loaded=await content(api,owner,repo,BACKLOG_PATH,triggerHeadSha);
     blobs[BACKLOG_PATH]={mode:entry?.mode,type:entry?.type,size:loaded.size,text:loaded.text};
   }
-  let baseLessonText, baseAdultText, baseTeenText;
+  let baseLessonText, baseAdultText;
   if (revision) {
     for (const path of candidatePaths) {
       const loaded=await content(api,owner,repo,path,currentBase.object.sha);
       if(path.endsWith('/lesson.yaml')) baseLessonText=loaded.text;
       else if(path.endsWith('/adult.md')) baseAdultText=loaded.text;
-      else baseTeenText=loaded.text;
     }
     // Reused rasters are fetched from the exact head; their absence from the diff proves byte identity to main.
     for (const path of candidatePaths.filter(p=>p.endsWith('.md'))) {
@@ -154,7 +153,7 @@ export async function collectGuardInput({ env = process.env, fetchImpl = fetch, 
   ]);
   const registryEntry = treeByPath.get(registryPath);
   return {
-    baseBacklogText:baseBacklog.text, baseLessonText, baseAdultText, baseTeenText,
+    baseBacklogText:baseBacklog.text, baseLessonText, baseAdultText,
     pr: { headRef: pr.head.ref, headSha: pr.head.sha, labels },
     triggerHeadSha,
     currentBaseSha: currentBase.object.sha,

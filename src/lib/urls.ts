@@ -1,17 +1,19 @@
 export type LessonEdition = 'adult' | 'teen';
 
 /**
- * Single source of truth for public lesson paths.
+ * Single source of truth for the sole canonical lesson path.
+ * The edition parameter is retained for legacy callers and reader backups only:
+ * both values deliberately resolve to /adult/<slug>, never a retired Teen URL.
  * Exact URL syntax remains changeable here without reconstructing paths elsewhere.
  */
-export function lessonPath(edition: LessonEdition, slug: string): string {
-  return `/${edition}/${slug}`;
+export function lessonPath(_edition: LessonEdition, slug: string): string {
+  return `/adult/${slug}`;
 }
 
 export type DiscoveryKind = 'library' | 'topics';
 export function discoveryPath(edition: LessonEdition | null, kind: DiscoveryKind, detail?: string | number): string {
   if (edition !== null && edition !== 'adult' && edition !== 'teen') throw new Error('Unknown edition.');
-  const prefix = edition ? `/editions/${edition}` : '';
+  const prefix = '';
   if (kind === 'library') {
     const page = detail === undefined ? 1 : Number(detail);
     if (!Number.isInteger(page) || page < 1) throw new Error('Invalid Library page.');

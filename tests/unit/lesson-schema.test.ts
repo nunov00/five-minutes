@@ -186,14 +186,14 @@ describe('lesson schema v2', () => {
     const missingTeen = validLesson();
     delete missingTeen.teen;
     expect(validateLessonBundle(missingTeen).valid).toBe(true);
-    expect(validatePublicationEligibility(missingTeen).issues).toContainEqual(expect.objectContaining({ path: 'teen', code: 'publication-presentation' }));
+    expect(validatePublicationEligibility(missingTeen).valid).toBe(true);
   });
 
-  it('requires both presentations for publication', () => {
+  it('requires the single active presentation for publication', () => {
     const lesson = validLesson();
     delete lesson.adult;
     delete lesson.teen;
-    expect(validatePublicationEligibility(lesson).issues.filter((x) => x.code === 'publication-presentation')).toHaveLength(2);
+    expect(validatePublicationEligibility(lesson).issues.filter((x) => x.code === 'publication-presentation')).toHaveLength(1);
   });
 
   it('blocks publication when publishedAt is missing or invalid', () => {
@@ -228,9 +228,9 @@ describe('lesson schema v2', () => {
     const incomplete = validLesson();
     incomplete.metadata.id = '018f47a2-5d7b-7c31-9d4f-0d9a8b6c2e12';
     incomplete.metadata.slug = 'incomplete-lesson';
-    delete incomplete.teen;
+    delete incomplete.adult;
     expect(validatePublicationCollection([complete, incomplete]).issues).toContainEqual(expect.objectContaining({
-      path: 'lessons[1].teen', code: 'publication-presentation',
+      path: 'lessons[1].adult', code: 'publication-presentation',
     }));
   });
 
@@ -319,8 +319,7 @@ describe('lesson schema v2', () => {
     const lesson = validLesson();
     expect(buildRedirectManifest([lesson])).toEqual([
       { from: '/adult/gps-and-relativity', to: '/adult/why-gps-needs-einstein', lessonId: lesson.metadata.id },
-      { from: '/teen/gps-and-relativity', to: '/teen/why-gps-needs-einstein', lessonId: lesson.metadata.id },
-    ]);
+          ]);
   });
 
   it('rejects removal or reassignment from historical route ownership', () => {
@@ -387,7 +386,7 @@ describe('lesson schema v2', () => {
 
   it('refuses redirects for incomplete or duplicate-route input', () => {
     const incomplete = validLesson();
-    delete incomplete.teen;
+    delete incomplete.adult;
     expect(() => buildRedirectManifest([incomplete])).toThrow(/incomplete lesson/);
 
     const first = validLesson();

@@ -9,7 +9,7 @@ const lessons = (await loadPublishedLessons(resolve('src/content/lessons'), owne
 
 // Discover approved archive content through the same validation boundary as the build.
 // Each lesson gets its own bounded test, rather than extending one hard-coded pilot list.
-for (const lesson of lessons) for (const edition of ['adult', 'teen'] as const) {
+for (const lesson of lessons) for (const edition of ['adult'] as const) {
   test(`archive catalogue: ${edition}/${lesson.metadata.slug}`, async ({ page }, testInfo) => {
     const presentation = lesson[edition];
     if (!presentation) throw new Error(`Missing ${edition} presentation for ${lesson.metadata.slug}`);
@@ -47,7 +47,7 @@ for (const lesson of lessons) for (const edition of ['adult', 'teen'] as const) 
         await expect(figure).toHaveCount(0);
       }
 
-      if (edition === 'teen' && presentation.activity) {
+      if (presentation.activity) {
         const activity = page.locator('[data-activity]');
         await activity.locator(':scope > summary').click();
         await activity.getByRole('radio').nth(presentation.activity.answer).check();

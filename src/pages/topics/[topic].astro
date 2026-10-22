@@ -1,9 +1,11 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Chooser from '../../components/discovery/Chooser.astro';
+import DiscoveryPage from '../../components/DiscoveryPage.astro';
 import { getBuildMetadata } from '../../lib/content/build-content';
+import { newestLessons } from '../../lib/discovery/catalogue';
 import { TAXONOMY } from '../../lib/taxonomy';
 export async function getStaticPaths(){const {lessons}=await getBuildMetadata();return TAXONOMY.filter(t=>lessons.some(l=>l.metadata.topic===t.token)).map(topic=>({params:{topic:topic.token},props:{topic}}));}
+const {lessons}=await getBuildMetadata();
+const topics=TAXONOMY.filter(t=>lessons.some(l=>l.metadata.topic===t.token));
 const {topic}=Astro.props;
 ---
-<BaseLayout title={`${topic.label} · Topics · Five Minutes`} neutralDiscovery><Chooser path={Astro.url.pathname} title={topic.label}/></BaseLayout>
+<DiscoveryPage edition="adult" kind="topics" pageNumber={1} pageCount={1} lessons={newestLessons(lessons.filter(l=>l.metadata.topic===topic.token))} topics={topics} topic={topic} />

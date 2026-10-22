@@ -1,5 +1,8 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Chooser from '../../components/discovery/Chooser.astro';
+import DiscoveryPage from '../../components/DiscoveryPage.astro';
+import { getBuildMetadata } from '../../lib/content/build-content';
+import { TAXONOMY } from '../../lib/taxonomy';
+const {lessons}=await getBuildMetadata();
+const topics=TAXONOMY.filter(t=>lessons.some(l=>l.metadata.topic===t.token));
 ---
-<BaseLayout title="Topics · Five Minutes" neutralDiscovery><Chooser path={Astro.url.pathname} title="Topics"/></BaseLayout>
+<DiscoveryPage edition="adult" kind="topics" pageNumber={1} pageCount={1} lessons={lessons} topics={topics} />

@@ -30,7 +30,7 @@ function candidate(branch = `lesson/${slug}`) {
   put('src/content/route-ownership.json', JSON.stringify({ [slug]: id }) + '\n');
   const root = `src/content/lessons/2026/${slug}`;
   put(`${root}/lesson.yaml`, `schemaVersion: 2\nid: ${id}\nslug: ${slug}\naliases: []\npublishedAt: 2026-10-05T05:00:00+02:00\ntopic: science\nsubtopic: astronomy\nconcepts: [shadows]\nrelated: {manual: [], exclude: []}\nsources: []\nprovenance:\n  createdAt: 2026-10-05T04:30:00+02:00\n  createdBy: {type: ai, provider: openai, model: test, promptVersion: test}\n  reviews: []\n`);
-  for (const edition of ['adult', 'teen']) put(`${root}/${edition}.md`, '---\ntitle: Shadows\ndescription: A description.\ntakeaway: A takeaway.\nquestion: Why?\nanswer: Light.\nsearchTerms: [shadows]\n---\nBody.\n');
+  for (const edition of ['adult']) put(`${root}/${edition}.md`, '---\ntitle: Shadows\ndescription: A description.\ntakeaway: A takeaway.\nquestion: Why?\nanswer: Light.\nsearchTerms: [shadows]\n---\nBody.\n');
   const commit = () => { git('add', '.'); git('commit', '-m', 'candidate'); };
   commit();
   return { cwd, base, git, put, commit };

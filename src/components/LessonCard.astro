@@ -7,8 +7,8 @@ import { lessonPath, type LessonEdition } from '../lib/urls';
 
 interface Props { lesson: LessonBundle; edition: LessonEdition; }
 const { lesson, edition } = Astro.props as Props;
-if (!lesson.adult || !lesson.teen) throw new Error(`Cannot render incomplete library lesson ${lesson.metadata.id}.`);
-const presentation = lesson[edition];
+if (!lesson.adult) throw new Error(`Cannot render incomplete library lesson ${lesson.metadata.id}.`);
+const presentation = lesson.adult;
 if(!presentation)throw new Error(`Missing ${edition} presentation.`);
 const topic = taxonomyTopic(lesson.metadata.topic);
 const subtopic = taxonomySubtopic(lesson.metadata.topic, lesson.metadata.subtopic);

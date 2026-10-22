@@ -1,5 +1,6 @@
 ---
 // Only emitted by the existing five-items-per-page browser-fixture build, never production.
+import TeenActivity from '../../components/reading/TeenActivity.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import LessonFigure from '../../components/reading/LessonFigure.astro';
 import type { LessonFigure as Figure } from '../../lib/content/presentation-extensions';
@@ -15,6 +16,7 @@ const figures:Figure[]=[
 ---
 <BaseLayout title="Figure toolkit calibration" noindex>
  <h1>Figure toolkit calibration</h1>
+ <TeenActivity activity={{prompt:'Which hemisphere has summer in January?',options:['The Northern Hemisphere','The Southern Hemisphere'],answer:1,explanation:'In January the Southern Hemisphere is tilted towards the Sun.'}} id="activity-fixture"/>
  <div class="toolkit-fixture-list">{figures.map((figure,index)=><section data-fixture={index}><LessonFigure figure={figure} id={`toolkit-${index}`}/></section>)}</div>
 </BaseLayout>
 <style>.toolkit-fixture-list{max-width:420px;margin-inline:auto}</style>

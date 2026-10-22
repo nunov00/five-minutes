@@ -1,5 +1,8 @@
 # ADR-0006: Lesson source schema and identity contract
 
+22 October 2026 single-version direction: [ADR-0013](0013-single-lesson-version.md) supersedes all earlier Adult/Teen requirements. Publish and review one lesson from `lesson.yaml` and `adult.md`; retired `teen.md` sources are inert archive material. All non-edition safeguards remain.
+
+
 
 18 October 2026 editorial renewal amendment: ADR-0012 and the shared backlog-first contract in docs/automation/publication-task-contracts.md supersede earlier new-only/import-exclusion/correction-exclusion wording for selected daily backlog candidates. Reader date labels and Today/Earlier eligibility apply globally as ADR-0012 defines. Existing review, source, off-switch, exact-head, same-day and guarded-merge safeguards remain. Direction is Owner-approved; activation waits for the implementation PR's mandatory different-provider review and checks.
 

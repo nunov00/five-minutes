@@ -19,10 +19,10 @@ function issues(figure:unknown,teenActivity:unknown=undefined){const b=validLess
 async function assetRoot(){const root=await mkdtemp(join(tmpdir(),'five-minutes-media-'));await mkdir(join(root,'lesson-media'));return root;}
 const image:LessonFigure={type:'image',src:'/lesson-media/test.png',width:192,height:192,alt:'Local raster explanation.',caption:'A local image.',description:'The explanation in words.'};
 describe('safe v2 presentation extensions',()=>{
- it('allows optional per-edition diagrams and a Teen-only activity',()=>{
+ it('allows optional diagrams and a safe activity in the single lesson',()=>{
   expect(issues(diagram,activity)).toEqual([]);
   for(const figure of [processDiagram,cycle,comparison]) expect(issues(figure)).toEqual([]);
-  const b=validLesson();expect(validateLessonBundle({...b,adult:{...b.adult,activity}}).issues).toContainEqual(expect.objectContaining({path:'adult.activity'}));
+  const b=validLesson();expect(validateLessonBundle({...b,adult:{...b.adult,activity}}).issues).toEqual([]);
  });
  it.each([
   {...diagram,type:'custom-component'}, {...diagram,component:'svg'}, {...diagram,data:{tiltDegrees:90}}, {...diagram,data:{tiltDegrees:23.4,script:'alert(1)'}},

@@ -1,0 +1,9 @@
+---
+import LegacyRedirect from '../../components/LegacyRedirect.astro';
+import {getBuildMetadata} from '../../lib/content/build-content';
+export async function getStaticPaths(){
+ const {redirects}=await getBuildMetadata();
+ return redirects.filter(entry=>entry.from.startsWith('/teen/')).map(entry=>({params:{slug:entry.from.slice(6)},props:{target:entry.to}}));
+}
+---
+<LegacyRedirect target={Astro.props.target}/>

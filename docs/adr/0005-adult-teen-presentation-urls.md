@@ -1,5 +1,8 @@
 # ADR-0005: Separate Adult and Teen presentation URLs
 
+22 October 2026 single-version direction: [ADR-0013](0013-single-lesson-version.md) supersedes all earlier Adult/Teen requirements. Publish and review one lesson from `lesson.yaml` and `adult.md`; retired `teen.md` sources are inert archive material. All non-edition safeguards remain.
+
+
 Status: Accepted
 Date: 2026-10-02
 Owner approval: approved 2026-10-02.

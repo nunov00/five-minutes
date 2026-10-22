@@ -16,15 +16,14 @@ export const GUARD_LIMITS = Object.freeze({
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-const LESSON_PATH = /^src\/content\/lessons\/(\d{4})\/([a-z0-9]+(?:-[a-z0-9]+)*)\/(adult\.md|lesson\.yaml|teen\.md)$/;
+const LESSON_PATH = /^src\/content\/lessons\/(\d{4})\/([a-z0-9]+(?:-[a-z0-9]+)*)\/(adult\.md|lesson\.yaml)$/;
 const REGISTRY_PATH = 'src/content/route-ownership.json';
 const REQUIRED_LABELS = ['editorial-review-requested', 'review:mandatory'];
 const METADATA_KEYS = new Set([
   'schemaVersion', 'id', 'slug', 'aliases', 'publishedAt', 'topic', 'subtopic',
   'concepts', 'related', 'sources', 'provenance', 'imageRights', 'revisedAt', 'archive',
 ]);
-const ADULT_KEYS = new Set(['title', 'description', 'takeaway', 'question', 'answer', 'searchTerms', 'figure']);
-const TEEN_KEYS = new Set([...ADULT_KEYS, 'activity']);
+const ADULT_KEYS = new Set(['title', 'description', 'takeaway', 'question', 'answer', 'searchTerms', 'figure', 'activity']);
 
 export class LessonGuardError extends Error {
   constructor(message) {
@@ -157,6 +156,15 @@ function parseFrontmatter(source, label, allowedKeys) {
   if (end < 0) fail(`${label} has unterminated YAML front matter.`);
   const value = parseYamlObject(source.slice(4, end), `${label} front matter`, allowedKeys);
   if (Object.hasOwn(value, 'figure')) validateAutomatedFigure(value.figure, label);
+  if (Object.hasOwn(value, 'activity')) {
+    const a=value.activity;
+    if(!isPlainObject(a)||!hasOnlyKeys(a,['prompt','options','answer','explanation'])
+      ||!isPlainText(a.prompt,140)||!isPlainText(a.explanation,400)
+      ||!Array.isArray(a.options)||a.options.length<2||a.options.length>4||!a.options.every(o=>isPlainText(o,80))
+      ||new Set(a.options.map(normalise)).size!==a.options.length
+      ||!Number.isInteger(a.answer)||a.answer<0||a.answer>=a.options.length
+      ||typeof value.question==='string'&&normalise(a.prompt)===normalise(value.question)) fail(`${label} activity is invalid.`);
+  }
   return value;
 }
 
@@ -226,12 +234,12 @@ export function evaluateLessonPullRequest(input) {
   const backlogFiles = files.filter(f => f.filename === BACKLOG_PATH);
   const renewal = backlogFiles.length === 1;
   const revision = renewal && files.some(f => LESSON_PATH.test(f.filename) && f.status === 'modified');
-  if(files.length<4||files.length>5+GUARD_LIMITS.imageFiles)fail('Automated candidate requires the bounded lesson, registry/backlog files and at most two images.');
+  if(files.length<3||files.length>4+GUARD_LIMITS.imageFiles)fail('Automated candidate requires the bounded lesson, registry/backlog files and at most two images.');
 
   const lessonFiles = files.filter((file) => typeof file?.filename === 'string' && LESSON_PATH.test(file.filename));
   const registryFiles = files.filter((file) => file?.filename === REGISTRY_PATH);
   const imageFiles=files.filter(file=>typeof file?.filename==='string'&&file.filename.startsWith('public/lesson-media/'));
-  if (lessonFiles.length !== 3 || registryFiles.length !== (revision ? 0 : 1) || lessonFiles.length+registryFiles.length+imageFiles.length+backlogFiles.length!==files.length) {
+  if (lessonFiles.length !== 2 || registryFiles.length !== (revision ? 0 : 1) || lessonFiles.length+registryFiles.length+imageFiles.length+backlogFiles.length!==files.length) {
     fail('Candidate may change only one lesson, its bounded new images, and the applicable registry/backlog delta.');
   }
   if (lessonFiles.some((file) => file.status !== (revision ? 'modified' : 'added')) || imageFiles.some(file=>file.status!=='added') || (!revision && registryFiles[0].status !== 'modified') || backlogFiles.some(f => f.status !== 'modified')) {
@@ -249,8 +257,8 @@ export function evaluateLessonPullRequest(input) {
   const years = new Set(matches.map((match) => match[1]));
   const slugs = new Set(matches.map((match) => match[2]));
   const names = new Set(matches.map((match) => match[3]));
-  if (years.size !== 1 || slugs.size !== 1 || names.size !== 3 || !['adult.md', 'lesson.yaml', 'teen.md'].every((name) => names.has(name))) {
-    fail('Candidate must add exactly adult.md, lesson.yaml and teen.md in one lesson directory.');
+  if (years.size !== 1 || slugs.size !== 1 || names.size !== 2 || !['adult.md', 'lesson.yaml'].every((name) => names.has(name))) {
+    fail('Candidate must add exactly adult.md and lesson.yaml in one lesson directory.');
   }
   const year = [...years][0];
   const slug = [...slugs][0];
@@ -259,11 +267,9 @@ export function evaluateLessonPullRequest(input) {
   const root = `src/content/lessons/${year}/${slug}`;
   const yamlPath = `${root}/lesson.yaml`;
   const adultPath = `${root}/adult.md`;
-  const teenPath = `${root}/teen.md`;
   const yamlText = requireTextBlob(blobs, yamlPath, GUARD_LIMITS.yamlBytes);
   const adultText = requireTextBlob(blobs, adultPath, GUARD_LIMITS.markdownBytes);
-  const teenText = requireTextBlob(blobs, teenPath, GUARD_LIMITS.markdownBytes);
-  const totalBytes = [yamlPath, adultPath, teenPath].reduce((sum, path) => sum + blobs[path].size, 0);
+  const totalBytes = [yamlPath, adultPath].reduce((sum, path) => sum + blobs[path].size, 0);
   if (totalBytes > GUARD_LIMITS.totalBytes) fail('Candidate exceeds the total lesson byte limit.');
 
   const metadata = parseYamlObject(yamlText, 'lesson.yaml', METADATA_KEYS);
@@ -307,13 +313,13 @@ export function evaluateLessonPullRequest(input) {
   if (publicationDate !== zurichDate(nowDate)) fail('Publication date must be the current Europe/Zurich date.');
   if (!(revision ? zurichDate(new Date(metadata.publishedAt)) : publicationDate).startsWith(`${year}-`)) fail('Lesson directory year must match publishedAt in Europe/Zurich.');
 
-  const presentations=[parseFrontmatter(adultText,'adult.md',ADULT_KEYS),parseFrontmatter(teenText,'teen.md',TEEN_KEYS)];
+  const presentations=[parseFrontmatter(adultText,'adult.md',ADULT_KEYS)];
   const images=presentations.map(p=>p.figure).filter(f=>f?.type==='image');
   for(const message of validateImageRights(metadata.imageRights,images.map(f=>f.src)))fail(message);
   const referenced=new Set(images.map(f=>`public${f.src}`));
   if((!revision && referenced.size!==imageFiles.length)||imageFiles.some(f=>!referenced.has(f.filename)))fail('Every added image must be referenced by this lesson and every image reference must be newly added.');
   if (revision) {
-    const originalPresentations = [parseFrontmatter(input.baseAdultText,'base adult.md',ADULT_KEYS), parseFrontmatter(input.baseTeenText,'base teen.md',TEEN_KEYS)];
+    const originalPresentations = [parseFrontmatter(input.baseAdultText,'base adult.md',ADULT_KEYS)];
     const originalImages = new Set(originalPresentations.filter(p=>p.figure?.type==='image').map(p=>`public${p.figure.src}`));
     for (const path of referenced) if (!imageFiles.some(f=>f.filename===path) && !originalImages.has(path)) fail('Revision cannot borrow an unrelated existing raster.');
   }

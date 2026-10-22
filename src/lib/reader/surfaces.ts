@@ -25,7 +25,7 @@ function reflectLessonControls(state: ReaderStateV2) {
   const id = lesson.dataset.lessonId;
   if (!id) return;
   const edition = lesson.dataset.edition;
-  const saved = isEdition(edition) && state.saved.some(entry => entry.id === id && entry.edition === edition);
+  const saved = isEdition(edition) && state.saved.some(entry => entry.id === id);
   const read = Boolean(state.read[id]);
   const save = lesson.querySelector<HTMLButtonElement>('[data-save-lesson]');
   const readButton = lesson.querySelector<HTMLButtonElement>('[data-read-lesson]');
@@ -38,7 +38,7 @@ function reflectMarkers(state: ReaderStateV2) {
     const id = marker.closest<HTMLElement>('[data-lesson-id]')?.dataset.lessonId;
     if (!id) return;
     const edition = marker.closest<HTMLElement>('[data-edition]')?.dataset.edition ?? root.dataset.edition;
-    const labels = [isEdition(edition) && state.saved.some(entry => entry.id === id && entry.edition === edition) ? 'Saved' : '', state.read[id] ? 'Read' : ''].filter(Boolean);
+    const labels = [isEdition(edition) && state.saved.some(entry => entry.id === id) ? 'Saved' : '', state.read[id] ? 'Read' : ''].filter(Boolean);
     marker.textContent = labels.join(' · ');
     marker.hidden = labels.length === 0;
   });
@@ -56,15 +56,15 @@ function renderPersonalLists(state: ReaderStateV2, catalogue: readonly BrowserCa
   const recentEmpty = document.querySelector<HTMLElement>('[data-recent-empty]');
   let missingSaved = 0, missingRecent = 0;
   savedList?.replaceChildren(); recentList?.replaceChildren();
-  state.saved.forEach(saved => {
+  state.saved.filter((entry,index,items)=>items.findIndex(other=>other.id===entry.id)===index).forEach(saved => {
     const entry = byId.get(saved.id); if (!entry) { missingSaved++; return; }
     const item = document.createElement('li'); item.dataset.lessonId = saved.id; item.dataset.edition = saved.edition;
-    item.append(link(entry[saved.edition].title, entry[saved.edition].path)); savedList?.append(item);
+    item.append(link(entry.adult.title, entry.adult.path)); savedList?.append(item);
   });
-  state.recent.forEach(recent => {
+  state.recent.filter((entry,index,items)=>items.findIndex(other=>other.id===entry.id)===index).forEach(recent => {
     const entry = byId.get(recent.id); if (!entry) { missingRecent++; return; }
     const item = document.createElement('li'); item.dataset.lessonId = recent.id;
-    item.append(link(entry[recent.edition].title, entry[recent.edition].path));
+    item.append(link(entry.adult.title, entry.adult.path));
     const meta = document.createElement('span'); meta.className = 'personal-links'; meta.textContent = new Intl.DateTimeFormat('en-GB',{dateStyle:'medium'}).format(new Date(recent.visitedAt));
     item.append(meta); recentList?.append(item);
   });

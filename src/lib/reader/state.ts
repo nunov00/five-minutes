@@ -93,7 +93,7 @@ export function readerStorage(getStorage: () => StoragePort) {
     },
     toggleSaved(lessonId: string, edition: LessonEdition): boolean {
       if (!isLessonId(lessonId) || !isEdition(edition)) return false;
-      const matches = (entry: SavedPresentation) => entry.id === lessonId && entry.edition === edition;
+      const matches = (entry: SavedPresentation) => entry.id === lessonId;
       return mutate(state => ({ ...state, saved: state.saved.some(matches) ? state.saved.filter(entry => !matches(entry)) : [...state.saved, { id: lessonId, edition }] }));
     },
     setRead(lessonId: string, read: boolean, visitedAt = new Date().toISOString()): boolean {

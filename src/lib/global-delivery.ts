@@ -30,10 +30,13 @@ export function buildGlobalDeliveryOutputs(
   for (const [historicalName, lessonId] of Object.entries(ownership).sort(([a], [b]) => compare(a, b))) {
     const lesson = byId.get(lessonId);
     if (!lesson) throw new Error(`Historical route "${historicalName}" references unknown lesson ${lessonId}.`);
-    if (historicalName === lesson.metadata.slug) continue;
+    if (historicalName === lesson.metadata.slug) {
+      redirects.push({ from: `/teen/${historicalName}`, to: lessonPath('adult', historicalName), lessonId });
+      continue;
+    }
 
     for (const edition of ['adult', 'teen'] as const) {
-      const from = lessonPath(edition, historicalName);
+      const from = edition === 'teen' ? `/teen/${historicalName}` : lessonPath(edition, historicalName);
       const to = lessonPath(edition, lesson.metadata.slug);
       if (canonicalPaths.has(from)) throw new Error(`Historical redirect source "${from}" conflicts with a canonical route.`);
       const existingTarget = redirectTargets.get(from);
@@ -47,6 +50,9 @@ export function buildGlobalDeliveryOutputs(
     }
   }
 
+  for (const target of discoveryPagePaths(lessons).filter(path=>path.startsWith('/library')||path.startsWith('/topics'))) {
+    for (const edition of ['adult','teen']) redirects.push({from:`/editions/${edition}${target}`,to:target});
+  }
   redirects.sort((a, b) => compare(a.from, b.from));
   const sitemapPaths = [...discoveryPagePaths(lessons), ...manifest.routes.map((route) => route.path)].sort(compare);
   return { manifest, redirects, sitemapPaths };

@@ -19,15 +19,15 @@ describe('app shell', () => {
     expect(html).toMatch(/<a[^>]*href="\/feedback"[^>]*>Send anonymous feedback<\/a>/);
   });
 
-  it('renders both progressive-enhancement presentations while defaulting Today to Adult', async () => {
+  it('renders one lesson with no edition controls', async () => {
     const container = await AstroContainer.create();
     const html = await container.renderToString(HomePage);
 
     expect(html).toMatch(/href="\/adult\/[a-z0-9-]+"/);
-    expect(html).toMatch(/href="\/teen\/[a-z0-9-]+"/);
+    expect(html).not.toMatch(/href="\/teen\/[a-z0-9-]+"/);
     expect(html).toContain('data-edition="adult"');
-    expect(html).toMatch(/data-edition-choice="adult" aria-current="page"/);
-    expect(html).toContain('>Edition</span>');
+    expect(html).not.toContain('data-edition-choice=');
+    expect(html).not.toContain('>Edition</span>');
     expect(html).not.toContain('Read the Adult edition');
     expect(html).not.toContain('Read the Teen edition');
     expect(html).not.toContain('One idea in two editions');
