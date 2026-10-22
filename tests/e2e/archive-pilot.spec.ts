@@ -6,7 +6,7 @@ const slugs = ['why-experts-skip-the-obvious-step', 'why-tails-is-not-due', 'why
 
 const pilot = (await loadPublishedLessons('src/content/lessons', JSON.parse(readFileSync('src/content/route-ownership.json','utf8')))).filter(l => slugs.includes(l.metadata.slug));
 
-test('archive pilot is readable in both editions and does not replace Today or Earlier', async ({ page }) => {
+test('archive pilot is readable as a single version and does not replace Today or Earlier', async ({ page }) => {
   await page.goto('/');
   for (const { metadata: { slug } } of pilot.filter(l => !l.metadata.revisedAt)) {
     await expect(page.locator(`[data-today-edition] a[href$="/${slug}"]`)).toHaveCount(0);
@@ -21,12 +21,13 @@ test('archive pilot is readable in both editions and does not replace Today or E
     await expect(page.locator('[data-recall] .answer')).toBeVisible();
   }
   await page.goto('/adult/why-tails-is-not-due');
-  await page.locator('[data-activity] > summary').click();
-  await page.getByRole('radio', { name: 'Exactly half', exact: true }).check();
-  await expect(page.locator('[data-activity-reveal]')).toHaveAttribute('open', '');
+  // The retired Teen activity must not leak into the current lesson.
+  await expect(page.locator('[data-activity]')).toHaveCount(0);
+  await page.locator('[data-recall-reveal] > summary').click();
+  await expect(page.locator('[data-recall] .answer')).toBeVisible();
 });
 
-test('archive Moon figure renders in both editions at phone and wide widths', async ({ page }, testInfo) => {
+test('archive Moon figure renders as a single version at phone and wide widths', async ({ page }, testInfo) => {
   for (const width of [320, 393, 1440]) for (const edition of ['adult']) {
     await page.setViewportSize({ width, height: width < 1000 ? 800 : 1000 });
     await page.goto(`/${edition}/why-the-moon-appears-in-daylight`);
