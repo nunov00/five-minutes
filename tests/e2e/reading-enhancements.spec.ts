@@ -1,9 +1,10 @@
 import {test,expect} from './support/fixtures';
 const key='five-minutes.reader-state';
-const seasons='/teen/why-earth-has-seasons';
+const seasons='/adult/why-earth-has-seasons';
+const activityFixture='/figure-fixtures/toolkit';
 
 test('recall follows the body and reveals answer and takeaway together in both editions',async({page})=>{
- for(const edition of ['adult','teen']){
+ for(const edition of ['adult']){
   await page.goto(`/${edition}/goodharts-law`);
   await expect(page.locator('.lesson-figure')).toHaveCount(0);
   const answer=page.locator('[data-recall] .answer'),takeaway=page.getByRole('region',{name:'Takeaway',exact:true});
@@ -14,8 +15,8 @@ test('recall follows the body and reveals answer and takeaway together in both e
  }
 });
 
-test('Teen choices are unnumbered accessible radios, with keyboard selection and no stored answer',async({page})=>{
- await page.goto(seasons);const prompt=page.locator('[data-activity]');
+test('Prediction choices are unnumbered accessible radios, with keyboard selection and no stored answer',async({page})=>{
+ await page.goto(activityFixture);const prompt=page.locator('[data-activity]');
  await expect(prompt).not.toHaveAttribute('open','');
  await prompt.getByText('What do you think?',{exact:true}).focus();await page.keyboard.press('Enter');
  await expect(prompt.getByText('Choose an option to see the explanation.')).toBeVisible();
@@ -25,22 +26,22 @@ test('Teen choices are unnumbered accessible radios, with keyboard selection and
  await radios.first().focus();await page.keyboard.press('ArrowDown');await expect(radios.last()).toBeChecked();await expect(radios.first()).not.toBeChecked();
  await expect(prompt.locator('[data-activity-selection]')).toHaveText('You chose: The Southern Hemisphere');
  await expect(prompt.locator('[data-activity-reveal]')).toHaveAttribute('open','');
- const state=await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!),key);expect(Object.keys(state).sort()).toEqual(['appearance','edition','read','recent','saved','version']);expect(state.saved).toEqual([]);
+ expect(await page.evaluate(k=>localStorage.getItem(k),key)).toBeNull();
  await page.goto('/adult/why-earth-has-seasons');await expect(page.locator('[data-activity]')).toHaveCount(0);
 });
 
 test('activities reset on reload, Back and the restoration handler without storing answers',async({page})=>{
  async function choose(){await page.getByText('What do you think?',{exact:true}).click();await page.getByRole('radio',{name:'The Northern Hemisphere',exact:true}).check();}
  async function reset(){await expect(page.locator('[data-activity]')).not.toHaveAttribute('open','');await expect(page.locator('[data-activity-reveal]')).not.toHaveAttribute('open','');for(const input of await page.getByRole('radio',{includeHidden:true}).all())await expect(input).not.toBeChecked();await expect(page.locator('[data-activity-selection]')).toHaveText('');}
- await page.goto(seasons);await choose();await page.reload();await reset();
- await choose();await page.getByRole('navigation',{name:'Main navigation'}).getByRole('link',{name:'Home',exact:true}).click();await page.goBack();await expect(page).toHaveURL(seasons);await reset();
+ await page.goto(activityFixture);await choose();await page.reload();await reset();
+ await choose();await page.getByRole('navigation',{name:'Main navigation'}).getByRole('link',{name:'Home',exact:true}).click();await page.goBack();await expect(page).toHaveURL(activityFixture);await reset();
  await choose();await page.evaluate(()=>window.dispatchEvent(new PageTransitionEvent('pageshow',{persisted:true})));await reset();
- const state=await page.evaluate(k=>JSON.parse(localStorage.getItem(k)!),key);expect(Object.keys(state).sort()).toEqual(['appearance','edition','read','recent','saved','version']);expect(state.saved).toEqual([]);
+ expect(await page.evaluate(k=>localStorage.getItem(k),key)).toBeNull();
 });
 
 test('native figures, plain activity choices and answer/takeaway reveals work without JavaScript',async({browser})=>{
  const context=await browser.newContext({javaScriptEnabled:false,viewport:{width:320,height:568}});const page=await context.newPage();
- for(const path of ['/adult/why-earth-has-seasons',seasons,'/teen/goodharts-law','/teen/how-heat-pumps-move-heat','/teen/how-kidneys-filter-blood','/teen/why-exponential-growth-feels-sudden']){
+ for(const path of [activityFixture,'/adult/why-earth-has-seasons',seasons,'/adult/goodharts-law','/adult/how-heat-pumps-move-heat','/adult/how-kidneys-filter-blood','/adult/why-exponential-growth-feels-sudden']){
   await page.goto('http://127.0.0.1:4321'+path);
   const activity=page.locator('[data-activity]');
   if(await activity.count()){
@@ -60,7 +61,7 @@ test('reusable structured diagrams are accessible, bounded and responsive',async
   ['how-kidneys-filter-blood','process-flow','filter-reclaim',4],
   ['why-exponential-growth-feels-sudden','comparison-bars','doubling-growth',3],
  ] as const;
- for(const width of [320,393,1440])for(const edition of ['adult','teen'] as const)for(const [slug,type,style,count] of examples){
+ for(const width of [320,393,1440])for(const edition of ['adult'] as const)for(const [slug,type,style,count] of examples){
   await page.setViewportSize({width,height:width<1000?700:900});await page.goto(`/${edition}/${slug}`);
   const figure=page.locator(`.lesson-figure[data-figure-type="${type}"]`);await expect(figure).toHaveCount(1);
   await expect(figure).toHaveAttribute('data-figure-style',style);
@@ -88,7 +89,7 @@ test('reusable structured diagrams are accessible, bounded and responsive',async
 });
 
 test('figure follows the opening on phones and sits alongside desktop prose in both themes',async({page})=>{
- for(const width of [320,393,1440])for(const edition of ['adult','teen'])for(const colorScheme of ['light','dark'] as const){
+ for(const width of [320,393,1440])for(const edition of ['adult'])for(const colorScheme of ['light','dark'] as const){
   await page.setViewportSize({width,height:width===320?568:900});await page.emulateMedia({colorScheme});await page.goto(`/${edition}/why-earth-has-seasons`);
   const figure=page.locator('.lesson-figure');await expect(figure).toHaveCount(1);await expect(figure.locator('[role="img"]')).toHaveAttribute('aria-label',/Earth keeps the same axis direction/);
   const positions=await page.evaluate(()=>{const a=document.querySelector('.figure-opening')!.getBoundingClientRect(),f=document.querySelector('.lesson-figure')!.getBoundingClientRect(),r=document.querySelector('.figure-rest')!.getBoundingClientRect();return {a:{x:a.x,bottom:a.bottom},f:{x:f.x,y:f.y,bottom:f.bottom},r:{y:r.y},overflow:document.documentElement.scrollWidth>innerWidth};});

@@ -78,7 +78,7 @@ function fixture() {
     mergeBaseSha: baseSha,
     behindBy: 0,
     files: [
-      file(`${root}/adult.md`, 'added'), file(`${root}/lesson.yaml`, 'added'), file(`${root}/teen.md`, 'added'),
+      file(`${root}/adult.md`, 'added'), file(`${root}/lesson.yaml`, 'added'),
       file('src/content/route-ownership.json', 'modified', 1, 0),
     ],
     blobs: Object.fromEntries(Object.entries(texts).map(([path, text]) => [path, {
@@ -115,6 +115,11 @@ describe('lesson-only publication guard', () => {
     expect(evaluateLessonPullRequest(fixture())).toMatchObject({ applicable: true });
     rejected(value => { value.pr.headRef = `lesson/2026-10-05-${slug}`; }, /Branch, directory and lesson slug must match/);
   });
+  it('accepts a safe prediction in the sole source', () => {
+    const v=fixture(), b=v.blobs[`${root}/adult.md`];
+    b.text=b.text.replace('searchTerms:', 'activity: { prompt: Which direction?, options: [North, South], answer: 1, explanation: Light arrives from the north. }\nsearchTerms:'); b.size=Buffer.byteLength(b.text);
+    expect(evaluateLessonPullRequest(v)).toMatchObject({applicable:true});
+  });
   it('accepts a valid bounded candidate', () => expect(evaluateLessonPullRequest(fixture())).toMatchObject({ applicable: true, slug, lessonId: id }));
  it.each([processFigure,processFigure.replace('type: process-flow','type: cycle-flow').replace('style: filter-reclaim','style: feedback-loop'),comparisonFigure])('accepts an app-owned structured figure without adding files', (figure) => {
     const value=fixture();const blob=value.blobs[`${root}/adult.md`];blob.text=blob.text.replace('searchTerms:', `${figure}searchTerms:`);blob.size=Buffer.byteLength(blob.text);
@@ -128,6 +133,7 @@ describe('lesson-only publication guard', () => {
   ])('rejects partial automation eligibility: %s', (_name, mutate) => rejected(mutate));
 
   it.each([
+    ['retired teen source', (v: ReturnType<typeof fixture>) => { v.files.push(file(`${root}/teen.md`, 'added')); }],
     ['missing lesson file', (v: ReturnType<typeof fixture>) => { v.files.splice(0, 1); }],
     ['extra code file', (v: ReturnType<typeof fixture>) => { v.files.push(file('src/index.ts', 'added')); }],
     ['workflow file', (v: ReturnType<typeof fixture>) => { v.files[0] = file('.github/workflows/evil.yml', 'added'); }],

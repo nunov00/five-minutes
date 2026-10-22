@@ -32,7 +32,7 @@ export function libraryPagination(pageNumber: number, pageCount: number, edition
 
 export function discoveryPagePaths(lessons: readonly LessonBundle[]): string[] {
  const paths=['/','/search'];
- for(const edition of ['adult','teen'] as const){
+ for(const edition of ['adult'] as const){
   paths.push(discoveryPath(edition,'library'),discoveryPath(edition,'topics'));
   for(const topic of TAXONOMY)if(lessons.some(l=>l.metadata.topic===topic.token))paths.push(discoveryPath(edition,'topics',topic.token));
   for(let page=2;page<=libraryPages(lessons).length;page++)paths.push(discoveryPath(edition,'library',page));

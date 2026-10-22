@@ -1,5 +1,8 @@
 # Five Minutes Architecture
 
+22 October 2026 single-version direction: [ADR-0013](adr/0013-single-lesson-version.md) supersedes all earlier Adult/Teen requirements. Publish and review one lesson from `lesson.yaml` and `adult.md`; retired `teen.md` sources are inert archive material. All non-edition safeguards remain.
+
+
 Reader-facing naming (19 October 2026): `/` is labelled **Home** in navigation and permanently headed **Something worth knowing**, even when publication is delayed. Lesson fallback links say **Back to home**; the 404 link says **Go to the home page**. References to Today below describe the existing internal homepage surface or historical decisions; selection, routes, dates and automation are unchanged.
 
 19 October 2026 single-task amendment: once activated, the Coordinator task in `docs/automation/publication-task-contracts.md` supersedes the separate scheduled-task/session requirements and alternating role timing below. One scheduled parent performs Writer work and delegates the complete Reviewer role to a fresh real child with `fork_turns="none"`; only that child may review and merge the exact head in the same child invocation. Each changed head requires a new child. All source/render/feedback checks, revision/history budgets, off switch, same-day and expected-head safeguards remain. Legacy role sections and schedules remain rollback references. Activation requires mandatory different-provider review, green checks, merge and verified task readback; direction alone does not activate it.
@@ -23,7 +26,7 @@ Open -> Something worth knowing -> Read -> Understand -> Test yourself -> Explor
 2. **Content first, application second.** Do not introduce application infrastructure unless the product requires it.
 3. **Static where practical; dynamic where it buys concrete scale or UX value.**
 4. **Individual authoring, independent deployment representation.** Lessons remain individually addressable in Git even when build/runtime representations are bundled or indexed differently.
-5. **One lesson identity, multiple audience presentations.** Adult and Teen presentations share identity and common metadata but can differ substantially in wording, examples and structure.
+5. **One lesson identity, one version.** The existing Adult source supplies the single complete lesson; ADR-0013 preserves legacy routes and reader data.
 6. **Local-first reader state.** Saved/read/recent/edition/appearance state stays in the browser initially. No account or application database is introduced merely for these features.
 7. **Provider and technology portability.** Core application/content logic must not directly depend on hosting-provider APIs. Provider-specific integrations belong at adapters/configuration boundaries. Search and AI-provider integrations likewise sit behind replaceable interfaces.
 8. **Evidence before complexity.** Scale decisions should be benchmarked. A hypothetical future problem is not sufficient reason to add infrastructure today.
@@ -39,7 +42,7 @@ Canonical lessons are individual structured files in Git, validated against a sc
 
 Shared lesson metadata includes the immutable ID, mutable slug/aliases, publication time, topic/subtopic/concepts, relationships, provenance/sources and generation/review metadata defined by ADR-0006.
 
-Adult and Teen Markdown are both required for publication. Draft generation may temporarily contain only one presentation, but incomplete lessons cannot be published. Audience-specific title/description/body/examples/takeaway/retrieval question may differ while sharing the same lesson identity.
+Publication requires one complete Markdown lesson (`adult.md`) and shared metadata (`lesson.yaml`). Retired Teen sources are preserved but not consumed. See ADR-0013.
 
 ### Web framework
 

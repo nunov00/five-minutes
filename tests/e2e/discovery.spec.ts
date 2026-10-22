@@ -2,7 +2,7 @@ import { expect, test } from './support/fixtures';
 
 test.describe('M5 discovery', () => {
   test('browses the static Library and populated Topics', async ({ page }) => {
-    await page.goto('/editions/adult/library');
+    await page.goto('/library');
     await expect(page.getByRole('heading', { level: 1, name: 'Library' })).toBeVisible();
     const manifestResponse = await page.request.get('/delivery.json');
     expect(manifestResponse.ok()).toBe(true);
@@ -30,10 +30,10 @@ test.describe('M5 discovery', () => {
     expect(new Set(lessonIds).size).toBe(lessonIds.length);
     expect([...lessonIds].sort()).toEqual(expectedIds);
 
-    await page.goto('/editions/adult/library');
+    await page.goto('/library');
     await expect(page.getByRole('navigation', { name: 'Library topics' }).getByRole('link')).toHaveCount(6);
 
-    await page.goto('/editions/adult/topics');
+    await page.goto('/topics');
     const topicCards = page.locator('[data-topic][data-lesson-count]');
     await expect(topicCards).toHaveCount(6);
     let topicLessonTotal = 0;
@@ -47,7 +47,7 @@ test.describe('M5 discovery', () => {
     expect(topicLessonTotal).toBe(expectedIds.length);
 
     await page.getByRole('link', { name: 'Human Mind' }).click();
-    await expect(page).toHaveURL('/editions/adult/topics/human-mind');
+    await expect(page).toHaveURL('/topics/human-mind');
     await expect(page.getByRole('heading', { level: 1, name: 'Human Mind' })).toBeVisible();
     await expect(page.getByRole('heading', { level: 2, name: 'Learning' })).toBeVisible();
     await expect(page.getByText('Why Testing Yourself Beats Another Reread')).toBeVisible();
@@ -66,11 +66,8 @@ test.describe('M5 discovery', () => {
     expect(requested.some((url) => url.includes('search-adult'))).toBe(true);
     expect(requested.some((url) => url.includes('search-teen'))).toBe(false);
 
-    await page.getByRole('navigation', {name:'Edition'}).getByRole('link', { name: 'Teen', exact:true }).click();
-    await page.getByRole('searchbox').fill('ship navigation clock');
-    await expect(page.getByRole('status')).toContainText('1 lesson found');
-    await expect(page.getByRole('link', { name: 'The Clock That Told Sailors Where They Were' })).toBeVisible();
-    expect(requested.some((url) => url.includes('search-teen'))).toBe(true);
+    await expect(page.getByRole('navigation', {name:'Edition'})).toHaveCount(0);
+    expect(new Set(requested).size).toBe(1);
   });
 
   test('keeps only the latest search when requests overlap or submit repeats', async ({ page }) => {
@@ -114,14 +111,14 @@ test.describe('M5 discovery', () => {
   });
 
   test('shows specific related lessons and keeps the same edition', async ({ page }) => {
-    await page.goto('/teen/why-gps-needs-einstein');
+    await page.goto('/adult/why-gps-needs-einstein');
     const section = page.getByRole('region', { name: 'Explore next' });
     const relatedCount = await section.locator('article[data-related-id]').count();
     expect(relatedCount).toBeGreaterThanOrEqual(2);
     expect(relatedCount).toBeLessThanOrEqual(4);
     await expect(section.getByText("Harrison's clock and GPS both find position by comparing extremely accurate time.")).toBeVisible();
     await section.getByRole('link').first().click();
-    await expect(page).toHaveURL(/\/teen\//);
+    await expect(page).toHaveURL(/\/adult\//);
   });
 
   test('Surprise Me chooses another published lesson with a no-script fallback', async ({ page }) => {

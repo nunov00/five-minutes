@@ -5,7 +5,7 @@ const destination = new URL('../../dist/_redirects', import.meta.url);
 const manifest = JSON.parse(await readFile(source, 'utf8'));
 if (manifest.version !== 1 || !Array.isArray(manifest.redirects)) throw new Error('Unsupported or invalid redirect manifest.');
 
-const pathPattern = /^\/(adult|teen)\/[a-z0-9]+(?:-[a-z0-9]+)*$/;
+const pathPattern = /^(?:\/(adult|teen)\/[a-z0-9]+(?:-[a-z0-9]+)*|(?:\/editions\/(?:adult|teen))?\/(?:library(?:\/page\/[1-9]\d*)?|topics(?:\/[a-z0-9]+(?:-[a-z0-9]+)*)?))$/;
 const lines = [];
 const sources = new Set();
 for (const entry of manifest.redirects) {

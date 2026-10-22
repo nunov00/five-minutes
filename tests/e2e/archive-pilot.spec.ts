@@ -12,7 +12,7 @@ test('archive pilot is readable in both editions and does not replace Today or E
     await expect(page.locator(`[data-today-edition] a[href$="/${slug}"]`)).toHaveCount(0);
     await expect(page.locator(`.earlier-list a[href$="/${slug}"]`)).toHaveCount(0);
   }
-  for (const edition of ['adult', 'teen']) for (const slug of slugs) {
+  for (const edition of ['adult']) for (const slug of slugs) {
     await page.goto(`/${edition}/${slug}`);
     await expect(page.locator('.reader-header .eyebrow')).not.toContainText('Archive');
     await expect(page.locator('.reader-header .eyebrow')).not.toContainText('Adapted');
@@ -20,14 +20,14 @@ test('archive pilot is readable in both editions and does not replace Today or E
     await page.locator('[data-recall-reveal] > summary').click();
     await expect(page.locator('[data-recall] .answer')).toBeVisible();
   }
-  await page.goto('/teen/why-tails-is-not-due');
+  await page.goto('/adult/why-tails-is-not-due');
   await page.locator('[data-activity] > summary').click();
   await page.getByRole('radio', { name: 'Exactly half', exact: true }).check();
   await expect(page.locator('[data-activity-reveal]')).toHaveAttribute('open', '');
 });
 
 test('archive Moon figure renders in both editions at phone and wide widths', async ({ page }, testInfo) => {
-  for (const width of [320, 393, 1440]) for (const edition of ['adult', 'teen']) {
+  for (const width of [320, 393, 1440]) for (const edition of ['adult']) {
     await page.setViewportSize({ width, height: width < 1000 ? 800 : 1000 });
     await page.goto(`/${edition}/why-the-moon-appears-in-daylight`);
     const figure = page.locator('.lesson-figure');

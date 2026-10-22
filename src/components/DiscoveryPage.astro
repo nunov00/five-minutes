@@ -1,0 +1,38 @@
+---
+import SurpriseLinks from '../components/SurpriseLinks.astro';
+import { buildDiscoveryArtifacts } from '../lib/discovery/artifacts';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import LessonCard from '../components/LessonCard.astro';
+import LibraryPagination from '../components/LibraryPagination.astro';
+import { getBuildMetadata } from '../lib/content/build-content';
+import { discoveryPath, type LessonEdition } from '../lib/urls';
+import { TAXONOMY } from '../lib/taxonomy';
+import type { LessonBundle } from '../lib/content/schema';
+interface Props { edition:LessonEdition; kind:'library'|'topics'; pageNumber:number; pageCount:number; lessons:readonly LessonBundle[]; topic?:typeof TAXONOMY[number]; topics: typeof TAXONOMY; }
+const {edition,kind,pageNumber,pageCount,lessons,topic,topics}=Astro.props as Props;
+const metadata = await getBuildMetadata();
+const artifacts = buildDiscoveryArtifacts(metadata.lessons);
+const fallback = artifacts.catalogue.payload[0];
+const heading=kind==='library'?'Library':topic?.label??'Topics';
+const groups=topic?.subtopics.map(subtopic=>({subtopic,lessons:lessons.filter(l=>l.metadata.subtopic===subtopic.token)})).filter(g=>g.lessons.length);
+const topicCards=topics.map(topic=>{
+ const topicLessons=lessons.filter(lesson=>lesson.metadata.topic===topic.token);
+ const populatedSubtopics=topic.subtopics.filter(subtopic=>topicLessons.some(lesson=>lesson.metadata.subtopic===subtopic.token));
+ return {topic,count:topicLessons.length,populatedSubtopics};
+});
+---
+<BaseLayout title={`${heading} · Five Minutes`} edition={edition}>
+ <section aria-labelledby="discovery-heading">
+  <p class="eyebrow">{pageCount>1?`Page ${pageNumber} of ${pageCount}`:"Discovery"}</p>
+  <h1 id="discovery-heading">{heading}</h1>
+  {kind==='library'&&<>
+   <p class="lede">Every published idea, ready to explore.</p>
+   <nav class="filter-links" aria-label="Library topics">{topics.map(t=><a href={discoveryPath(edition,'topics',t.token)}>{t.label}</a>)}</nav>
+   <div class="lesson-list">{lessons.map(lesson=><LessonCard lesson={lesson} edition={edition}/>)}</div>
+   {fallback && <SurpriseLinks edition={edition} catalogue={artifacts.catalogue} adultFallback={fallback.adult.path} teenFallback={fallback.teen.path}/>}
+   <LibraryPagination pageNumber={pageNumber} pageCount={pageCount} edition={edition}/>
+  </>}
+  {kind==='topics'&&!topic&&<><p class="lede">Start with a field, then follow the connections between ideas.</p><div class="topic-grid">{topicCards.map(({topic:t,count,populatedSubtopics})=><article class="card topic-card" data-topic={t.token} data-lesson-count={count}><h2><a href={discoveryPath(edition,'topics',t.token)}>{t.label}</a></h2><p>{t.description}</p><p class="topic-count">{count} {count===1?'lesson':'lessons'}</p><p class="topic-subtopics">{populatedSubtopics.map(subtopic=>subtopic.label).join(' · ')}</p></article>)}</div></>}
+  {topic&&<><p class="lede">{topic.description}</p>{groups?.map(g=><section class="topic-section" aria-labelledby={`${g.subtopic.token}-heading`}><h2 id={`${g.subtopic.token}-heading`}>{g.subtopic.label}</h2><div class="lesson-list">{g.lessons.map(lesson=><LessonCard lesson={lesson} edition={edition}/>)}</div></section>)}</>}
+ </section>
+</BaseLayout>

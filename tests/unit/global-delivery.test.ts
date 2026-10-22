@@ -19,9 +19,10 @@ describe('global delivery outputs', () => {
       'current-name': lesson.metadata.id,
       'retired-name': lesson.metadata.id,
     });
-    expect(outputs.redirects).toEqual([
+    expect(outputs.redirects.filter(entry=>!entry.from.startsWith('/editions/'))).toEqual([
       { from: '/adult/retired-name', to: '/adult/current-name', lessonId: lesson.metadata.id },
-      { from: '/teen/retired-name', to: '/teen/current-name', lessonId: lesson.metadata.id },
+      { from: '/teen/current-name', to: '/adult/current-name', lessonId: lesson.metadata.id },
+      { from: '/teen/retired-name', to: '/adult/current-name', lessonId: lesson.metadata.id },
     ]);
   });
 
@@ -34,7 +35,7 @@ describe('global delivery outputs', () => {
 
   it('produces deterministic sitemap paths from canonical routes only', () => {
     expect(buildGlobalDeliveryOutputs([lesson], { 'current-name': lesson.metadata.id }).sitemapPaths)
-      .toEqual(['/', '/adult/current-name', '/editions/adult/library', '/editions/adult/topics', '/editions/adult/topics/science', '/editions/teen/library', '/editions/teen/topics', '/editions/teen/topics/science', '/search', '/teen/current-name']);
+      .toEqual(['/', '/adult/current-name', '/library', '/search', '/topics', '/topics/science']);
   });
 
   it('rejects malformed historical route names independently of the loader', () => {

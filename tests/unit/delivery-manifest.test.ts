@@ -14,13 +14,13 @@ function lesson(id: string, slug: string, aliases = ['old-' + slug]): LessonBund
 const A='0199a5b7-6e21-7a42-9c3d-8f1b2e4a6c70', B='0199a5b7-6e21-7a42-9c3d-8f1b2e4a6c71';
 
 describe('delivery manifest',()=>{
- it('is deterministic and creates exactly two canonical routes plus redirect inputs',()=>{
+ it('is deterministic and creates exactly one canonical route per lesson plus redirect inputs',()=>{
   const first=buildDeliveryManifest([lesson(B,'beta'),lesson(A,'alpha')]), second=buildDeliveryManifest([lesson(A,'alpha'),lesson(B,'beta')]);
-  expect(first).toEqual(second); expect(first.catalogue).toHaveLength(2); expect(first.routes).toHaveLength(4); expect(first.redirects).toHaveLength(4);
-  expect(first.routes.map(x=>x.path)).toEqual([lessonPath('adult','alpha'),lessonPath('adult','beta'),lessonPath('teen','alpha'),lessonPath('teen','beta')]);
+  expect(first).toEqual(second); expect(first.catalogue).toHaveLength(2); expect(first.routes).toHaveLength(2); expect(first.redirects).toHaveLength(2);
+  expect(first.routes.map(x=>x.path)).toEqual([lessonPath('adult','alpha'),lessonPath('adult','beta')]);
  });
  it('normalises publication timestamps to UTC',()=>{ expect(buildDeliveryManifest([lesson(A,'alpha')]).catalogue[0].publishedAt).toBe('2026-10-02T18:00:00.000Z'); });
- it('fails closed for empty or incomplete input',()=>{ expect(()=>buildDeliveryManifest([])).toThrow(/without published/); const x=lesson(A,'alpha'); x.teen=undefined; expect(()=>buildDeliveryManifest([x])).toThrow(/incomplete/); });
+ it('fails closed for empty or incomplete input',()=>{ expect(()=>buildDeliveryManifest([])).toThrow(/without published/); const x=lesson(A,'alpha'); x.adult=undefined; expect(()=>buildDeliveryManifest([x])).toThrow(/incomplete/); });
  it('rejects duplicate identities and canonical paths',()=>{ expect(()=>buildDeliveryManifest([lesson(A,'alpha'),lesson(A,'beta')])).toThrow(/Duplicate lesson identity/); expect(()=>buildDeliveryManifest([lesson(A,'same'),lesson(B,'same')])).toThrow(/Duplicate canonical route/); });
  it('rejects alias conflicts with canonical routes, duplicate aliases and self redirects',()=>{
   expect(()=>buildDeliveryManifest([lesson(A,'alpha',['beta']),lesson(B,'beta')])).toThrow(/conflicts with canonical route/);
@@ -28,5 +28,5 @@ describe('delivery manifest',()=>{
   expect(()=>buildDeliveryManifest([lesson(A,'alpha',['alpha'])])).toThrow(/conflicts with canonical route|point to itself/);
  });
  it('contains metadata rather than rendered bodies or provider data',()=>{ const json=JSON.stringify(buildDeliveryManifest([lesson(A,'alpha')]).catalogue); expect(json).not.toContain('Html'); expect(json).not.toContain('cloudflare'); expect(json).not.toContain('sourceDirectory'); });
- it('builds from the real validated canonical lesson set',async()=>{ const loaded=await loadPublishedLessons(join(process.cwd(),'src/content/lessons'),routeOwnership); const bundles:LessonBundle[]=loaded.map(({metadata,adult,teen})=>({metadata,adult,teen})); const m=buildDeliveryManifest(bundles); expect(m.catalogue).toHaveLength(loaded.length); expect(m.routes).toHaveLength(loaded.length*2); });
+ it('builds from the real validated canonical lesson set',async()=>{ const loaded=await loadPublishedLessons(join(process.cwd(),'src/content/lessons'),routeOwnership); const bundles:LessonBundle[]=loaded.map(({metadata,adult,teen})=>({metadata,adult,teen})); const m=buildDeliveryManifest(bundles); expect(m.catalogue).toHaveLength(loaded.length); expect(m.routes).toHaveLength(loaded.length); });
 });

@@ -22,16 +22,19 @@ const expectedSet = new Set(expected);
 if (expectedSet.size !== expected.length) throw new Error('Duplicate expected canonical route assignment.');
 const editions = new Map();
 for (const route of inventory.routes) {
-  if (!['adult', 'teen'].includes(route.edition) || typeof route.lessonId !== 'string' || typeof route.slug !== 'string') throw new Error('Invalid route inventory entry.');
+  if (route.edition !== 'adult' || typeof route.lessonId !== 'string' || typeof route.slug !== 'string') throw new Error('Invalid route inventory entry.');
   if (route.path !== `/${route.edition}/${route.slug}`) throw new Error(`Route inventory fields disagree: ${route.path}.`);
   const seen = editions.get(route.lessonId) ?? new Set();
   if (seen.has(route.edition)) throw new Error(`Duplicate ${route.edition} route for lesson ${route.lessonId}.`);
   seen.add(route.edition); editions.set(route.lessonId, seen);
 }
-for (const [id, seen] of editions) if (!seen.has('adult') || !seen.has('teen')) throw new Error(`Incomplete Adult/Teen routes for lesson ${id}.`);
+for (const [id, seen] of editions) if (seen.size !== 1 || !seen.has('adult')) throw new Error(`Incomplete single-version routes for lesson ${id}.`);
 
 const files = await walk(dist);
-const editionFiles = files.filter((f) => /^\/(adult|teen)\//.test(webPath(f)));
+const redirects = JSON.parse(await readFile(join(dist, 'redirects.json'), 'utf8'));
+if (redirects.version !== 1 || !Array.isArray(redirects.redirects)) throw new Error('Invalid redirect manifest.');
+const redirectsByPath = new Map(redirects.redirects.map(entry=>[entry.from,entry.to]));
+const editionFiles = files.filter((f) => /^\/(adult|teen)\//.test(webPath(f)) && !redirectsByPath.has(webPath(f).replace(/\/index\.html$/, '')));
 const generated = editionFiles.filter((f) => /[\\/](adult|teen)[\\/][^\\/]+[\\/]index\.html$/.test(f))
   .map((f) => webPath(f).replace(/\/index\.html$/, '')).sort();
 const generatedSet = new Set(generated);
@@ -53,6 +56,8 @@ const noindexPages = new Set();
 for (const file of files.filter((f) => f.endsWith('.html'))) {
   const html = await readFile(file, 'utf8');
   if (/<meta[^>]*name="robots"[^>]*content="noindex(?:,|\s)/.test(html)) noindexPages.add(webPath(file).replace(/\/index\.html$/, '') || '/');
+  const redirectTarget=redirectsByPath.get(webPath(file).replace(/\/index\.html$/, ''));
+  if(redirectTarget && (!html.includes(`data-redirect-target="${redirectTarget}"`) || !html.includes('http-equiv="refresh"') || !html.includes(`href="${redirectTarget}"`) || !noindexPages.has(webPath(file).replace(/\/index\.html$/, '')))) throw Error(`Invalid redirect fallback: ${webPath(file)}`);
   if(expectedSet.has(webPath(file).replace(/\/index\.html$/, ''))) {
     if((html.match(/<h1(?:\s|>)/g)??[]).length!==1)throw Error(`Reading page must have exactly one title: ${webPath(file)}`);
     const body=html.indexOf('class="lesson-body'),recall=html.indexOf('data-recall'),reveal=html.indexOf('data-recall-reveal'),answer=html.indexOf('class="answer"'),takeaway=html.indexOf('id="takeaway-heading"');
@@ -89,14 +94,12 @@ for (const file of files.filter((f) => f.endsWith('.html'))) {
     }
   }
 }
-const redirects = JSON.parse(await readFile(join(dist, 'redirects.json'), 'utf8'));
-if (redirects.version !== 1 || !Array.isArray(redirects.redirects)) throw new Error('Invalid redirect manifest.');
 const redirectSources = new Set();
 for (const redirect of redirects.redirects) {
   if (expectedSet.has(redirect.from)) throw new Error(`Redirect source shadows canonical page: ${redirect.from}`);
   if (redirectSources.has(redirect.from)) throw new Error(`Duplicate redirect source: ${redirect.from}`);
   redirectSources.add(redirect.from);
-  if (!expectedSet.has(redirect.to)) throw new Error(`Redirect target is not canonical: ${redirect.to}`);
+  if (!canonicalPagePaths.has(redirect.to) || redirectsByPath.has(redirect.to)) throw new Error(`Redirect target is not canonical: ${redirect.to}`);
 }
 
 const sitemap = await readFile(join(dist, 'sitemap.xml'), 'utf8');
@@ -142,4 +145,4 @@ for (const [size, purpose] of [['192x192', 'any'], ['512x512', 'any'], ['512x512
   }
 }
 
-console.log(`Verified ${generated.length} canonical lesson pages, global outputs, Adult/Teen completeness, internal links, standalone navigation and the web app manifest.`);
+console.log(`Verified ${generated.length} canonical lesson pages, global outputs, single-version completeness, internal links, standalone navigation and the web app manifest.`);

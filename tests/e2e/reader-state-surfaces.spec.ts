@@ -2,14 +2,14 @@ import { expect, test } from './support/fixtures';
 import type { Page } from '@playwright/test';
 
 const key = 'five-minutes.reader-state';
-const lesson = '/teen/why-earth-has-seasons';
+const lesson = '/adult/why-earth-has-seasons';
 
 // Follow real pagination; neither catalogue growth nor page size fixes a lesson's position.
 async function findLibraryCard(page: Page, path: string) {
   const catalogue = await page.request.get('/delivery.json');
   expect(catalogue.ok()).toBe(true);
   const { routes } = await catalogue.json() as { routes: Array<{ edition: string }> };
-  const teenLessons = routes.filter(route => route.edition === 'teen').length;
+  const teenLessons = routes.filter(route => route.edition === 'adult').length;
   expect(teenLessons).toBeGreaterThan(0);
   const card = page.locator('article[data-lesson-id]').filter({ has: page.locator(`a[href="${path}"]`) });
   for (let visited = 1; await card.count() === 0 && visited < teenLessons; visited += 1) {
@@ -40,9 +40,9 @@ test('lesson visits are read and recent, while Save is presentation-specific', a
   await expect(page.getByRole('button', {name:'Mark unread'})).toBeVisible();
   const save=page.getByRole('button', {name:'Save lesson', exact:true}); await save.click();
   await expect(save).toHaveAttribute('aria-pressed','true'); await expect(save).toHaveText('Save lesson');
-  expect(await page.evaluate(k => JSON.parse(localStorage.getItem(k)!), key)).toMatchObject({version:2,saved:[{id,edition:'teen'}], read:{[id!]:expect.any(String)}, recent:[{id,edition:'teen'}]});
+  expect(await page.evaluate(k => JSON.parse(localStorage.getItem(k)!), key)).toMatchObject({version:2,saved:[{id,edition:'adult'}], read:{[id!]:expect.any(String)}, recent:[{id,edition:'adult'}]});
   await page.goto('/adult/why-earth-has-seasons');
-  await expect(page.getByRole('button', {name:'Save lesson', exact:true})).toHaveAttribute('aria-pressed','false');
+  await expect(page.getByRole('button', {name:'Save lesson', exact:true})).toHaveAttribute('aria-pressed','true');
   await page.getByRole('button', {name:'Mark unread'}).click();
   await expect(page.getByRole('button', {name:'Mark read'})).not.toHaveAttribute('aria-pressed',/.+/);
   expect(await page.evaluate(({key,id}) => JSON.parse(localStorage.getItem(key)!).read[id!], {key,id})).toBeUndefined();
@@ -53,11 +53,10 @@ test('Saved renders only the saved presentation without redundant edition labels
   await page.getByRole('navigation', {name:'Main navigation'}).getByRole('link', {name:'Saved'}).click();
   await expect(page).toHaveURL('/saved');
   await expect(page.getByRole('heading', {name:'Saved and recent'})).toBeVisible();
-  await expect(page.locator('[data-saved-list]')).toContainText('The Season Explanation That Fails Half the Planet');
-  await expect(page.locator('[data-saved-list]')).not.toContainText('Why Summer Is Not Earth Moving Closer to the Sun');
+  await expect(page.locator('[data-saved-list]')).toContainText('Why Summer Is Not Earth Moving Closer to the Sun');
   await expect(page.locator('[data-saved-list]')).not.toContainText('Teen:');
   await expect(page.locator('[data-recent-list]')).not.toContainText('Teen ·');
-  await page.getByRole('navigation',{name:'Main navigation'}).getByRole('link', {name:'Library', exact:true}).focus(); await page.keyboard.press('Enter'); await page.getByRole('link', {name:'Explore Teen', exact:true}).click();
+  await page.getByRole('navigation',{name:'Main navigation'}).getByRole('link', {name:'Library', exact:true}).focus(); await page.keyboard.press('Enter');
   const savedCard = await findLibraryCard(page, lesson);
   await expect(savedCard).toHaveCount(1);
   await expect(savedCard.locator('[data-reader-markers]')).toBeVisible();
@@ -70,14 +69,14 @@ test('Saved renders only the saved presentation without redundant edition labels
 
 
 test('Saved markers remain visible when the saved lesson starts on a later Library page', async ({page}) => {
-  await page.goto('/editions/teen/library');
+  await page.goto('/library');
   await page.getByRole('navigation', {name:'Library pages'}).getByRole('link', {name:'Next', exact:true}).click();
   const readingLink = page.locator('article[data-lesson-id] h2 a').first();
   const path = await readingLink.getAttribute('href');
-  expect(path).toMatch(/^\/teen\//);
+  expect(path).toMatch(/^\/adult\//);
   await readingLink.click();
   await page.getByRole('button', {name:'Save lesson', exact:true}).click();
-  await page.goto('/editions/teen/library');
+  await page.goto('/library');
   await expect(page.locator(`article[data-lesson-id] a[href="${path}"]`)).toHaveCount(0);
   const card = await findLibraryCard(page, path!);
   await expect(card.locator('[data-reader-markers]')).toBeVisible();
@@ -148,7 +147,7 @@ test('blocked storage disables personal controls without changing content access
 
 test('reader surfaces fail safely without JavaScript', async ({browser}) => {
   const context=await browser.newContext({javaScriptEnabled:false,viewport:{width:320,height:568}}); const page=await context.newPage();
-  await page.goto('http://127.0.0.1:4321/teen/why-earth-has-seasons');
+  await page.goto('http://127.0.0.1:4321/adult/why-earth-has-seasons');
   await expect(page.getByText('Saving and read markers need JavaScript.')).toBeVisible(); await expect(page.getByRole('button',{name:'Save'})).toHaveCount(0);
   await page.goto('http://127.0.0.1:4321/saved'); await expect(page.getByText(/Saved lessons, recent reading/)).toBeVisible();
   await expect(page.getByText('Loading saved lessons…')).toBeHidden(); await expect(page.getByText('Saved lessons need JavaScript to appear here.')).toBeVisible();

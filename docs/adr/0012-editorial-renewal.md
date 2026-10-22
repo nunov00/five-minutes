@@ -1,5 +1,8 @@
 # ADR-0012: Editorial renewal and ranked lesson pipeline
 
+22 October 2026 single-version direction: [ADR-0013](0013-single-lesson-version.md) supersedes all earlier Adult/Teen requirements. Publish and review one lesson from `lesson.yaml` and `adult.md`; retired `teen.md` sources are inert archive material. All non-edition safeguards remain.
+
+
 Status: Owner-approved direction; implementation awaits mandatory different-provider review before activation.
 Date: 2026-10-18
 Tracking: #161; original catalogue inventory #138.

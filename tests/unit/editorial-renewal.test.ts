@@ -25,7 +25,7 @@ function revision(kind='revision') {
   const registry=JSON.stringify({[slug]:id});
   return {pr:{headRef:`lesson/${slug}`,headSha:'c'.repeat(40),labels:['editorial-review-requested','review:mandatory']},triggerHeadSha:'c'.repeat(40),currentBaseSha:'b'.repeat(40),mergeBaseSha:'b'.repeat(40),behindBy:0,
     baseBacklogText:JSON.stringify(baseQueue),baseLessonText,baseAdultText:body,baseTeenText:body,baseRegistryText:kind==='import'?'{}':registry,headRegistryBlob:textBlob(registry),blobs,
-    files:[...Object.keys(blobs).map(filename=>({filename,status:filename===queuePath||kind==='revision'?'modified':'added',additions:10,deletions:1,changes:11})),...(kind==='import'?[{filename:'src/content/route-ownership.json',status:'modified',additions:1,deletions:0,changes:1}]:[])],
+    files:[...Object.keys(blobs).filter(filename=>!filename.endsWith('/teen.md')).map(filename=>({filename,status:filename===queuePath||kind==='revision'?'modified':'added',additions:10,deletions:1,changes:11})),...(kind==='import'?[{filename:'src/content/route-ownership.json',status:'modified',additions:1,deletions:0,changes:1}]:[])],
     now:'2026-10-18T03:00:00+02:00'};
 }
 function changeMetadata(v:ReturnType<typeof revision>, mutate:(m:any)=>void) { const m=parse(v.blobs[`${root}/lesson.yaml`].text); mutate(m); v.blobs[`${root}/lesson.yaml`]=textBlob(stringify(m)); }

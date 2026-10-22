@@ -30,7 +30,7 @@ function compareNewest(a: { publishedAt: string; id: string; originalDate?: stri
 }
 
 function searchDocument(lesson: LessonBundle, edition: LessonEdition): SearchDocument {
-  const presentation = edition === 'adult' ? lesson.adult : lesson.teen;
+  const presentation = lesson.adult;
   if (!presentation) throw new Error(`Cannot build ${edition} discovery data for incomplete lesson ${lesson.metadata.id}.`);
   const topic = taxonomyTopic(lesson.metadata.topic);
   const subtopic = taxonomySubtopic(lesson.metadata.topic, lesson.metadata.subtopic);
@@ -57,7 +57,7 @@ function searchDocument(lesson: LessonBundle, edition: LessonEdition): SearchDoc
 
 export function buildDiscoveryArtifacts(lessons: readonly LessonBundle[]): DiscoveryArtifacts {
   const catalogue = lessons.map((lesson): BrowserCatalogueEntry => {
-    if (!lesson.adult || !lesson.teen) throw new Error(`Cannot build discovery catalogue for incomplete lesson ${lesson.metadata.id}.`);
+    if (!lesson.adult) throw new Error(`Cannot build discovery catalogue for incomplete lesson ${lesson.metadata.id}.`);
     return {
       id: lesson.metadata.id,
       publishedAt: new Date(lesson.metadata.publishedAt).toISOString(),
@@ -67,18 +67,18 @@ export function buildDiscoveryArtifacts(lessons: readonly LessonBundle[]): Disco
       topic: lesson.metadata.topic,
       subtopic: lesson.metadata.subtopic,
       adult: { title: lesson.adult.title, path: lessonPath('adult', lesson.metadata.slug) },
-      teen: { title: lesson.teen.title, path: lessonPath('teen', lesson.metadata.slug) },
+      teen: { title: lesson.adult.title, path: lessonPath('teen', lesson.metadata.slug) },
     };
   }).sort(compareNewest);
 
   const adult = lessons.map((lesson) => searchDocument(lesson, 'adult')).sort(compareNewest);
-  const teen = lessons.map((lesson) => searchDocument(lesson, 'teen')).sort(compareNewest);
+  const teen = adult;
 
   return {
     catalogue: artifact('catalogue', catalogue),
     search: {
       adult: artifact('search-adult', adult),
-      teen: artifact('search-teen', teen),
+      teen: artifact('search-adult', teen),
     },
   };
 }

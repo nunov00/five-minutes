@@ -298,7 +298,7 @@ export type RouteOwnershipRegistry = Readonly<Record<string, LessonId>>;
 export interface RedirectEntry {
   from: string;
   to: string;
-  lessonId: LessonId;
+  lessonId?: LessonId;
 }
 
 function compareCanonical(a: string, b: string): number {
@@ -457,9 +457,9 @@ export function buildRedirectManifest(bundles: readonly LessonBundle[]): Redirec
   const redirects: RedirectEntry[] = [];
   const seen = new Set<string>();
   for (const bundle of bundles) {
-    if (!bundle.adult || !bundle.teen) throw new Error(`Cannot build redirects for incomplete lesson ${bundle.metadata.id}.`);
+    if (!bundle.adult) throw new Error(`Cannot build redirects for incomplete lesson ${bundle.metadata.id}.`);
     for (const alias of bundle.metadata.aliases) {
-      for (const edition of ['adult', 'teen'] as const) {
+      for (const edition of ['adult'] as const) {
         const from = lessonPath(edition, alias);
         if (seen.has(from)) throw new Error(`Duplicate redirect source "${from}".`);
         seen.add(from);
@@ -480,7 +480,6 @@ export function validatePublicationEligibility(bundle: unknown): ValidationResul
   const issues = [...result.issues];
   if (!isObject(bundle)) return { valid: false, issues };
   if (bundle.adult === undefined) issue(issues, 'adult', 'publication-presentation', 'Adult presentation is required for publication.');
-  if (bundle.teen === undefined) issue(issues, 'teen', 'publication-presentation', 'Teen presentation is required for publication.');
   return { valid: issues.length === 0, issues };
 }
 

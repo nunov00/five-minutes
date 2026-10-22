@@ -57,12 +57,12 @@ describe('reader v2 storage and discovery contracts',()=>{
   expect(parseReaderState(JSON.stringify(v1))).toBeNull();
   expect(parseReaderState(JSON.stringify(v2))).toBeNull();
  });
- it('saves Adult and Teen presentations independently without losing extensions',()=>{
+ it('toggles saved lessons by identity across legacy edition keys without losing extensions',()=>{
   let raw=JSON.stringify({...emptyReaderState(),extension:{kept:true}});
   const storage=readerStorage(()=>({getItem:()=>raw,setItem:(_key:string,value:string)=>{raw=value;}}));
   expect(storage.toggleSaved(id,'teen')).toBe(true);expect(storage.read()?.saved).toEqual([{id,edition:'teen'}]);
-  expect(storage.toggleSaved(id,'adult')).toBe(true);expect(storage.read()?.saved).toEqual([{id,edition:'teen'},{id,edition:'adult'}]);
-  expect(storage.toggleSaved(id,'teen')).toBe(true);expect(storage.read()?.saved).toEqual([{id,edition:'adult'}]);
+  expect(storage.toggleSaved(id,'adult')).toBe(true);expect(storage.read()?.saved).toEqual([]);
+  expect(storage.toggleSaved(id,'teen')).toBe(true);expect(storage.read()?.saved).toEqual([{id,edition:'teen'}]);
   expect(JSON.parse(raw).extension).toEqual({kept:true});
  });
  it('marks visits read, deduplicates recents by lesson and edition, and caps the list',()=>{
@@ -109,10 +109,10 @@ describe('reader v2 storage and discovery contracts',()=>{
   expect(JSON.parse(restored!)).toEqual(JSON.parse(raw));
  });
  it('generates collision-free edition routes and preserves path meaning while forwarding',()=>{
-  expect(discoveryPath('teen','library',2)).toBe('/editions/teen/library/page/2');
-  expect(discoveryPath('adult','topics','science')).toBe('/editions/adult/topics/science');
-  expect(editionDiscoveryPath('/editions/teen/library/page/12','adult')).toBe('/editions/adult/library/page/12');
-  expect(forwardDestination('/topics/science','teen','?q=x','#section')).toBe('/editions/teen/topics/science?q=x#section');
+  expect(discoveryPath('teen','library',2)).toBe('/library/page/2');
+  expect(discoveryPath('adult','topics','science')).toBe('/topics/science');
+  expect(editionDiscoveryPath('/editions/teen/library/page/12','adult')).toBe('/library/page/12');
+  expect(forwardDestination('/topics/science','teen','?q=x','#section')).toBe('/topics/science?q=x#section');
   expect(editionDiscoveryPath('/teen/library','adult')).toBeNull();
   expect(()=>discoveryPath('adult','library',0)).toThrow();
  });

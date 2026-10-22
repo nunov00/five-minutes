@@ -8,7 +8,7 @@ import { evaluateLessonPullRequest, lessonBranchName, LessonGuardError } from '.
 
 const REGISTRY = 'src/content/route-ownership.json';
 const BACKLOG = 'editorial/backlog.json';
-const LESSON = /^src\/content\/lessons\/\d{4}\/([a-z0-9-]+)\/(adult\.md|teen\.md|lesson\.yaml)$/;
+const LESSON = /^src\/content\/lessons\/\d{4}\/([a-z0-9-]+)\/(adult\.md|lesson\.yaml)$/;
 const SHA = /^[0-9a-f]{40}$/;
 export const PUBLICATION_CHECKS = Object.freeze(['baseline', 'e2e', 'lesson-guard', 'privacy']);
 const EXPECTED_WORKFLOWS = {
@@ -148,8 +148,7 @@ export function prepareLessonSubmission({ cwd = process.cwd(), base, now = new D
     files, blobs, baseRegistryText: baseText(REGISTRY), headRegistryBlob: blob(REGISTRY),
     baseBacklogText: baseText(BACKLOG), now,
     ...(revision ? { baseLessonText: baseText(metadataPath),
-      baseAdultText: baseText(metadataPath.replace('lesson.yaml', 'adult.md')),
-      baseTeenText: baseText(metadataPath.replace('lesson.yaml', 'teen.md')) } : {}),
+      baseAdultText: baseText(metadataPath.replace('lesson.yaml', 'adult.md')) } : {}),
   };
   const result = evaluateLessonPullRequest(input);
   if (!result.applicable) fail('Preflight did not validate an automated lesson.');

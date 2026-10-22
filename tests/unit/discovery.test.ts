@@ -55,9 +55,9 @@ describe('M5 discovery contracts', () => {
     const second = buildDiscoveryArtifacts(corpus());
     expect(first.catalogue.path).toMatch(/^\/discovery\/catalogue\.[a-f0-9]{12}\.json$/);
     expect(first).toEqual(second);
-    expect(first.search.adult.path).not.toBe(first.search.teen.path);
+    expect(first.search.adult.path).toBe(first.search.teen.path);
     expect(first.search.adult.payload[0].edition).toBe('adult');
-    expect(first.search.teen.payload[0].edition).toBe('teen');
+    expect(first.search.teen.payload[0].edition).toBe('adult');
     expect(JSON.stringify(first.catalogue.payload)).not.toContain('takeaway');
   });
 
@@ -72,11 +72,11 @@ describe('M5 discovery contracts', () => {
     expect(searchDocuments(documents, 'theory')).toEqual([]);
   });
 
-  it('keeps Adult and Teen wording separate', () => {
+  it('uses only the single lesson wording for all legacy index keys', () => {
     const artifacts = buildDiscoveryArtifacts(corpus());
     expect(searchDocuments(artifacts.search.adult.payload, 'marine chronometer')).toHaveLength(1);
-    expect(searchDocuments(artifacts.search.teen.payload, 'marine chronometer')).toHaveLength(0);
-    expect(searchDocuments(artifacts.search.teen.payload, 'ship clock')).toHaveLength(1);
+    expect(searchDocuments(artifacts.search.teen.payload, 'marine chronometer')).toHaveLength(1);
+    expect(searchDocuments(artifacts.search.teen.payload, 'ship clock')).toHaveLength(0);
   });
 
   it('does not match unrelated longer words against short corpus words', async () => {
@@ -94,7 +94,7 @@ describe('M5 discovery contracts', () => {
     expect(related).toHaveLength(2);
     expect(related.map((entry) => entry.id)).toEqual([secondId, thirdId]);
     expect(related[0]).toEqual(expect.objectContaining({
-      path: '/teen/how-clocks-found-longitude',
+      path: '/adult/how-clocks-found-longitude',
       reason: 'Both turn precise time into position.',
     }));
   });

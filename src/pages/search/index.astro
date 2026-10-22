@@ -22,13 +22,12 @@ const artifacts = buildDiscoveryArtifacts(lessons);
       </form>
       <p class="search-status" role="status" aria-live="polite">Enter at least two characters to search.</p>
       <ol class="search-results" aria-label="Search results"></ol>
-      <noscript><p>Search and its edition context need JavaScript. You can still browse every lesson and choose an edition in the <a href="/library">Library</a>.</p></noscript>
+      <noscript><p>Search needs JavaScript. You can still browse every lesson in the <a href="/library">Library</a>.</p></noscript>
     </div>
   </section>
 </BaseLayout>
 
 <script>
-  import { readerStorage, isEdition } from '../../lib/reader/state';
   import { searchDocuments } from '../../lib/discovery/search';
   import type { LessonEdition } from '../../lib/urls';
   import type { SearchDocument } from '../../lib/discovery/types';
@@ -48,7 +47,7 @@ const artifacts = buildDiscoveryArtifacts(lessons);
     const edition=selectedEdition(), url=new URL(location.href);
     if(writeUrl){
       if(input?.value)url.searchParams.set('q',input.value);else url.searchParams.delete('q');
-      if(edition)url.searchParams.set('edition',edition);else url.searchParams.delete('edition');
+      url.searchParams.delete('edition');
       history.replaceState(null,'',url.pathname+url.search+url.hash);
     }
     document.documentElement.dataset.edition=edition??'';
@@ -60,8 +59,8 @@ const artifacts = buildDiscoveryArtifacts(lessons);
     document.dispatchEvent(new Event('search-context'));
   }
   function initialise() {
-    const url=new URL(location.href), value=url.searchParams.get('edition');
-    activeEdition=isEdition(value)?value:(readerStorage(()=>localStorage).read()?.edition ?? 'adult');
+    const url=new URL(location.href);
+    activeEdition='adult';
     if(input)input.value=url.searchParams.get('q')??'';
     context(false);void runSearch();
   }

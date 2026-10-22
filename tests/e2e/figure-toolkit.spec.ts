@@ -40,7 +40,7 @@ test('toolkit figures remain available without scripts and with enlarged text',a
 // New toolkit figures also get evidence inside their actual Adult/Teen reading pages.
 const usesToolkit=(figure:LessonFigure|undefined)=>figure&&(figure.type==='image'||figure.type==='concept-flow'||figure.type==='orbital-motion'||(figure.type==='comparison-bars'&&figure.data.style==='proportional'));
 const toolkitLessons=(await loadPublishedLessons('src/content/lessons',routeOwnership)).filter(l=>!l.metadata.archive&&(usesToolkit(l.adult?.figure)||usesToolkit(l.teen?.figure)));
-for(const lesson of toolkitLessons)for(const edition of ['adult','teen'] as const){
+for(const lesson of toolkitLessons)for(const edition of ['adult'] as const){
  const figure=lesson[edition]?.figure;if(!usesToolkit(figure)||!figure)continue;
  test(`daily figure ${edition}/${lesson.metadata.slug} remains readable`,async({page},testInfo)=>{
   for(const width of [320,393,1440]){

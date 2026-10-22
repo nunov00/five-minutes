@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process';
-import { mkdtemp, mkdir, symlink, writeFile } from 'node:fs/promises';
+import { mkdtemp, mkdir, symlink, writeFile, unlink } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
@@ -50,8 +50,12 @@ searchTerms: [safe]
     const lessons = await loadPublishedLessons(root, { hostile: id });
     expect(lessons[0].adultHtml).not.toContain('<script>');
     expect(lessons[0].adultHtml).toContain('&lt;script&gt;');
-    expect(lessons[0].teenHtml).toContain('a=1&amp;b=2');
+    expect(lessons[0].teenHtml).toBe(lessons[0].adultHtml);
     expect(lessons[0].teenHtml).not.toContain('&amp;amp;');
+    await unlink(join(dir, 'teen.md'));
+    const single = await loadPublishedLessons(root, { hostile: id });
+    expect(single[0].adultHtml).toBe(lessons[0].adultHtml);
+    expect(single[0].teen).toEqual(single[0].adult);
   });
 
   it('rejects misplaced content and stray files instead of silently ignoring them', async () => {
@@ -65,7 +69,6 @@ searchTerms: [safe]
     const dir = join(root, '2026', 'broken');
     await mkdir(dir, { recursive: true });
     await writeFile(join(dir, 'lesson.yaml'), 'x: 1');
-    await writeFile(join(dir, 'adult.md'), '---\ntitle: x\n---\nx');
     await expect(loadPublishedLessons(root, {})).rejects.toThrow(/must contain exactly/);
     await writeFile(join(dir, 'teen.md'), '---\ntitle: x\n---\nx');
     await writeFile(join(dir, 'stray.txt'), 'ignored?');

@@ -1,0 +1,7 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+const {target}=Astro.props as {target:string};
+---
+<BaseLayout title="Page moved · Five Minutes" noindex redirectTo={target}>
+ <h1>Page moved</h1><p><a href={target}>Continue to the page</a></p>
+</BaseLayout>

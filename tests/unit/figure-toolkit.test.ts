@@ -22,7 +22,7 @@ function candidate(figure:unknown=orbit){
  const body=`---\n${stringify({title:'Test',description:'Description',takeaway:'Insight',question:'Why?',answer:'Because',searchTerms:['test'],figure})}---\nBody.\n`;
  const paths=[`${root}/adult.md`,`${root}/lesson.yaml`,`${root}/teen.md`];
  return {baseBacklogText:JSON.stringify({version:1,entries:[]}),pr:{headRef:`lesson/${slug}`,headSha:head,labels:['editorial-review-requested','review:mandatory']},triggerHeadSha:head,currentBaseSha:base,mergeBaseSha:base,behindBy:0,
-  files:[...paths.map(filename=>({filename,status:'added',additions:20,deletions:0,changes:20})),{filename:'src/content/route-ownership.json',status:'modified',additions:1,deletions:0,changes:1}],
+  files:[...paths.filter(path=>!path.endsWith('/teen.md')).map(filename=>({filename,status:'added',additions:20,deletions:0,changes:20})),{filename:'src/content/route-ownership.json',status:'modified',additions:1,deletions:0,changes:1}],
   blobs:Object.fromEntries(paths.map(path=>[path,textBlob(path.endsWith('.yaml')?yaml:body)])) as Record<string,any>,baseRegistryText:'{}',headRegistryBlob:textBlob(JSON.stringify({[slug]:id})),now:'2026-10-17T05:00:00+02:00'};
 }
 const rights=(src=image.src)=>({src,origin:'original-code',creator:'Publication illustrator',licence:'Original artwork owned by the publication',evidence:'Drawn from the factual sources recorded in this lesson; no third-party artwork.'});
@@ -57,18 +57,18 @@ describe('reusable figure contracts and trusted-base parity',()=>{
  });
  it('never accepts raw layout instructions',()=>expect(validateToolkitData('concept-flow',{pattern:'sequence',nodes,css:'color:red'}).length).toBeGreaterThan(0));
  it('accepts one new PNG shared by both editions',()=>expect(evaluateLessonPullRequest(rasterCandidate())).toMatchObject({applicable:true}));
- it('accepts two separately referenced edition figures',()=>{
+ it('rejects an asset referenced only by a retired edition',()=>{
   const v=rasterCandidate(),adult={...image,src:`/lesson-media/${slug}-adult.png`},teen={...image,src:`/lesson-media/${slug}-teen.png`};
   setFigure(v,adult);const blob=v.blobs[`${root}/teen.md`];blob.text=blob.text.replace(adult.src,teen.src);blob.size=Buffer.byteLength(blob.text);
   const original=v.files.pop()!;delete v.blobs[original.filename];
   for(const f of [adult,teen]){v.files.push({...original,filename:`public${f.src}`});v.blobs[`public${f.src}`]={mode:'100644',type:'blob',size:png.length,bytes:png};}
   setRights(v,[rights(adult.src),rights(teen.src)]);
-  expect(evaluateLessonPullRequest(v)).toMatchObject({applicable:true});
+  expect(()=>evaluateLessonPullRequest(v)).toThrow(/imageRights|referenced/);
  });
  it.each([
   ['missing image',v=>{v.files.pop();}],['unreferenced image',v=>{setFigure(v,orbit);}],
-  ['modified existing image',v=>{v.files[4].status='modified';}],
-  ['wrong slug',v=>{setFigure(v,{...image,src:'/lesson-media/other.png'});v.files[4].filename='public/lesson-media/other.png';v.blobs[v.files[4].filename]=v.blobs[`public${image.src}`];}],
+  ['modified existing image',v=>{v.files[3].status='modified';}],
+  ['wrong slug',v=>{setFigure(v,{...image,src:'/lesson-media/other.png'});v.files[3].filename='public/lesson-media/other.png';v.blobs[v.files[3].filename]=v.blobs[`public${image.src}`];}],
   ['symlink image',v=>{v.blobs[`public${image.src}`].mode='120000';}],
   ['executable image',v=>{v.blobs[`public${image.src}`].mode='100755';}],
   ['oversized image',v=>{v.blobs[`public${image.src}`].size=512001;}],
@@ -77,7 +77,7 @@ describe('reusable figure contracts and trusted-base parity',()=>{
   ['wrong dimensions',v=>{setFigure(v,{...image,width:193});}],
   ['remote path',v=>{setFigure(v,{...image,src:'https://example.test/a.png'});}],
   ['extra code',v=>{v.files.push({filename:'src/evil.ts',status:'added',additions:1,deletions:0,changes:1});}],
-  ['too many files',v=>{v.files.push(v.files[4],v.files[4]);}],
+  ['too many files',v=>{v.files.push(v.files[3],v.files[3]);}],
  ] as Array<[string,(v:ReturnType<typeof rasterCandidate>)=>void]>)('rejects %s',(_name,change)=>{const v=rasterCandidate();change(v);expect(()=>evaluateLessonPullRequest(v)).toThrow();});
  it('rejects oversized/noncanonical binary API responses before use',()=>{
   expect(()=>strictBase64Bytes({type:'file',encoding:'base64',size:999999,content:''},'x',512000)).toThrow(/limit/);

@@ -57,7 +57,7 @@ export function relatedLessons(
     throw new Error(`Lesson ${lessonId} has fewer than two related discovery results.`);
   }
   return results.map(({ lesson, reason }) => {
-    const presentation = edition === 'adult' ? lesson.adult : lesson.teen;
+    const presentation = lesson.adult;
     if (!presentation) throw new Error(`Related lesson ${lesson.metadata.id} has no ${edition} presentation.`);
     return {
       id: lesson.metadata.id,

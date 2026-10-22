@@ -1,5 +1,10 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Chooser from '../../components/discovery/Chooser.astro';
+import DiscoveryPage from '../../components/DiscoveryPage.astro';
+import { getBuildMetadata } from '../../lib/content/build-content';
+import { libraryPages } from '../../lib/discovery/catalogue';
+import { TAXONOMY } from '../../lib/taxonomy';
+const {lessons}=await getBuildMetadata();
+const topics=TAXONOMY.filter(t=>lessons.some(l=>l.metadata.topic===t.token));
+const pages=libraryPages(lessons);
 ---
-<BaseLayout title="Library · Five Minutes" neutralDiscovery><Chooser path={Astro.url.pathname} title="Library"/></BaseLayout>
+<DiscoveryPage edition="adult" kind="library" pageNumber={1} pageCount={pages.length} lessons={pages[1-1]} topics={topics} />

@@ -10,12 +10,11 @@ import { selectEarlierLessons, selectTodayLesson } from '../lib/today';
 const { lessons, manifest } = await getBuildMetadata();
 const today = selectTodayLesson(manifest.catalogue);
 const lesson = lessons.find((candidate) => candidate.metadata.id === today.id);
-if (!lesson?.adult || !lesson.teen) throw new Error(`Today lesson ${today.id} is not a complete published lesson.`);
+if (!lesson?.adult) throw new Error(`Today lesson ${today.id} is not a complete published lesson.`);
 
 // Both presentations are rendered for progressive enhancement; one selected edition is visible.
 const editions = [
   { edition: 'adult' as const, path: today.adult.path, presentation: lesson.adult },
-  { edition: 'teen' as const, path: today.teen.path, presentation: lesson.teen },
 ];
 const artifacts = buildDiscoveryArtifacts(lessons);
 const fallback = artifacts.catalogue.payload.find((entry) => entry.id !== today.id);
@@ -45,7 +44,6 @@ const earlier = selectEarlierLessons(manifest.catalogue, today.id).map((entry) =
             <p class="earlier-meta"><LessonDates {...entry} /> · {entry.topicLabel}</p>
             <div class="earlier-links">
               <a data-earlier-edition="adult" href={entry.adult.path}>{entry.adult.title}</a>
-              <a data-earlier-edition="teen" href={entry.teen.path}>{entry.teen.title}</a>
             </div>
           </li>
         ))}

@@ -1,6 +1,6 @@
 # Five Minutes
 
-Five Minutes is a daily learning publication with Adult and Teen presentations of every published lesson.
+Five Minutes is a daily learning publication with one clear, complete version of every lesson.
 
 The accepted architecture lives in `docs/ARCHITECTURE.md` and `docs/adr/`. Governance and contribution rules live in `docs/GOVERNANCE.md` and `AGENTS.md`.
 
@@ -61,7 +61,7 @@ The application produces standard static output in `dist/`. Hosting-provider con
 ## Reading experience and visual foundation
 
 - `/` is **Home**, headed **Something worth knowing**: the newest eligible release by `revisedAt` when present, otherwise `publishedAt` (ties broken by lesson ID), offered in both editions (ADR-0007). Dates display in the Europe/Zurich editorial timezone. Selection and formatting live in `src/lib/today.ts`.
-- `/adult/<slug>` and `/teen/<slug>` are the static lesson pages. The edition switch links to the other edition's manifest path; the URL alone decides the edition (ADR-0005). Takeaway and Test Yourself follow the lesson body; the answer uses `<details>`, so it works without JavaScript.
+- `/adult/<slug>` remains the single static lesson URL. Former Teen links redirect to it; the site has no edition selector (ADR-0013). Takeaway and Test Yourself follow the lesson body; the answer uses `<details>`, so it works without JavaScript.
 - The reading page owns the only `<h1>` (the presentation title from front matter). Lesson bodies therefore start headings at `##`; the content pipeline rejects `#` in a presentation body, and the sanitized body HTML is rendered unchanged.
 - `src/styles/global.css` holds the shared, mobile-first design tokens (colour, type, spacing, shape) and a few components (`container`, `card`, `button`, `eyebrow`, `lede`, `edition-switch`). Light/dark follows the operating-system setting. Reuse these tokens rather than adding new values.
 - The site is an installable PWA without a service worker: a web app manifest, locally owned icons and Apple touch-icon metadata, with nothing cached offline. See "Installable app (PWA)" in `docs/OPERATIONS.md` for cache/update behaviour and how to change icons safely.

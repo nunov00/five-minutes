@@ -26,7 +26,7 @@ test.describe('public aggregate analytics', () => {
     await page.goto('/analytics');
     await expect(page.getByRole('heading', { level: 1, name: 'Analytics' })).toBeVisible();
     await expect(page.locator('[data-metric="views"]')).toHaveText('12');
-    await expect(page.locator('[data-edition-metric="adult"]')).toHaveText('7');
+    await expect(page.locator('[data-edition-metric]')).toHaveCount(0);
     await expect(page.locator('[data-top-lessons] a')).toHaveAttribute('href', lesson.path);
     await expect(page.getByRole('cell', { name: '12' })).toBeVisible();
     await expect(page.getByText('does not create a visitor ID')).toBeVisible();
