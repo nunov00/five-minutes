@@ -15,9 +15,9 @@ test.describe('public aggregate analytics', () => {
         generatedAt: '2026-10-13T18:00:00.000Z',
         range: { from: '2026-09-14', to: '2026-10-13', days: 30 },
         totals: { views: 12, pageViews: 5, lessonViews: 7, interactions: 4 },
-        editions: { adult: 7, teen: 0 },
+        editions: { adult: 4, teen: 3 },
         events: { page_view: 5, lesson_view: 7, edition_switch: 1, save: 1, surprise: 1, related: 1, outbound: 0 },
-        lessons: [{ id: lesson.lessonId, edition: 'adult', count: 7 }],
+        lessons: [{ id: lesson.lessonId, edition: 'adult', count: 4 },{ id: lesson.lessonId, edition: 'teen', count: 3 }],
         series: [{ day: '2026-10-13', views: 12, interactions: 4 }],
       }),
     }));
@@ -28,6 +28,8 @@ test.describe('public aggregate analytics', () => {
     await expect(page.locator('[data-metric="views"]')).toHaveText('12');
     await expect(page.locator('[data-edition-metric]')).toHaveCount(0);
     await expect(page.locator('[data-top-lessons] a')).toHaveAttribute('href', lesson.path);
+    await expect(page.locator('[data-top-lessons] li')).toHaveCount(1);
+    await expect(page.locator('[data-top-lessons] li span')).toHaveText('7');
     await expect(page.getByRole('cell', { name: '12' })).toBeVisible();
     await expect(page.getByText('does not create a visitor ID')).toBeVisible();
   });

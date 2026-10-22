@@ -41,7 +41,12 @@ test('activities reset on reload, Back and the restoration handler without stori
 
 test('native figures, plain activity choices and answer/takeaway reveals work without JavaScript',async({browser})=>{
  const context=await browser.newContext({javaScriptEnabled:false,viewport:{width:320,height:568}});const page=await context.newPage();
- for(const path of [activityFixture,'/adult/why-earth-has-seasons',seasons,'/adult/goodharts-law','/adult/how-heat-pumps-move-heat','/adult/how-kidneys-filter-blood','/adult/why-exponential-growth-feels-sudden']){
+ await page.goto('http://127.0.0.1:4321'+activityFixture);
+ const prediction=page.locator('[data-activity]');
+ await prediction.getByText('What do you think?',{exact:true}).click();
+ await expect(prediction.locator('ul')).toBeVisible();await expect(prediction.locator('fieldset')).toBeHidden();
+ await prediction.getByText('Reveal the explanation',{exact:true}).click();await expect(prediction.locator('[data-activity-reveal]')).toHaveAttribute('open','');
+ for(const path of ['/adult/why-earth-has-seasons',seasons,'/adult/goodharts-law','/adult/how-heat-pumps-move-heat','/adult/how-kidneys-filter-blood','/adult/why-exponential-growth-feels-sudden']){
   await page.goto('http://127.0.0.1:4321'+path);
   const activity=page.locator('[data-activity]');
   if(await activity.count()){

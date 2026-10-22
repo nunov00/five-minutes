@@ -27,7 +27,7 @@ Open -> Something worth knowing -> Read -> Understand -> Test yourself -> Explor
 3. **Static where practical; dynamic where it buys concrete scale or UX value.**
 4. **Individual authoring, independent deployment representation.** Lessons remain individually addressable in Git even when build/runtime representations are bundled or indexed differently.
 5. **One lesson identity, one version.** The existing Adult source supplies the single complete lesson; ADR-0013 preserves legacy routes and reader data.
-6. **Local-first reader state.** Saved/read/recent/edition/appearance state stays in the browser initially. No account or application database is introduced merely for these features.
+6. **Local-first reader state.** Saved/read/recent/appearance state stays in the browser initially. No account or application database is introduced merely for these features.
 7. **Provider and technology portability.** Core application/content logic must not directly depend on hosting-provider APIs. Provider-specific integrations belong at adapters/configuration boundaries. Search and AI-provider integrations likewise sit behind replaceable interfaces.
 8. **Evidence before complexity.** Scale decisions should be benchmarked. A hypothetical future problem is not sufficient reason to add infrastructure today.
 9. **Production through review.** AI workers create reviewable repository changes; they do not directly publish production.
@@ -59,7 +59,7 @@ Search is discovery-oriented initially, not full-body text search.
 Discovery delivery is tiered rather than forcing one large browser payload onto every screen:
 
 - Today, Library and Topics are statically rendered and progressively enhanced; catalogue browsing does not require the search index.
-- A compact browser catalogue contains only the identity/URL/edition/taxonomy/date/title fields needed for Saved/Read joins and lightweight discovery such as Surprise Me.
+- A compact browser catalogue contains only the identity/URL/taxonomy/date/title fields needed for Saved/Read joins and lightweight discovery such as Surprise Me.
 - Edition-specific search indexes contain the richer discovery fields (title, description/deck, taxonomy/concepts, curated search terms and takeaway) and load only when search is used.
 - Generated discovery artifacts use content-hashed names where practical so cached clients do not retain stale indexes.
 
@@ -67,15 +67,15 @@ MiniSearch is the initial candidate behind an application-owned interface. Brows
 
 ### Reader state
 
-A small storage abstraction owns Saved, Read/Unread, recent lessons, selected edition and appearance preferences. The first implementation uses browser-local storage. Components must not access storage directly where doing so would make future sync unnecessarily invasive.
+A small storage abstraction owns Saved, Read/Unread, recent lessons, appearance preferences and legacy compatibility fields. The first implementation uses browser-local storage. Components must not access storage directly where doing so would make future sync unnecessarily invasive.
 
-ADR-0009 and the 2026-10-04 ADR-0005/0006 amendments record the Owner-approved post-M5 production contracts, with the 2026-10-15 amendments making Adult the fallback when no saved preference exists and the global selector the sole edition control. The versioned reader-state abstraction owns Saved/Read/recent/appearance and export/import. Adult and Teen remain explicit canonical lesson URLs, while a deliberate publication-level edition choice stores the reader's default. Explicit/shared lesson URLs do not silently mutate that preference. Reader-state version 2 stores Saved as immutable lesson ID plus exact edition; Read remains keyed by immutable lesson identity. Version 1 identity-only Saved entries migrate to the saved preference, or Adult when none exists. `/saved` joins those IDs to the compact catalogue; missing catalogue entries are retained and reported, not deleted. Recent reading is bounded to 50 edition-specific visits.
+ADR-0013 defines the single-version experience. Reader-state v1/v2 remains readable and exportable without a destructive migration. Legacy edition fields are retained for compatibility and ignored by navigation. Saved and Recent are presented once per immutable lesson identity; saving/unsaving applies across legacy edition keys. Read remains keyed by identity. Missing catalogue entries are retained and reported rather than deleted; Recent stays bounded to 50 stored visits. Unknown extension fields survive edits and imports.
 
 ### Production experience
 
-The Owner-approved post-M5 direction is **one publication, two visual voices**. Edition-specific discovery routes live under `/editions/<edition>/...`; explicit lesson routes remain `/adult/<slug>` and `/teen/<slug>`. Today and Search honour a valid saved preference and otherwise default their interface to Adult. The labelled segmented selector is the sole edition control across Today, Search and lesson pages; content does not repeat edition labels or add a second same-lesson switch. Shared publication navigation may present Adult and Teen with materially different visual treatment while preserving one lesson identity, the ADR-0005 route contract and progressively enhanced reading.
+The publication has one complete version of every lesson. Home, Earlier, Library, Topics, Search, Related and Surprise Me all use it. `/adult/<slug>` remains the canonical reading address for link stability, with no audience labels or edition controls. Former Teen lesson links and both old discovery families redirect to the current reading or neutral discovery page. ADR-0013 records the complete compatibility contract.
 
-The reading experience uses a recall-before-summary ending: after the explanatory body, the reader is prompted to retrieve/consider the central idea before the final takeaway/answer is presented. It may include reviewed per-edition explanatory figures and optional lightweight Teen-only prediction/choice activities. Figures and activities require safe structured canonical contracts before production publication; raw executable lesson content remains prohibited. The isolated design prototype is reference evidence only and is not a production dependency. See ADR-0009 for preference/history semantics, prototype boundaries and production verification gates.
+The reading experience uses a recall-before-summary ending: after the explanatory body, readers consider the central idea before revealing the answer and takeaway. Reviewed explanatory figures and optional lightweight prediction/choice activities use safe structured contracts; raw executable lesson content remains prohibited. The isolated prototype remains reference evidence only.
 
 ### Hosting and runtime
 
@@ -105,7 +105,7 @@ The optional feedback surface collects only a category and bounded message. It h
 
 Routine automated publication follows ADR-0007's subscription-based, fail-closed contract:
 
-Midnight Writer -> research and critical self-edit -> Adult + Teen draft and provenance -> lesson-only Pull Request -> named automated checks -> separate Reviewer at 02:00 with available external feedback -> Ready and same-run guarded merge, or IMPORTANT findings -> bounded Writer revision of the same open candidate -> fresh checks and a complete later Reviewer pass -> deployment. The loop has at most three editorial revision rounds per identity/Zurich date; Block, staleness or exhausted failed review ends the candidate.
+Midnight Writer -> research and critical self-edit -> single lesson draft and provenance -> lesson-only Pull Request -> named automated checks -> separate Reviewer at 02:00 with available external feedback -> Ready and same-run guarded merge, or IMPORTANT findings -> bounded Writer revision of the same open candidate -> fresh checks and a complete later Reviewer pass -> deployment. The loop has at most three editorial revision rounds per identity/Zurich date; Block, staleness or exhausted failed review ends the candidate.
 
 The writer and reviewer currently act through the Owner's GitHub identity, so separation of powers is procedural and reinforced by the lesson-only guard, current-`main` base requirement, named-check verification and `expectedHeadSha` merge. Saved reviews, comments and labels never authorise a later merge. Auto-merge is not used.
 
@@ -171,4 +171,4 @@ The production reader-state envelope, storage abstraction, edition discovery rou
 
 ## M6.2 implementation boundary
 
-The optional per-edition figure and Teen-only activity contracts, safe asset validation, progressive enhancement and shared recall-first ending are documented in [M6.2 reading enhancements](implementation/m6.2-reading-enhancements.md). The schema-v2 corpus migration must land before authored extensions. No persistent activity state or new service is introduced. Independent code and editorial review are required before publication.
+The optional figure and prediction activity contracts, safe asset validation, progressive enhancement and shared recall-first ending are documented in [M6.2 reading enhancements](implementation/m6.2-reading-enhancements.md). The schema-v2 corpus migration must land before authored extensions. No persistent activity state or new service is introduced. Independent code and editorial review are required before publication.
