@@ -1143,14 +1143,17 @@
       "kind": "new",
       "slug": "how-noise-cancelling-headphones-work",
       "title": "How headphones can cancel a sound with another sound",
-      "state": "queued",
+      "state": "complete",
       "priority": 200,
       "queuedAt": "2026-10-18T14:37:41Z",
       "reason": "Explain superposition, timing and why a steady engine hum is easier to cancel than a sudden voice.",
       "criteria": [
         "Verify authoritative accessible sources and current catalogue overlap.",
         "Teach the mechanism in distinct Adult and Teen editions; assess useful figures and Teen prediction."
-      ]
+      ],
+      "completedAt": "2026-10-22T02:00:00+02:00",
+      "destinationId": "965b4d69-cdd0-48ac-a5cc-5a50e1dfe60a",
+      "destinationSlug": "how-noise-cancelling-headphones-work"
     },
     {
       "key": "idea-why-usb-c-cables-charge-differently",
@@ -1182,18 +1185,9 @@
     }
   ],
   "pipeline": {
-    "assessedAt": "2026-10-21T11:29:37Z",
-    "summary": "Owner review notes for the published queueing lesson are now retained in its revision entry, linked to the Perplexity retrospective and issue #181. It is added after the existing ten candidates because it was released today and its targeted clarification can wait while different topics lead. Existing candidate order is unchanged; eleven viable candidates remain. Remove the stale position number from the Wi-Fi explanation. Rankings are editorial judgements, not measured demand or a fresh source audit.",
+    "assessedAt": "2026-10-21T22:07:08Z",
+    "summary": "The noise-cancelling-headphones idea was selected as today's strongest reviewed candidate after source and catalogue checks. The remaining order is unchanged: it retains ten viable candidates across engineering, physics, technology, geography and mathematics, so no new ideas were added. Rankings are editorial judgements, not measured demand or a fresh source audit.",
     "ranking": [
-      {
-        "key": "idea-how-noise-cancelling-headphones-work",
-        "headline": "How headphones can cancel a sound with another sound",
-        "description": "Explain superposition, timing and why a steady engine hum is easier to cancel than a sudden voice.",
-        "hook": "Adding sound can make a room seem quieter.",
-        "rankReason": "A strong new sensory puzzle with explanatory wave figures; check that it remains distinct from resonance.",
-        "relevance": "Evergreen everyday technology; not tied to a product launch.",
-        "evidenceUrls": []
-      },
       {
         "key": "legacy-aircraft-pressurisation",
         "headline": "Why aircraft windows have rounded corners",
