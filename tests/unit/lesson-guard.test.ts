@@ -1,4 +1,6 @@
 import { describe, expect, it } from 'vitest';
+import { stringify } from 'yaml';
+import { validatePresentationExtensions } from '../../src/lib/content/presentation-extensions';
 import { evaluateLessonPullRequest, GUARD_LIMITS } from '../../scripts/lesson-guard-core.mjs';
 import { collectGuardInput, strictBase64Text } from '../../scripts/verify-lesson-pr.mjs';
 
@@ -32,7 +34,6 @@ searchTerms: [shadows]
 ---
 Body.
 `;
-const teen = adult.replace('Why Shadows Change', 'Your Shadow Is a Clock');
 const processFigure = `figure:
   type: process-flow
   alt: Light travels from the source to an object and then a shadow appears.
@@ -68,7 +69,6 @@ function fixture() {
   const texts: Record<string, string> = {
     [`${root}/lesson.yaml`]: yaml,
     [`${root}/adult.md`]: adult,
-    [`${root}/teen.md`]: teen,
   };
   return {
     pr: { headRef: `lesson/${slug}`, headSha, labels: ['editorial-review-requested', 'review:mandatory'] },
@@ -262,7 +262,6 @@ describe('lesson-guard GitHub adapter', () => {
       ['editorial/backlog.json']: JSON.stringify({version:1,entries:[]}),
       [`${root}/adult.md`]: value.blobs[`${root}/adult.md`].text,
       [`${root}/lesson.yaml`]: value.blobs[`${root}/lesson.yaml`].text,
-      [`${root}/teen.md`]: value.blobs[`${root}/teen.md`].text,
       [`src/content/route-ownership.json@${baseSha}`]: value.baseRegistryText,
       [`src/content/route-ownership.json@${headSha}`]: value.headRegistryBlob.text,
     };
@@ -299,3 +298,37 @@ function setRegistry(value: ReturnType<typeof fixture>, text: string) {
   value.headRegistryBlob.text=text;
   value.headRegistryBlob.size=Buffer.byteLength(text);
 }
+
+const validActivity = {prompt:'Which direction?',options:['North','South'],answer:1,explanation:'Light arrives from the north.'};
+const activityCases: Array<[string,unknown,boolean]> = [
+ ['valid prediction',validActivity,true],
+ ['maximum text lengths',{...validActivity,prompt:'p'.repeat(140),options:['a'.repeat(80),'b'],explanation:'e'.repeat(400)},true],
+ ['four choices and final answer',{...validActivity,options:['a','b','c','d'],answer:3},true],
+ ['null',null,false],['array',[],false],['empty mapping',{},false],
+ ['normalised duplicate',{...validActivity,options:['North',' north ']},false],
+ ['negative answer',{...validActivity,answer:-1},false],
+ ['answer beyond choices',{...validActivity,answer:2},false],
+ ['fractional answer',{...validActivity,answer:0.5},false],
+ ['string answer',{...validActivity,answer:'1'},false],
+ ['one choice',{...validActivity,options:['North']},false],
+ ['five choices',{...validActivity,options:['a','b','c','d','e']},false],
+ ['long prompt',{...validActivity,prompt:'p'.repeat(141)},false],
+ ['long option',{...validActivity,options:['a'.repeat(81),'b']},false],
+ ['long explanation',{...validActivity,explanation:'e'.repeat(401)},false],
+ ['extra key',{...validActivity,score:true},false],
+ ['retrieval duplication',{...validActivity,prompt:'  a QUESTION? '},false],
+ ['markup prompt',{...validActivity,prompt:'<script>run()</script>'},false],
+ ['markup option',{...validActivity,options:['[link](https://example.com)','b']},false],
+ ['control character',{...validActivity,explanation:'No\u0000text'},false],
+];
+describe('single-source activity validation parity',()=>{
+ it.each(activityCases)('%s',(_name,activity,expected)=>{
+  const value=fixture(),blob=value.blobs[`${root}/adult.md`];
+  blob.text=blob.text.replace('searchTerms:',stringify({activity})+'searchTerms:');
+  blob.size=Buffer.byteLength(blob.text);
+  const canonical=validatePresentationExtensions({question:'A question?',activity},'adult','adult');
+  expect(canonical.length===0).toBe(expected);
+  if(expected)expect(evaluateLessonPullRequest(value)).toMatchObject({applicable:true});
+  else expect(()=>evaluateLessonPullRequest(value)).toThrow(/activity/);
+ });
+});

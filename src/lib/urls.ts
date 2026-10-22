@@ -1,7 +1,9 @@
 export type LessonEdition = 'adult' | 'teen';
 
 /**
- * Single source of truth for public lesson paths.
+ * Single source of truth for the sole canonical lesson path.
+ * The edition parameter is retained for legacy callers and reader backups only:
+ * both values deliberately resolve to /adult/<slug>, never a retired Teen URL.
  * Exact URL syntax remains changeable here without reconstructing paths elsewhere.
  */
 export function lessonPath(_edition: LessonEdition, slug: string): string {

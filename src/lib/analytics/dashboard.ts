@@ -26,8 +26,6 @@ async function render() {
     for (const key of ['views', 'lessonViews', 'pageViews', 'interactions'] as const) {
       setText(`[data-metric="${key}"]`, number.format(summary.totals[key]));
     }
-    setText('[data-edition-metric="adult"]', number.format(summary.editions.adult));
-    setText('[data-edition-metric="teen"]', number.format(summary.editions.teen));
 
     const byId = new Map(catalogue.map((entry) => [entry.id, entry]));
     const top = dashboard.querySelector<HTMLOListElement>('[data-top-lessons]');
@@ -72,8 +70,6 @@ async function render() {
     for (const key of ['views', 'lessonViews', 'pageViews', 'interactions'] as const) {
       setText(`[data-metric="${key}"]`, 'Unavailable');
     }
-    setText('[data-edition-metric="adult"]', 'Unavailable');
-    setText('[data-edition-metric="teen"]', 'Unavailable');
 
     const top = dashboard.querySelector<HTMLOListElement>('[data-top-lessons]');
     top?.replaceChildren(Object.assign(document.createElement('li'), { textContent: 'Analytics totals are temporarily unavailable.' }));

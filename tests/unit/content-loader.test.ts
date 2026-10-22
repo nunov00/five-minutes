@@ -69,10 +69,10 @@ searchTerms: [safe]
     const dir = join(root, '2026', 'broken');
     await mkdir(dir, { recursive: true });
     await writeFile(join(dir, 'lesson.yaml'), 'x: 1');
-    await expect(loadPublishedLessons(root, {})).rejects.toThrow(/must contain exactly/);
+    await expect(loadPublishedLessons(root, {})).rejects.toThrow(/must contain adult.md and lesson.yaml/);
     await writeFile(join(dir, 'teen.md'), '---\ntitle: x\n---\nx');
     await writeFile(join(dir, 'stray.txt'), 'ignored?');
-    await expect(loadPublishedLessons(root, {})).rejects.toThrow(/must contain exactly/);
+    await expect(loadPublishedLessons(root, {})).rejects.toThrow(/must contain adult.md and lesson.yaml/);
   });
 
   it('rejects symlinked canonical files', async () => {

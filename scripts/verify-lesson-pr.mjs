@@ -123,13 +123,12 @@ export async function collectGuardInput({ env = process.env, fetchImpl = fetch, 
     const entry=treeByPath.get(BACKLOG_PATH), loaded=await content(api,owner,repo,BACKLOG_PATH,triggerHeadSha);
     blobs[BACKLOG_PATH]={mode:entry?.mode,type:entry?.type,size:loaded.size,text:loaded.text};
   }
-  let baseLessonText, baseAdultText, baseTeenText;
+  let baseLessonText, baseAdultText;
   if (revision) {
     for (const path of candidatePaths) {
       const loaded=await content(api,owner,repo,path,currentBase.object.sha);
       if(path.endsWith('/lesson.yaml')) baseLessonText=loaded.text;
       else if(path.endsWith('/adult.md')) baseAdultText=loaded.text;
-      else baseTeenText=loaded.text;
     }
     // Reused rasters are fetched from the exact head; their absence from the diff proves byte identity to main.
     for (const path of candidatePaths.filter(p=>p.endsWith('.md'))) {
@@ -154,7 +153,7 @@ export async function collectGuardInput({ env = process.env, fetchImpl = fetch, 
   ]);
   const registryEntry = treeByPath.get(registryPath);
   return {
-    baseBacklogText:baseBacklog.text, baseLessonText, baseAdultText, baseTeenText,
+    baseBacklogText:baseBacklog.text, baseLessonText, baseAdultText,
     pr: { headRef: pr.head.ref, headSha: pr.head.sha, labels },
     triggerHeadSha,
     currentBaseSha: currentBase.object.sha,

@@ -32,7 +32,7 @@ async function strictLessonDirectories(root: string): Promise<string[]> {
       const files = await readdir(dir, { withFileTypes: true });
       const names = files.map((x) => x.name).sort();
       if (!REQUIRED.every(name => names.includes(name)) || names.some(name => !REQUIRED.includes(name) && name !== LEGACY_FILE)) {
-        throw new Error(`Lesson directory ${entry.name}/${child.name} must contain exactly: ${REQUIRED.join(', ')}.`);
+        throw new Error(`Lesson directory ${entry.name}/${child.name} must contain ${REQUIRED.join(' and ')}, optionally legacy ${LEGACY_FILE}.`);
       }
       for (const file of files) {
         const stat = await lstat(join(dir, file.name));
