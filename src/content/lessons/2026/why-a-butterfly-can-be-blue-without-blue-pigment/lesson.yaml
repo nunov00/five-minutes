@@ -1,0 +1,70 @@
+schemaVersion: 2
+id: a303d4bc-85eb-4bd8-b9af-03037b3f27ea
+slug: why-a-butterfly-can-be-blue-without-blue-pigment
+aliases: []
+publishedAt: '2026-10-23T10:02:31+00:00'
+topic: science
+subtopic: physics
+concepts:
+- structural-colour
+- light-interference
+- diffraction
+- butterfly-wing-scales
+related:
+  manual:
+  - id: 965b4d69-cdd0-48ac-a5cc-5a50e1dfe60a
+    reason: 'Both lessons explain how waves combine: headphones reduce sound, while wing structures reinforce reflected
+      light.'
+  exclude: []
+sources:
+- title: Photophysics of Structural Color in the Morpho Butterflies
+  url: https://forma.katachi-jp.com/pdf/1702/17020103.pdf
+  publisher: Forma — Kinoshita, Yoshioka, Fujii and Okamoto (2002)
+  accessedAt: '2026-10-23'
+  note: 'Full paper read: section 3.1 and figures 3–4 support the cuticle-and-air ridge anatomy and unequal heights;
+    sections 4.1 and 5 support interference with diffraction and model limits; section 4.3 supports pigment enhancing
+    blue contrast. Diagrams are original qualitative drawings, not copied figures.'
+- title: Morphing Butterfly
+  url: https://www.nisenet.org/sites/default/files/catalog/uploads/9881/diy_nano_print_butterfly_03_21.pdf
+  publisher: NISE Network / Sciencenter (2012)
+  accessedAt: '2026-10-23'
+  note: Four-page activity guide documents isopropyl alcohol filling gaps, a green appearance, and a return to blue
+    on evaporation. Presented as a reported observation, with no home procedure or copied photographs. The guide
+    does not identify a particular Morpho species.
+- title: Scientific Image — Blue Morpho Butterfly Wing (non-reflected light)
+  url: https://www.nisenet.org/catalog/scientific-image-blue-morpho-butterfly-wing-non-reflected-light
+  publisher: NISE Network / F. Nijhout, Duke University
+  accessedAt: '2026-10-23'
+  note: Supports brown pigment becoming visible in transmitted light. Its photograph is not reproduced; brown appearance
+    alone is not used to prove the blue mechanism.
+imageRights:
+- src: /lesson-media/why-a-butterfly-can-be-blue-without-blue-pigment-vlead.webp
+  origin: generated
+  creator: OpenAI image generation for Five Minutes
+  licence: Generated output under applicable OpenAI Europe terms; no exclusivity or copyright guarantee.
+  evidence: Byte-identical reuse of approved setup-01 artwork from docs/visuals/references/butterfly.webp; full
+    prompt and rights basis in docs/visuals/setup-ledger.json. SHA-256 71015b7d6d1957794230c413a95dfb123b776cd64dff9b32282f52c6cada4143.
+    Conceptual artwork, not a specimen image or species-identification evidence. No new generation dispatched.
+  sourceUrl: https://openai.com/policies/eu-terms-of-use/
+- src: /lesson-media/why-a-butterfly-can-be-blue-without-blue-pigment-vstructure.webp
+  origin: original-code
+  creator: Five Minutes — OpenAI-assisted original diagram
+  licence: Original project artwork; no third-party figure copied.
+  evidence: Original deterministic Pillow drawing, exported RGB lossless WebP without metadata. Qualitative anatomy
+    informed by Kinoshita et al. (2002), sections 3.1 and 4.1; no traced micrograph, numerical geometry or measured
+    spectrum. Aligned-wave addition is a separate conceptual sketch.
+- src: /lesson-media/why-a-butterfly-can-be-blue-without-blue-pigment-vwetdry.webp
+  origin: original-code
+  creator: Five Minutes — OpenAI-assisted original diagram
+  licence: Original project artwork; no third-party figure copied.
+  evidence: Original deterministic Pillow drawing, exported RGB lossless WebP without metadata. Schematic interpretation
+    of NISE/Sciencenter Morphing Butterfly guide, page 3. Colour patches represent reported appearance; liquid shading
+    is only a diagram key. No documentary images, measured spectra or chemical procedure copied.
+provenance:
+  createdAt: '2026-10-23T10:02:31+00:00'
+  createdBy:
+    type: ai
+    provider: openai
+    model: gpt-6.1-sol
+    promptVersion: owner-commissioned-weekly-calibration-v1
+  reviews: []
