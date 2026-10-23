@@ -4,11 +4,11 @@
 
 ## Recommendation
 
-Use **Why a butterfly can be blue without blue pigment** for the calibration lesson, subject to source verification and the visual capability test. **Why a steel ship floats while a steel bolt sinks** is the first alternative; **How a hard kernel becomes a piece of popcorn** is the second. These are recommendations, not approved lessons or a publication date.
+Use **Why a butterfly can be blue without blue pigment** for the calibration lesson, subject to source verification and the visual capability test. **Why aircraft windows have rounded corners** is the first alternative; **Why a steel ship floats while a steel bolt sinks** is the second. These are recommendations, not approved lessons or a publication date.
 
-The butterfly topic asks whether we can make an arresting illustration and still teach a precise mechanism across scales. It is not selected merely because the animal is beautiful. The ship is more immediately familiar, but tests less of that range. Popcorn has a good transformation to explain, but needs full-text access resolved. Do not use a simpler special production path for the pilot: apply #188's setup and calibration limits, then demonstrate repeatability on a different topic within its regular limits.
+The butterfly topic asks whether we can make an arresting illustration and still teach a precise mechanism across scales. It is not selected merely because the animal is beautiful. Aircraft windows offers the stronger follow-on puzzle and a different engineering setting for the repeatability test. The ship remains the practical calibration fallback if the optical diagram cannot be made clear within budget. Popcorn stays fourth on editorial merit: its transformation is engaging, but keeping pressure, expansion, jumping and sound within one central explanation is harder. Do not use a simpler special production path for the pilot: apply #188's setup and calibration limits, then demonstrate repeatability on a different topic within its regular limits.
 
-The strongest legacy challenger is aircraft-window geometry, ranked fourth. Its mechanism and sources are strong; stress depiction and historical caveats make it less balanced as the first art-and-explanation test. Newness earns no priority. Imports have no migration quota or entitlement, and no deferred entry is promised a later release.
+The strongest legacy challenger is aircraft-window geometry, now ranked second. Its familiar shape conceals a less familiar mechanism than the ship example; accurate stress depiction and historical caveats remain necessary. Newness earns no priority. Imports have no migration quota or entitlement, and no deferred entry is promised a later release.
 
 ## Scope and counts
 
@@ -16,7 +16,7 @@ The original 75 records remain in order, with all original values preserved; ass
 
 The 12 accepted revisions and three completed records remain in their states. There are no parked records or other unfinished states. Accepted does not mean newly re-reviewed; completed does not mean reopened. The former Adult/Teen comparison is historical evidence, not a reason in itself to revise a single-version lesson. Its original criteria remain visible.
 
-**Activation boundary:** this PR adds the three ideas and records assessment findings in `editorial/backlog.json`. Its existing ten-item daily `pipeline` is byte-for-byte equivalent as a parsed value. The proposed eight below do not become the active ranking. The coordinated policy/tooling PR must replace daily selection/refresh rules and validate the permanent six-to-eight rule before applying this order; no fabricated shortfall or unsupported JSON fields. Deferred means unranked in that proposed weekly list; old daily ranks are explicitly not reassessed production instructions. Schedules, off switches, publication rules, lesson files and routes are untouched.
+**Activation boundary:** this PR adds the three ideas and records assessment findings in `editorial/backlog.json`. Its existing ten-item daily `pipeline` is unchanged as a parsed value. The proposed eight below do not become the active ranking. The coordinated policy/tooling PR must replace daily selection/refresh rules and validate the permanent six-to-eight rule before applying this order; no fabricated shortfall or unsupported JSON fields. Deferred means unranked in that proposed weekly list; old daily ranks are explicitly not reassessed production instructions. Schedules, off switches, publication rules, lesson files and routes are untouched. The scheduled Five Minutes Publisher was checked during review remediation on 23 October: it is disabled. No automation was changed; re-enabling remains a separate activation step.
 
 ## Proposed weekly shortlist
 
@@ -24,20 +24,20 @@ All eight have a distinct explanatory question, a connection to non-specialist u
 
 | Rank | Candidate / existing key | Why this position | Evidence |
 | --- | --- | --- | --- |
-| 1 | **Why a butterfly can be blue without blue pigment** — `idea-why-morpho-wings-look-blue` (new) | Best combined test of expressive illustration and a precise explanation across scales; the mechanism, not the butterfly alone, must carry the lesson. | [morpho](#source-morpho), [morpho-image](#source-morpho-image) |
-| 2 | **Why a steel ship floats while a steel bolt sinks** — `idea-why-steel-ships-float` (new) | Clearest alternative and a real explanatory payoff; ranks second because it is a more familiar school example and tests the new visual range less strongly. | [ship](#source-ship) |
-| 3 | **How a hard kernel becomes a piece of popcorn** — `idea-why-popcorn-pops` (new) | A familiar object with an unexpectedly physical mechanism; third because the source-access limitation must be resolved and a sequence can easily become decorative. | [popcorn](#source-popcorn) |
-| 4 | **Why aircraft windows have rounded corners** — `legacy-aircraft-pressurisation` (import) | Strongest legacy challenger. Excellent causal stakes, but a precise stress illustration and historical caveats make it a less balanced first demonstration than the leading pair. | [aircraft](#source-aircraft) |
+| 1 | **Why a butterfly can be blue without blue pigment** — `idea-why-morpho-wings-look-blue` (new) | Best combined test of expressive illustration and a precise explanation across scales; the mechanism, not the butterfly alone, must carry the lesson. | [morpho](#source-morpho), [morpho-image](#source-morpho-image), [morpho-demo](#source-morpho-demo) |
+| 2 | **Why aircraft windows have rounded corners** — `legacy-aircraft-pressurisation` (import) | Strongest legacy challenger; the everyday shape puzzle offers more unfamiliar explanation than the ship and tests the style in an engineering setting after calibration. | [aircraft](#source-aircraft) |
+| 3 | **Why a steel ship floats while a steel bolt sinks** — `idea-why-steel-ships-float` (new) | Clear displacement explanation and the practical calibration fallback. Third because many readers may already know the basic answer; the pressure-to-force connection must add value. | [ship](#source-ship) |
+| 4 | **How a hard kernel becomes a piece of popcorn** — `idea-why-popcorn-pops` (new) | A compelling transformation, but pressure, expansion, jumping and sound can fragment the explanation; the first three offer a tighter pilot scope. No source-access penalty. | [popcorn](#source-popcorn) |
 | 5 | **How some concrete cracks can seal themselves** — `legacy-roman-concrete` (import) | Strong surprise and visual opportunity; fifth because abstract-level research is not enough for a finished chemical diagram. | [concrete](#source-concrete) |
 | 6 | **Why does a mirror seem to swap left and right?** — `idea-why-mirrors-seem-to-reverse-left-and-right` (new) | Strong everyday puzzle. Below concrete because its memorable distinction is valuable but the art treatment has less range; better after the pilot. | [mirror](#source-mirror) |
 | 7 | **Why an unlikely message tells you more** — `legacy-shannon-information` (import) | Eligible under the broad reader promise. Seventh because mathematical setup consumes more of the five-minute experience and competes with recent probability coverage. | [shannon](#source-shannon) |
 | 8 | **Why Greenland changes size when the map changes** — `lesson-b6fbc2e0-bcad-4ad7-8336-2fed9576e788` (revision) | Only shortlisted redevelopment. Substantial new explanation and exact maps would earn a weekly slot; lower priority than strong new lessons, rather than a compulsory archive upgrade. | [maps](#source-maps) |
 
-Only rank 8 is a substantial redevelopment. It retains lesson ID `b6fbc2e0-bcad-4ad7-8336-2fed9576e788` and slug `why-every-flat-map-lies`. No weekly revision slots have yet been consumed because weekly publication has not started; it is provisionally slot-eligible, not scheduled. Recheck before selection: at most one redevelopment in every rolling four releases and at most one in the opening three. The leading three are new topics and do not need a revision slot.
+Only rank 8 is a substantial redevelopment. It retains lesson ID `b6fbc2e0-bcad-4ad7-8336-2fed9576e788` and slug `why-every-flat-map-lies`. No weekly revision slots have yet been consumed because weekly publication has not started; it is provisionally slot-eligible, not scheduled. Recheck before selection: at most one redevelopment in every rolling four releases and at most one in the opening three. The leading three would create distinct canonical lessons: two fresh ideas and one legacy import. None needs a revision slot; import status itself confers no priority.
 
 **Reserves, not ranked:** `legacy-wifi-propagation` has a strong wall/coverage contrast, but frequency alone cannot explain every home's result; obtain primary propagation evidence and bound materials and distance. `idea-why-usb-c-cables-charge-differently` has a good connector-versus-capability puzzle; obtain current official negotiation/cable evidence without product recommendations. Neither gets through evidence eligibility on appeal alone.
 
-**Why now / recent coverage:** this is an evergreen calibration choice, not a verified trend. The latest releases cover headphone cancellation, queues, condensation and QR codes. Structural colour shares a wave principle with headphones, but asks a different question about materials and visible colour; the overlap must be acknowledged, not sold as wholly unrelated physics. Ships revisit density but differ from ice packing and lake convection. Popcorn revisits heat but explains confinement and expansion rather than evaporation or condensation. The three pilot options lean towards physical mechanisms; this is not a commitment to a science-only calendar. Strong social, biological and mathematical topics remain in the pool.
+**Why now / recent coverage:** this is an evergreen calibration choice, not a verified trend. The latest releases cover headphone cancellation, queues, condensation and QR codes. Structural colour shares a wave principle with headphones, but asks a different question about materials and visible colour; the overlap must be acknowledged, not sold as wholly unrelated physics. Aircraft windows revisits loading but differs from bridge expansion and resonance through cut-out geometry and pressure cycles. Ships revisit density but differ from ice packing and lake convection. Popcorn revisits heat but explains confinement and expansion rather than evaporation or condensation. The three pilot options lean towards physical mechanisms; this is not a commitment to a science-only calendar. Strong social, biological and mathematical topics remain in the pool.
 
 No aggregate analytics or reader feedback was available in this assessment; rankings are AI-assisted editorial judgements, not measured demand. Before pilot reading, optionally ask the existing trial readers which of these three headlines they would open and why. That informs selection, not recall performance, and creates no additional panel or approval gate. Never put participant details in public planning.
 
@@ -47,17 +47,29 @@ These one-time review briefs are included here so selection can be reviewed with
 
 ### 1. Recommended — Why a butterfly can be blue without blue pigment
 
-Key: `idea-why-morpho-wings-look-blue`. Sources: [morpho](#source-morpho), [morpho-image](#source-morpho-image).
+Key: `idea-why-morpho-wings-look-blue`. Sources: [morpho](#source-morpho), [morpho-image](#source-morpho-image), [morpho-demo](#source-morpho-demo).
 
-Title: Why a butterfly can be blue without blue pigment. Description: Follow a blue morpho wing from its visible colour down to the tiny structures that shape reflected light.
+Title: Why a butterfly can be blue without blue pigment. Description: A blue morpho wing reveals how tiny structures can make colour.
 
-The retellable idea is that colour can come from structure as well as dye. Start with the puzzle of a brilliant wing that looks brown when viewed using transmitted light. Move from the whole wing to overlapping scales, then explain how light reflected from their tiny features can reinforce some wavelengths. Acknowledge that the real structure also involves diffraction and irregularities; a neat stack of identical layers is only a limited teaching model. Brown pigment still helps the appearance.
+Anchor the puzzle in the structural colours of familiar peacock feathers, without claiming the structures are identical. Use NISE's reported demonstration: isopropyl alcohol enters the wing's tiny gaps and the blue appears green; after evaporation it returns to blue. Show it as a documented observation, not a reader experiment or invented photograph.
 
-Plan one expressive, naturalistic lead illustration and a separate, sourced cross-section. Labels, light paths and scale changes belong in an exact diagram, not in the generated artwork. Use a restrained palette so the blue is purposeful and the explanation remains legible on a phone.
+Explain that replacing air changes the optical environment and which wavelengths are reinforced, without adding a new dye. Brown seen in transmitted light is supporting evidence of pigment, not proof by itself of the blue-making mechanism. Real Morpho colour also depends on diffraction and irregular features; avoid a perfect-stack model and do not use viewing-angle change as the main demonstration.
 
-End by asking what could change the colour without adding a different dye. Avoid implying all butterflies use this mechanism. The pilot succeeds only if a reader can explain structure versus pigment after the visual spectacle has passed.
+Pair a naturalistic lead with an exact scale cross-section; labels and light paths are drawn separately. Keep a dry/wet/dry comparison within three visuals. Recall question: why can the blue return on drying? Answer: air returns to the gaps, restoring their optical environment. Do not claim reversible colour change alone rules out pigment chemistry; interpret the demonstration alongside the structural evidence.
 
-### 2. Alternative — Why a steel ship floats while a steel bolt sinks
+### 2. Alternative — Why aircraft windows have rounded corners
+
+Key: `legacy-aircraft-pressurisation`. Sources: [aircraft](#source-aircraft).
+
+Title: Why aircraft windows have rounded corners. Description: A familiar shape reveals how a small opening can change stress in a loaded shell.
+
+The retellable idea is that an opening changes where stress concentrates, and a rounded corner spreads that concentration more gently than a sharp one. Start with a passenger looking through a window, then reveal the pressurised shell around it. Explain repeated loading and why a small local weakness matters over many cycles. Keep the distinction between a single heavy load and accumulating fatigue.
+
+Use a carefully designed cabin illustration to attract attention, then a separate qualitative comparison of sharp and rounded cut-outs under the same loading. Labels must explain local concentration without inventing measured stresses, numerical colour scales or a simulation. The reader should predict which corner needs more attention and explain why.
+
+Use the FAA account for context, while keeping manufacturing, cut-out details and testing history in view. Do not reduce the Comet accidents to square passenger windows or imply that rounding guarantees safety. This is a strong stage B option for testing the visual system on engineering within the regular production budget.
+
+### 3. Alternative — Why a steel ship floats while a steel bolt sinks
 
 Key: `idea-why-steel-ships-float`. Sources: [ship](#source-ship).
 
@@ -69,21 +81,9 @@ Create an engaging harbour lead illustration, but use a separate exact cross-sec
 
 Finish with a prediction about adding cargo. Avoid saying air pushes the ship upward, or that any wider shape is automatically stable. This is the fallback if the butterfly's optical diagram cannot be made clear within the agreed production budget.
 
-### 3. Alternative — How a hard kernel becomes a piece of popcorn
-
-Key: `idea-why-popcorn-pops`. Sources: [popcorn](#source-popcorn).
-
-Title: How a hard kernel becomes a piece of popcorn. Description: A familiar snack hides a pressure vessel and a rapid change in structure.
-
-The retellable idea is that a kernel's hull holds pressure until rupture lets its softened starch expand into a foam. Start with an unpopped kernel beside the expanded flake. Explain the sequence of heating its moisture, pressure building inside the enclosing hull, rupture and rapid expansion. Keep the expansion explanation separate from how the kernel jumps off a hot surface; the cited experiment observed a starch protrusion pushing against that surface.
-
-Use a warm, detailed food illustration for the opening and a separately drawn cutaway for the mechanism. A compact state sequence should show what changes, rather than repeat the paragraph as boxes. Generated artwork must not pretend to be a scientific high-speed photograph or establish hidden anatomy.
-
-End with a question about why the enclosing hull matters. Treat the reported popping temperatures as approximate experimental findings and any account of the sound with the paper's uncertainty. Before drafting, obtain readable full text beyond the search extract and verify the structural details.
-
 ## Treatments for the remaining shortlisted candidates
 
-- **Why aircraft windows have rounded corners:** An opening's shape changes local stress under repeated pressure loading. Example: Compare identical cut-outs with sharp and rounded corners under the same illustrative loading. Visuals: Cabin illustration and a qualitative, labelled cut-out comparison; no fabricated numerical stress heatmap. Avoid: Fatigue, manufacturing and testing matter too; rounded windows are not a complete accident explanation.
+- **How a hard kernel becomes a piece of popcorn:** Confinement lets pressure build until the hull ruptures and the starch expands. Use a food illustration and exact cutaway/state sequence. Keep the main question on expansion; jumping is a separate observation and the sound explanation is a hypothesis. Avoid an exact universal popping temperature or a rocket-like jump. The full-text access problem was a temporary fetch failure, now resolved.
 - **How some concrete cracks can seal themselves:** Certain lime-rich inclusions can supply reactive material for crack filling when water enters. Example: Trace a crack that intersects a lime clast, distinguishing filling from full recovery of structural strength. Visuals: Evocative masonry lead and a carefully sourced chemical cross-section. Avoid: Do not generalise one mechanism to every Roman structure or confuse it with ordinary cement hydration.
 - **Why does a mirror seem to swap left and right?:** Reflection reverses the direction perpendicular to the mirror; turning yourself around is a different transformation. Example: Keep a labelled hand fixed in world coordinates before comparing reflection with a physical turn. Visuals: Expressive mirror scene paired with an exact top-view orientation/ray diagram. Avoid: Generated scenes can silently reverse labels and hands; the geometric explanation must control the image.
 - **Why an unlikely message tells you more:** Technical information measures reduced uncertainty, not a message's importance. Example: A deliberately specified four-outcome guessing game, then an unequal-probability event; state the model. Visuals: Editorial message illustration plus deterministic probability/choice diagrams. Avoid: Separate a single event's surprise from average entropy and avoid equating rarity with truth or meaning.
@@ -95,15 +95,21 @@ Accessed 23 October 2026. These are selection-stage evidence notes, not permissi
 
 ### Source morpho
 
-[Kinoshita et al. (2002), original-paper abstract](https://forma.katachi-jp.com/abstract/1702/17020103.html)
+[Kinoshita et al. (2002), original paper](https://forma.katachi-jp.com/pdf/1702/17020103.pdf)
 
-Read abstract, not the linked full paper. Supports submicron scale structure, combined interference/diffraction and pigment's supporting role. Does not justify a perfectly regular multilayer model.
+The full PDF is accessible; abstract and introductory material reviewed here. Detailed methods and model/figure verification remain required before authoring. Supports submicron scale structure, combined interference/diffraction and pigment's supporting role. Does not justify a perfectly regular multilayer model.
 
 ### Source morpho-image
 
 [NISE Network, scientific-image record](https://www.nisenet.org/catalog/scientific-image-blue-morpho-butterfly-wing-non-reflected-light)
 
 Read description: transmitted light reveals brown pigmentation. Use as a reference, not permission to copy the image.
+
+### Source morpho-demo
+
+[NISE Network / Sciencenter, Morphing Butterfly activity guide](https://www.nisenet.org/sites/default/files/catalog/uploads/9881/diy_nano_print_butterfly_03_21.pdf)
+
+Read all four pages. Describes isopropyl alcohol entering the gaps, a green appearance and return to blue on evaporation; also names peacock feathers as structural colour. This specific observation does not justify saying all liquids have the same effect or all dyes are insensitive to solvents. Use a documented explanatory comparison, not a home activity. Do not copy the guide's photographs without rights clearance.
 
 ### Source ship
 
@@ -115,7 +121,7 @@ Read transcript and buoyancy background. Supports displacement, pressure increas
 
 [Virot and Ponomarenko (2015), original research, DOI 10.1098/rsif.2014.1247](https://pmc.ncbi.nlm.nih.gov/articles/PMC4345489/)
 
-Search retrieval exposed abstract and experimental sections; direct open hit a bot check. Supports pressure-vessel rupture, starch expansion and observed jumping. Approximate temperature is an experimental result, not a universal exact threshold. Re-fetch full text before drafting.
+Direct full text is now readable: reviewed the introduction, pressure/temperature, jumping, sound and conclusion sections. The earlier bot check was a temporary retrieval failure, not a paywall or editorial weakness. Supports the pressure-vessel and jump account; sound is presented as a hypothesis. Verify any quantitative detail and figure before authoring.
 
 ### Source aircraft
 
@@ -147,7 +153,7 @@ Read introduction and logarithmic-measure discussion. Supports information as se
 
 Read general concepts, including area versus conformality. USGS landing page and full PDF returned 403; this government-hosted excerpt is accessible. Projection equations/dataset and generated maps still need verification.
 
-Research work comprised manual AI-assisted screening of the 60 queued briefs, reading the 32 canonical lesson metadata/text pairs, developing three fresh challengers and comparing ten candidates using the source material above. No elapsed-time, token or monetary estimate was measured. **Image-generation requests used: zero.** This research does not spend or expand #188's four-request setup allowance. No external reader test, rendered visual audit or comprehensive source re-audit of the catalogue has been performed.
+Research work comprised manual AI-assisted screening of the 60 queued briefs, reading the 32 canonical lesson metadata/text pairs, developing three fresh challengers and comparing ten candidates using the source material above. Review remediation additionally checked the NISE demonstration, the linked Morpho PDF and the now-readable popcorn full text. No elapsed-time, token or monetary estimate was measured. **Image-generation requests used: zero.** This research does not spend or expand #188's four-request setup allowance. No external reader test, rendered visual audit or comprehensive source re-audit of the catalogue has been performed.
 
 ## Complete queued-pool screen
 
@@ -263,4 +269,4 @@ Classifications are also appended to every existing revision record, including a
 
 Independent review should challenge the butterfly recommendation, source-to-claim limits, every keep/defer decision, actual overlap with existing lessons, and whether the planned visuals teach enough to justify production cost. Confirm exact coverage of the 60 old queued keys, preservation of all 75 original records and criteria, the three fresh identities, and the one-in-four redevelopment boundary.
 
-After review, carry this assessment into the coordinated policy/tooling and visual-capability work. Apply the reviewed weekly order only when that activation is safe. Then research and produce the selected calibration lesson with its actual visuals, use the five-reader test in #188, and test the regular budget on another lesson. The next lesson PR must verify its complete causal chain; this document is not an authorisation to publish.
+After review, carry this assessment into the coordinated policy/tooling and visual-capability work. That work must explicitly define the dated reassessment notes appended to `criteria` as historical context rather than new acceptance requirements. Apply the reviewed weekly order only when that activation is safe. Then research and produce the selected calibration lesson with its actual visuals, use the five-reader test in #188, and test the regular budget on another lesson. The next lesson PR must verify its complete causal chain; this document is not an authorisation to publish.
