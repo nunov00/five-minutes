@@ -1,29 +1,64 @@
 {
   "trial": "setup-02",
   "date": "2026-10-23",
-  "status": "reserved-dispatch-pending",
+  "status": "completed-technical-submission-artwork-crop-limitation",
   "baseMain": "2b1e8aa607ac5645ecfe48fcf9e996aefa0ce097",
   "authority": "Single scheduled artwork capability trial authorised by Owner for #188/#190. No publication, main merge, PR creation or schedule activation.",
   "budget": {
     "totalSetupCeiling": 4,
     "setup01": "Already dispatched interactively for a butterfly, per Owner instruction",
     "thisTrialReserved": 1,
-    "thisTrialDispatched": 0,
+    "thisTrialDispatched": 1,
     "retriesAllowed": 0,
     "editsAllowed": 0,
-    "interruptionRule": "Reservation is a single-use dispatch token. Never dispatch again after an interrupted/uncertain attempt; reconcile evidence."
+    "interruptionRule": "Reservation is a single-use dispatch token. Never dispatch again after an interrupted/uncertain attempt; reconcile evidence.",
+    "thisTrialFailures": 0,
+    "thisTrialEdits": 0,
+    "knownSetupDispatchedTotal": 2,
+    "remainingUnderCeiling": 2
   },
   "prompt": "Create exactly one 3:2 landscape expressive editorial illustration: an aircraft cabin window with rounded corners framing blue sky, observed from inside an empty cabin. Contemporary natural-history-like gouache and delicate ink texture on warm ivory, with restrained cobalt and muted ochre accents. Generous safe margins so the essential window and framing survive a 1200x630 centre crop. This is conceptual artwork, not a documentary photograph or scientific diagram. No words, labels, arrows, logos, people, microscopic structures or stress claims.",
   "tool": "Built-in image_gen.imagegen; no paid API or fallback",
   "rightsBasis": "Original AI-generated conceptual artwork requested for this project, no third-party source images; subject to provider terms, no exclusive rights claim.",
   "stages": {
-    "reservation": "Committed before dispatch",
-    "generation": "pending",
-    "localBytes": "pending",
-    "inspection": "pending",
-    "optimisation": "pending",
-    "trustedMainRasterValidation": "pending",
-    "submission": "pending"
+    "reservation": "PASS: branch created from pinned current main and reservation committed before the one dispatch",
+    "generation": "PASS: exactly one built-in image_gen.imagegen dispatch returned an aircraft illustration; no retry or edit",
+    "localBytes": "PASS: generated PNG accessed and fully decoded locally",
+    "inspection": "PASS for conceptual 3:2 artwork: rounded cabin window, blue sky, empty scene, gouache/ink-like texture and requested palette; no text, labels, arrows, logos, people or scientific overlays. Visual inspection of original and optimised image completed.",
+    "centreCrop": "LIMITATION: inspected 1200x630 centre crop clips the upper window corners/frame. Not approved for share-card use without deterministic reframing; no second generation requested.",
+    "optimisation": "PASS: installed Pillow 12.3.0, RGB/sRGB interpretation (input has no embedded ICC profile), fresh metadata-free RGB canvas, WebP quality 85/method 6; fully decoded output; 241710 bytes, 1536x1024, below all limits.",
+    "trustedMainRasterValidation": {
+      "result": "PASS",
+      "main": "2b1e8aa607ac5645ecfe48fcf9e996aefa0ce097",
+      "path": "src/lib/figures/raster.mjs",
+      "blob": "d5b45d4f7866a65f994ed6eac0a56238344c11a7",
+      "method": "rasterDimensions and validateRasterBytes executed locally using copied trusted current-main module; logical validation path /lesson-media/scheduled-aircraft.webp, documentation-only storage path. No candidate code executed."
+    },
+    "submission": {
+      "result": "PASS: GitHub connector create_blob(base64) accepted real optimised bytes",
+      "blob": "d301d52b1eb56aa928f85f2dc869ca421e56331b",
+      "finalisation": "Asset and ledger included in one Git tree/commit on capability branch, expected-head ref update; verify published tree entries after update.",
+      "binaryReadback": "Generic fetch rejects binary blob reads as non-UTF-8; no binary readback claimed. Verify repository blob SHA against locally computed Git blob hash."
+    }
   },
-  "foundationPR": "No open PR with head feature/weekly-visual-foundation found at reservation time."
+  "foundationPR": "No open PR with head feature/weekly-visual-foundation found at initial and pre-submission checks; no comment posted and no PR created.",
+  "reservationCommit": "8c166fd690d1f2f4c491ecb75c41ab2617ecdb44",
+  "asset": {
+    "path": "docs/visuals/references/scheduled-aircraft.webp",
+    "gitBlob": "d301d52b1eb56aa928f85f2dc869ca421e56331b",
+    "sha256": "cdc0e94d9e32c3cb94d82364e02357622279011e3768c0b06c4db9c69b54ce23",
+    "width": 1536,
+    "height": 1024,
+    "bytes": 241710,
+    "format": "WebP",
+    "conceptual": true
+  },
+  "source": {
+    "format": "PNG",
+    "width": 1536,
+    "height": 1024,
+    "bytes": 2894178,
+    "sha256": "06ef51935d8ed28b82f4aacbc45a5fa0ed00362ef6df513b6a88c3d188abe9df"
+  },
+  "boundaries": "No lesson authored/published, main merge, deployment, automation changes or schedule activation. This technical trial does not prove publication, rendered lesson integration, factual suitability or share-crop approval."
 }
