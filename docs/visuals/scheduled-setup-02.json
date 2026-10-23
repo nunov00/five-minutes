@@ -1,0 +1,29 @@
+{
+  "trial": "setup-02",
+  "date": "2026-10-23",
+  "status": "reserved-dispatch-pending",
+  "baseMain": "2b1e8aa607ac5645ecfe48fcf9e996aefa0ce097",
+  "authority": "Single scheduled artwork capability trial authorised by Owner for #188/#190. No publication, main merge, PR creation or schedule activation.",
+  "budget": {
+    "totalSetupCeiling": 4,
+    "setup01": "Already dispatched interactively for a butterfly, per Owner instruction",
+    "thisTrialReserved": 1,
+    "thisTrialDispatched": 0,
+    "retriesAllowed": 0,
+    "editsAllowed": 0,
+    "interruptionRule": "Reservation is a single-use dispatch token. Never dispatch again after an interrupted/uncertain attempt; reconcile evidence."
+  },
+  "prompt": "Create exactly one 3:2 landscape expressive editorial illustration: an aircraft cabin window with rounded corners framing blue sky, observed from inside an empty cabin. Contemporary natural-history-like gouache and delicate ink texture on warm ivory, with restrained cobalt and muted ochre accents. Generous safe margins so the essential window and framing survive a 1200x630 centre crop. This is conceptual artwork, not a documentary photograph or scientific diagram. No words, labels, arrows, logos, people, microscopic structures or stress claims.",
+  "tool": "Built-in image_gen.imagegen; no paid API or fallback",
+  "rightsBasis": "Original AI-generated conceptual artwork requested for this project, no third-party source images; subject to provider terms, no exclusive rights claim.",
+  "stages": {
+    "reservation": "Committed before dispatch",
+    "generation": "pending",
+    "localBytes": "pending",
+    "inspection": "pending",
+    "optimisation": "pending",
+    "trustedMainRasterValidation": "pending",
+    "submission": "pending"
+  },
+  "foundationPR": "No open PR with head feature/weekly-visual-foundation found at reservation time."
+}
