@@ -10,7 +10,7 @@ This rubric is the product contract for lesson generation and editorial review. 
 
 ## Publication standard
 
-A publishable lesson must meet every criterion below. Reviewers use judgement and written reasons rather than scores or averaged percentages. A polished sentence cannot compensate for an unsupported claim, and a long source list cannot compensate for a dull or confusing lesson.
+A publishable lesson must meet every criterion below. Reviewers decide readiness through judgement and written reasons against these criteria. The advisory reader-experience rating below never replaces a criterion or averages away a failure. A polished sentence cannot compensate for an unsupported claim, and a long source list cannot compensate for a dull or confusing lesson.
 
 | Criterion | Publication standard | Common reasons to revise |
 | --- | --- | --- |
@@ -111,7 +111,7 @@ For factual and editorial review, record:
 8. the catalogue comparison used for originality and duplication.
 9. the figure decision for the lesson and the prediction activity decision, including the reason for any omission; for an included figure, record `FIGURE: PASS` or `FIGURE: REWORK`, the exact-head rendered route and the phone/wide viewports inspected.
 10. a concise reader-value assessment, with passage-specific evidence rather than a generic assertion, answering these four questions:
-    - **Interest:** what gives the lesson's reader a reason to care early?
+    - **Interest:** would a curious non-expert with no prior interest choose to open this lesson from its title and description, and keep reading? Explain the concrete reason to care, the reward for reading and any passage where interest drops. This is an editorial hypothesis unless supported by actual reader evidence.
     - **Understanding:** how does the lesson explain the mechanism, and is a crucial causal step missing?
     - **Memory:** what specific image, example, connection or reasoning might each reader remember tomorrow, and does the ending deliver its payoff? This is editorial judgement, not a claim of measured retention.
     - **Depth:** what useful reasoning, implication or boundary does the explanation develop?
@@ -120,7 +120,9 @@ For factual and editorial review, record:
 
 These answers can be incorporated into the existing lesson assessment and attention notes; do not duplicate the review. Missing reader outcomes require actionable findings under the severity definitions above. Check the author's claims against the actual text rather than accepting their self-assessment.
 
-Do not report a numeric quality score, an averaged rubric percentage or a precision-style confidence number. Descriptive confidence is useful only when it explains what is uncertain and what evidence would resolve it.
+Include one **advisory reader-experience rating**, as a whole number from 1 to 10, in the existing full lesson review: “How good is the overall experience for a curious non-expert reader, and why? What holds it back, and which two improvements would add the most reader value?” Support the judgement with concrete passages and reader outcomes. Distinguish required fixes under the existing severity rules from optional polish; if fewer than two worthwhile improvements remain, say so rather than inventing work. If the finished experience cannot be assessed, record that limitation instead of inventing a rating.
+
+The rating is a subjective diagnostic, not measured reader satisfaction, a publication threshold or an approval. Do not average criterion scores, add decimal precision or use the number to override accuracy, accessibility, Ready/Revise/Block or any existing gate. A low rating alone is not an actionable finding; a high rating cannot excuse one. Existing revision limits still apply: do not create an extra review or revision loop to chase a higher number. Do not report precision-style confidence numbers. Descriptive confidence is useful only when it explains what is uncertain and what evidence would resolve it.
 
 The canonical review record is the GitHub pull-request review on the exact commit. Any accepted MINOR finding and its rationale must be recorded in the same PR conversation or merge record. `provenance.reviews` may preserve earlier lesson-level review or substantive-revision events already incorporated into the reviewed commit; it is not updated after the final exact-head review, because doing so would create a new unreviewed head.
 
@@ -128,11 +130,11 @@ The canonical review record is the GitHub pull-request review on the exact commi
 
 Before drafting, prepare a short working brief: the worthwhile question, the reasoning that answers it, a concrete reader connection or memory anchor, and the supported additional understanding the explanation will develop. A named fact, longer wording or technical label is not an additional explanation. If the causal chain or deeper reasoning cannot be explained and sourced, improve the angle before writing. This brief guides the work; it is not a fixed lesson outline or reader-facing text.
 
-After drafting, read the single version as a finished lesson. Identify the actual passages delivering the hook, causal steps, payoff and explanatory depth. Test whether the reasoning still works without the analogy. Check retrieval against the central takeaway and challenge every activity distractor as a plausible misconception. Remove self-assessments such as "the memorable reversal" and let the explanation earn its value. Revise missing reader outcomes before requesting review; filling out a quality checklist is not evidence that the text achieves them. Use the calibrated examples below to judge substance while varying topics and voice.
+After drafting, read the single version as a finished lesson. Ask whether a curious non-expert would choose to open it and keep reading, and identify the reward the text actually delivers; record the brief evidence in the existing reader-value assessment. Identify the actual passages delivering the hook, causal steps, payoff and explanatory depth. Test whether the reasoning still works without the analogy. Check retrieval against the central takeaway and challenge every activity distractor as a plausible misconception. Remove self-assessments such as "the memorable reversal" and let the explanation earn its value. Revise missing reader outcomes before requesting review; filling out a quality checklist is not evidence that the text achieves them. Use the calibrated examples below to judge substance while varying topics and voice.
 
 ### Challenge the first draft before submission
 
-Apply these three checks to the actual draft during the existing critical self-edit. Fix failures before opening the PR. Record the brief evidence in the PR's existing reader-value/activity assessment; do not add another review, score, task or checklist document. This is author evidence for the separate Reviewer to challenge, never publication approval.
+Apply these three checks to the actual draft during the existing critical self-edit. Fix failures before opening the PR. Record the brief evidence in the PR's existing reader-value/activity assessment; do not add another review, author scorecard, task or checklist document. This is author evidence for the separate Reviewer to challenge, never publication approval.
 
 1. **Explanatory depth:** finish “After this lesson, the reader can explain ___ and why it happens.” Point to the passage that supplies the reasoning and explain the added understanding in plain language without relying on its technical names. Then mentally remove that passage: if the reader loses only vocabulary, arithmetic detail or length, develop a worthwhile causal step, implication, trade-off or boundary. A worked example counts when it reveals additional reasoning, not merely because it contains numbers. Preserve the complete central explanation.
 2. **Concrete meaning and coherence:** challenge claims such as “more efficient”, “a quoted percentage”, “stronger protection” or “a significant cost”. Can the reader explain what changes, relative to what, and why it matters from this text? Use a supported comparison, worked example, familiar consequence or useful numerical context where it answers that question. Check units, denominators, conditions and limits when using figures. Resolve references whose antecedent or example is missing. Numbers are optional; decorative precision and unsupported universal rules are failures too.
