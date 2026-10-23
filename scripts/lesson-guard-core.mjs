@@ -12,7 +12,7 @@ export const GUARD_LIMITS = Object.freeze({
   markdownBytes: 32 * 1024,
   totalBytes: 80 * 1024,
   changedLines: 1600,
-  imageFiles: 3,
+  imageFiles: VISUAL_LIMITS.count,
   imageTotalBytes: VISUAL_LIMITS.totalBytes,
 });
 
@@ -238,12 +238,12 @@ export function evaluateLessonPullRequest(input) {
   const backlogFiles = files.filter(f => f.filename === BACKLOG_PATH);
   const renewal = backlogFiles.length === 1;
   const revision = renewal && files.some(f => LESSON_PATH.test(f.filename) && f.status === 'modified');
-  if(files.length<3||files.length>4+GUARD_LIMITS.imageFiles)fail('Automated candidate requires the bounded lesson, registry/backlog files and at most three images.');
+  if(files.length<3||files.length>4+GUARD_LIMITS.imageFiles)fail('Automated candidate requires the bounded lesson, registry/backlog files and at most five images.');
 
   const lessonFiles = files.filter((file) => typeof file?.filename === 'string' && LESSON_PATH.test(file.filename));
   const registryFiles = files.filter((file) => file?.filename === REGISTRY_PATH);
   const imageFiles=files.filter(file=>typeof file?.filename==='string'&&file.filename.startsWith('public/lesson-media/'));
-  if(imageFiles.length>GUARD_LIMITS.imageFiles)fail('At most three source images are allowed.');
+  if(imageFiles.length>GUARD_LIMITS.imageFiles)fail('At most five source images are allowed.');
   if (lessonFiles.length !== 2 || registryFiles.length !== (revision ? 0 : 1) || lessonFiles.length+registryFiles.length+imageFiles.length+backlogFiles.length!==files.length) {
     fail('Candidate may change only one lesson, its bounded new images, and the applicable registry/backlog delta.');
   }

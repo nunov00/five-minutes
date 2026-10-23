@@ -1,13 +1,14 @@
 /** Shared bounded structure; each inner figure is validated by the existing figure validator. */
 import {RASTER_LIMITS} from './raster.mjs';
-export const VISUAL_LIMITS = Object.freeze({count:3, totalBytes:3*RASTER_LIMITS.maxBytes});
+// More focused figures may share the existing total download budget.
+export const VISUAL_LIMITS = Object.freeze({count:5, totalBytes:3*RASTER_LIMITS.maxBytes});
 const object=v=>v!==null&&typeof v==='object'&&!Array.isArray(v);
 export function validateVisualCollection(presentation) {
   if(!Object.hasOwn(presentation,'figures'))return [];
   const issues=[];
   if(Object.hasOwn(presentation,'figure'))issues.push('Use figure or figures, never both.');
   const list=presentation.figures;
-  if(!Array.isArray(list)||list.length<1||list.length>VISUAL_LIMITS.count)return [...issues,'Expected one to three figures.'];
+  if(!Array.isArray(list)||list.length<1||list.length>VISUAL_LIMITS.count)return [...issues,'Expected one to five figures.'];
   const ids=new Set();let leads=0;
   for(const item of list){
     if(!object(item)||Object.keys(item).some(k=>!['id','role','figure'].includes(k))

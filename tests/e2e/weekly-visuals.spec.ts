@@ -1,5 +1,26 @@
 import {checkReading} from './support/reading';
 import {test,expect} from './support/fixtures';
+test('five visual slots retain positions, labels and decoding across sizes and themes',async({page},info)=>{
+ for(const width of [320,393,1440])for(const colorScheme of ['light','dark'] as const){
+  await page.setViewportSize({width,height:900});await page.emulateMedia({colorScheme});await page.goto('/figure-fixtures/weekly/five');
+  const figures=page.locator('article .lesson-figure');await expect(figures).toHaveCount(5);
+  expect(await page.locator('.visual-sequence').evaluate(el=>[...el.children].filter(n=>n.matches('p,figure')).map(n=>n.tagName))).toEqual(['P','FIGURE','P','FIGURE','P','FIGURE','P','FIGURE','P','FIGURE']);
+  for(const fig of await figures.all()){
+   await fig.scrollIntoViewIfNeeded();await expect(fig.getByRole('img')).toHaveAccessibleName(/\S/);
+   for(const img of await fig.locator('img').all())await expect.poll(()=>img.evaluate((el:HTMLImageElement)=>el.complete&&el.naturalWidth>0)).toBe(true);
+  }
+  const ids=await page.locator('[id]').evaluateAll(els=>els.map(el=>el.id));expect(new Set(ids).size).toBe(ids.length);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+  if(info.project.name==='desktop-chromium')await page.screenshot({path:info.outputPath(`visual-five-${width}-${colorScheme}.png`),fullPage:true});
+ }
+});
+test('five positioned figures and their descriptions work without JavaScript',async({browser})=>{
+ const context=await browser.newContext({javaScriptEnabled:false,viewport:{width:320,height:800}}),page=await context.newPage();
+ await page.goto('http://127.0.0.1:4321/figure-fixtures/weekly/five');await expect(page.locator('article .lesson-figure')).toHaveCount(5);
+ const descriptions=page.locator('article .figure-description');
+ for(const description of await descriptions.all()){await description.locator('summary').click();await expect(description.locator('p')).toBeVisible();}
+ await page.evaluate(()=>document.documentElement.style.fontSize='200%');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await context.close();
+});
 test('answer-first keeps one visible takeaway after the lead and a later native answer reveal',async({page},info)=>{
  for(const width of [320,393,1440])for(const colorScheme of ['light','dark'] as const){
   await page.setViewportSize({width,height:900});await page.emulateMedia({colorScheme});await page.goto('/figure-fixtures/weekly/answer-first');
