@@ -13,7 +13,7 @@ Write for curious adults without specialist knowledge, including intermediate-En
 
 Aim for **4–6 minutes including visuals and recall**. Use 500–700 words as guidance, without a minimum or maximum. Measure actual reading time.
 
-Identify the central insight, essential causal step and retellable idea. Include a genuine misconception only when relevant. Choose an honest title and description, develop the explanation through concrete examples, and finish with a satisfying payoff. Keep recall before the revealed takeaway; use prediction activities only when they improve understanding.
+Identify the central insight, essential causal step and retellable idea. Include a genuine misconception only when relevant. Choose an honest title and description, develop the explanation through concrete examples, and finish with a satisfying payoff. Keep recall before the revealed takeaway by default. The explicitly selected answer-first pilot shows that takeaway once after its opening lead and retains later recall of a deeper causal step with an answer-only reveal; see ADR-0006 and the topic-led opening proposal. This exception does not change the wider default. Use prediction activities only when they improve understanding.
 
 Rank topics by curiosity, explanatory payoff, visual opportunity and evidence, within existing subject safeguards. Maintain one ranked pool and provisional dates, with variety across releases.
 

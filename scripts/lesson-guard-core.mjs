@@ -1,4 +1,5 @@
 import { lessonVisuals, validateVisualCollection, VISUAL_LIMITS } from '../src/lib/figures/collection.mjs';
+import { validateOpening } from '../src/lib/content/opening-contract.mjs';
 import { isValidTimestamp } from './publication-time.mjs';
 import { BACKLOG_PATH, parseBacklog, verifyBacklogCompletion } from './editorial-backlog.mjs';
 import { parseDocument } from 'yaml';
@@ -24,7 +25,7 @@ const METADATA_KEYS = new Set([
   'schemaVersion', 'id', 'slug', 'aliases', 'publishedAt', 'topic', 'subtopic',
   'concepts', 'related', 'sources', 'provenance', 'imageRights', 'revisedAt', 'archive',
 ]);
-const ADULT_KEYS = new Set(['title', 'description', 'takeaway', 'question', 'answer', 'searchTerms', 'figure', 'figures', 'activity']);
+const ADULT_KEYS = new Set(['title', 'description', 'takeaway', 'question', 'answer', 'searchTerms', 'figure', 'figures', 'activity', 'opening']);
 
 export class LessonGuardError extends Error {
   constructor(message) {
@@ -157,6 +158,7 @@ function parseFrontmatter(source, label, allowedKeys) {
   if (end < 0) fail(`${label} has unterminated YAML front matter.`);
   const value = parseYamlObject(source.slice(4, end), `${label} front matter`, allowedKeys);
   for(const message of validateVisualCollection(value))fail(`${label}: ${message}`);
+  for(const message of validateOpening(value))fail(`${label}: ${message}`);
   for(const {figure} of lessonVisuals(value))validateAutomatedFigure(figure,label);
   if (Object.hasOwn(value, 'activity')) {
     const a=value.activity;
