@@ -1,5 +1,6 @@
 /** Shared bounded structure; each inner figure is validated by the existing figure validator. */
-export const VISUAL_LIMITS = Object.freeze({count:3, totalBytes:1536*1024});
+import {RASTER_LIMITS} from './raster.mjs';
+export const VISUAL_LIMITS = Object.freeze({count:3, totalBytes:3*RASTER_LIMITS.maxBytes});
 const object=v=>v!==null&&typeof v==='object'&&!Array.isArray(v);
 export function validateVisualCollection(presentation) {
   if(!Object.hasOwn(presentation,'figures'))return [];

@@ -142,3 +142,7 @@ On the Workers Free plan, matching static-asset requests remain free and unlimit
 - **Current usage:** CI reports the actual assembled build on every change; the repository does not hard-code a stale current count in documentation.
 - **Builds:** Workers Builds has its own per-plan build allowances. Check Cloudflare's Builds limits if publication frequency grows.
 - **Paid plan:** needed only if `dist/` approaches 20,000 files. That is an Owner cost decision (ARCHITECTURE.md, "Cloudflare deployment boundary").
+
+### Portable origin and hostname guards (ADR-0014)
+
+Set `SITE_URL` in the build environment to the selected HTTPS production origin. The base `wrangler.jsonc` stores no allowed-host defaults. `cf:prepare` writes the ignored `.wrangler.generated.json` beside it, deriving both analytics and feedback hostname guards from SITE_URL while retaining empty preview overrides. `cf:deploy` refuses an absent origin and uses the generated config; `cf:preview` uses it with isolated preview bindings. Generated config paths stay relative to the same directory as the template. Do not deploy the template directly or commit the generated file. See OPERATIONS for a domain move and old-host 301 redirects.

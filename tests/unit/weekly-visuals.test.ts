@@ -2,6 +2,7 @@ import {describe,it,expect} from 'vitest';
 import {readFileSync} from 'node:fs';
 import {parse,stringify} from 'yaml';
 import sharp from 'sharp';
+import {createHash} from 'node:crypto';
 import {validatePresentationExtensions} from '../../src/lib/content/presentation-extensions';
 import {positionVisuals} from '../../src/lib/figures/placement';
 import {validateVisualCollection,lessonVisuals} from '../../src/lib/figures/collection.mjs';
@@ -55,14 +56,24 @@ describe('weekly visual input boundary',()=>{
 });
 describe('trusted build derivatives',()=>{
  it('produces exactly two hashed local derivatives; keeps textured artwork within bounds',async()=>{
-  const bytes=readFileSync('public/lesson-media/visual-style-butterfly.webp');const a=await buildArtwork(bytes,'test');
+  const bytes=readFileSync('docs/visuals/references/butterfly.webp');const a=await buildArtwork(bytes,'test');
   expect(a.outputs).toHaveLength(2);expect(a.share).toMatch(/^\/visuals\/test-[a-f0-9]{16}\/share\.jpg$/);
   for(const [i,item] of a.outputs.entries()){const ext=item.path.split('.').at(-1)!;await expect(validateDerivative(item.bytes,i===0?'thumbnail':'share',ext)).resolves.toBeDefined();}
   const again=await buildArtwork(bytes,'test');expect(again.share).toBe(a.share);
  },15000);
  it('prefers PNG for simple graphics and has a legacy fallback',async()=>{
   const bytes=await sharp({create:{width:100,height:100,channels:3,background:'#336699'}}).png().toBuffer();expect((await buildArtwork(bytes,'simple')).share).toMatch(/\.png$/);
-  const art=await lessonArtwork({metadata:{slug:'old'},adult:{}});expect(art.isFallback).toBe(true);expect(art.outputs).toHaveLength(2);
+  const art=await lessonArtwork({metadata:{slug:'old'},adult:{}});expect(art.isFallback).toBe(true);expect(art.outputs).toHaveLength(1);expect(art.thumbnail).toBeUndefined();
+ });
+ it('preserves portrait artwork inside a thumbnail instead of cropping it',async()=>{
+  const bytes=await sharp({create:{width:80,height:200,channels:3,background:'#ff0000'}}).png().toBuffer();
+  const art=await buildArtwork(bytes,'portrait');const {data,info}=await sharp(art.outputs[0].bytes).raw().toBuffer({resolveWithObject:true});
+  const pixel=(x:number,y:number)=>[...data.subarray((y*info.width+x)*info.channels,(y*info.width+x)*info.channels+3)];
+  expect(pixel(0,0)[0]).toBeGreaterThan(230);expect(pixel(0,0)[1]).toBeGreaterThan(220);expect(pixel(240,160)[1]).toBeLessThan(20);
+ });
+ it('pins the font-free fallback sharing image',async()=>{
+  const art=await lessonArtwork({metadata:{slug:'old'},adult:{}});
+  expect(createHash('sha256').update(art.outputs[0].bytes).digest('hex')).toBe('e3afccc45c9db996ec9f6c22bd300527c722f8ec92d7341f3d65d9411419e6f2');
  });
  it('rejects false extension, invalid decoding, dimensions, traversal and remote sources',async()=>{
   await expect(validateDerivative(Buffer.from('<svg/>'),'share','png')).rejects.toThrow();

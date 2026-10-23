@@ -330,7 +330,7 @@ export function evaluateLessonPullRequest(input) {
   const revisionSuffix = renewal ? `(?:-r${publicationDate.replaceAll('-', '')})?` : '';
   for(const f of images){
     const filename=`public${f.src}`;
-    if(imageFiles.some(file => file.filename === filename) && !new RegExp(`^public/lesson-media/${slug}${revisionSuffix}(?:-adult|-teen|-v[a-z][a-z0-9-]{0,19})?\\.(?:png|webp)$`).test(filename))fail('Image filenames must belong to this lesson slug.');
+    if(imageFiles.some(file => file.filename === filename) && !new RegExp(`^public/lesson-media/${slug}${revisionSuffix}(?:-adult|-teen|-v(?=[a-z0-9-]{1,20}\\.)(?:[a-z][a-z0-9]*(?:-[a-z0-9]+)*))?\\.(?:png|webp)$`).test(filename))fail('Image filenames must belong to this lesson slug.');
     const blob=blobs[filename];
     if(!blob||blob.mode!=='100644'||blob.type!=='blob'||!Number.isSafeInteger(blob.size)||blob.size<1||blob.size>RASTER_LIMITS.maxBytes
       ||!Buffer.isBuffer(blob.bytes)||blob.bytes.length!==blob.size)fail('Raster must be a bounded regular binary blob with trustworthy size.');

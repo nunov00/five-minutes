@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import { discoveryPath, editionDiscoveryPath, type LessonEdition } from '../lib/urls';
 import { getBuildMetadata } from '../lib/content/build-content';
+import { UTILITY_PAGES } from '../lib/utility-pages';
 import { libraryPages } from '../lib/discovery/catalogue';
 import { TAXONOMY } from '../lib/taxonomy';
 interface Props { social?:{image:string;imageType:string;imageAlt:string}; redirectTo?: string; title?: string; description?: string; edition?: LessonEdition; editionPaths?: Record<LessonEdition,string>; neutralDiscovery?: boolean; noindex?: boolean; wide?: boolean; preferenceSurface?: boolean; todaySurface?: boolean; }
@@ -60,7 +61,7 @@ const canonical = !neutralDiscovery && !noindex && Astro.site ? new URL(pathname
       <button id="reset-reader-state" class="button button-secondary" type="button">Discard local reader data and reset</button>
     </details>
     <main id="main" class:list={["site-main", "container", {"reader-wide":wide}]}><slot /></main>
-    <footer class="site-footer"><div class="container"><a href="/analytics">Analytics</a><a href="/feedback">Send anonymous feedback</a></div></footer>
+    <footer class="site-footer"><div class="container">{UTILITY_PAGES.map(page=><a href={page.path}>{page.label}</a>)}</div></footer>
     <script>import '../lib/reader/enhance'; import '../lib/reader/surfaces'; import '../lib/analytics/client';</script>
   </body>
 </html>

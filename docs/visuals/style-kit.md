@@ -6,7 +6,7 @@ Draft for visual and independent technical review; not a completed lesson or a f
 
 Make the subject worth looking at: rich, carefully observed editorial illustration with fine edges, tactile colour and quiet space around it. Use a natural-history sensibility without copying an old plate or making every subject look antique. The artwork creates curiosity; the explanation earns it. Engineering and social subjects must work in the same family without borrowing biological imagery.
 
-![First generated style reference](../../public/lesson-media/visual-style-butterfly.webp)
+![First generated style reference](references/butterfly.webp)
 
 This first sample is expressive artwork, not a specimen photograph, species-identification reference or microscopic evidence. Its silhouette, colour and detail still need topic-specific review before any lesson use. The scientific diagram will be designed from sources separately; an attractive wing is not an explanation of its colour.
 
@@ -45,3 +45,5 @@ The scheduled trial **passed the technical path**, including local bytes, optimi
 ![Aircraft reference with the full frame preserved](references/aircraft-share-trial.jpg)
 
 The padded derivative preserves both rounded upper corners; the plain centre crop is deliberately not used.
+
+Renderer fixtures serve the documentation source only in the explicit test build. It is absent from normal production output. Card thumbnails and share images both use contain/padding; portrait artwork is preserved too.

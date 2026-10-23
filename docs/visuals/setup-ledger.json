@@ -11,7 +11,7 @@
       "method": "Built-in image_gen; model not reported",
       "prompt": "Use case: illustration-story. Asset type: lead editorial illustration for Five Minutes, a thoughtful illustrated publication for curious adults. Primary request: an arresting blue Morpho butterfly with open wings, seen from slightly above, resting on a small branch. Style: contemporary natural-history editorial artwork, precise observed silhouette, rich layered gouache colour, very fine ink-like edges and subtle paper texture, sophisticated and vivid, not a school worksheet. Large luminous blue wings with restrained dark margins; a small brown body, two antennae and plausible anatomy. Warm pale ivory background with a faint botanical shadow and generous breathing room; blue carries the visual impact. Wide 3:2 composition, keep the entire butterfly and wing tips inside the central 75% so a 1200x630 crop remains viable. Soft directional light and delicate physical texture, not glossy CGI. No lettering, labels, arrows, graphic overlays, diagrams, microscope inset, signatures, logos or watermark. This is an expressive illustration of a butterfly, not a documentary photograph or a scientific rendering of nanostructure.",
       "inputImages": [],
-      "asset": "public/lesson-media/visual-style-butterfly.webp",
+      "asset": "docs/visuals/references/butterfly.webp",
       "width": 1536,
       "height": 1024,
       "bytes": 297368,
