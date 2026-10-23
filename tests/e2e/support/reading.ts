@@ -4,7 +4,7 @@ export type Opening = 'answer-first' | undefined;
 
 /** Expected mode comes from validated delivery data, not the DOM under test. */
 export async function sourceOpening(page:Page):Promise<Opening>{
- const response=await page.request.get('/delivery.json');expect(response.ok()).toBe(true);
+ const response=await page.request.get(new URL('/delivery.json',page.url()).href);expect(response.ok()).toBe(true);
  const routes=(await response.json()).routes;
  const selected=routes.filter((r:{path:string})=>r.path===new URL(page.url()).pathname);
  expect(selected).toHaveLength(1);
@@ -34,3 +34,4 @@ export async function checkReading(page:Page,opening:Opening,reveal:'click'|'key
  if(reveal==='keyboard'){await summary.focus();await page.keyboard.press('Enter');}else await summary.click();
  await expect(answer).toBeVisible();await expect(heading).toBeVisible();await expect(heading).toHaveCount(1);
 }
+
