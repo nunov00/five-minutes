@@ -1,3 +1,4 @@
+import {checkReading,sourceOpening} from './support/reading';
 import type { Page } from '@playwright/test';
 import { expect, test } from './support/fixtures';
 interface Route {path:string;lessonId:string;edition:'adult';slug:string}
@@ -23,9 +24,7 @@ test.describe('Home and the single lesson',()=>{
   await expect(page.locator('html')).toHaveAttribute('data-appearance','dark');
   await page.getByRole('link',{name:/^Read:/}).click();await expect(page).toHaveURL(/\/adult\//);
   await expect(page).not.toHaveTitle(/edition/i);
-  const recall=page.getByRole('region',{name:'Recall',exact:true});await expect(recall.locator('.answer')).toBeHidden();
-  await recall.getByText('Reveal answer and takeaway').click();await expect(recall.locator('.answer')).toBeVisible();
-  await expect(page.getByRole('region',{name:'Takeaway',exact:true})).toBeVisible();
+  await checkReading(page,await sourceOpening(page));
   await page.getByRole('link',{name:'Back to home'}).click();await expect(page).toHaveURL('/');
  });
  test('unreadable legacy state is preserved and does not change the initial appearance',async({page})=>{
@@ -34,7 +33,7 @@ test.describe('Home and the single lesson',()=>{
   await expect(page.locator('[data-today-edition]')).toBeVisible();await expect(page.locator('html')).not.toHaveAttribute('data-appearance','dark');
   expect(await page.evaluate(()=>localStorage.getItem('five-minutes.reader-state'))).toBe(raw);await expect(page.locator('#reader-recovery')).toBeVisible();
  });
-  test('sampled reading pages have one title heading and recall-before-takeaway', async ({ page }) => {
+  test('sampled reading pages have one title heading and their source-selected reading order', async ({ page }) => {
     // Static verification checks every built lesson; sample one route per edition here.
     const routes=await deliveryRoutes(page);
     for (const route of routes.slice(0,2)) {
@@ -42,8 +41,7 @@ test.describe('Home and the single lesson',()=>{
       expect(response?.ok(), route.path).toBe(true);
       await expect(page.locator('article[data-lesson-id]')).toHaveAttribute('data-edition', route.edition);
       await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1);
-      await expect(page.getByRole('region', { name: 'Recall',exact:true })).toBeVisible();
-      await expect(page.getByRole('region', { name: 'Takeaway',exact:true })).toBeHidden();
+      await checkReading(page,await sourceOpening(page),false);
       await expectNoHorizontalOverflow(page);
     }
   });
@@ -51,10 +49,7 @@ test.describe('Home and the single lesson',()=>{
   test('the answer can be revealed with the keyboard', async ({ page }) => {
     const [route] = await deliveryRoutes(page);
     await page.goto(route.path);
-    const summary = page.getByText('Reveal answer and takeaway');
-    await summary.focus();
-    await page.keyboard.press('Enter');
-    await expect(page.locator('.answer')).toBeVisible();
+    await checkReading(page,await sourceOpening(page),'keyboard');
   });
 
   test('follows the system dark colour scheme', async ({ page }) => {

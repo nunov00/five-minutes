@@ -1,3 +1,4 @@
+import {checkReading,sourceOpening} from './support/reading';
 import {expect,test} from './support/fixtures';
 const key='five-minutes.reader-state',originKey='five-minutes.session-origin.v1';
 export function singleVersionJourneys(){
@@ -42,7 +43,7 @@ test('no-JavaScript discovery, reading, reveals and Surprise Me remain usable',a
  const context=await browser.newContext({javaScriptEnabled:false,viewport:{width:320,height:568}}),page=await context.newPage();
  await page.goto('http://127.0.0.1:4321/library');await expect(page.locator('[data-surprise-edition]')).toHaveCount(1);
  await page.locator('.lesson-card h2 a').first().click();await expect(page.locator('article[data-reader-lesson]')).toBeVisible();
- await page.locator('[data-recall-reveal] > summary').click();await expect(page.getByRole('region',{name:'Takeaway',exact:true})).toBeVisible();
+ await checkReading(page,await sourceOpening(page));
  await expect(page.locator('[data-return]')).toHaveAttribute('href','/');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await context.close();
 });
 test('canonical discovery and invalid legacy routes keep their SEO and 404 contracts',async({page})=>{
