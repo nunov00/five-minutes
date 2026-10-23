@@ -24,6 +24,6 @@ test('canonical lessons have absolute article metadata and decoded fallback shar
 test('three visual slots remain readable without JavaScript and with enlarged text',async({browser})=>{
  const context=await browser.newContext({javaScriptEnabled:false,viewport:{width:320,height:800}});const page=await context.newPage();
  await page.goto('http://127.0.0.1:4321/figure-fixtures/weekly/visuals');await expect(page.locator('.lesson-figure')).toHaveCount(3);
- await page.locator('details summary').first().click();await expect(page.locator('.figure-description p').first()).toBeVisible();
+ await page.locator('.figure-description summary').first().click();await expect(page.locator('.figure-description p').first()).toBeVisible();
  await page.evaluate(()=>document.documentElement.style.fontSize='200%');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await context.close();
 });
