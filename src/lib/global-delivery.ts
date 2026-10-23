@@ -54,6 +54,6 @@ export function buildGlobalDeliveryOutputs(
     for (const edition of ['adult','teen']) redirects.push({from:`/editions/${edition}${target}`,to:target});
   }
   redirects.sort((a, b) => compare(a.from, b.from));
-  const sitemapPaths = [...discoveryPagePaths(lessons), ...manifest.routes.map((route) => route.path)].sort(compare);
+  const sitemapPaths = [...discoveryPagePaths(lessons), '/analytics', '/feedback', ...manifest.routes.map((route) => route.path)].sort(compare);
   return { manifest, redirects, sitemapPaths };
 }

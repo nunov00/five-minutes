@@ -1,5 +1,7 @@
 # Operations and Delivery
 
+Visual foundation: [ADR-0014](adr/0014-positioned-lesson-visuals.md) defines positioned collections, bounded sources and trusted static card/share derivatives. It does not activate weekly scheduling or re-enable the Publisher.
+
 22 October 2026 single-version direction: [ADR-0013](adr/0013-single-lesson-version.md) supersedes all earlier Adult/Teen requirements. Publish and review one lesson from `lesson.yaml` and `adult.md`; retired `teen.md` sources are inert archive material. All non-edition safeguards remain.
 
 

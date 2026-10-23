@@ -1,8 +1,8 @@
 ---
 import type { LessonFigure } from '../../lib/content/presentation-extensions';
 import ToolkitFigure from './ToolkitFigure.astro';
-interface Props { figure: LessonFigure; id: string; }
-const {figure,id}=Astro.props;
+interface Props { figure: LessonFigure; id: string; eager?:boolean; }
+const {figure,id,eager=false}=Astro.props;
 const tilt=figure.type==='seasons-orbit'?figure.data.tiltDegrees:0;
 const angle=tilt*Math.PI/180;
 const axes=(cx:number)=>({northX:cx+56*Math.sin(angle),southX:cx-56*Math.sin(angle),northY:92-56*Math.cos(angle),southY:92+56*Math.cos(angle)});
@@ -14,7 +14,7 @@ const toolkit=figure.type==='concept-flow'||figure.type==='orbital-motion'||(fig
 const cycleCentre=visualStyle==='heat-transfer'?'Heat moves':visualStyle==='feedback-loop'?'Check · adjust':'';
 ---
 <figure class="lesson-figure" data-figure-type={figure.type} data-figure-style={visualStyle||undefined} aria-labelledby={`${id}-caption`}>
- {toolkit ? <ToolkitFigure figure={figure} id={id}/> : figure.type==='image' ? <img src={figure.src} width={figure.width} height={figure.height} alt={figure.alt} loading="lazy" decoding="async"/> : figure.type==='seasons-orbit' ? <>
+ {toolkit ? <ToolkitFigure figure={figure} id={id}/> : figure.type==='image' ? <img src={figure.src} width={figure.width} height={figure.height} alt={figure.alt} loading={eager?"eager":"lazy"} decoding="async"/> : figure.type==='seasons-orbit' ? <>
   <div class="season-panels" role="img" aria-label={figure.alt} aria-describedby={`${id}-description`}>
    {panels.map(panel=>{
     const axis=axes(panel.earth);

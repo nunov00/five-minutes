@@ -1,3 +1,4 @@
+import {lessonVisuals} from '../../src/lib/figures/collection.mjs';
 import { test,expect } from './support/fixtures';
 import { loadPublishedLessons } from '../../src/lib/content/loader';
 import type { LessonFigure } from '../../src/lib/content/presentation-extensions';
@@ -39,20 +40,20 @@ test('toolkit figures remain available without scripts and with enlarged text',a
 
 // New toolkit figures also get evidence inside their actual Adult/Teen reading pages.
 const usesToolkit=(figure:LessonFigure|undefined)=>figure&&(figure.type==='image'||figure.type==='concept-flow'||figure.type==='orbital-motion'||(figure.type==='comparison-bars'&&figure.data.style==='proportional'));
-const toolkitLessons=(await loadPublishedLessons('src/content/lessons',routeOwnership)).filter(l=>!l.metadata.archive&&(usesToolkit(l.adult?.figure)||usesToolkit(l.teen?.figure)));
-for(const lesson of toolkitLessons)for(const edition of ['adult'] as const){
- const figure=lesson[edition]?.figure;if(!usesToolkit(figure)||!figure)continue;
- test(`daily figure ${edition}/${lesson.metadata.slug} remains readable`,async({page},testInfo)=>{
+const toolkitLessons=(await loadPublishedLessons('src/content/lessons',routeOwnership)).filter(l=>lessonVisuals(l.adult).some(v=>usesToolkit(v.figure)));
+for(const lesson of toolkitLessons)for(const edition of ['adult'] as const)for(const visual of lessonVisuals(lesson[edition])){
+ const figure=visual.figure;if(!usesToolkit(figure)||!figure)continue;
+ test(`daily figure ${edition}/${lesson.metadata.slug}/${visual.id} remains readable`,async({page},testInfo)=>{
   for(const width of [320,393,1440]){
    await page.setViewportSize({width,height:900});await page.goto(`/${edition}/${lesson.metadata.slug}`);
-   const rendered=page.locator('.lesson-figure');await rendered.scrollIntoViewIfNeeded();
+   const rendered=page.locator(`[aria-labelledby="figure-${edition}-${lesson.metadata.id}-${visual.id}-caption"]`);await rendered.scrollIntoViewIfNeeded();
    await expect(rendered.getByRole('img')).toHaveAccessibleName(figure.alt);
    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
    if(figure.type==='image'){
     const image=rendered.locator('img');
     await expect.poll(()=>image.evaluate(el=>({loaded:(el as HTMLImageElement).complete,width:(el as HTMLImageElement).naturalWidth,height:(el as HTMLImageElement).naturalHeight}))).toEqual({loaded:true,width:figure.width,height:figure.height});
    }
-   if(testInfo.project.name==='desktop-chromium')await page.locator('.lesson-figure').screenshot({path:testInfo.outputPath(`visual-daily-${edition}-${lesson.metadata.slug}-${width}.png`)});
+   if(testInfo.project.name==='desktop-chromium')await rendered.screenshot({path:testInfo.outputPath(`visual-daily-${edition}-${lesson.metadata.slug}-${visual.id}-${width}.png`)});
   }
  });
 }

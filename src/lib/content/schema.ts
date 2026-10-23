@@ -1,4 +1,5 @@
-import { validatePresentationExtensions, type LessonFigure, type TeenActivity } from './presentation-extensions';
+import { validatePresentationExtensions, type LessonFigure, type LessonVisual, type TeenActivity } from './presentation-extensions';
+import { lessonVisuals } from '../figures/collection.mjs';
 import { lessonPath } from '../urls';
 import { isTaxonomyPair, taxonomyTopic } from '../taxonomy';
 import { relatedCandidateCount } from '../discovery/related';
@@ -52,6 +53,7 @@ export interface LessonMetadata {
 
 export interface PresentationMetadata {
   figure?: LessonFigure;
+  figures?: LessonVisual[];
   activity?: TeenActivity;
   title: string;
   description: string;
@@ -83,7 +85,7 @@ const RFC3339_TIMESTAMP = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2})(?
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
 const TOKEN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-const PRESENTATION_KEYS = new Set(['title', 'description', 'takeaway', 'question', 'answer', 'searchTerms', 'figure', 'activity']);
+const PRESENTATION_KEYS = new Set(['title', 'description', 'takeaway', 'question', 'answer', 'searchTerms', 'figure', 'figures', 'activity']);
 const METADATA_KEYS = new Set([
   'schemaVersion', 'id', 'slug', 'aliases', 'publishedAt', 'topic', 'subtopic',
   'concepts', 'related', 'sources', 'provenance', 'archive', 'imageRights', 'revisedAt',
@@ -250,7 +252,7 @@ export function validateLessonBundle(bundle: unknown): ValidationResult {
   if (bundle.adult !== undefined) issues.push(...validatePresentation(bundle.adult, 'adult').issues);
   if (bundle.teen !== undefined) issues.push(...validatePresentation(bundle.teen, 'teen', 'teen').issues);
   if(isObject(bundle.metadata)){
-    const paths=[bundle.adult,bundle.teen].flatMap(p=>isObject(p)&&isObject(p.figure)&&p.figure.type==='image'?[p.figure.src]:[]);
+    const paths=[bundle.adult,bundle.teen].flatMap(p=>lessonVisuals(p).flatMap(v=>v.figure?.type==='image'?[v.figure.src]:[]));
     for(const message of validateImageRights(bundle.metadata.imageRights,paths,!bundle.metadata.archive || bundle.metadata.revisedAt !== undefined))issue(issues,'metadata.imageRights','image-rights',message);
   }
 

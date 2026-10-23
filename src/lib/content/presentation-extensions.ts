@@ -1,3 +1,4 @@
+import { validateVisualCollection } from '../figures/collection.mjs';
 import type { ValidationIssue } from './schema';
 import { FIGURE_SYMBOLS, TOOLKIT_TYPES, validateToolkitData } from '../figures/toolkit-contract.mjs';
 import { RASTER_LIMITS, LOCAL_RASTER_PATH } from '../figures/raster.mjs';
@@ -21,6 +22,7 @@ export type LessonFigure = FigureText & (
   | { type: 'orbital-motion'; data: { style: 'shared-free-fall' } }
   | { type: 'image'; src: string; width: number; height: number }
 );
+export interface LessonVisual {id:string;role:'lead'|'explanation'|'evidence';figure:LessonFigure;}
 export interface TeenActivity { prompt: string; options: string[]; answer: number; explanation: string; }
 export const FIGURE_LIMITS = RASTER_LIMITS;
 export const LOCAL_FIGURE_PATH = LOCAL_RASTER_PATH;
@@ -52,6 +54,10 @@ function validateSteps(value: unknown, path: string, type: 'process-flow'|'cycle
 export function validatePresentationExtensions(value: Record<string,unknown>, path: string, _edition: 'adult'|'teen'): ValidationIssue[] {
   const issues: ValidationIssue[] = [];
   const fail = (name:string,message:string) => issues.push({path:`${path}.${name}`,code:'presentation-extension',message});
+  for(const message of validateVisualCollection(value)) fail('figures',message);
+  if(Array.isArray(value.figures)) for(const [index,item] of value.figures.entries()) {
+    if(object(item)&&object(item.figure)) issues.push(...validatePresentationExtensions({figure:item.figure},`${path}.figures.${index}`,_edition));
+  }
   if ('figure' in value) {
     const f = value.figure;
     if (!object(f)) fail('figure','Expected one structured figure.');

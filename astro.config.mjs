@@ -1,6 +1,7 @@
 import { defineConfig } from 'astro/config';
+import publication from './config/publication.json';
 
-const site = process.env.SITE_URL;
+const site = process.env.SITE_URL ?? publication.canonicalOrigin;
 
 export default defineConfig({
   output: 'static',

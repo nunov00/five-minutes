@@ -1,7 +1,8 @@
 ---
-import LessonFigure from '../../components/reading/LessonFigure.astro';
+import LessonBody from '../../components/reading/LessonBody.astro';
+import { lessonArtwork } from '../../lib/figures/artwork.mjs';
+import { lessonVisuals } from '../../lib/figures/collection.mjs';
 import TeenActivity from '../../components/reading/TeenActivity.astro';
-import { figurePosition } from '../../lib/figures/placement';
 import { legacyPublicationDate } from '../../lib/editorial-order';
 import LessonDates from '../../components/LessonDates.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
@@ -44,21 +45,20 @@ const { lesson, edition, editionPaths, related } = Astro.props as Props & { rela
 const presentation = edition === 'adult' ? lesson.adult : lesson.teen;
 const html = edition === 'adult' ? lesson.adultHtml : lesson.teenHtml;
 if (!presentation) throw new Error(`Missing ${edition} presentation for ${lesson.metadata.id}.`);
-const positioned=presentation.figure?figurePosition(html,presentation.figure.afterParagraph):null;
+const visuals=lessonVisuals(presentation);
+const art=await lessonArtwork(lesson);
+const lead=visuals.find(v=>v.role==='lead')?.figure;
+const social={image:art.share,imageType:art.shareType,imageAlt:lead?.alt??'Five Minutes publication emblem.'};
 ---
-<BaseLayout title={`${presentation.title} · Five Minutes`} description={presentation.description} edition={edition} editionPaths={editionPaths} wide={!!presentation.figure}>
-  <article class:list={['reading-article', {'has-figure': !!presentation.figure}]} data-reader-lesson data-lesson-id={lesson.metadata.id} data-edition={edition}>
+<BaseLayout social={social} title={`${presentation.title} · Five Minutes`} description={presentation.description} edition={edition} editionPaths={editionPaths} wide={visuals.length>0}>
+  <article class:list={['reading-article', {'has-figure': visuals.length>0}]} data-reader-lesson data-lesson-id={lesson.metadata.id} data-edition={edition}>
     <header class="reader-header">
       <p class="eyebrow"><LessonDates publishedAt={lesson.metadata.publishedAt} originalDate={legacyPublicationDate(lesson.metadata)} revisedAt={lesson.metadata.revisedAt} /></p>
       <h1>{presentation.title}</h1>
       <p class="lede">{presentation.description}</p>
     </header>
     {presentation.activity && <TeenActivity activity={presentation.activity} id={`activity-${lesson.metadata.id}`}/>}
-    {presentation.figure && positioned ? <div class="reading-with-figure">
-      <div class="lesson-body figure-opening" set:html={positioned.opening}/>
-      <LessonFigure figure={presentation.figure} id={`figure-${edition}-${lesson.metadata.id}`}/>
-      <div class="lesson-body figure-rest" set:html={positioned.rest}/>
-    </div> : <div class="lesson-body" set:html={html}/>}
+    <LessonBody html={html} visuals={visuals} legacy={!!presentation.figure} id={`figure-${edition}-${lesson.metadata.id}`}/>
     <section class="card lesson-section recall-section" aria-labelledby="recall-heading" data-recall>
       <h2 id="recall-heading">Recall</h2>
       <p>{presentation.question}</p>
