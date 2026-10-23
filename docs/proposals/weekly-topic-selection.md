@@ -17,6 +17,8 @@ Output one reviewed queue PR, with the screen table and three pilot candidates i
 
 Keep unsuitable imports/revisions queued but unranked, with a recorded deferral reason through reviewed administration, preserving previous criteria. Do not fabricate technical-failure evidence to use the existing parked state. Deferral does not promise later migration.
 
+**Published lessons.** Published lessons remain available; there is no wholesale withdrawal. During the one-time reassessment, also classify each published lesson as sound, needs correction, or below the minimum standard, recording the result in its existing revision entry where one exists. Correct factual or comprehension problems promptly through the existing correction path, outside the weekly quota. Retire a lesson only if it would mislead readers and cannot be corrected promptly; this needs a separately reviewed retirement with a redirect to the closest related lesson, never a silent removal. Lessons worth redeveloping compete in the normal pool under the one-in-four limit; there is no programme to upgrade the whole catalogue. Give featured placements to new-standard lessons and the strongest existing ones, without labelling older lessons as an earlier format.
+
 ## 2. Keep one pool and a smaller working shortlist
 
 Keep **six to eight strong shortlisted candidates**, with the leading three developed. Explain genuine shortfalls. Use one ranked list across imports, revisions and new ideas.
