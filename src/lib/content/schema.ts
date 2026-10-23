@@ -52,6 +52,7 @@ export interface LessonMetadata {
 }
 
 export interface PresentationMetadata {
+  opening?: 'answer-first';
   figure?: LessonFigure;
   figures?: LessonVisual[];
   activity?: TeenActivity;
@@ -85,7 +86,7 @@ const RFC3339_TIMESTAMP = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2})(?
 const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
 const TOKEN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-const PRESENTATION_KEYS = new Set(['title', 'description', 'takeaway', 'question', 'answer', 'searchTerms', 'figure', 'figures', 'activity']);
+const PRESENTATION_KEYS = new Set(['title', 'description', 'takeaway', 'question', 'answer', 'searchTerms', 'figure', 'figures', 'activity', 'opening']);
 const METADATA_KEYS = new Set([
   'schemaVersion', 'id', 'slug', 'aliases', 'publishedAt', 'topic', 'subtopic',
   'concepts', 'related', 'sources', 'provenance', 'archive', 'imageRights', 'revisedAt',

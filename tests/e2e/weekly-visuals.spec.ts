@@ -1,4 +1,27 @@
 import {test,expect} from './support/fixtures';
+test('answer-first keeps one visible takeaway after the lead and a later native answer reveal',async({page},info)=>{
+ for(const width of [320,393,1440])for(const colorScheme of ['light','dark'] as const){
+  await page.setViewportSize({width,height:900});await page.emulateMedia({colorScheme});await page.goto('/figure-fixtures/weekly/answer-first');
+  await expect(page.locator('#takeaway-heading')).toHaveCount(1);
+  await expect(page.locator('[data-opening-takeaway]')).toBeVisible();
+  expect(await page.locator('.visual-sequence').evaluate(el=>[...el.children].map(n=>n.matches('figure')?'figure':n.hasAttribute('data-opening-takeaway')?'takeaway':n.textContent?.trim()).filter(Boolean))).toEqual([
+   expect.stringContaining('An illustration'),'figure','takeaway',expect.stringContaining('The next figure'),'figure',expect.stringContaining('A third independently'),'figure']);
+  await expect(page.locator('[data-recall] #takeaway-heading')).toHaveCount(0);
+  await expect(page.locator('[data-recall] summary')).toHaveText('▸Reveal answer');
+  await expect(page.locator('[data-recall] .answer')).toBeHidden();
+  await page.locator('[data-recall] summary').click();await expect(page.locator('[data-recall] .answer')).toBeVisible();
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+  const ids=await page.locator('[id]').evaluateAll(els=>els.map(e=>e.id));expect(new Set(ids).size).toBe(ids.length);
+  if(info.project.name==='desktop-chromium')await page.screenshot({path:info.outputPath(`visual-opening-${width}-${colorScheme}.png`),fullPage:true});
+ }
+});
+test('answer-first explanation and disclosure work without JavaScript',async({browser})=>{
+ const context=await browser.newContext({javaScriptEnabled:false,viewport:{width:320,height:800}});const page=await context.newPage();
+ await page.goto('http://127.0.0.1:4321/figure-fixtures/weekly/answer-first');
+ await expect(page.locator('[data-opening-takeaway]')).toBeVisible();await expect(page.locator('#takeaway-heading')).toHaveCount(1);
+ await page.locator('[data-recall] summary').click();await expect(page.locator('[data-recall] .answer')).toBeVisible();
+ await page.evaluate(()=>document.documentElement.style.fontSize='200%');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await context.close();
+});
 test('three positions, accessible artwork and illustrated card work across sizes and themes',async({page},info)=>{
  for(const width of [320,393,1440])for(const colorScheme of ['light','dark'] as const){
   await page.setViewportSize({width,height:900});await page.emulateMedia({colorScheme});await page.goto('/figure-fixtures/weekly/visuals');

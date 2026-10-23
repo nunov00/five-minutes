@@ -1,0 +1,14 @@
+---
+import Takeaway from './Takeaway.astro';
+interface Props { question: string; answer: string; takeaway: string; opening?: 'answer-first'; }
+const {question, answer, takeaway, opening} = Astro.props;
+---
+<section class="card lesson-section recall-section" aria-labelledby="recall-heading" data-recall>
+  <h2 id="recall-heading">Recall</h2>
+  <p>{question}</p>
+  <details data-recall-reveal>
+    <summary><span class="reveal-marker" aria-hidden="true">▸</span>{opening === 'answer-first' ? 'Reveal answer' : 'Reveal answer and takeaway'}</summary>
+    <p class="answer">{answer}</p>
+    {opening !== 'answer-first' && <Takeaway text={takeaway}/>}
+  </details>
+</section>

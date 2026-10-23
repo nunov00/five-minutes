@@ -1,14 +1,23 @@
 ---
 import LessonFigure from './LessonFigure.astro';
+import Takeaway from './Takeaway.astro';
+import { validateOpening } from '../../lib/content/opening-contract.mjs';
 import { positionVisuals } from '../../lib/figures/placement';
 import type { LessonVisual } from '../../lib/content/presentation-extensions';
-interface Props {html:string;visuals:LessonVisual[];id:string;legacy?:boolean;}
-const {html,visuals,id,legacy=false}=Astro.props;
+interface Props {html:string;visuals:LessonVisual[];id:string;legacy?:boolean;openingTakeaway?:string;}
+const {html,visuals,id,legacy=false,openingTakeaway}=Astro.props;
+if (openingTakeaway !== undefined) {
+  const errors=validateOpening({opening:'answer-first',figures:visuals});
+  if (legacy || !openingTakeaway.trim() || errors.length) throw Error(`Invalid answer-first body: ${errors.join(' ')}`);
+}
 const parts=positionVisuals(html,visuals);
 ---
 <div class={legacy?'reading-with-figure':'visual-sequence'}>
   {parts.map((part,index)=><>
     <div class:list={['lesson-body',{'figure-opening':legacy&&index===0,'figure-rest':legacy&&index>0}]} set:html={part.html}/>
-    {part.visuals.map(visual=><LessonFigure figure={visual.figure} id={`${id}-${visual.id}`} eager={visual.role==='lead'&&(visual.figure.afterParagraph??1)===1}/>)}
+    {part.visuals.map(visual=><>
+      <LessonFigure figure={visual.figure} id={`${id}-${visual.id}`} eager={visual.role==='lead'&&(visual.figure.afterParagraph??1)===1} openingLead={openingTakeaway !== undefined && visual.role === 'lead'}/>
+      {openingTakeaway !== undefined && visual.role === 'lead' && <Takeaway text={openingTakeaway} early/>}
+    </>)}
   </>)}
 </div>

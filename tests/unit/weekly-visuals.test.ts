@@ -8,6 +8,7 @@ import {positionVisuals} from '../../src/lib/figures/placement';
 import {validateVisualCollection,lessonVisuals} from '../../src/lib/figures/collection.mjs';
 import {buildArtwork,validateDerivative,lessonArtwork} from '../../src/lib/figures/artwork.mjs';
 import {evaluateLessonPullRequest} from '../../scripts/lesson-guard-core.mjs';
+import {validatePresentation} from '../../src/lib/content/schema';
 
 const slug='weekly-visual-test',root=`src/content/lessons/2026/${slug}`,id='12345678-1234-4234-9234-123456789abc';
 const words={alt:'Illustrative material.',caption:'Test fixture, not measured evidence.',description:'The same relationship is explained in this text alternative.'};
@@ -27,6 +28,27 @@ function candidate(){
 }
 function setFigures(c:ReturnType<typeof candidate>,change:(p:any)=>void){const p=`${root}/adult.md`,s=c.blobs[p].text;const fm=parse(s.split('---\n')[1]);change(fm);c.blobs[p]=blob(`---\n${stringify(fm)}---\nOne.\n\nTwo.\n\nThree.\n`);return fm;}
 describe('weekly visual input boundary',()=>{
+ it('accepts an answer-first presentation at loader and submission-guard boundaries',()=>{
+  const c=candidate(),p=setFigures(c,p=>p.opening='answer-first');
+  expect(validatePresentation(p).issues).toEqual([]);
+  expect(evaluateLessonPullRequest(c)).toMatchObject({applicable:true});
+ });
+ it.each([
+  (p:any)=>p.opening='default',
+  (p:any)=>p.opening=true,
+  (p:any)=>p.opening=null,
+  (p:any)=>p.opening={mode:'answer-first'},
+  (p:any)=>p.figures[0].figure.afterParagraph=2,
+  (p:any)=>p.figures[0].role='explanation',
+  (p:any)=>p.figures[0].figure.type='process-flow',
+  (p:any)=>{p.figure=p.figures[0].figure;delete p.figures;},
+  (p:any)=>{p.figures[1].figure.afterParagraph=1;p.figures.reverse();},
+  (p:any)=>p.headline='An unapproved headline',
+ ])('rejects invalid opt-in and contradictory lead placement at both boundaries %#',change=>{
+  const c=candidate(),p=setFigures(c,p=>{p.opening='answer-first';change(p);});
+  expect(validatePresentation(p).valid).toBe(false);
+  expect(()=>evaluateLessonPullRequest(c)).toThrow();
+ });
  it('accepts three independently positioned, rights-matched rasters through the trusted guard',()=>{expect(validatePresentationExtensions({figures:visuals},'adult','adult')).toEqual([]);expect(evaluateLessonPullRequest(candidate())).toMatchObject({applicable:true});});
  it.each([
   (p:any)=>p.figure=visuals[0].figure,
