@@ -1,6 +1,9 @@
-import { readFile, readdir } from 'node:fs/promises';
+import { readFile, readdir, lstat } from 'node:fs/promises';
 import { join, relative, sep } from 'node:path';
+import {configuredOrigin} from '../src/lib/site-origin.mjs';
+import {validateDerivative,DERIVATIVE_LIMITS} from '../src/lib/figures/artwork.mjs';
 
+const origin=configuredOrigin(process.env.SITE_URL);
 const dist = join(process.cwd(), 'dist');
 async function walk(dir) {
   const entries = await readdir(dir, { withFileTypes: true });
@@ -53,12 +56,23 @@ const canonicalPagePaths = new Set([...htmlTargets].map((path) => {
   return path.replace(/\.html$/, '');
 }));
 const noindexPages = new Set();
+const referencedVisuals=new Set();
 for (const file of files.filter((f) => f.endsWith('.html'))) {
   const html = await readFile(file, 'utf8');
   if (/<meta[^>]*name="robots"[^>]*content="noindex(?:,|\s)/.test(html)) noindexPages.add(webPath(file).replace(/\/index\.html$/, '') || '/');
+  if(!origin&&(/<link rel="canonical"/.test(html)||/<meta (?:property="og:|name="twitter:)/.test(html)))throw Error(`Origin-absent page claims absolute publication metadata: ${webPath(file)}`);
   const redirectTarget=redirectsByPath.get(webPath(file).replace(/\/index\.html$/, ''));
   if(redirectTarget && (!html.includes(`data-redirect-target="${redirectTarget}"`) || !html.includes('http-equiv="refresh"') || !html.includes(`href="${redirectTarget}"`) || !noindexPages.has(webPath(file).replace(/\/index\.html$/, '')))) throw Error(`Invalid redirect fallback: ${webPath(file)}`);
   if(expectedSet.has(webPath(file).replace(/\/index\.html$/, ''))) {
+    const property = name => html.match(new RegExp(`<meta property="${name}" content="([^"]+)"`))?.[1];
+    const image=property('og:image'),url=property('og:url');
+    if(origin){
+      if(!image||!url||property('og:type')!=='article')throw Error(`Missing article sharing metadata: ${webPath(file)}`);
+      const imageUrl=new URL(image),articleUrl=new URL(url);
+      referencedVisuals.add(imageUrl.pathname);
+      if(imageUrl.origin!==origin||articleUrl.origin!==origin||articleUrl.pathname!==webPath(file).replace(/\/index\.html$/, '')||!imageUrl.pathname.startsWith('/visuals/')||!targets.has(imageUrl.pathname)
+        ||!['image/png','image/jpeg'].includes(property('og:image:type'))||property('og:image:width')!=='1200'||property('og:image:height')!=='630'||!property('og:image:alt'))throw Error(`Invalid article sharing image: ${webPath(file)}`);
+    }
     if((html.match(/<h1(?:\s|>)/g)??[]).length!==1)throw Error(`Reading page must have exactly one title: ${webPath(file)}`);
     const body=html.indexOf('class="lesson-body'),recall=html.indexOf('data-recall'),reveal=html.indexOf('data-recall-reveal'),answer=html.indexOf('class="answer"'),takeaway=html.indexOf('id="takeaway-heading"');
     if(body<0||recall<body||reveal<recall||answer<reveal||takeaway<answer)throw Error(`Recall/answer/takeaway order invalid: ${webPath(file)}`);
@@ -66,6 +80,7 @@ for (const file of files.filter((f) => f.endsWith('.html'))) {
     if(!ending.includes('class="answer"')||!ending.includes('id="takeaway-heading"'))throw Error(`Answer/takeaway must share a reveal: ${webPath(file)}`);
     if(html.slice(0,recall).includes('id="takeaway-heading"'))throw Error(`Takeaway appears before recall: ${webPath(file)}`);
   }
+  if((redirectTarget||noindexPages.has(webPath(file).replace(/\/index\.html$/, '')))&&/<meta property="og:type" content="article"/.test(html))throw Error(`Noncanonical page claims article sharing metadata: ${webPath(file)}`);
   // Installed (standalone) display has no browser back button or address bar:
   // every page must declare the manifest and offer an in-page way back to Today,
   // and internal links must not escape the app window.
@@ -85,7 +100,8 @@ for (const file of files.filter((f) => f.endsWith('.html'))) {
   }
   for(const match of html.matchAll(/<img\b[^>]*src=["']([^"']+)["']/g)) {
     const src=match[1];
-    if(src.startsWith('/lesson-media/')&&!targets.has(src))throw Error(`Figure image missing in ${webPath(file)}: ${src}`);
+    if(src.startsWith('/visuals/'))referencedVisuals.add(src);
+    if((src.startsWith('/lesson-media/')||src.startsWith('/visuals/'))&&!targets.has(src))throw Error(`Figure image missing in ${webPath(file)}: ${src}`);
   }
   for (const match of html.matchAll(/\bdata-(?:catalogue|adult-index|teen-index)=["']([^"']+)["']/g)) {
     const path = match[1];
@@ -93,6 +109,24 @@ for (const file of files.filter((f) => f.endsWith('.html'))) {
       throw new Error(`Discovery data path does not resolve in ${webPath(file)}: ${path}`);
     }
   }
+}
+// Leads emit thumbnail/share pairs; the font-free publication fallback emits only its share image.
+if(!process.env.FIVE_MINUTES_TEST_LIBRARY_PAGE_SIZE&&(targets.has('/lesson-media/visual-style-butterfly.webp')||[...targets].some(p=>p.startsWith('/figure-fixtures/'))))throw Error('Visual fixture assets leaked into production.');
+const derivativePaths=[...targets].filter(p=>p.startsWith('/visuals/'));
+const expectedDerivatives=new Set();
+for(const path of referencedVisuals){
+  const folder=path.slice(0,path.lastIndexOf('/'));
+  const thumbnail=`${folder}/thumbnail.webp`;
+  const shares=derivativePaths.filter(p=>p===`${folder}/share.png`||p===`${folder}/share.jpg`);
+  const fallback=folder.startsWith('/visuals/publication-');
+  if((!fallback&&!targets.has(thumbnail))||(fallback&&targets.has(thumbnail))||shares.length!==1)throw Error(`Incomplete visual derivative set: ${folder}`);
+  if(!fallback)expectedDerivatives.add(thumbnail);expectedDerivatives.add(shares[0]);
+}
+if(derivativePaths.length!==expectedDerivatives.size||derivativePaths.some(p=>!expectedDerivatives.has(p)))throw Error('Unexpected visual derivative outputs.');
+for(const path of expectedDerivatives){
+  const kind=path.endsWith('thumbnail.webp')?'thumbnail':'share',file=join(dist,path.slice(1)),stat=await lstat(file);
+  if(!stat.isFile()||stat.isSymbolicLink()||stat.size>DERIVATIVE_LIMITS[kind])throw Error(`Unsafe visual derivative: ${path}`);
+  await validateDerivative(await readFile(file),kind,path.split('.').at(-1));
 }
 const redirectSources = new Set();
 for (const redirect of redirects.redirects) {

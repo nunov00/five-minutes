@@ -2,6 +2,7 @@ import type { LessonBundle, RedirectEntry, RouteOwnershipRegistry } from './cont
 import { validateRouteOwnershipRegistry } from './content/schema';
 import { lessonPath } from './urls';
 import { buildDeliveryManifest, type DeliveryManifest } from './delivery-manifest';
+import { UTILITY_PAGES } from './utility-pages';
 import { discoveryPagePaths } from './discovery/catalogue';
 
 export interface GlobalDeliveryOutputs {
@@ -54,6 +55,6 @@ export function buildGlobalDeliveryOutputs(
     for (const edition of ['adult','teen']) redirects.push({from:`/editions/${edition}${target}`,to:target});
   }
   redirects.sort((a, b) => compare(a.from, b.from));
-  const sitemapPaths = [...discoveryPagePaths(lessons), ...manifest.routes.map((route) => route.path)].sort(compare);
+  const sitemapPaths = [...discoveryPagePaths(lessons), ...UTILITY_PAGES.filter(p=>p.indexable).map(p=>p.path), ...manifest.routes.map((route) => route.path)].sort(compare);
   return { manifest, redirects, sitemapPaths };
 }

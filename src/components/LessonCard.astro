@@ -1,20 +1,25 @@
 ---
+import { lessonArtwork } from '../lib/figures/artwork.mjs';
+import { lessonVisuals } from '../lib/figures/collection.mjs';
 import { legacyPublicationDate } from '../lib/editorial-order';
 import LessonDates from './LessonDates.astro';
 import type { LessonBundle } from '../lib/content/schema';
 import { taxonomySubtopic, taxonomyTopic } from '../lib/taxonomy';
 import { lessonPath, type LessonEdition } from '../lib/urls';
 
-interface Props { lesson: LessonBundle; edition: LessonEdition; }
+interface Props { lesson: LessonBundle; edition: LessonEdition; artwork?:Awaited<ReturnType<typeof lessonArtwork>>; }
 const { lesson, edition } = Astro.props as Props;
 if (!lesson.adult) throw new Error(`Cannot render incomplete library lesson ${lesson.metadata.id}.`);
 const presentation = lesson.adult;
 if(!presentation)throw new Error(`Missing ${edition} presentation.`);
+const art=Astro.props.artwork??await lessonArtwork(lesson);
+const lead=lessonVisuals(presentation).find(v=>v.role==='lead')?.figure;
 const topic = taxonomyTopic(lesson.metadata.topic);
 const subtopic = taxonomySubtopic(lesson.metadata.topic, lesson.metadata.subtopic);
 if (!topic || !subtopic) throw new Error(`Cannot render unknown taxonomy for ${lesson.metadata.id}.`);
 ---
 <article class="card lesson-card" data-lesson-id={lesson.metadata.id}>
+  {!art.isFallback && lead && <img class="lesson-card-art" src={art.thumbnail} width="480" height="320" loading="lazy" decoding="async" alt=""/> }
   <p class="eyebrow">{topic.label} · {subtopic.label}</p>
   <h2><a href={lessonPath(edition, lesson.metadata.slug)}>{presentation.title}</a></h2>
   <p>{presentation.description}</p>

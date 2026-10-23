@@ -2,9 +2,10 @@
 import '../styles/global.css';
 import { discoveryPath, editionDiscoveryPath, type LessonEdition } from '../lib/urls';
 import { getBuildMetadata } from '../lib/content/build-content';
+import { UTILITY_PAGES } from '../lib/utility-pages';
 import { libraryPages } from '../lib/discovery/catalogue';
 import { TAXONOMY } from '../lib/taxonomy';
-interface Props { redirectTo?: string; title?: string; description?: string; edition?: LessonEdition; editionPaths?: Record<LessonEdition,string>; neutralDiscovery?: boolean; noindex?: boolean; wide?: boolean; preferenceSurface?: boolean; todaySurface?: boolean; }
+interface Props { social?:{image:string;imageType:string;imageAlt:string}; redirectTo?: string; title?: string; description?: string; edition?: LessonEdition; editionPaths?: Record<LessonEdition,string>; neutralDiscovery?: boolean; noindex?: boolean; wide?: boolean; preferenceSurface?: boolean; todaySurface?: boolean; }
 const { redirectTo, title = 'Five Minutes', description = 'One worthwhile idea, made easy to discover, understand and explore.', edition, neutralDiscovery=false, noindex=false, wide=false, preferenceSurface=false, todaySurface=false } = Astro.props;
 const pathname = Astro.url.pathname;
 const { lessons } = await getBuildMetadata();
@@ -19,6 +20,7 @@ const navigation = [
   { href: '/search', label: 'Search', current: search },
   { href: '/saved', label: 'Saved', current: pathname === '/saved' },
 ];
+const social=Astro.props.social;
 const canonical = !neutralDiscovery && !noindex && Astro.site ? new URL(pathname,Astro.site).href : undefined;
 ---
 <!doctype html>
@@ -29,6 +31,15 @@ const canonical = !neutralDiscovery && !noindex && Astro.site ? new URL(pathname
     <meta name="color-scheme" content="light dark" /><meta name="description" content={description} /><title>{title}</title>
     {(neutralDiscovery || noindex) && <meta name="robots" content="noindex,follow"/>}
     {canonical && <link rel="canonical" href={canonical}/>}
+    {canonical && social && !redirectTo && <>
+      <meta property="og:type" content="article"/><meta property="og:title" content={title}/>
+      <meta property="og:description" content={description}/><meta property="og:url" content={canonical}/>
+      <meta property="og:image" content={new URL(social.image,Astro.site).href}/>
+      <meta property="og:image:type" content={social.imageType}/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/>
+      <meta property="og:image:alt" content={social.imageAlt}/><meta name="twitter:card" content="summary_large_image"/>
+      <meta name="twitter:title" content={title}/><meta name="twitter:description" content={description}/>
+      <meta name="twitter:image" content={new URL(social.image,Astro.site).href}/><meta name="twitter:image:alt" content={social.imageAlt}/>
+    </>}
     <link rel="manifest" href="/manifest.webmanifest" /><link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" /><meta name="apple-mobile-web-app-title" content="Five Minutes" />
     <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fbfaf7" />
@@ -50,7 +61,7 @@ const canonical = !neutralDiscovery && !noindex && Astro.site ? new URL(pathname
       <button id="reset-reader-state" class="button button-secondary" type="button">Discard local reader data and reset</button>
     </details>
     <main id="main" class:list={["site-main", "container", {"reader-wide":wide}]}><slot /></main>
-    <footer class="site-footer"><div class="container"><a href="/analytics">Analytics</a><a href="/feedback">Send anonymous feedback</a></div></footer>
+    <footer class="site-footer"><div class="container">{UTILITY_PAGES.map(page=><a href={page.path}>{page.label}</a>)}</div></footer>
     <script>import '../lib/reader/enhance'; import '../lib/reader/surfaces'; import '../lib/analytics/client';</script>
   </body>
 </html>

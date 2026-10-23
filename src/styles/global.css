@@ -651,3 +651,8 @@ html[data-appearance=dark] .diagram-ray{stroke:#ecc86b}html[data-appearance=dark
 .reader-js-only{display:none}.reader-features .reader-js-only{display:block}.reader-features .reader-js-fallback{display:none}
 
 .reader-settings > summary{display:flex;justify-content:space-between;gap:16px;width:100%;padding:12px 0;border-block:1px solid var(--color-border);font-size:var(--text-lg);list-style:none}.reader-settings > summary::-webkit-details-marker{display:none}.settings-chevron{display:inline-block;font-size:1.5em;line-height:1;transform:rotate(0deg)}.reader-settings[open] > summary .settings-chevron{transform:rotate(90deg)}
+
+/* Artwork keeps its authored colours in both themes; no inversion or colour filters. */
+.lesson-card-art,.featured-art{display:block;width:100%;height:auto;border-radius:0.6rem;margin:0 0 1rem;background:#fbf6ea;object-fit:contain}
+.lesson-card-art{aspect-ratio:3/2}
+.reading-with-figure>.lesson-body:empty{display:none}

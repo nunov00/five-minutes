@@ -1,5 +1,7 @@
 # Operations and Delivery
 
+Visual foundation: [ADR-0014](adr/0014-positioned-lesson-visuals.md) defines positioned collections, bounded sources and trusted static card/share derivatives. It does not activate weekly scheduling or re-enable the Publisher.
+
 22 October 2026 single-version direction: [ADR-0013](adr/0013-single-lesson-version.md) supersedes all earlier Adult/Teen requirements. Publish and review one lesson from `lesson.yaml` and `adult.md`; retired `teen.md` sources are inert archive material. All non-edition safeguards remain.
 
 
@@ -347,3 +349,12 @@ M4 closes with Today, explicit Adult/Teen reading pages and the installable shel
 Installability on iOS/iPadOS cannot be exercised in CI, so it was verified on a real device. On 2026-10-03 the Owner installed the PR #44 Cloudflare preview on an iPhone via Safari Add to Home Screen: the "Five Minutes" name and icon appeared correctly, the standalone launch removed Safari's browser chrome, and Today rendered correctly. The current icon is accepted as v1 branding; it can be replaced later by the process in "Installable app (PWA)" above, without changing the app `id`.
 
 M4 deliberately ships no service worker, no stored edition/appearance preference (M6) and no discovery features (M5). Remaining non-blocking review items are tracked in #42.
+
+## Changing the domain
+
+1. Set the HTTPS origin in the Cloudflare **build environment** as `SITE_URL`; no production hostname is committed as a repository default. Leave it empty only for intentionally origin-absent builds/previews. A production deployment without it fails closed.
+2. Rebuild and run `npm run cf:prepare`. The adapter derives `ANALYTICS_ALLOWED_HOSTNAME` and `FEEDBACK_ALLOWED_HOSTNAME` from that URL in its ignored `.wrangler.generated.json`. Both guards move together; preview bindings remain empty. The deployment scripts use this generated configuration, never an independently edited hostname.
+3. Run static/metadata and preview checks, then use the reviewed deployment path. Verify the live canonical links, sitemap, share image URLs, analytics and feedback against the selected origin. Do not merge this foundation until the production build's SITE_URL is configured; it is an external prerequisite, not supplied by this PR.
+4. Add path-preserving permanent **301 redirects** from the old host to the new host so saved/shared links and search results carry over. Configure these on the old host; the application's relative lesson paths stay unchanged.
+
+Browser-stored saved lessons/history remain tied to their old origin. The Owner does not require a cross-origin migration; the existing export/import is sufficient. No additional reader-data transfer is introduced.

@@ -24,6 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     env:
+      SITE_URL: https://example.test
       CONTENT_BASE_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || (github.event_name == 'push' && github.event.before || github.sha) }}
     steps:
       - name: Checkout
@@ -42,6 +43,10 @@ jobs:
         run: npm run check
       - name: Unit/integration tests (npm test)
         run: npm test
+      - name: Verify origin-absent build and metadata
+        env:
+          SITE_URL: ""
+        run: npm run build && npm run verify:static
       - name: Production static build (npm run build)
         run: npm run build
       - name: Verify static completeness and internal links (npm run verify:static)
@@ -59,6 +64,8 @@ jobs:
     # Stable check name used by branch protection/publication automation.
     name: e2e
     needs: baseline
+    env:
+      SITE_URL: https://example.test
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:

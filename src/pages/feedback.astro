@@ -1,7 +1,8 @@
 ---
+import { UTILITY_PAGES } from '../lib/utility-pages';
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
-<BaseLayout title="Anonymous feedback · Five Minutes" description="Send private, anonymous feedback about Five Minutes.">
+<BaseLayout noindex={!UTILITY_PAGES.find(p=>p.path==='/feedback')!.indexable} title="Anonymous feedback · Five Minutes" description="Send private, anonymous feedback about Five Minutes.">
   <article class="feedback-page">
     <p class="eyebrow">Private reader feedback</p>
     <h1>Send anonymous feedback</h1>

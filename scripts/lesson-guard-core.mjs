@@ -1,3 +1,4 @@
+import { lessonVisuals, validateVisualCollection, VISUAL_LIMITS } from '../src/lib/figures/collection.mjs';
 import { isValidTimestamp } from './publication-time.mjs';
 import { BACKLOG_PATH, parseBacklog, verifyBacklogCompletion } from './editorial-backlog.mjs';
 import { parseDocument } from 'yaml';
@@ -10,8 +11,8 @@ export const GUARD_LIMITS = Object.freeze({
   markdownBytes: 32 * 1024,
   totalBytes: 80 * 1024,
   changedLines: 1600,
-  imageFiles: 2,
-  imageTotalBytes: 1024 * 1024,
+  imageFiles: 3,
+  imageTotalBytes: VISUAL_LIMITS.totalBytes,
 });
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
@@ -23,7 +24,7 @@ const METADATA_KEYS = new Set([
   'schemaVersion', 'id', 'slug', 'aliases', 'publishedAt', 'topic', 'subtopic',
   'concepts', 'related', 'sources', 'provenance', 'imageRights', 'revisedAt', 'archive',
 ]);
-const ADULT_KEYS = new Set(['title', 'description', 'takeaway', 'question', 'answer', 'searchTerms', 'figure', 'activity']);
+const ADULT_KEYS = new Set(['title', 'description', 'takeaway', 'question', 'answer', 'searchTerms', 'figure', 'figures', 'activity']);
 
 export class LessonGuardError extends Error {
   constructor(message) {
@@ -155,7 +156,8 @@ function parseFrontmatter(source, label, allowedKeys) {
   const end = source.indexOf('\n---\n', 4);
   if (end < 0) fail(`${label} has unterminated YAML front matter.`);
   const value = parseYamlObject(source.slice(4, end), `${label} front matter`, allowedKeys);
-  if (Object.hasOwn(value, 'figure')) validateAutomatedFigure(value.figure, label);
+  for(const message of validateVisualCollection(value))fail(`${label}: ${message}`);
+  for(const {figure} of lessonVisuals(value))validateAutomatedFigure(figure,label);
   if (Object.hasOwn(value, 'activity')) {
     const a=value.activity;
     if(!isPlainObject(a)||!hasOnlyKeys(a,['prompt','options','answer','explanation'])
@@ -234,11 +236,12 @@ export function evaluateLessonPullRequest(input) {
   const backlogFiles = files.filter(f => f.filename === BACKLOG_PATH);
   const renewal = backlogFiles.length === 1;
   const revision = renewal && files.some(f => LESSON_PATH.test(f.filename) && f.status === 'modified');
-  if(files.length<3||files.length>4+GUARD_LIMITS.imageFiles)fail('Automated candidate requires the bounded lesson, registry/backlog files and at most two images.');
+  if(files.length<3||files.length>4+GUARD_LIMITS.imageFiles)fail('Automated candidate requires the bounded lesson, registry/backlog files and at most three images.');
 
   const lessonFiles = files.filter((file) => typeof file?.filename === 'string' && LESSON_PATH.test(file.filename));
   const registryFiles = files.filter((file) => file?.filename === REGISTRY_PATH);
   const imageFiles=files.filter(file=>typeof file?.filename==='string'&&file.filename.startsWith('public/lesson-media/'));
+  if(imageFiles.length>GUARD_LIMITS.imageFiles)fail('At most three source images are allowed.');
   if (lessonFiles.length !== 2 || registryFiles.length !== (revision ? 0 : 1) || lessonFiles.length+registryFiles.length+imageFiles.length+backlogFiles.length!==files.length) {
     fail('Candidate may change only one lesson, its bounded new images, and the applicable registry/backlog delta.');
   }
@@ -314,20 +317,20 @@ export function evaluateLessonPullRequest(input) {
   if (!(revision ? zurichDate(new Date(metadata.publishedAt)) : publicationDate).startsWith(`${year}-`)) fail('Lesson directory year must match publishedAt in Europe/Zurich.');
 
   const presentations=[parseFrontmatter(adultText,'adult.md',ADULT_KEYS)];
-  const images=presentations.map(p=>p.figure).filter(f=>f?.type==='image');
+  const images=presentations.flatMap(p=>lessonVisuals(p).map(v=>v.figure)).filter(f=>f?.type==='image');
   for(const message of validateImageRights(metadata.imageRights,images.map(f=>f.src)))fail(message);
   const referenced=new Set(images.map(f=>`public${f.src}`));
   if((!revision && referenced.size!==imageFiles.length)||imageFiles.some(f=>!referenced.has(f.filename)))fail('Every added image must be referenced by this lesson and every image reference must be newly added.');
   if (revision) {
     const originalPresentations = [parseFrontmatter(input.baseAdultText,'base adult.md',ADULT_KEYS)];
-    const originalImages = new Set(originalPresentations.filter(p=>p.figure?.type==='image').map(p=>`public${p.figure.src}`));
+    const originalImages = new Set(originalPresentations.flatMap(p=>lessonVisuals(p).map(v=>v.figure)).filter(f=>f?.type==='image').map(f=>`public${f.src}`));
     for (const path of referenced) if (!imageFiles.some(f=>f.filename===path) && !originalImages.has(path)) fail('Revision cannot borrow an unrelated existing raster.');
   }
   let imageBytes=0;
   const revisionSuffix = renewal ? `(?:-r${publicationDate.replaceAll('-', '')})?` : '';
   for(const f of images){
     const filename=`public${f.src}`;
-    if(imageFiles.some(file => file.filename === filename) && !new RegExp(`^public/lesson-media/${slug}${revisionSuffix}(?:-adult|-teen)?\\.(?:png|webp)$`).test(filename))fail('Image filenames must belong to this lesson slug.');
+    if(imageFiles.some(file => file.filename === filename) && !new RegExp(`^public/lesson-media/${slug}${revisionSuffix}(?:-adult|-teen|-v(?=[a-z0-9-]{1,20}\\.)(?:[a-z][a-z0-9]*(?:-[a-z0-9]+)*))?\\.(?:png|webp)$`).test(filename))fail('Image filenames must belong to this lesson slug.');
     const blob=blobs[filename];
     if(!blob||blob.mode!=='100644'||blob.type!=='blob'||!Number.isSafeInteger(blob.size)||blob.size<1||blob.size>RASTER_LIMITS.maxBytes
       ||!Buffer.isBuffer(blob.bytes)||blob.bytes.length!==blob.size)fail('Raster must be a bounded regular binary blob with trustworthy size.');

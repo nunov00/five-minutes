@@ -1,3 +1,4 @@
+import { lessonVisuals } from '../src/lib/figures/collection.mjs';
 import { BACKLOG_PATH } from './editorial-backlog.mjs';
 import { parseDocument } from 'yaml';
 import { TextDecoder } from 'node:util';
@@ -135,8 +136,8 @@ export async function collectGuardInput({ env = process.env, fetchImpl = fetch, 
       const text=blobs[path].text, end=text.indexOf('\n---\n',4);
       const doc=parseDocument(text.slice(4,end),{schema:'core',uniqueKeys:true});
       if(doc.errors.length||doc.warnings.length)throw new LessonGuardError('Invalid presentation YAML.');
-      const figure=doc.toJS({maxAliasCount:0})?.figure;
-      if(figure?.type==='image' && /^\/lesson-media\/[a-z0-9-]+\.(png|webp)$/.test(figure.src) && !imagePaths.includes(`public${figure.src}`)) imagePaths.push(`public${figure.src}`);
+      const figures=lessonVisuals(doc.toJS({maxAliasCount:0})).map(v=>v.figure);
+      for(const figure of figures)if(figure?.type==='image' && /^\/lesson-media\/[a-z0-9-]+\.(png|webp)$/.test(figure.src) && !imagePaths.includes(`public${figure.src}`)) imagePaths.push(`public${figure.src}`);
     }
   }
   const registryPath = 'src/content/route-ownership.json';

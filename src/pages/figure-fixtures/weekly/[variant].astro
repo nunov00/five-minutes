@@ -1,0 +1,24 @@
+---
+import {readFile} from 'node:fs/promises';
+import {buildArtwork} from '../../../lib/figures/artwork.mjs';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import LessonBody from '../../../components/reading/LessonBody.astro';
+import LessonCard from '../../../components/LessonCard.astro';
+import {getBuildMetadata} from '../../../lib/content/build-content';
+import type {LessonVisual} from '../../../lib/content/presentation-extensions';
+export function getStaticPaths(){return process.env.FIVE_MINUTES_TEST_LIBRARY_PAGE_SIZE?[{params:{variant:'visuals'}}]:[];}
+const visuals:LessonVisual[]=[
+ {id:'lead',role:'lead',figure:{type:'image',src:'/lesson-media/visual-style-butterfly.webp',width:1536,height:1024,afterParagraph:1,alt:'Conceptual blue butterfly illustration on warm paper.',caption:'Proposed illustration style; generated artwork, not a documentary photograph.',description:'An open-winged blue butterfly rests on a branch against a quiet ivory background. This expressive image makes no microscopic or species-identification claim.'}},
+ {id:'relationship',role:'explanation',figure:{type:'comparison-bars',afterParagraph:2,data:{style:'proportional',unit:'Synthetic test values',items:[{label:'First sample',value:1,display:'1'},{label:'Second sample',value:2,display:'2'}]},alt:'A second synthetic value is twice the first.',caption:'Layout test data, not evidence for a butterfly mechanism.',description:'The bars test the existing application-owned diagram beside the article text. The first value is one and the second is two.'}},
+ {id:'detail',role:'evidence',figure:{type:'image',src:'/lesson-media/visual-style-butterfly.webp',width:1536,height:1024,afterParagraph:3,alt:'The same generated artwork in the third positioned slot.',caption:'The source is reused here to test stable placement, not counted as a second generation.',description:'This repeated source verifies that each figure gets a unique label and text explanation. It is a renderer fixture, not a suggested lesson composition.'}}
+];
+const html='<p data-prose="one">An illustration can make someone curious. This page tests the new visual slots; it is not the butterfly lesson.</p><p data-prose="two">The next figure tests application-owned diagram layout. Its numbers are synthetic, unrelated to the artwork.</p><p data-prose="three">A third independently positioned visual follows this paragraph. The final lesson will use purpose-drawn explanatory material.</p>';
+const {lessons}=await getBuildMetadata();const artwork=await buildArtwork(await readFile('docs/visuals/references/butterfly.webp'),`lesson-${lessons[0].metadata.slug}`);const sample={...lessons[0],adult:{...lessons[0].adult!,figures:visuals,figure:undefined}};
+// Do not carry the old singular figure into a collection example.
+delete sample.adult.figure;
+---
+<BaseLayout title="Weekly visual renderer test" noindex wide>
+ <h1>Weekly visual renderer test</h1><p>Engineering fixture, not a published lesson or a finished art direction.</p>
+ <LessonBody html={html} visuals={visuals} id="weekly"/>
+ <section aria-label="Illustrated Library card"><LessonCard lesson={sample} edition="adult" artwork={artwork}/></section>
+</BaseLayout>

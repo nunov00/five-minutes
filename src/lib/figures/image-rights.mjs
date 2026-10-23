@@ -5,7 +5,7 @@ const source=v=>{if(!plain(v,512))return false;try{const u=new URL(v);return u.p
 /** Structural evidence is necessary, never sufficient to establish ownership or a licence. */
 export function validateImageRightsRecords(records){
  if(records===undefined)return [];
- if(!Array.isArray(records)||records.length<1||records.length>2)return ['Expected one or two imageRights records.'];
+ if(!Array.isArray(records)||records.length<1||records.length>3)return ['Expected one to three imageRights records.'];
  if(!records.every(r=>object(r)&&Object.keys(r).every(k=>['src','origin','creator','licence','evidence','sourceUrl'].includes(k))
   &&typeof r.src==='string'&&LOCAL_RASTER_PATH.test(r.src)&&['original-code','generated','licensed'].includes(r.origin)
   &&plain(r.creator,120)&&plain(r.licence,160)&&plain(r.evidence,600)

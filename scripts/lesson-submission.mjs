@@ -1,3 +1,4 @@
+import { lessonVisuals } from '../src/lib/figures/collection.mjs';
 import { execFileSync } from 'node:child_process';
 import { readFileSync, lstatSync } from 'node:fs';
 import { createHash } from 'node:crypto';
@@ -131,8 +132,8 @@ export function prepareLessonSubmission({ cwd = process.cwd(), base, now = new D
     const source = blobs[path].text;
     const doc = parseDocument(source.slice(4, source.indexOf('\n---\n', 4)), { schema: 'core', uniqueKeys: true });
     if (doc.errors.length || doc.warnings.length) fail('Invalid presentation metadata.');
-    const figure = doc.toJS({ maxAliasCount: 0 })?.figure;
-    if (figure?.type === 'image' && typeof figure.src === 'string') {
+    const figures = lessonVisuals(doc.toJS({ maxAliasCount: 0 })).map(v=>v.figure);
+    for(const figure of figures) if (figure?.type === 'image' && typeof figure.src === 'string') {
       const imagePath = `public${figure.src}`;
       const entry = tree.get(imagePath);
       if (!entry || entry.type !== 'blob') fail('Required image is missing.');

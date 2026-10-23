@@ -1,5 +1,6 @@
 import { lstat, readdir, readFile } from 'node:fs/promises';
 import { validateFigureAsset } from '../figures/assets';
+import { lessonVisuals, VISUAL_LIMITS } from '../figures/collection.mjs';
 import { figurePosition } from '../figures/placement';
 import { basename, join } from 'node:path';
 import { parsePresentationFile, parseSafeYaml } from './safe-content';
@@ -74,10 +75,15 @@ export async function loadPublishedLessons(root: string, routeOwnership: RouteOw
   const issues = [...validatePublicationCollection(bundles).issues, ...validateLessonReferences(bundles, routeOwnership).issues];
   if (issues.length) throw new Error(`Canonical lesson validation failed:\n${issues.map((x) => `- ${x.path} [${x.code}]: ${x.message}`).join('\n')}`);
   for(const lesson of loaded) for(const edition of ['adult'] as const) {
-    const figure=lesson[edition]?.figure;
+    const visuals=lessonVisuals(lesson[edition]);
     try {
-      if(figure) figurePosition(edition==='adult'?lesson.adultHtml:lesson.teenHtml,figure.afterParagraph);
-      await validateFigureAsset(figure,publicRoot);
+      const assets=new Set<string>();let bytes=0;
+      for(const {figure} of visuals){
+        figurePosition(lesson.adultHtml,figure.afterParagraph);
+        await validateFigureAsset(figure,publicRoot);
+        if(figure.type==='image'&&!assets.has(figure.src)){assets.add(figure.src);bytes+=(await lstat(join(publicRoot,figure.src.slice(1)))).size;}
+      }
+      if(bytes>VISUAL_LIMITS.totalBytes)throw Error('Raster figures exceed the aggregate image byte budget.');
     } catch(error) { throw new Error(`Lesson ${lesson.sourceDirectory}/${edition}.md figure: ${String(error)}`); }
   }
   // Legacy catalogue/state keys resolve to the single authored source.

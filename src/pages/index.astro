@@ -1,4 +1,6 @@
 ---
+import { lessonArtwork } from '../lib/figures/artwork.mjs';
+import { lessonVisuals } from '../lib/figures/collection.mjs';
 import LessonDates from '../components/LessonDates.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SurpriseLinks from '../components/SurpriseLinks.astro';
@@ -16,6 +18,8 @@ if (!lesson?.adult) throw new Error(`Today lesson ${today.id} is not a complete 
 const editions = [
   { edition: 'adult' as const, path: today.adult.path, presentation: lesson.adult },
 ];
+const art=await lessonArtwork(lesson);
+const lead=lessonVisuals(lesson.adult).find(v=>v.role==='lead')?.figure;
 const artifacts = buildDiscoveryArtifacts(lessons);
 const fallback = artifacts.catalogue.payload.find((entry) => entry.id !== today.id);
 if (!fallback) throw new Error('Today requires another lesson for Surprise Me.');
@@ -31,6 +35,7 @@ const earlier = selectEarlierLessons(manifest.catalogue, today.id).map((entry) =
     <h1 id="today-heading">Something worth knowing</h1>
     {editions.map(({ edition, path, presentation }) => (
       <article class="card" data-today-edition={edition}>
+        {!art.isFallback && lead?.type==='image' && <img class="featured-art" src={lead.src} width={lead.width} height={lead.height} alt={lead.alt} decoding="async"/>}
         <h2>{presentation.title}</h2>
         <p>{presentation.description}</p>
         <a class="button" href={path} aria-label={`Read: ${presentation.title}`}>Read</a>

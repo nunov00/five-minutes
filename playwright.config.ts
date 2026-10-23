@@ -39,7 +39,7 @@ export default defineConfig({
       // differences. A headless WebKit build is evidence, not a substitute
       // for the physical-iPhone gate recorded in the M6.4 checklist.
       name: 'mobile-webkit',
-      testMatch: '**/m6-integration-webkit.spec.ts',
+      testMatch: ['**/m6-integration-webkit.spec.ts','**/weekly-visuals.spec.ts'],
       use: { ...devices['iPhone 15'], browserName: 'webkit' },
     },
   ],
