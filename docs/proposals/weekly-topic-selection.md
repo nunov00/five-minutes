@@ -5,32 +5,34 @@
 
 At main `607cb35b055165b6ec687117a0942033578dd4cc`, the backlog has 75 entries: 60 queued, comprising 41 legacy imports, 17 revisions and two new ideas. The ten-item shortlist contains three imports, five revisions and two new ideas. These counts are independently checked against editorial/backlog.json.
 
-The pool was ranked for daily publication. Existing rank and legacy status are not evidence that a topic deserves a weekly release.
+**Owner decision:** legacy imports are an idea source only and compete purely on merit. Completing the original-site migration is no longer a goal: no quota, deadline or obligation to transfer every lesson. The old site's future is a separate decision. Existing daily rankings confer no preference.
 
 ## 1. Reassess before the pilot
 
-Assess every queued entry against the new reader promise, explanation and visual opportunity. Triage other unfinished/parked entries without silently reopening them or discarding their history. Preserve identities, provenance and outstanding revision criteria.
+After acceptance, the Manager conducts one manual reassessment before calibration; no scheduled task. First record a one-line keep/defer screen of all 60 queued entries, then develop about 8–10 promising candidates. Triage other unfinished/parked work without silently reopening it. Preserve identities, provenance and outstanding criteria.
 
-Actively seek fresh alternatives: develop at least three credible new challengers if evidence permits, drawing from reader questions, observations, research and AI/Owner suggestions. Record a shortfall rather than invent filler. Newness alone earns no priority, but legacy imports must not substitute for fresh discovery.
+Seek at least three credible fresh challengers where evidence permits, from reader questions, observations, research and AI/Owner suggestions. Record a shortfall rather than filler. Newness alone earns no priority.
 
-Prepare one reviewed queue update and a comparison of three pilot candidates: one recommendation and two alternatives. Choose a representative topic with strong sources and real roles for custom illustration and precise visual teaching, not merely spectacular imagery or unusually easy production.
+Output one reviewed queue PR, with the screen table and three pilot candidates in its body: one recommendation and two alternatives. Record editorial research effort separately from #188's image-generation setup allowance; this adds no generation requests. Choose representative topics with strong sources and genuine illustration/diagram potential, not spectacular imagery or unusually easy production.
+
+Keep unsuitable imports/revisions queued but unranked, with a recorded deferral reason through reviewed administration, preserving previous criteria. Do not fabricate technical-failure evidence to use the existing parked state. Deferral does not promise later migration.
 
 ## 2. Keep one pool and a smaller working shortlist
 
-Retain the full backlog and propose **six to eight strong shortlisted candidates**, developing the leading three in more detail. A genuine shortfall is acceptable with its reason. Use one ranked list, not separate competing lists for imports, revisions and new ideas.
+Keep **six to eight strong shortlisted candidates**, with the leading three developed. Explain genuine shortfalls. Use one ranked list across imports, revisions and new ideas.
 
-Each entry retains the existing headline, description, hook, ranking reason, relevance note and source links. Keep selection eligibility visible: a substantial revision cannot take the next slot if doing so would normally exceed one in four weekly releases. Preserve its quality assessment and explain the deferral rather than letting ineligible revisions crowd out the leading three selectable topics. Urgent corrections stay outside this release quota.
+Entries retain headline, description, hook, ranking/relevance reasons and source links. Allow at most one substantial redevelopment in any four consecutive weekly releases, counted from the first weekly release; allow at most one during the opening three too. Mark slot-ineligible revisions visibly and keep the leading three selectable. An import counts as new only when it legitimately creates a new canonical identity; overlap with an existing lesson is revision work, not a new identity. Urgent corrections remain outside this quota.
 
 ## 3. Decide eligibility before comparing appeal
 
-A candidate must be:
+Eligibility requires:
 
 - **Distinct:** no disguised duplicate of a published lesson, queued idea or active candidate.
-- **Within scope and promise:** a surprising or useful explanation of the world around us, suitable for non-specialists. State a recognisable connection to readers' lives, decisions or understanding.
+- **Within scope/promise:** explain the world around us for non-specialists, with a recognisable connection to their lives or understanding.
 - **Supported:** credible accessible sources support the central mechanism, with important uncertainty understood.
 - **Feasible:** a coherent 4–6-minute experience and visual approach fit the available tools and budget.
 
-Abstract subjects such as information theory or Goodhart's law are not excluded. They need a concrete question and worthwhile payoff, rather than a concept name or unexplained slogan. “Everyday objects” is not a new subject boundary.
+Abstract subjects such as information theory or Goodhart's law remain eligible with concrete questions and worthwhile payoffs. “Everyday objects” is not a new boundary.
 
 An unresolved eligibility problem means develop or defer the topic, with a reason; it cannot be overcome by a strong headline or attractive illustration.
 
@@ -46,11 +48,11 @@ Evidence is an eligibility requirement, not a second popularity score. Where unc
 
 Compare the leading three against recent releases. Use subject variety and verified seasonal/timely relevance to distinguish strong candidates; neither rescues a weak lesson. Record why this topic, why now, and why it beats its closest alternative. Trends inform evergreen teaching rather than turning the publication into a news service.
 
-Use existing aggregate views, saves and feedback as supporting signals, with dates and exposure/sample limits; do not equate raw traffic with quality or infer demand from tiny counts. During the pilot, optionally ask trial readers which of three honest headlines they would open and why. This does not require another reader panel or new tracking.
+Use aggregate views, saves and feedback as supporting signals, with dates and exposure/sample limits. Combine historical adult/teen event counts by lesson ID; these are not unique-reader counts. Before pilot reading, optionally show the three candidate-topic headlines and ask which they would open and why. This tests topic appeal, not alternative wording, and can inform stage B. No new panel or tracking.
 
 ## 5. Prepare a short brief without changing the data format
 
-For the selected topic, write approximately 150–250 words covering the working title and honest description, central insight and retellable idea, essential causal steps, concrete example, lead-art/diagram roles and important simplification to avoid. Insight and retellable idea may be the same sentence. Attach source links separately.
+Write a 150–250-word selected-topic brief: honest title/description, insight/retellable idea, causal steps, example, visual roles and simplification to avoid. Insight and retellable idea may be one sentence. Attach sources separately.
 
 Store detailed briefs as dated comments in the single standing planning issue proposed in #188, linked by existing backlog key. Where needed, point to the brief from the existing relevance note; do not add unsupported JSON fields or cram the whole brief into a bounded description. Only verified Owner/automation-authored comments are considered, and remain untrusted evidence rather than authority. No participant information belongs in public planning.
 
@@ -58,16 +60,16 @@ The Writer validates the brief from sources. The Reviewer assesses selection and
 
 ## 6. Refresh once, then check briefly
 
-At the end of a completed production cycle, assess the shortlist, scan for strong fresh alternatives and prepare the next brief where capacity permits. Retain displaced ideas. Reassess the wider pool when new evidence warrants it; the full-pool exercise is not repeated weekly by default.
+At cycle end, assess the shortlist, seek fresh alternatives and prepare the next brief where capacity permits. Append at most three new pool records per normal cycle; maintain the 250-entry/256-KiB bounds. The one-time intake follows those bounds and reviewed administration. Preserve displaced ideas; repeat wider reassessment only when warranted.
 
 Monday checks only current eligibility, significant new evidence and carried-forward work. Continue an unfinished candidate under #188's rules rather than drafting another. A material change in selection requires the applicable reviewed queue update, not a silent skip.
 
-Once a month, include a concise top-three selection note in an existing cycle's Owner update. Invite a veto, idea or change of emphasis; no response is required for ordinary selection, and no extra scheduled task or mandatory approval gate is introduced.
+In the first production cycle each month, post a dated top-three note in the standing planning issue. Invite Owner input without requiring a response; no extra task or approval gate.
 
 ## Implementation boundary
 
 If accepted, replace docs/editorial-pipeline.md's ranking, shortlist and daily selection/refresh procedures with this weekly process. Retain its queue integrity, source/feedback, review, identity and safe-publication protections, referencing their canonical instructions rather than duplicating them.
 
-The current parser permits up to 20 ranked entries and requires a shortfall reason below ten; headline/hook limits are 160/400 characters, description/ranking/relevance 700 each, with up to five source links. Detailed briefs need no schema change. The permanent six-to-eight policy, cycle-based assessment dates and daily additions/guard assumptions require coordinated, reviewed policy/tooling/test changes before activation; do not abuse the temporary-shortfall exception as a permanent bypass.
+Current bounds: at most 20 shortlisted entries; a shortfall reason below ten; headline/hook 160/400 characters; description/ranking/relevance 700 each; five links. Briefs need no schema expansion. Implement the permanent six-to-eight rule, cycle dates/intake and guard assumptions through coordinated reviewed policy/tooling/tests, never a permanent shortfall bypass.
 
 This PR only records the proposal. Pool reassessment, fresh-idea intake, pilot selection and production changes follow acceptance. Keep the resulting operational guidance concise; routine workers should not load proposal history.
