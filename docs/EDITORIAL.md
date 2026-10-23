@@ -10,7 +10,7 @@ This rubric is the product contract for lesson generation and editorial review. 
 
 ## Publication standard
 
-A publishable lesson must meet every criterion below. Reviewers decide readiness through judgement and written reasons against these criteria. The advisory reader-experience rating below never replaces a criterion or averages away a failure. A polished sentence cannot compensate for an unsupported claim, and a long source list cannot compensate for a dull or confusing lesson.
+A publishable lesson must meet every criterion below. Reviewers decide readiness through judgement and written reasons against these criteria. The advisory ratings below never replace a criterion or average away a failure. A polished sentence cannot compensate for an unsupported claim, and a long source list cannot compensate for a dull or confusing lesson.
 
 | Criterion | Publication standard | Common reasons to revise |
 | --- | --- | --- |
@@ -120,9 +120,18 @@ For factual and editorial review, record:
 
 These answers can be incorporated into the existing lesson assessment and attention notes; do not duplicate the review. Missing reader outcomes require actionable findings under the severity definitions above. Check the author's claims against the actual text rather than accepting their self-assessment.
 
-Include one **advisory reader-experience rating**, as a whole number from 1 to 10, in the existing full lesson review: “How good is the overall experience for a curious non-expert reader, and why? What holds it back, and which two improvements would add the most reader value?” Support the judgement with concrete passages and reader outcomes. Distinguish required fixes under the existing severity rules from optional polish; if fewer than two worthwhile improvements remain, say so rather than inventing work. If the finished experience cannot be assessed, record that limitation instead of inventing a rating.
+Include two brief **advisory ratings**, each a whole number from 1 to 10, in the existing full lesson review:
 
-The rating is a subjective diagnostic, not measured reader satisfaction, a publication threshold or an approval. Do not average criterion scores, add decimal precision or use the number to override accuracy, accessibility, Ready/Revise/Block or any existing gate. A low rating alone is not an actionable finding; a high rating cannot excuse one. Existing revision limits still apply: do not create an extra review or revision loop to chase a higher number. Do not report precision-style confidence numbers. Descriptive confidence is useful only when it explains what is uncertain and what evidence would resolve it.
+- **Topic appeal:** how compelling is the central question and angle for a curious non-expert with no prior interest, assuming it is explained well? Identify the reason to choose it and the potential reward for reading.
+- **Lesson quality:** how well does the actual finished lesson deliver that promise through its explanation, language, structure, figures where useful and ending? Support the judgement with concrete passages and reader outcomes.
+
+For each, explain what holds it back and ask: **“What would raise this by roughly two points, or towards 10 if already near the top?”** Name at most two highest-value improvements across the assessment and identify whether each concerns the topic/angle, its execution or both. The proposed changes and reader benefit matter more than the numbers; do not promise a measured two-point gain. Distinguish required fixes under the existing severity rules from optional polish. If fewer than two worthwhile improvements remain, say so rather than inventing work. If either aspect cannot be assessed, record that limitation instead of inventing a rating.
+
+Form and note the initial ratings and reasons from the lesson and sources before consulting author or earlier reviewer ratings, where possible. Authors need not supply a self-rating. If earlier scores have already been seen, disclose that briefly; do not claim a blind assessment. Then consider all available review findings and evidence under the existing review contract, explaining any resulting change in judgement rather than aligning numbers for agreement.
+
+If the Owner and reviewers agree a published reference lesson and rating, cite its exact version and the reasons for that benchmark when using it. Until then, do not invent a shared reference or assume that the same number means the same thing across reviewers. This adds no separate calibration task or panel.
+
+The ratings are subjective diagnostics, not measured reader satisfaction, publication thresholds or approvals. Do not combine or average them, add decimal precision or use either number to override accuracy, accessibility, Ready/Revise/Block or any existing gate. A low rating alone is not an actionable finding; a high rating cannot excuse one. Existing revision limits still apply: do not create an extra review or revision loop to chase a higher number. Do not report precision-style confidence numbers. Descriptive confidence is useful only when it explains what is uncertain and what evidence would resolve it.
 
 The canonical review record is the GitHub pull-request review on the exact commit. Any accepted MINOR finding and its rationale must be recorded in the same PR conversation or merge record. `provenance.reviews` may preserve earlier lesson-level review or substantive-revision events already incorporated into the reviewed commit; it is not updated after the final exact-head review, because doing so would create a new unreviewed head.
 
