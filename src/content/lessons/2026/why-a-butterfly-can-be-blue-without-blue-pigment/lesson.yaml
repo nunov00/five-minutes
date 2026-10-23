@@ -37,6 +37,14 @@ sources:
   accessedAt: '2026-10-23'
   note: Supports brown pigment becoming visible in transmitted light. Its photograph is not reproduced; brown appearance
     alone is not used to prove the blue mechanism.
+- title: Effects of Measurement Configurations on the Sensitivity of Morpho Butterfly Scales Based Chemical Biosensor
+  url: https://www.frontiersin.org/journals/physics/articles/10.3389/fphy.2021.806904/full
+  publisher: Frontiers in Physics — Dong et al. (published 5 January 2022; volume 9, 2021)
+  accessedAt: '2026-10-23'
+  note: Model and simulations examine changes in the surrounding medium. Supports a qualitative longer-wavelength
+    shift for relevant viewing conditions; also shows that direction/size of a shift is not universal across measurement
+    angles. Its methanol/ethanol comparison is not treated as an isopropyl-alcohol measurement. NISE remains the
+    source for that demonstration. No peak wavelengths or numerical prediction are asserted.
 imageRights:
 - src: /lesson-media/why-a-butterfly-can-be-blue-without-blue-pigment-vlead.webp
   origin: generated
@@ -46,20 +54,22 @@ imageRights:
     prompt and rights basis in docs/visuals/setup-ledger.json. SHA-256 71015b7d6d1957794230c413a95dfb123b776cd64dff9b32282f52c6cada4143.
     Conceptual artwork, not a specimen image or species-identification evidence. No new generation dispatched.
   sourceUrl: https://openai.com/policies/eu-terms-of-use/
-- src: /lesson-media/why-a-butterfly-can-be-blue-without-blue-pigment-vstructure.webp
+- src: /lesson-media/why-a-butterfly-can-be-blue-without-blue-pigment-vstructure2.webp
   origin: original-code
   creator: Five Minutes — OpenAI-assisted original diagram
   licence: Original project artwork; no third-party figure copied.
-  evidence: Original deterministic Pillow drawing, exported RGB lossless WebP without metadata. Qualitative anatomy
-    informed by Kinoshita et al. (2002), sections 3.1 and 4.1; no traced micrograph, numerical geometry or measured
-    spectrum. Aligned-wave addition is a separate conceptual sketch.
-- src: /lesson-media/why-a-butterfly-can-be-blue-without-blue-pigment-vwetdry.webp
+  evidence: Original deterministic Pillow drawing, revision round 1; RGB lossless WebP without metadata. Anatomy
+    informed by Kinoshita et al. (2002), sections 3.1 and 4.1. Air-gap leader ends in open space without crossing
+    cuticle; the unlabelled connector was removed and text enlarged. No traced micrograph, numerical geometry or
+    measured spectrum. Wave addition is a separate sketch.
+- src: /lesson-media/why-a-butterfly-can-be-blue-without-blue-pigment-vwetdry2.webp
   origin: original-code
   creator: Five Minutes — OpenAI-assisted original diagram
   licence: Original project artwork; no third-party figure copied.
-  evidence: Original deterministic Pillow drawing, exported RGB lossless WebP without metadata. Schematic interpretation
-    of NISE/Sciencenter Morphing Butterfly guide, page 3. Colour patches represent reported appearance; liquid shading
-    is only a diagram key. No documentary images, measured spectra or chemical procedure copied.
+  evidence: Original deterministic Pillow drawing, revision round 1; RGB lossless WebP without metadata. Schematic
+    interpretation of NISE/Sciencenter Morphing Butterfly guide, page 3. Text and hatching distinguish gap contents
+    in greyscale. Flat labelled patches represent reported appearance; no invented light rays, copied photographs,
+    measured spectra or chemical procedure.
 provenance:
   createdAt: '2026-10-23T10:02:31+00:00'
   createdBy:
