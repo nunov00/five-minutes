@@ -77,7 +77,7 @@ ADR-0013 defines the single-version experience. Reader-state v1/v2 remains reada
 
 The publication has one complete version of every lesson. Home, Earlier, Library, Topics, Search, Related and Surprise Me all use it. `/adult/<slug>` remains the canonical reading address for link stability, with no audience labels or edition controls. Former Teen lesson links and both old discovery families redirect to the current reading or neutral discovery page. ADR-0013 records the complete compatibility contract.
 
-The reading experience uses a recall-before-summary ending: after the explanatory body, readers consider the central idea before revealing the answer and takeaway. Reviewed explanatory figures and optional lightweight prediction/choice activities use safe structured contracts; raw executable lesson content remains prohibited. The isolated prototype remains reference evidence only.
+The reading experience defaults to a recall-before-summary ending: after the explanatory body, readers consider the central idea before revealing the answer and takeaway. The validated opt-in `opening: answer-first` mode (ADR-0006) instead shows the existing takeaway once after the opening lead and retains later recall with an answer-only reveal. Reviewed explanatory figures and optional lightweight prediction/choice activities use safe structured contracts; raw executable lesson content remains prohibited. The isolated prototype remains reference evidence only.
 
 ### Hosting and runtime
 

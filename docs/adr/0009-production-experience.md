@@ -34,6 +34,8 @@ The editorial rule remains unchanged: neither Adult nor Teen is the editorially 
 
 The selected lesson ending asks the reader to retrieve or consider the central idea **after the explanatory body and before the final takeaway/answer**. This is the intended meaning of “recall-first”; it does not move a quiz ahead of the lesson body.
 
+The 23 October 2026 opt-in `opening: answer-first` amendment in [ADR-0006](0006-lesson-schema-and-identity.md) permits the existing takeaway once after the opening lead and before the detailed explanation. Recall still follows the body and reveals only the answer, testing a causal step beyond the opening wording. Absence of this field preserves the order above; this is not a global default change.
+
 Essential reading, the prompt, takeaway/reveal and navigation must remain understandable without JavaScript.
 
 ### Figures and lightweight activities

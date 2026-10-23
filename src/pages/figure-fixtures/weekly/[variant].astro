@@ -3,10 +3,13 @@ import {readFile} from 'node:fs/promises';
 import {buildArtwork} from '../../../lib/figures/artwork.mjs';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import LessonBody from '../../../components/reading/LessonBody.astro';
+import Recall from '../../../components/reading/Recall.astro';
 import LessonCard from '../../../components/LessonCard.astro';
 import {getBuildMetadata} from '../../../lib/content/build-content';
 import type {LessonVisual} from '../../../lib/content/presentation-extensions';
-export function getStaticPaths(){return process.env.FIVE_MINUTES_TEST_LIBRARY_PAGE_SIZE?[{params:{variant:'visuals'}}]:[];}
+export function getStaticPaths(){return process.env.FIVE_MINUTES_TEST_LIBRARY_PAGE_SIZE?['visuals','answer-first'].map(variant=>({params:{variant}})):[];}
+const opening: 'answer-first' | undefined = Astro.params.variant === 'answer-first' ? 'answer-first' : undefined;
+const takeaway='One short answer from the existing takeaway field.';
 const visuals:LessonVisual[]=[
  {id:'lead',role:'lead',figure:{type:'image',src:'/lesson-media/visual-style-butterfly.webp',width:1536,height:1024,afterParagraph:1,alt:'Conceptual blue butterfly illustration on warm paper.',caption:'Proposed illustration style; generated artwork, not a documentary photograph.',description:'An open-winged blue butterfly rests on a branch against a quiet ivory background. This expressive image makes no microscopic or species-identification claim.'}},
  {id:'relationship',role:'explanation',figure:{type:'comparison-bars',afterParagraph:2,data:{style:'proportional',unit:'Synthetic test values',items:[{label:'First sample',value:1,display:'1'},{label:'Second sample',value:2,display:'2'}]},alt:'A second synthetic value is twice the first.',caption:'Layout test data, not evidence for a butterfly mechanism.',description:'The bars test the existing application-owned diagram beside the article text. The first value is one and the second is two.'}},
@@ -19,6 +22,9 @@ delete sample.adult.figure;
 ---
 <BaseLayout title="Weekly visual renderer test" noindex wide>
  <h1>Weekly visual renderer test</h1><p>Engineering fixture, not a published lesson or a finished art direction.</p>
- <LessonBody html={html} visuals={visuals} id="weekly"/>
+ <article data-opening={opening}>
+ <LessonBody html={html} visuals={visuals} id="weekly" openingTakeaway={opening ? takeaway : undefined}/>
+ {opening && <Recall question="How does the longer explanation support this answer?" answer="The explanation connects the intervening steps, beyond repeating the opening." takeaway={takeaway} opening={opening}/>}
+ </article>
  <section aria-label="Illustrated Library card"><LessonCard lesson={sample} edition="adult" artwork={artwork}/></section>
 </BaseLayout>

@@ -2,6 +2,7 @@ import { readFile, readdir, lstat } from 'node:fs/promises';
 import { join, relative, sep } from 'node:path';
 import {configuredOrigin} from '../src/lib/site-origin.mjs';
 import {validateDerivative,DERIVATIVE_LIMITS} from '../src/lib/figures/artwork.mjs';
+import {verifyReadingOrder} from './reading-integrity.mjs';
 
 const origin=configuredOrigin(process.env.SITE_URL);
 const dist = join(process.cwd(), 'dist');
@@ -22,6 +23,10 @@ if (inventory.version !== 1 || !Array.isArray(inventory.routes)) throw new Error
 const expected = inventory.routes.map(({ path }) => path).sort();
 if (expected.length === 0) throw new Error('Delivery route inventory must not be empty.');
 const expectedSet = new Set(expected);
+const openingByPath = new Map(inventory.routes.map(route => {
+  if (Object.hasOwn(route,'opening') && route.opening !== 'answer-first') throw Error('Invalid delivery opening mode.');
+  return [route.path, route.opening];
+}));
 if (expectedSet.size !== expected.length) throw new Error('Duplicate expected canonical route assignment.');
 const editions = new Map();
 for (const route of inventory.routes) {
@@ -74,12 +79,10 @@ for (const file of files.filter((f) => f.endsWith('.html'))) {
         ||!['image/png','image/jpeg'].includes(property('og:image:type'))||property('og:image:width')!=='1200'||property('og:image:height')!=='630'||!property('og:image:alt'))throw Error(`Invalid article sharing image: ${webPath(file)}`);
     }
     if((html.match(/<h1(?:\s|>)/g)??[]).length!==1)throw Error(`Reading page must have exactly one title: ${webPath(file)}`);
-    const body=html.indexOf('class="lesson-body'),recall=html.indexOf('data-recall'),reveal=html.indexOf('data-recall-reveal'),answer=html.indexOf('class="answer"'),takeaway=html.indexOf('id="takeaway-heading"');
-    if(body<0||recall<body||reveal<recall||answer<reveal||takeaway<answer)throw Error(`Recall/answer/takeaway order invalid: ${webPath(file)}`);
-    const ending=html.slice(reveal,html.indexOf('</details>',reveal));
-    if(!ending.includes('class="answer"')||!ending.includes('id="takeaway-heading"'))throw Error(`Answer/takeaway must share a reveal: ${webPath(file)}`);
-    if(html.slice(0,recall).includes('id="takeaway-heading"'))throw Error(`Takeaway appears before recall: ${webPath(file)}`);
+    try { verifyReadingOrder(html, openingByPath.get(webPath(file).replace(/\/index\.html$/, ''))); }
+    catch(error) { throw Error(`Reading order invalid in ${webPath(file)}: ${error.message}`); }
   }
+  if (process.env.FIVE_MINUTES_TEST_LIBRARY_PAGE_SIZE && webPath(file) === '/figure-fixtures/weekly/answer-first/index.html') verifyReadingOrder(html,'answer-first');
   if((redirectTarget||noindexPages.has(webPath(file).replace(/\/index\.html$/, '')))&&/<meta property="og:type" content="article"/.test(html))throw Error(`Noncanonical page claims article sharing metadata: ${webPath(file)}`);
   // Installed (standalone) display has no browser back button or address bar:
   // every page must declare the manifest and offer an in-page way back to Today,

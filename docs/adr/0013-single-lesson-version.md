@@ -4,7 +4,7 @@ Status: Owner-approved direction, 22 October 2026. Activation requires the norma
 
 ## Decision
 
-Five Minutes publishes one version of each lesson. The existing Adult source is retained as that version. There is no Teen writing, review or publication requirement, edition choice, edition preference navigation, or second reading page. Clear English for intermediate, non-native readers, explanatory depth, source accuracy, useful figures, optional prediction activities and recall-before-takeaway remain required as applicable.
+Five Minutes publishes one version of each lesson. The existing Adult source is retained as that version. There is no Teen writing, review or publication requirement, edition choice, edition preference navigation, or second reading page. Clear English for intermediate, non-native readers, explanatory depth, source accuracy, useful figures, optional prediction activities and recall-before-takeaway remain required as applicable. The 23 October 2026 [ADR-0006 answer-first amendment](0006-lesson-schema-and-identity.md#optional-answer-first-opening-23-october-2026) allows an explicitly selected presentation to show its existing takeaway once after its opening lead, with later recall revealing only the answer. The default order and single-version contract remain unchanged.
 
 This decision supersedes audience/edition requirements in ADR-0001, ADR-0003, ADR-0005, ADR-0006, ADR-0007, ADR-0009, ADR-0012 and earlier implementation/automation documents. Historical edition descriptions and calibration evidence are references only; they cannot require new Teen work. The general safety, trust, review, privacy, date, history, revision-budget and publication rules are unchanged.
 

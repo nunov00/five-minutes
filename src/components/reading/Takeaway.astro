@@ -1,0 +1,8 @@
+---
+interface Props { text: string; early?: boolean; }
+const {text, early = false} = Astro.props;
+---
+<section class={early ? 'card lesson-section opening-answer' : undefined} aria-labelledby="takeaway-heading" data-opening-takeaway={early || undefined}>
+  {early ? <h2 id="takeaway-heading">The short answer</h2> : <h3 id="takeaway-heading">Takeaway</h3>}
+  <p>{text}</p>
+</section>

@@ -1,4 +1,5 @@
 import { validateVisualCollection } from '../figures/collection.mjs';
+import { validateOpening } from './opening-contract.mjs';
 import type { ValidationIssue } from './schema';
 import { FIGURE_SYMBOLS, TOOLKIT_TYPES, validateToolkitData } from '../figures/toolkit-contract.mjs';
 import { RASTER_LIMITS, LOCAL_RASTER_PATH } from '../figures/raster.mjs';
@@ -54,6 +55,7 @@ function validateSteps(value: unknown, path: string, type: 'process-flow'|'cycle
 export function validatePresentationExtensions(value: Record<string,unknown>, path: string, _edition: 'adult'|'teen'): ValidationIssue[] {
   const issues: ValidationIssue[] = [];
   const fail = (name:string,message:string) => issues.push({path:`${path}.${name}`,code:'presentation-extension',message});
+  for(const message of validateOpening(value)) fail('opening',message);
   for(const message of validateVisualCollection(value)) fail('figures',message);
   if(Array.isArray(value.figures)) for(const [index,item] of value.figures.entries()) {
     if(object(item)&&object(item.figure)) issues.push(...validatePresentationExtensions({figure:item.figure},`${path}.figures.${index}`,_edition));
