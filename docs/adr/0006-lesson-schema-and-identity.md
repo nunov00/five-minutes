@@ -124,6 +124,8 @@ The reviewed topic-led pilot direction (#195) adds `opening: answer-first` to sc
 
 An opt-in presentation requires a `figures` collection with exactly one raster `lead`, explicitly positioned after paragraph 1 and before any other figure sharing that anchor. The reading order is paragraph 1, lead, the existing `takeaway` once under **The short answer**, then the remaining body and figures at their original prose-paragraph anchors. Later recall reveals `answer` only. No summary copy, extra headline field or lesson-authored layout instructions are introduced. Existing `title` and `description` supply the reading-page and discovery text; figure text retains its accessibility/provenance purpose.
 
+Use of `opening: answer-first` is currently authorised only for the butterfly calibration pilot in [#192](https://github.com/nunov00/five-minutes/pull/192), lesson ID `a303d4bc-85eb-4bd8-b9af-03037b3f27ea`. Writers must leave the field absent on every other lesson, including new scheduled candidates and revisions. Reviewers must record a **BLOCKER** if any other automated candidate supplies it. Wider use needs a further reviewed decision explicitly authorised and recorded by the Owner; accepting the pilot alone does not extend this permission.
+
 This capability does not select existing lessons or make answer-first the default. The butterfly pilot remains separately reviewed and unpublished until authorised. [M6.2](../implementation/m6.2-reading-enhancements.md) defines rendering and whole-corpus verification; [EDITORIAL](../EDITORIAL.md) requires a later causal recall question and an ending that adds value.
 
 ### Optional presentation media and activities
