@@ -4,7 +4,11 @@ test('five visual slots retain positions, labels and decoding across sizes and t
  for(const width of [320,393,1440])for(const colorScheme of ['light','dark'] as const){
   await page.setViewportSize({width,height:900});await page.emulateMedia({colorScheme});await page.goto('/figure-fixtures/weekly/five');
   const figures=page.locator('article .lesson-figure');await expect(figures).toHaveCount(5);
-  expect(await page.locator('.visual-sequence').evaluate(el=>[...el.children].filter(n=>n.matches('p,figure')).map(n=>n.tagName))).toEqual(['P','FIGURE','P','FIGURE','P','FIGURE','P','FIGURE','P','FIGURE']);
+  const sequence=await page.locator('.visual-sequence').evaluate(root=>[...root.querySelectorAll(':scope > .lesson-body > p, :scope > figure')].map(el=>el.matches('figure')?'figure':el.textContent?.trim()));
+  expect(sequence).toEqual([
+   expect.stringContaining('An illustration'),'figure',expect.stringContaining('The next figure'),'figure',
+   expect.stringContaining('A third independently'),'figure',expect.stringContaining('A fourth figure'),'figure',
+   expect.stringContaining('A fifth figure'),'figure']);
   for(const fig of await figures.all()){
    await fig.scrollIntoViewIfNeeded();await expect(fig.getByRole('img')).toHaveAccessibleName(/\S/);
    for(const img of await fig.locator('img').all())await expect.poll(()=>img.evaluate((el:HTMLImageElement)=>el.complete&&el.naturalWidth>0)).toBe(true);
