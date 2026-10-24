@@ -1,0 +1,59 @@
+schemaVersion: 2
+id: 5f54e8c8-179c-43f9-8bb1-ed477857532b
+slug: why-popcorn-pops
+aliases: []
+publishedAt: '2026-10-24T12:59:06+00:00'
+topic: science
+subtopic: physics
+concepts:
+- pressure
+- phase-change
+- materials
+related:
+  manual: []
+  exclude: []
+sources:
+- title: Wu and Schwartzberg (1992) — Popping Behavior and Zein Coating of Popcorn
+  url: https://www.cerealsgrains.org/publications/cc/backissues/1992/Documents/69_567.pdf
+  publisher: Cereal Chemistry, American Association of Cereal Chemists
+  accessedAt: '2026-10-24'
+  note: 'Primary research: pp. 568, 571–573 explain the mechanism; p. 570, Table III compares damaged hulls.'
+- title: American Chemical Society (2017) — The Secret Science of Popcorn
+  url: https://www.acs.org/content/dam/acsorg/education/whatischemistry/adventuresinchemistry/secretscience/popcorn/secretscience-popcorn.pdf
+  publisher: American Chemical Society
+  accessedAt: '2026-10-24'
+  note: Pages 1–2 explain the seed, starch, moisture, hull and hardening after expansion. Its sound account is outside this lesson.
+- title: Song and Eckhoff (1994) — Optimum Popping Moisture Content for Popcorn Kernels of Different Sizes
+  url: https://www.cerealsgrains.org/publications/cc/backissues/1994/documents/71_458.pdf
+  publisher: Cereal Chemistry, American Association of Cereal Chemists
+  accessedAt: '2026-10-24'
+  note: 'Primary research, pp. 458–460: tested kernel sizes had different moisture levels for greatest expansion; more water was not always better.'
+- title: Quinn, Hong and Both (2004) — Increasing the Size of a Piece of Popcorn (preprint)
+  url: https://arxiv.org/abs/cond-mat/0409424
+  publisher: arXiv
+  accessedAt: '2026-10-24'
+  note: Pages 7–8 and 12 report greater average volume under reduced external pressure, with yields below prior best results. Preprint, not a kitchen method.
+imageRights:
+- src: /lesson-media/why-popcorn-pops-vlead1.webp
+  origin: generated
+  creator: OpenAI built-in image_gen
+  licence: Use under applicable OpenAI terms; no exclusivity or copyright guarantee.
+  evidence: Original text-only generation popcorn-lead-01; full prompt and dispatch ledger in planning issue 200, comment 6384426055. Conceptual artwork, not specimen evidence.
+- src: /lesson-media/why-popcorn-pops-vinside1.webp
+  origin: original-code
+  creator: Five Minutes publication illustrator
+  licence: Original deterministic artwork created for Five Minutes.
+  evidence: Original Pillow drawing based on the cited explanatory sources; no third-party figure copied. Qualitative shapes and spacing, not measured anatomy or a simulation.
+- src: /lesson-media/why-popcorn-pops-vpuff1.webp
+  origin: original-code
+  creator: Five Minutes publication illustrator
+  licence: Original deterministic artwork created for Five Minutes.
+  evidence: Original Pillow drawing based on the cited explanatory sources; no third-party figure copied. Qualitative shapes and spacing, not measured anatomy or a simulation.
+provenance:
+  createdAt: '2026-10-24T12:59:06+00:00'
+  createdBy:
+    type: ai
+    provider: openai
+    model: Codex
+    promptVersion: popcorn-repeatability-pilot-v1
+  reviews: []
