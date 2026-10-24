@@ -571,6 +571,13 @@ input[type='search'] {
   font-size: var(--text-lg);
 }
 
+.source-citation { display:inline-block; min-inline-size:2rem; min-block-size:1.5rem; padding-inline:.1em .3em; font-size:.85em; text-align:start; white-space:nowrap; }
+.lesson-sources ol { padding-inline-start:1.6em; }
+.lesson-sources li { margin-block:1.25rem; overflow-wrap:anywhere; scroll-margin-top:6rem; }
+.lesson-sources li:target { outline:2px solid currentColor; outline-offset:.35rem; border-radius:.15rem; }
+.lesson-sources li p { margin-block:.3rem; }
+.source-publication,.source-note { font-size:var(--text-sm); color:var(--color-muted); }
+
 details {
   margin-top: var(--space-3);
 }

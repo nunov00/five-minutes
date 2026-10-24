@@ -1,5 +1,6 @@
 import { lessonVisuals, validateVisualCollection, VISUAL_LIMITS } from '../src/lib/figures/collection.mjs';
 import { validateOpening } from '../src/lib/content/opening-contract.mjs';
+import { validateCitations, validatePresentationCitations } from '../src/lib/content/citations.mjs';
 import { isValidTimestamp } from './publication-time.mjs';
 import { BACKLOG_PATH, parseBacklog, verifyBacklogCompletion } from './editorial-backlog.mjs';
 import { parseDocument } from 'yaml';
@@ -319,6 +320,15 @@ export function evaluateLessonPullRequest(input) {
   if (!(revision ? zurichDate(new Date(metadata.publishedAt)) : publicationDate).startsWith(`${year}-`)) fail('Lesson directory year must match publishedAt in Europe/Zurich.');
 
   const presentations=[parseFrontmatter(adultText,'adult.md',ADULT_KEYS)];
+  try {
+    const count = Array.isArray(metadata.sources) ? metadata.sources.length : 0;
+    for (const presentation of presentations) validatePresentationCitations(presentation, count);
+    validateCitations(adultText.slice(adultText.indexOf('\n---\n', 4) + 5), count, true);
+    for (const presentation of presentations) for (const {figure} of lessonVisuals(presentation)) {
+      validateCitations(figure.caption, count);
+      validateCitations(figure.description, count);
+    }
+  } catch (error) { fail(`Invalid source citation: ${error.message}`); }
   const images=presentations.flatMap(p=>lessonVisuals(p).map(v=>v.figure)).filter(f=>f?.type==='image');
   for(const message of validateImageRights(metadata.imageRights,images.map(f=>f.src)))fail(message);
   const referenced=new Set(images.map(f=>`public${f.src}`));

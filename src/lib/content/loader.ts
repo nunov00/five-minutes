@@ -2,6 +2,7 @@ import { lstat, readdir, readFile } from 'node:fs/promises';
 import { validateFigureAsset } from '../figures/assets';
 import { lessonVisuals, VISUAL_LIMITS } from '../figures/collection.mjs';
 import { figurePosition } from '../figures/placement';
+import { validateCitations } from './citations.mjs';
 import { basename, join } from 'node:path';
 import { parsePresentationFile, parseSafeYaml } from './safe-content';
 import {
@@ -61,7 +62,7 @@ export async function loadPublishedLessons(root: string, routeOwnership: RouteOw
     let metadata, adult, teen;
     try {
       metadata = parseSafeYaml(yaml);
-      adult = parsePresentationFile(adultSource);
+      adult = parsePresentationFile(adultSource, (metadata as LessonBundle['metadata'])?.sources?.length ?? 0);
       teen = adult;
     } catch(error) { throw new Error(`Lesson ${dir}: ${String(error)}`); }
     loaded.push({
@@ -79,6 +80,8 @@ export async function loadPublishedLessons(root: string, routeOwnership: RouteOw
     try {
       const assets=new Set<string>();let bytes=0;
       for(const {figure} of visuals){
+        validateCitations(figure.caption, lesson.metadata.sources.length);
+        validateCitations(figure.description, lesson.metadata.sources.length);
         figurePosition(lesson.adultHtml,figure.afterParagraph);
         await validateFigureAsset(figure,publicRoot);
         if(figure.type==='image'&&!assets.has(figure.src)){assets.add(figure.src);bytes+=(await lstat(join(publicRoot,figure.src.slice(1)))).size;}
