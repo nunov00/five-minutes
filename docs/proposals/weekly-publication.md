@@ -21,7 +21,7 @@ Retain sound older lessons and improve weaker ones through the backlog. Substant
 
 ## Visual quality
 
-Custom illustrations become a normal part of production. Usually combine a compelling lead illustration with one or two precise explanatory visuals where useful. Support **up to three visuals**, without a quota.
+Custom illustrations become a normal part of production. Usually combine a compelling lead illustration with one or two precise explanatory visuals where useful. Support **up to five visuals**, without a quota; use only as many as the topic needs within the unchanged 1500 KiB total raster budget.
 
 An illustration may create curiosity or a memorable scene. A diagram must explain its relationship accurately. Use image generation for expressive artwork and deterministic drawing or suitable application components for precise diagrams. Do not force subjects into generic icon-and-arrow templates.
 

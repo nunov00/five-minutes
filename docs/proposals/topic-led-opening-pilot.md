@@ -30,7 +30,7 @@ These replace the old title/description only after lesson review; the lesson ide
 
 ADR-0014's 480x320 thumbnail and 1200x630 share image still contain only the lead artwork. Inspect those actual derivatives with surrounding text removed: the blue wing and green region must remain recognisable, with no misleading crop. Review them again with the real card title or Open Graph title/description. Standalone pixels need not teach the microscopic cause. Title-bearing social-image composition remains a separate future trusted-build change, not an implied result of application text.
 
-Replace the current lead within the three-source ceiling. Keep expressive art distinct from the two precise explanation/evidence figures and check that they perform different jobs. Reuse verified rights where practical; any generated or edited artwork consumes the existing reserved generation allowance and needs prompt, rights, validation and budget records. This proposal dispatches no generation request and increases no budget.
+Replace the current lead within the five-source ceiling in ADR-0014. Keep expressive art distinct from the precise explanation/evidence figures and check that they perform different jobs. Reuse verified rights where practical; any generated or edited artwork consumes the existing reserved generation allowance and needs prompt, rights, validation and budget records. This proposal dispatches no generation request and increases no budget.
 
 ## 2. A short answer, followed by a causal explanation
 
@@ -75,7 +75,7 @@ Record the apparent subject, specific puzzle/reward, misleading expectations and
 | Meaning | No moving shelves, green dye, pigment-free-wing or documentary-imagery implication. The lead shows wing-scale appearance; gap contents remain in the evidence figure. |
 | Reading | A standalone one-sentence takeaway retains the light-speed step; the body explains the wave relationship; recall tests that relationship beyond the opening wording; the ending adds a supported connection. |
 | Layout | Inspect 320, 393 and 1440 px in light/dark and without JavaScript. Existing title/description and figure text stay readable without clipping. |
-| Figures/derivatives | Both explanatory figures follow their section's first paragraph. Lead and evidence do not duplicate a triptych. Inspect 480x320 and 1200x630 outputs without text, then the actual card/share context. |
+| Figures/derivatives | Explanatory figures follow the relevant mechanism paragraphs. Lead and evidence do not duplicate a triptych. Inspect 480x320 and 1200x630 outputs without text, then the actual card/share context. |
 | Compatibility | Unselected lessons keep recall/takeaway order, cards, URLs, saved/read state and legacy figures. ADR-0013, weekly-proposal and M6.2 requirements are reconciled explicitly; static integrity enforces both modes across the corpus. |
 | Assets/checks | Preserve existing rights, immutable-source names, raster limits, sRGB/metadata stripping and trusted-main validation. Fresh exact-head CI, independent policy/code review and full factual/editorial/rendered lesson review remain required. |
 | Calibration | Record the Owner's actual judgement of the revised preview: opening clarity/appeal, explanation, diagram placement and ending. Identify unresolved problems and any actual timing; otherwise state time unmeasured. No panel, human-recall threshold or simulated measurement is required or counted. |
