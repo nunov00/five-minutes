@@ -35,42 +35,54 @@ figures:
     role: explanation
     figure:
       type: image
-      src: /lesson-media/why-a-butterfly-can-be-blue-without-blue-pigment-vstructure3.webp
+      src: /lesson-media/why-a-butterfly-can-be-blue-without-blue-pigment-vstructure4.webp
       width: 960
-      height: 2360
+      height: 940
       afterParagraph: 4
-      alt: Cuticle shelves and gaps beneath overlapping scales. Sample reflected waves are more in step for blue
-        in the dry case and green in the wet case; neither colour changes wavelength at the eye.
-      caption: Idealised structure and wave timing, not to scale. Wet gaps change which colour’s reflections
-        reinforce most strongly; both colours are already in the incoming light.
-      description: The wing surface carries overlapping scales. Inside a scale, ridges carry finite shelves of
-        cuticle separated by air. Three ridges are shown at unequal heights rather than as a perfect
-        continuous stack. Incoming mixed light and favoured blue reflection are indicated schematically; these
-        arrows are not a ray trace. Below, separate dry and wet comparisons show two sample reflections per
-        colour at the observer. Blue crests align in the dry case; green crests align in the wet case. The other
-        pair is less in step, not completely cancelled. Each colour keeps the same wavelength at the observer
-        in both cases. The traces illustrate changed relative timing, not a measured spectrum, a numerical
-        model of a scale or conversion of blue light into green. The shelves stay in place. Real wings also
-        involve diffraction and variations across species.
+      alt: Overlapping wing scales lead to an idealised cross-section of cuticle shelves and air gaps, with
+        neighbouring ridges at unequal heights.
+      caption: Idealised dry-scale structure, not to scale. Cuticle shelves and air gaps help favour blue reflection.
+      description: The surface carries overlapping scales. Ridges on a scale carry finite cuticle shelves separated
+        by air. Three ridges have unequal heights. Incoming mixed light and favoured blue reflection are
+        schematic arrows, not a ray trace or a numerical optical model. The complete wing also involves
+        diffraction and variations across species.
+  - id: wave-timing
+    role: explanation
+    figure:
+      type: image
+      src: /lesson-media/why-a-butterfly-can-be-blue-without-blue-pigment-vwaves4.webp
+      width: 960
+      height: 1420
+      afterParagraph: 7
+      alt: In the dry case, blue reflected crests line up and green crests are offset; in the wet case, green crests
+        line up and blue crests are offset.
+      caption: Illustrative reflected-wave timing at the eye. Guides make aligned and offset crests easier to
+        compare; both colours are already in the incoming light.
+      description: Each colour has two sample reflected traces. Dashed guides pass through crests of the upper
+        trace. Dry blue crests align between traces; dry green crests are offset. With alcohol in the gaps,
+        green crests align and blue crests are offset. Each colour keeps the same
+        wavelength at the observer across dry and wet cases. These illustrative phases are not measured scale
+        parameters or a reflection spectrum. Offset waves are not completely cancelled. The comparison does
+        not show blue light changing into green; slower travel through the wet gaps changes which existing
+        colour is reinforced most strongly.
   - id: wet-dry
     role: evidence
     figure:
       type: image
-      src: /lesson-media/why-a-butterfly-can-be-blue-without-blue-pigment-vwetdry2.webp
+      src: /lesson-media/why-a-butterfly-can-be-blue-without-blue-pigment-vcycle4.webp
       width: 960
-      height: 1660
-      afterParagraph: 7
-      alt: "Reported sequence: air-filled gaps and blue appearance; alcohol-filled gaps and green appearance;
-        evaporation restores air and blue."
-      caption: Reported blue–green–blue sequence, shown schematically. Hatching marks clear alcohol in the gaps;
-        patches show wing colour.
-      description: Three stages connect the gaps to the reported wing colour. First, air separates cuticle shelves
-        and the wing appears blue. Second, alcohol replaces air in those spaces and the wet region appears
-        green. Third, evaporation allows air to return and the wing appears blue again. The solid shelves are
-        retained throughout. Hatching marks clear alcohol between the shelves; unhatched gaps contain air. The
-        ridge heights differ slightly and stay unchanged through the sequence. Coloured patches represent
-        appearance qualitatively, not measured spectra or photographs. This observation is interpreted
-        alongside microscopic and optical evidence.
+      height: 1260
+      afterParagraph: 8
+      alt: "Two states form a loop: dry air-filled gaps and blue appearance; clear alcohol fills the gaps and the
+        region appears green; evaporation returns it to the dry blue state."
+      caption: Reported reversible change, shown schematically. Hatching marks clear alcohol; patches represent wing colour.
+      description: The dry state appears once, above the wet state. A downward arrow labelled Alcohol fills the gaps
+        leads from air-filled gaps and blue appearance to clear-alcohol-filled gaps and green appearance. An
+        upward arrow labelled Alcohol dries; air returns leads back to the same dry state. The cuticle shelves
+        keep their shape and unequal ridge heights in both states. Hatching identifies clear alcohol between
+        the solid shelves, not green dye. The patches are conceptual appearances, not photographs or measured
+        spectra. The loop describes the reported museum-guide sequence, not an automatic cycle or a home
+        chemical procedure.
 opening: answer-first
 ---
 A blue morpho wing turns green where clear alcohol wets it, then blue again as it dries. A museum activity guide reports the change. How can a colour disappear and return without the wing growing anything new?
@@ -89,9 +101,9 @@ Real scales are not perfect stacks of identical sheets. Their shelves have limit
 
 ## Change the gaps, change the colour
 
-Alcohol slows light more than air does. Light crossing an alcohol-filled gap therefore takes longer to travel the same distance. Reflections following different paths gain different delays, changing which wavelengths arrive together and strengthen each other. The strongest reflection shifts towards longer wavelengths—towards green in the reported demonstration. The wave comparison above shows this change: blue reflections are more in step in the dry case, green in the wet case. The shelves have not moved. The clear liquid changes how reflected waves combine, rather than acting as a green dye that absorbs unwanted colours.
+Alcohol slows light more than air does. Light crossing an alcohol-filled gap therefore takes longer to travel the same distance. Reflections following different paths gain different delays, changing which wavelengths arrive together and strengthen each other. The strongest reflection shifts towards longer wavelengths—towards green in the reported demonstration. The wave comparison below shows this change: blue reflections are more in step in the dry case, green in the wet case. The shelves have not moved. The clear liquid changes how reflected waves combine, rather than acting as a green dye that absorbs unwanted colours.
 
-When the alcohol evaporates, air returns. The shorter crossing time restores the pattern that favours blue. Microscopy and optical measurements support this explanation; the colour’s return alone would not rule out a chemical change. The diagram connects the invisible change in the gaps to the visible blue–green–blue sequence.
+When the alcohol evaporates, air returns. The shorter crossing time restores the pattern that favours blue. Microscopy and optical measurements support this explanation; the colour’s return alone would not rule out a chemical change. The return arrow in the diagram shows how evaporation restores the dry state.
 
 Structural colour does not mean a pigment-free wing. In *M. didius*, brown pigment absorbs light that would otherwise weaken the contrast of the blue reflection. When light passes through the wing rather than reflecting from it, the brown can become visible.
 

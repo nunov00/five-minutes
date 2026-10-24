@@ -29,8 +29,8 @@ sources:
     publisher: NISE Network / Sciencenter (2012)
     accessedAt: 2026-10-23
     note: Page 3 supports the reported isopropyl-alcohol blue–green–blue sequence and clear liquid filling gaps.
-      The lesson gives no home procedure and copies no photographs.
-      The guide does not identify a particular Morpho species.
+      The lesson gives no home procedure and copies no photographs. The guide does not identify a particular
+      Morpho species.
   - title: Scientific Image — Blue Morpho Butterfly Wing (non-reflected light)
     url: https://www.nisenet.org/catalog/scientific-image-blue-morpho-butterfly-wing-non-reflected-light
     publisher: NISE Network / F. Nijhout, Duke University
@@ -69,24 +69,30 @@ imageRights:
       interpretation, not a specimen or measured boundary. No third-party image input. Calibration 1/12, lead
       1/6; no retry or edit."
     sourceUrl: https://openai.com/policies/eu-terms-of-use/
-  - src: /lesson-media/why-a-butterfly-can-be-blue-without-blue-pigment-vstructure3.webp
+  - src: /lesson-media/why-a-butterfly-can-be-blue-without-blue-pigment-vstructure4.webp
     origin: original-code
     creator: Five Minutes — OpenAI-assisted original diagram
     licence: Original project artwork; no third-party figure copied.
-    evidence: Original deterministic Pillow drawing, revision 3/3; metadata-free RGB lossless WebP, SHA-256
-      053587115f5b11c098606f4be5cdbc06e2b12682b032b42337c0544f28269153. Anatomy follows Kinoshita et al.
-      (2002); separate dry/wet wave comparison follows interference principles in OpenStax section 3.4.
-      Sample phases are illustrative, not measured or a numerical Morpho model. Each colour retains its
-      observer wavelength. No source artwork copied, generation request or new service. Prior bytes remain
-      in Git history. Reserved in PR #192 comment 6374581349.
-  - src: /lesson-media/why-a-butterfly-can-be-blue-without-blue-pigment-vwetdry2.webp
+    evidence: "Owner-directed layout follow-up, PR #192 comment 6375000532. Deterministic Pillow crop of the
+      previously reviewed anatomy. Metadata-free RGB WebP. SHA-256
+      f2654fac541d750b3e5a2f38e0bd61f895ece76b62b231fad1d7483d42411e5b. No image generation or copied source
+      artwork. Prior asset bytes remain in Git history."
+  - src: /lesson-media/why-a-butterfly-can-be-blue-without-blue-pigment-vwaves4.webp
     origin: original-code
     creator: Five Minutes — OpenAI-assisted original diagram
     licence: Original project artwork; no third-party figure copied.
-    evidence: Original deterministic Pillow drawing, revision round 1; RGB lossless WebP without metadata.
-      Schematic interpretation of NISE/Sciencenter Morphing Butterfly guide, page 3. Text and hatching
-      distinguish gap contents in greyscale. Flat labelled patches represent reported appearance; no invented
-      light rays, copied photographs, measured spectra or chemical procedure.
+    evidence: "Owner-directed layout follow-up, PR #192 comment 6375000532. Deterministic Pillow wave comparison
+      with halved cycle count and crest guides; phases illustrative, no wavelength conversion. Metadata-free
+      RGB WebP. SHA-256 4e73d1d074c6f8c59dd9c4a48cf17924efeef5276ae35920b2b0edcbab8d7cc5. No image generation
+      or copied source artwork. Prior asset bytes remain in Git history."
+  - src: /lesson-media/why-a-butterfly-can-be-blue-without-blue-pigment-vcycle4.webp
+    origin: original-code
+    creator: Five Minutes — OpenAI-assisted original diagram
+    licence: Original project artwork; no third-party figure copied.
+    evidence: "Owner-directed layout follow-up, PR #192 comment 6375000532. Deterministic Pillow two-state return
+      loop interpreting NISE/Sciencenter guide page 3. Metadata-free RGB WebP. SHA-256
+      db8b8991b1ab03ac944380b20a07b86acdc1eecdabd7f94c8f8e173fb78ef6f6. No image generation or copied source
+      artwork. Prior asset bytes remain in Git history."
 provenance:
   createdAt: 2026-10-23T10:02:31+00:00
   createdBy:

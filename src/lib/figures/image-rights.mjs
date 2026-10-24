@@ -1,11 +1,12 @@
 import { LOCAL_RASTER_PATH } from './raster.mjs';
+import { VISUAL_LIMITS } from './collection.mjs';
 const object=v=>v!==null&&typeof v==='object'&&!Array.isArray(v)&&[Object.prototype,null].includes(Object.getPrototypeOf(v));
 const plain=(v,max)=>typeof v==='string'&&v.trim().length>0&&v.length<=max&&!/[<>`\u0000-\u001f]/.test(v);
 const source=v=>{if(!plain(v,512))return false;try{const u=new URL(v);return u.protocol==='https:'&&!u.username&&!u.password;}catch{return false;}};
 /** Structural evidence is necessary, never sufficient to establish ownership or a licence. */
 export function validateImageRightsRecords(records){
  if(records===undefined)return [];
- if(!Array.isArray(records)||records.length<1||records.length>3)return ['Expected one to three imageRights records.'];
+ if(!Array.isArray(records)||records.length<1||records.length>VISUAL_LIMITS.count)return ['Expected one to five imageRights records.'];
  if(!records.every(r=>object(r)&&Object.keys(r).every(k=>['src','origin','creator','licence','evidence','sourceUrl'].includes(k))
   &&typeof r.src==='string'&&LOCAL_RASTER_PATH.test(r.src)&&['original-code','generated','licensed'].includes(r.origin)
   &&plain(r.creator,120)&&plain(r.licence,160)&&plain(r.evidence,600)

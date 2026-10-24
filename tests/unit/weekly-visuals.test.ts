@@ -5,7 +5,8 @@ import sharp from 'sharp';
 import {createHash} from 'node:crypto';
 import {validatePresentationExtensions} from '../../src/lib/content/presentation-extensions';
 import {positionVisuals} from '../../src/lib/figures/placement';
-import {validateVisualCollection,lessonVisuals} from '../../src/lib/figures/collection.mjs';
+import {validateVisualCollection,lessonVisuals,VISUAL_LIMITS} from '../../src/lib/figures/collection.mjs';
+import {validateImageRights} from '../../src/lib/figures/image-rights.mjs';
 import {buildArtwork,validateDerivative,lessonArtwork} from '../../src/lib/figures/artwork.mjs';
 import {evaluateLessonPullRequest} from '../../scripts/lesson-guard-core.mjs';
 import {validatePresentation} from '../../src/lib/content/schema';
@@ -15,10 +16,11 @@ const words={alt:'Illustrative material.',caption:'Test fixture, not measured ev
 const image=(n:number)=>({id:`image-${n}`,role:n===1?'lead':'explanation',figure:{type:'image',src:`/lesson-media/${slug}-vimage-${n}.png`,width:192,height:192,afterParagraph:n,...words}});
 const visuals=[1,2,3].map(image);
 const blob=(text:string)=>({mode:'100644',type:'blob',size:Buffer.byteLength(text),text});
-function candidate(){
+function candidate(count=3){
+ const visuals=Array.from({length:count},(_,i)=>image(i+1));
  const metadata={schemaVersion:2,id,slug,aliases:[],publishedAt:'2026-10-23T05:00:00+02:00',topic:'science',subtopic:'physics',concepts:['test'],related:{manual:[],exclude:[]},sources:[],imageRights:visuals.map(v=>({src:v.figure.src,origin:'original-code',creator:'Test illustrator',licence:'Original test asset',evidence:'Application-owned fixture.'})),provenance:{createdAt:'2026-10-23T04:00:00+02:00',createdBy:{type:'ai',provider:'openai',model:'test',promptVersion:'test'},reviews:[]}};
  const presentation={title:'Test',description:'A test.',takeaway:'An insight.',question:'Why?',answer:'Because.',searchTerms:['test'],figures:structuredClone(visuals)};
- const text=`---\n${stringify(presentation)}---\nOne.\n\nTwo.\n\nThree.\n`;
+ const text=`---\n${stringify(presentation)}---\n${Array.from({length:count},(_,i)=>`Paragraph ${i+1}.`).join('\n\n')}\n`;
  const png=readFileSync('public/icons/icon-192.png');
  const files=[`${root}/lesson.yaml`,`${root}/adult.md`,'src/content/route-ownership.json',...visuals.map(v=>`public${v.figure.src}`)].map(filename=>({filename,status:filename.endsWith('.json')?'modified':'added',additions:10,deletions:0,changes:10}));
  const blobs:Record<string,any>={[`${root}/lesson.yaml`]:blob(stringify(metadata)),[`${root}/adult.md`]:blob(text)};
@@ -50,9 +52,37 @@ describe('weekly visual input boundary',()=>{
   expect(()=>evaluateLessonPullRequest(c)).toThrow();
  });
  it('accepts three independently positioned, rights-matched rasters through the trusted guard',()=>{expect(validatePresentationExtensions({figures:visuals},'adult','adult')).toEqual([]);expect(evaluateLessonPullRequest(candidate())).toMatchObject({applicable:true});});
+ it.each([1,4,5])('accepts %i rights-matched rasters without requiring three',count=>{
+  const c=candidate(count),p=parse(c.blobs[`${root}/adult.md`].text.split('---\n')[1]),m=parse(c.blobs[`${root}/lesson.yaml`].text);
+  expect(validatePresentation(p).valid).toBe(true);
+  expect(validateImageRights(m.imageRights,p.figures.map((v:any)=>v.figure.src))).toEqual([]);
+  expect(evaluateLessonPullRequest(c)).toMatchObject({applicable:true});
+ });
+ it('allows no figure while rejecting a sixth slot, asset or rights record',()=>{
+  expect(validatePresentationExtensions({},'adult','adult')).toEqual([]);
+  const c=candidate(6),p=parse(c.blobs[`${root}/adult.md`].text.split('---\n')[1]),m=parse(c.blobs[`${root}/lesson.yaml`].text);
+  expect(validatePresentation(p).valid).toBe(false);
+  expect(validateImageRights(m.imageRights,p.figures.map((v:any)=>v.figure.src)).length).toBeGreaterThan(0);
+  expect(()=>evaluateLessonPullRequest(c)).toThrow(/five/);
+ });
+ it('requires exact rights coverage for all five sources',()=>{
+  const c=candidate(5),m=parse(c.blobs[`${root}/lesson.yaml`].text),paths=m.imageRights.map((r:any)=>r.src);
+  expect(validateImageRights(m.imageRights.slice(0,4),paths).length).toBeGreaterThan(0);
+  m.imageRights[4].src=m.imageRights[0].src;
+  expect(validateImageRights(m.imageRights,paths).length).toBeGreaterThan(0);
+ });
+ it('keeps the 1500 KiB aggregate budget for five individually valid rasters',async()=>{
+  expect(VISUAL_LIMITS.totalBytes).toBe(1500*1024);
+  const c=candidate(5),p=`${root}/adult.md`,fm=parse(c.blobs[p].text.split('---\n')[1]);
+  const png=await sharp(Buffer.alloc(384*384*3,127),{raw:{width:384,height:384,channels:3}}).png({compressionLevel:0}).toBuffer();
+  expect(png.length).toBeLessThan(500*1024);expect(5*png.length).toBeGreaterThan(1500*1024);
+  for(const v of fm.figures){v.figure.width=384;v.figure.height=384;c.blobs[`public${v.figure.src}`]={mode:'100644',type:'blob',bytes:png,size:png.length};}
+  c.blobs[p]=blob(`---\n${stringify(fm)}---\nOne.\n\nTwo.\n\nThree.\n\nFour.\n\nFive.\n`);
+  expect(()=>evaluateLessonPullRequest(c)).toThrow(/aggregate image byte budget/);
+ });
  it.each([
   (p:any)=>p.figure=visuals[0].figure,
-  (p:any)=>p.figures.push(image(4)),
+  (p:any)=>p.figures.push(image(4),image(5),image(6)),
   (p:any)=>p.figures=[],
   (p:any)=>p.figures[1].id=p.figures[0].id,
   (p:any)=>p.figures[1].role='lead',
