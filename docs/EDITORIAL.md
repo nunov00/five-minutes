@@ -143,6 +143,22 @@ The ratings are subjective diagnostics, not measured reader satisfaction, public
 
 The canonical review record is the GitHub pull-request review on the exact commit. Any accepted MINOR finding and its rationale must be recorded in the same PR conversation or merge record. `provenance.reviews` may preserve earlier lesson-level review or substantive-revision events already incorporated into the reviewed commit; it is not updated after the final exact-head review, because doing so would create a new unreviewed head.
 
+## Challenge the topic before drafting
+
+Before investing in lesson prose or artwork, compare the leading three eligible candidates using their proposed question/angle, honest headline, short description, reader payoff and visual concept. Assess the treatment rather than a broad subject label. Check evidence, scope, duplication and production feasibility first under the applicable pipeline; appeal cannot rescue an ineligible candidate.
+
+In the existing selection brief or planning discussion, the selection reviewer gives one advisory **topic-appeal rating (1–10)** per candidate and answers:
+
+- Why would a curious non-expert choose this over competing content?
+- What familiar experience, useful implication, compelling story or worthwhile understanding makes it matter? Immediate practical use is not required.
+- What is the surprising explanation or payoff, and can the opening image communicate the subject and reason to care honestly?
+- What holds the angle back, and what would raise it by roughly two points, or towards 10? Name at most two worthwhile changes; do not invent work.
+- Would improving the angle be enough, or would a competing candidate make a stronger lesson?
+
+Give short reasons and a comparative recommendation, not a numerical ranking formula. Record unresolved evidence or feasibility limits and develop/defer an unsuitable angle before drafting. Do not rate an unwritten lesson's quality. Apply the existing advisory-rating rules above: independent initial judgement where possible, prior-score exposure disclosed, no author self-rating requirement, agreed exact-version benchmarks only, no thresholds/averages or new revision loops. AI assessments are editorial hypotheses, not measured demand.
+
+Reuse this selection evidence in the later lesson review, reassessing topic appeal if the angle changes; assess actual lesson quality separately on the finished exact head. Keep this within existing selection/review work: no extra scheduled task, reader panel, per-topic PR, schema field or publication authority. Weekly shortlist changes remain subject to the weekly process's separate implementation boundary.
+
 ## Drafting and critical self-edit
 
 Before drafting, prepare a short working brief: the worthwhile question, the reasoning that answers it, a concrete reader connection or memory anchor, and the supported additional understanding the explanation will develop. A named fact, longer wording or technical label is not an additional explanation. If the causal chain or deeper reasoning cannot be explained and sourced, improve the angle before writing. This brief guides the work; it is not a fixed lesson outline or reader-facing text.

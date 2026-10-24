@@ -40,7 +40,7 @@ An unresolved eligibility problem means develop or defer the topic, with a reaso
 
 ## 4. Rank the eligible candidates
 
-Compare three questions using short written judgements, not scores:
+Compare three questions using short written judgements. Apply [the pre-draft topic challenge](../EDITORIAL.md#challenge-the-topic-before-drafting) to the leading three: include advisory topic-appeal ratings and concrete improvements, without sorting by score or introducing a pass mark:
 
 1. **Curiosity:** why would someone open this? Identify the puzzle, consequence or surprising connection without clickbait.
 2. **Explanatory payoff:** what will readers understand and be able to retell? Prefer a revealing mechanism or useful mental model over trivia.
