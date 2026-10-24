@@ -39,37 +39,35 @@ figures:
     src: /lesson-media/why-popcorn-pops-vpuff1.webp
     width: 960
     height: 1470
-    afterParagraph: 5
+    afterParagraph: 4
     alt: Three schematic stages show heating while the hull holds, rupture with expansion, and a foam that sets.
     caption: 'Schematic, not to scale: pressure rises, the hull breaks, starch expands, and the structure sets.[^1]'
     description: The hull holds while starch softens. Rupture permits expansion; the stretched structure firms up. Arrows and spaces are conceptual, not microscopic observations.
 ---
-A hard kernel already contains the material for a light, crisp piece of popcorn. Heating builds pressure while softening the starch. When the hull gives way, the starch can expand. The surprise is how it keeps that shape.[^4]
+A hard kernel already contains the material for a light, crisp piece of popcorn. Heating builds pressure while softening the starch. When the hull gives way, the starch can expand. The surprise is how it keeps that shape.[^1]
 
 ## A seed that holds pressure
 
-A kernel is a seed, not an empty shell. Its starchy interior stores food for the young plant, and that starch becomes the familiar white part of popcorn. Water is already present within this material; it is not a little pool in a hollow centre.[^2]
+A kernel is a seed, not an empty shell. Its starchy interior stores food for the young plant, and that starch becomes the familiar white part of popcorn. Water is already present within this material; it is not a little pool in a hollow centre.[^1][^2]
 
-Heating makes some of the water become vapour. The hull restricts escape, so pressure rises. Heat and moisture also soften the starch, preparing it to deform before the visible puff begins.[^1]
-
-The hull therefore does more than keep the seed together: it delays the release. It holds pressure while the starch becomes easier to stretch. Both changes prepare the kernel to expand when that restraint is removed.[^4]
+Heating makes some of the water become vapour. The hull slows its escape, allowing pressure to build while heat and moisture soften the starch. By delaying the release, the hull gives the starch time to become easier to stretch.[^1]
 
 ## The crack is only the beginning
 
 Once the hull splits, it no longer confines the inside. Vapour expands and more hot water can vaporise as pressure falls. That expansion stretches the softened starch around growing spaces, making the flake larger.[^1]
 
-The expanded starch then firms up into the crisp structure you eat. It is a foam: a solid framework around many spaces. Popcorn is not an inflated bag that must stay sealed. Its structure remains after the vapour has gone.[^2]
+Water evaporates from the stretched starch walls into the growing spaces and the surrounding air. Losing moisture makes the starch less soft, helping it set in its expanded shape. The result is a foam: a solid framework around many spaces. Its shape no longer depends on trapped vapour keeping it inflated.[^1][^2]
 
 ## Why some kernels disappoint
 
 In Wu and Schwartzberg's tests, damaged kernels expanded much less than intact ones. A leak lets vapour escape before enough pressure builds. So cracking the hull early can reduce expansion rather than help it.[^1]
 
-Moisture matters too, but 'more water' is not a rule for better popcorn. Experiments found that expansion rose to a best moisture level and then fell; that level differed with the kernels tested. A kernel's size alone was not enough to predict its best moisture level.[^3]
+The damage also affected how many kernels popped at all. In that study, roughly 38 in every 100 damaged kernels remained unpopped. For intact kernels in a popper that had not been preheated, it was about 8 in 100. A damaged hull can leave more hard kernels behind.[^1]
 
-The kernels left in the bowl are therefore not necessarily waiting for more heat. Their moisture may differ, and adding water is not a guaranteed fix. The explanation reveals why the balance matters; it does not diagnose every unpopped kernel from its appearance.[^3]
+Moisture matters too, but 'more water' is not a rule for better popcorn. Expansion rose to a best moisture level and then fell. The optimum varied between the tested size groups, without consistently rising or falling as kernels got bigger.[^3]
 
 ## The pressure outside
 
-There is a further twist: the air outside matters too. In experiments described in a 2004 preprint, researchers lowered the surrounding pressure and obtained a larger average popped volume than in their ordinary-pressure trials. Their maximum yields still fell below the best results already reported for other methods, so this did not establish a superior way to cook popcorn.[^4]
+There is a further twist: the air outside matters too. In experiments described in a 2004 preprint, researchers lowered the surrounding pressure and obtained a larger average popped volume than in their ordinary-pressure trials. Their best expansion volumes and average flake sizes were still below earlier reports for air poppers and microwaves, so this did not establish a superior way to cook popcorn.[^4]
 
 The revealing result is the comparison: the same starting food could fill more space when it expanded against less pressure outside. Even after the hull has broken, the surroundings can help decide the size of your snack.[^4]
