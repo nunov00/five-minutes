@@ -3,6 +3,7 @@ import { join, relative, sep } from 'node:path';
 import {configuredOrigin} from '../src/lib/site-origin.mjs';
 import {validateDerivative,DERIVATIVE_LIMITS} from '../src/lib/figures/artwork.mjs';
 import {verifyReadingOrder} from './reading-integrity.mjs';
+import {verifySourceLinks} from '../src/lib/content/citations.mjs';
 
 const origin=configuredOrigin(process.env.SITE_URL);
 const dist = join(process.cwd(), 'dist');
@@ -64,6 +65,7 @@ const noindexPages = new Set();
 const referencedVisuals=new Set();
 for (const file of files.filter((f) => f.endsWith('.html'))) {
   const html = await readFile(file, 'utf8');
+  verifySourceLinks(html);
   if (/<meta[^>]*name="robots"[^>]*content="noindex(?:,|\s)/.test(html)) noindexPages.add(webPath(file).replace(/\/index\.html$/, '') || '/');
   if(!origin&&(/<link rel="canonical"/.test(html)||/<meta (?:property="og:|name="twitter:)/.test(html)))throw Error(`Origin-absent page claims absolute publication metadata: ${webPath(file)}`);
   const redirectTarget=redirectsByPath.get(webPath(file).replace(/\/index\.html$/, ''));

@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import LessonBody from '../../../components/reading/LessonBody.astro';
+import LessonSources from '../../../components/reading/LessonSources.astro';
+import { renderSafeMarkdown } from '../../../lib/content/safe-content';
+import type { LessonVisual } from '../../../lib/content/presentation-extensions';
+export function getStaticPaths() { return process.env.FIVE_MINUTES_TEST_LIBRARY_PAGE_SIZE ? [{params:{name:'references'}}] : []; }
+// This static route is emitted only in the existing explicit fixture build.
+export const prerender = true;
+const sources = [
+  {title:'Example Researcher (2020) — A synthetic source',url:'https://example.com/one?a=1&b=2',publisher:'Example publisher',accessedAt:'2026-10-24',note:'Supports the first synthetic relationship; section 2. Fixture data only.'},
+  {title:'Example Organisation (2021) — A second synthetic source',url:'https://example.com/two',publisher:'Example organisation',accessedAt:'2026-10-24',note:'Abstract checked only; no full-paper review. A long reference remains readable on a narrow screen.'},
+];
+const html=renderSafeMarkdown('A synthetic claim has a source.[^1] A later claim reuses it.[^1]\n\nA second source supports a different point.[^2]',{sourceCount:sources.length});
+const visuals:LessonVisual[]=[{id:'sample',role:'explanation',figure:{type:'seasons-orbit',afterParagraph:1,data:{tiltDegrees:23.5},alt:'Application-owned schematic used to exercise citation navigation.',caption:'Schematic, not to scale. Synthetic source reference.[^2]',description:'A technical fixture, not a new factual lesson. Description citation.[^1]'}}];
+---
+<BaseLayout title="Source reference test" noindex>
+  <article class="reading-article">
+    <h1>Source reference test</h1>
+    <LessonBody html={html} visuals={visuals} sourceCount={sources.length} id="citation-fixture"/>
+    <LessonSources sources={sources}/>
+  </article>
+</BaseLayout>

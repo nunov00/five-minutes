@@ -1,8 +1,9 @@
 ---
 import type { LessonFigure } from '../../lib/content/presentation-extensions';
 import ToolkitFigure from './ToolkitFigure.astro';
-interface Props { figure: LessonFigure; id: string; eager?:boolean; openingLead?:boolean; }
-const {figure,id,eager=false,openingLead=false}=Astro.props;
+import { renderCitationText } from '../../lib/content/safe-content';
+interface Props { figure: LessonFigure; id: string; eager?:boolean; openingLead?:boolean; sourceCount?:number; }
+const {figure,id,eager=false,openingLead=false,sourceCount=0}=Astro.props;
 const tilt=figure.type==='seasons-orbit'?figure.data.tiltDegrees:0;
 const angle=tilt*Math.PI/180;
 const axes=(cx:number)=>({northX:cx+56*Math.sin(angle),southX:cx-56*Math.sin(angle),northY:92-56*Math.cos(angle),southY:92+56*Math.cos(angle)});
@@ -86,6 +87,6 @@ const cycleCentre=visualStyle==='heat-transfer'?'Heat moves':visualStyle==='feed
   </ol>
   {figure.data.unit&&<p class="growth-unit" aria-hidden="true">{figure.data.unit}</p>}
  </div>}
- <figcaption id={`${id}-caption`}>{figure.caption}</figcaption>
- <details class="figure-description"><summary>Explanation of this figure</summary><p id={`${id}-description`}>{figure.description}</p></details>
+ <figcaption id={`${id}-caption`} set:html={renderCitationText(figure.caption,sourceCount)}/>
+ <details class="figure-description"><summary>Explanation of this figure</summary><p id={`${id}-description`} set:html={renderCitationText(figure.description,sourceCount)}/></details>
 </figure>

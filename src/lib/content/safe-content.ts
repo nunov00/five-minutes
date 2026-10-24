@@ -1,4 +1,5 @@
 import { parseDocument } from 'yaml';
+import { citationAt, citationLink, SOURCE_FRAGMENT, validateCitations } from './citations.mjs';
 
 export interface ParsedPresentation {
   frontmatter: unknown;
@@ -14,6 +15,7 @@ export class ContentContractError extends Error {}
 export interface MarkdownOptions {
   /** Lowest heading level the source may use; shallower `#` headings fail closed. */
   minHeadingLevel?: 1 | 2;
+  sourceCount?: number;
 }
 
 const SAFE_LINK = /^(?:https?:|mailto:)/i;
@@ -45,7 +47,7 @@ function findClosingParen(source: string, start: number): number {
   return -1;
 }
 
-function inline(source: string): string {
+function inline(source: string, sourceCount = 0): string {
   if (/!\[[^\]]*\]\(/.test(source)) throw new ContentSecurityError('Markdown images are not allowed.');
 
   const tokens: string[] = [];
@@ -62,6 +64,14 @@ function inline(source: string): string {
       }
     }
     if (source[i] === '[') {
+      const citation = citationAt(source, i, sourceCount);
+      if (citation) {
+        const token = `\u0000${tokens.length}\u0000`;
+        tokens.push(citationLink(citation.number));
+        staged += token;
+        i += citation.length;
+        continue;
+      }
       const labelEnd = source.indexOf('](', i + 1);
       if (labelEnd !== -1) {
         const hrefEnd = findClosingParen(source, labelEnd + 2);
@@ -100,7 +110,9 @@ export function sanitizeRenderedHtml(html: string): string {
     else if (tag.startsWith('</') || name !== 'a') output.push(`<${tag.startsWith('</') ? '/' : ''}${name}>`);
     else {
       const href = /href="([^"]*)"/.exec(attrs)?.[1];
-      output.push(href && SAFE_LINK.test(href) ? `<a href="${href}" rel="noopener noreferrer">` : escapeHtml(tag));
+      const citation = href && SOURCE_FRAGMENT.exec(href);
+      output.push(citation ? `<a href="${href}" class="source-citation" aria-label="Source ${citation[1]}">`
+        : href && SAFE_LINK.test(href) ? `<a href="${href}" rel="noopener noreferrer">` : escapeHtml(tag));
     }
     cursor = index + tag.length;
   }
@@ -108,8 +120,9 @@ export function sanitizeRenderedHtml(html: string): string {
   return output.join('');
 }
 
-export function renderSafeMarkdown(markdown: string, { minHeadingLevel = 1 }: MarkdownOptions = {}): string {
+export function renderSafeMarkdown(markdown: string, { minHeadingLevel = 1, sourceCount = 0 }: MarkdownOptions = {}): string {
   if (markdown.includes('\u0000')) throw new ContentSecurityError('NUL characters are not allowed in Markdown.');
+  validateCitations(markdown, sourceCount, true);
   const lines = markdown.replace(/\r\n?/g, '\n').split('\n');
   const rendered: string[] = [];
   let list: 'ul' | 'ol' | null = null;
@@ -129,24 +142,24 @@ export function renderSafeMarkdown(markdown: string, { minHeadingLevel = 1 }: Ma
     if (heading && heading[1].length < minHeadingLevel) {
       throw new ContentContractError(`Markdown headings must start at level ${minHeadingLevel}: "${line}".`);
     }
-    if (heading) { closeList(); rendered.push(`<h${heading[1].length}>${inline(heading[2])}</h${heading[1].length}>`); continue; }
+    if (heading) { closeList(); rendered.push(`<h${heading[1].length}>${inline(heading[2], sourceCount)}</h${heading[1].length}>`); continue; }
     const bullet = /^[-*]\s+(.+)$/.exec(line);
     const numbered = /^\d+\.\s+(.+)$/.exec(line);
     if (bullet || numbered) {
       const kind = bullet ? 'ul' : 'ol';
       if (list !== kind) { closeList(); list = kind; rendered.push(`<${kind}>`); }
-      rendered.push(`<li>${inline((bullet || numbered)![1])}</li>`); continue;
+      rendered.push(`<li>${inline((bullet || numbered)![1], sourceCount)}</li>`); continue;
     }
     const quote = /^>\s?(.+)$/.exec(line);
-    if (quote) { closeList(); rendered.push(`<blockquote>${inline(quote[1])}</blockquote>`); continue; }
-    closeList(); rendered.push(`<p>${inline(line)}</p>`);
+    if (quote) { closeList(); rendered.push(`<blockquote>${inline(quote[1], sourceCount)}</blockquote>`); continue; }
+    closeList(); rendered.push(`<p>${inline(line, sourceCount)}</p>`);
   }
   if (fence !== null) throw new ContentSecurityError('Unclosed fenced code block.');
   closeList();
   return sanitizeRenderedHtml(rendered.join('\n'));
 }
 
-export function parsePresentationFile(source: string): ParsedPresentation {
+export function parsePresentationFile(source: string, sourceCount = 0): ParsedPresentation {
   const match = /^---\n([\s\S]*?)\n---\n([\s\S]*)$/.exec(source.replace(/\r\n?/g, '\n'));
   if (!match) throw new ContentSecurityError('Presentation requires YAML front matter.');
   const frontmatter = parseSafeYaml(match[1]);
@@ -163,7 +176,18 @@ export function parsePresentationFile(source: string): ParsedPresentation {
   }
   // The presentation title (front matter) is the page's level-1 heading, so
   // body headings start at level 2 and rendered HTML is used unchanged.
-  return { frontmatter, markdown, html: renderSafeMarkdown(markdown, { minHeadingLevel: 2 }) };
+  return { frontmatter, markdown, html: renderSafeMarkdown(markdown, { minHeadingLevel: 2, sourceCount }) };
+}
+
+/** Plain figure copy stays plain; only the bounded citation token becomes a link. */
+export function renderCitationText(text: string, sourceCount: number): string {
+  let html = '';
+  for (let i = 0; i < text.length;) {
+    const citation = citationAt(text, i, sourceCount);
+    if (citation) { html += citationLink(citation.number); i += citation.length; }
+    else { html += escapeHtml(text[i]); i++; }
+  }
+  return html;
 }
 
 export function serializeStructuredData(value: unknown): string {
