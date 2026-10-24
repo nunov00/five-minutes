@@ -1,6 +1,6 @@
 # Controlled weekly production trial
 
-Status: reviewed trial contract; scheduling inactive pending the single-task amendment's mandatory review, merge and configuration readback. Tracking: #200; accepted manual popcorn pilot #202.
+Status: bounded trial contract. Execution is permitted only after the single-task amendment passes mandatory review and checks, is merged, and its saved task configuration/readback is recorded on #200. Tracking: #200; accepted manual popcorn pilot #202.
 Owner direction, 24 October 2026: publish the accepted pilot, then test one controlled weekly production cycle before considering recurring activation. Follow-up: use one task for exactly three runs to fit account capacity.
 
 ## Scope and authority
