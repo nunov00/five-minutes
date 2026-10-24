@@ -145,6 +145,8 @@ The canonical review record is the GitHub pull-request review on the exact commi
 
 ## Challenge the topic before drafting
 
+This section governs Owner-approved pilots and, after activation, weekly topic selection. The existing daily workflow continues to follow [the ranked pipeline](editorial-pipeline.md); it gains no pre-draft rating requirement from this section.
+
 Before investing in lesson prose or artwork, compare the leading three eligible candidates using their proposed question/angle, honest headline, short description, reader payoff and visual concept. Assess the treatment rather than a broad subject label. Check evidence, scope, duplication and production feasibility first under the applicable pipeline; appeal cannot rescue an ineligible candidate.
 
 In the existing selection brief or planning discussion, the selection reviewer gives one advisory **topic-appeal rating (1–10)** per candidate and answers:
