@@ -1,6 +1,6 @@
 import {describe,expect,it} from 'vitest';
-import {renderSafeMarkdown,renderCitationText,sanitizeRenderedHtml} from '../../src/lib/content/safe-content';
-import {validateCitations,verifySourceLinks} from '../../src/lib/content/citations.mjs';
+import {renderSafeMarkdown,renderCitationText,sanitizeRenderedHtml,parsePresentationFile} from '../../src/lib/content/safe-content';
+import {validateCitations,validatePresentationCitations,verifySourceLinks} from '../../src/lib/content/citations.mjs';
 import {mkdtemp,mkdir,writeFile} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
@@ -11,6 +11,7 @@ import {loadPublishedLessons} from '../../src/lib/content/loader';
 describe('bounded lesson source citations',()=>{
   it('rejects missing or duplicated targets in built HTML',()=>{
     expect(()=>verifySourceLinks('<a href="#source-1">[1]</a>')).toThrow(/Missing/);
+    expect(()=>verifySourceLinks('<a href="#source-1">[1]</a><li data-id="source-1"></li>')).toThrow(/Missing/);
     expect(()=>verifySourceLinks('<li id="source-1"></li><li id="source-1"></li>')).toThrow(/Duplicate/);
     expect(()=>verifySourceLinks('<a href="#source-1">[1]</a><li id="source-1"></li>')).not.toThrow();
   });
@@ -45,13 +46,31 @@ describe('bounded lesson source citations',()=>{
     expect(()=>validateCitations('Caption.[^2]',1)).toThrow(/no matching/);
     expect(()=>renderSafeMarkdown('[^1]: separate definition',{sourceCount:1})).toThrow(/definitions/);
   });
-  it('keeps code and ordinary link labels literal in both Markdown paths',()=>{
-    const text='`[^99]` [literal [^88]](https://example.com/a_(b))\n\n```\n[^77]\n```\n\nActual.[^1]';
+  it('keeps code and ordinary links literal in both Markdown paths',()=>{
+    const text='`[^99]` [literal label](https://example.com/a_(b)[^88])\n\n```\n[^77]\n```\n\nActual.[^1]';
     expect(validateCitations(text,1,true)).toEqual([1]);
     const html=renderSafeMarkdown(text,{sourceCount:1});
     expect(html.match(/class="source-citation"/g)).toHaveLength(1);
     expect(html).toContain('<code>[^99]</code>');
-    expect(html).toContain('literal [^88]');
+    expect(html).toContain('literal label');
+  });
+  it.each(['## Heading [^1]','[label [^9]](https://example.com)','a [ [^9] and [b](https://example.com)'])('rejects hidden or misplaced markers: %s',text=>{
+    expect(()=>validateCitations(text,1,true)).toThrow(/headings|link labels/);
+    expect(()=>renderSafeMarkdown(text,{sourceCount:1})).toThrow(/headings|link labels/);
+  });
+  it.each([
+    {title:'Title [^1]'},{description:'Lead [^1]'},{takeaway:'Answer [^1]'},{question:'Question [^1]'},{answer:'Answer [^1]'},
+    {searchTerms:['term [^1]']},{figure:{alt:'Alt [^1]'}},{figure:{data:{steps:[{label:'Step [^1]'}]}}},
+    {activity:{prompt:'Prompt [^1]',options:['A','B']}},
+  ])('rejects reserved syntax in unsupported presentation fields: %j',presentation=>{
+    expect(()=>validatePresentationCitations(presentation,1)).toThrow(/Citation tokens/);
+    const source=`---\n${stringify(presentation)}---\nBody.\n`;
+    expect(()=>parsePresentationFile(source,1)).toThrow(/Citation tokens/);
+  });
+  it('validates captions in collections and singular figures while rejecting collection alt markers',()=>{
+    expect(()=>validatePresentationCitations({figures:[{figure:{caption:'Caption.[^1]',description:'Description.[^1]'}}]},1)).not.toThrow();
+    expect(()=>validatePresentationCitations({figures:[{figure:{alt:'Alt [^1]'}}]},1)).toThrow(/figures.0.figure.alt/);
+    expect(()=>validatePresentationCitations({figure:{caption:'Caption.[^2]'}},1)).toThrow(/Citation 2/);
   });
   it('escapes figure copy and retains only application-owned numeric fragments',()=>{
     const html=renderCitationText('<img onerror=x> *plain* [^1]',1);

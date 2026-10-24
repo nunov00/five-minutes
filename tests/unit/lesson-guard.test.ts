@@ -100,6 +100,14 @@ function rejected(change: (value: ReturnType<typeof fixture>) => void, pattern?:
 }
 
 describe('lesson-only publication guard', () => {
+  it.each(['title: Why Shadows Change','description: A description.','takeaway: A takeaway.','question: A question?','answer: An answer.'])('rejects citation tokens in plain presentation fields: %s',field=>{
+    rejected(v=>{const b=v.blobs[`${root}/adult.md`];b.text=b.text.replace(field,field+'[^1]');b.size=Buffer.byteLength(b.text);},/Citation tokens/);
+  });
+  it('rejects source tokens in diagram labels and alt text in the trusted guard',()=>{
+    for(const figure of [processFigure.replace('alt: Light','alt: Light[^1]'),processFigure.replace('label: Light source','label: "Light source[^1]"')]){
+      rejected(v=>{const b=v.blobs[`${root}/adult.md`];b.text=b.text.replace('searchTerms:',figure+'searchTerms:');b.size=Buffer.byteLength(b.text);},/Citation tokens/);
+    }
+  });
   it('checks citation targets in body and figure copy using source metadata',()=>{
     const v=fixture(),y=v.blobs[`${root}/lesson.yaml`],b=v.blobs[`${root}/adult.md`];
     y.text=y.text.replace('sources: []','sources: [{title: Test, url: https://example.com, publisher: Example, accessedAt: 2026-10-05}]');y.size=Buffer.byteLength(y.text);

@@ -1,5 +1,5 @@
 import { parseDocument } from 'yaml';
-import { citationAt, citationLink, SOURCE_FRAGMENT, validateCitations } from './citations.mjs';
+import { citationAt, citationLink, SOURCE_FRAGMENT, validateCitations, validatePresentationCitations } from './citations.mjs';
 
 export interface ParsedPresentation {
   frontmatter: unknown;
@@ -163,6 +163,7 @@ export function parsePresentationFile(source: string, sourceCount = 0): ParsedPr
   const match = /^---\n([\s\S]*?)\n---\n([\s\S]*)$/.exec(source.replace(/\r\n?/g, '\n'));
   if (!match) throw new ContentSecurityError('Presentation requires YAML front matter.');
   const frontmatter = parseSafeYaml(match[1]);
+  validatePresentationCitations(frontmatter, sourceCount);
   const markdown = match[2];
   let fenced = false;
   for (const line of markdown.replace(/\r\n?/g, '\n').split('\n')) {

@@ -36,3 +36,16 @@ test('existing canonical lessons expose their recorded sources without invented 
   await expect(page.locator('#source-1')).toContainText('NASA');
   await expect(page.locator('.source-citation')).toHaveCount(0);
 });
+
+test('existing research notes stay visible as secondary source details on phones',async({page},info)=>{
+  for(const width of [320,393])for(const colorScheme of ['light','dark'] as const){
+    await page.setViewportSize({width,height:900});await page.emulateMedia({colorScheme});
+    await page.goto('/adult/why-wastewater-plants-recycle-sludge');
+    const sources=page.locator('.lesson-sources');await sources.scrollIntoViewIfNeeded();
+    await expect(sources.locator('.source-note').first()).toBeVisible();
+    const sizes=await sources.evaluate(el=>({note:parseFloat(getComputedStyle(el.querySelector('.source-note')!).fontSize),title:parseFloat(getComputedStyle(el.querySelector('li > a')!).fontSize)}));
+    expect(sizes.note).toBeLessThan(sizes.title);
+    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+    if(info.project.name==='desktop-chromium')await sources.screenshot({path:info.outputPath(`visual-source-notes-${width}-${colorScheme}.png`)});
+  }
+});

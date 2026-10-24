@@ -1,6 +1,6 @@
 import { lessonVisuals, validateVisualCollection, VISUAL_LIMITS } from '../src/lib/figures/collection.mjs';
 import { validateOpening } from '../src/lib/content/opening-contract.mjs';
-import { validateCitations } from '../src/lib/content/citations.mjs';
+import { validateCitations, validatePresentationCitations } from '../src/lib/content/citations.mjs';
 import { isValidTimestamp } from './publication-time.mjs';
 import { BACKLOG_PATH, parseBacklog, verifyBacklogCompletion } from './editorial-backlog.mjs';
 import { parseDocument } from 'yaml';
@@ -322,6 +322,7 @@ export function evaluateLessonPullRequest(input) {
   const presentations=[parseFrontmatter(adultText,'adult.md',ADULT_KEYS)];
   try {
     const count = Array.isArray(metadata.sources) ? metadata.sources.length : 0;
+    for (const presentation of presentations) validatePresentationCitations(presentation, count);
     validateCitations(adultText.slice(adultText.indexOf('\n---\n', 4) + 5), count, true);
     for (const presentation of presentations) for (const {figure} of lessonVisuals(presentation)) {
       validateCitations(figure.caption, count);

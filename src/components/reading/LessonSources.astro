@@ -9,7 +9,7 @@ const { sources } = Astro.props;
     {sources.map((source, index) => <li id={`source-${index + 1}`} tabindex="-1">
       <a href={source.url} rel="noopener noreferrer">{source.title}</a>
       <p class="source-publication">{source.publisher} · Accessed {source.accessedAt}</p>
-      {source.note && <p>{source.note}</p>}
+      {source.note && <p class="source-note">{source.note}</p>}
     </li>)}
   </ol>
 </section>}
