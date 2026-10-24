@@ -44,7 +44,7 @@ figures:
     caption: 'Schematic, not to scale: pressure rises, the hull breaks, starch expands, and the structure sets.[^1]'
     description: The hull holds while starch softens. Rupture permits expansion; the stretched structure firms up. Arrows and spaces are conceptual, not microscopic observations.
 ---
-A hard kernel already contains the material for a light, crisp piece of popcorn. Heating builds pressure while softening the starch. When the hull gives way, the starch can expand. The surprise is how it keeps that shape.[^1]
+Why do a few kernels stay hard at the bottom of a bowl of popcorn? Heat alone does not guarantee a fluffy flake. The hull has to hold pressure while the starch softens, then release it so the starch can expand. A leak can disrupt that sequence.[^1]
 
 ## A seed that holds pressure
 
@@ -68,6 +68,6 @@ Moisture matters too, but 'more water' is not a rule for better popcorn. Expansi
 
 ## The pressure outside
 
-There is a further twist: the air outside matters too. In experiments by Quinn and colleagues, researchers lowered the surrounding pressure and obtained a larger average popped volume than in their ordinary-pressure trials. Their best expansion volumes and average flake sizes were still below earlier reports for air poppers and microwaves, so this did not establish a superior way to cook popcorn.[^4]
+The air outside matters too. In experiments by Quinn and colleagues, researchers lowered the surrounding pressure and obtained a larger average popped volume than in their ordinary-pressure trials. Their best expansion volumes and average flake sizes were still below earlier reports for air poppers and microwaves, so this did not establish a superior way to cook popcorn.[^4]
 
-The revealing result is the comparison: the same starting food could fill more space when it expanded against less pressure outside. Even after the hull has broken, the surroundings can help decide the size of your snack.[^4]
+Lower outside pressure means less pressure pushing back against the expanding vapour. While the starch is soft, the vapour can stretch its walls further. As those walls lose moisture, they set. The hull helps control when expansion starts; the air outside helps determine how far it goes.[^1][^4]
