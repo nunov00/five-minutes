@@ -17,7 +17,7 @@ sources:
   url: https://www.cerealsgrains.org/publications/cc/backissues/1992/Documents/69_567.pdf
   publisher: Cereal Chemistry, American Association of Cereal Chemists
   accessedAt: '2026-10-24'
-  note: 'Primary research: pp. 568, 571–573 explain the mechanism; p. 570, Table III compares damaged hulls.'
+  note: 'Primary research: pp. 568, 571–573 explain the mechanism; p. 570, Table III reports cut-hull and intact controls. The cut-hull row gives no preheating condition; the intact controls cover both conditions.'
 - title: American Chemical Society (2017) — The Secret Science of Popcorn
   url: https://www.acs.org/content/dam/acsorg/education/whatischemistry/adventuresinchemistry/secretscience/popcorn/secretscience-popcorn.pdf
   publisher: American Chemical Society
@@ -28,11 +28,11 @@ sources:
   publisher: Cereal Chemistry, American Association of Cereal Chemists
   accessedAt: '2026-10-24'
   note: 'Primary research, pp. 458–460: tested kernel sizes had different moisture levels for greatest expansion; more water was not always better.'
-- title: Quinn, Hong and Both (2004) — Increasing the Size of a Piece of Popcorn (preprint)
+- title: Quinn, Hong and Both (2004; published 2005) — Increasing the Size of a Piece of Popcorn
   url: https://arxiv.org/abs/cond-mat/0409424
   publisher: arXiv
   accessedAt: '2026-10-24'
-  note: Pages 7–8 and 12 report greater average volume under reduced external pressure, with maximum expansion volume and flake size below earlier reported results. Preprint, not a kitchen method.
+  note: Author preprint read, pp. 7–8 and 12; greater volume under reduced external pressure, below earlier best expansion volumes and flake sizes. Published in Physica A 353 (2005), pp. 637–648, DOI 10.1016/j.physa.2005.02.013. Publisher record checked; published full text unavailable here.
 imageRights:
 - src: /lesson-media/why-popcorn-pops-vlead1.webp
   origin: generated

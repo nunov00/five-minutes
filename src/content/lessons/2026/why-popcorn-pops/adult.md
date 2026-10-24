@@ -62,12 +62,12 @@ Water evaporates from the stretched starch walls into the growing spaces and the
 
 In Wu and Schwartzberg's tests, damaged kernels expanded much less than intact ones. A leak lets vapour escape before enough pressure builds. So cracking the hull early can reduce expansion rather than help it.[^1]
 
-The damage also affected how many kernels popped at all. In that study, roughly 38 in every 100 damaged kernels remained unpopped. For intact kernels in a popper that had not been preheated, it was about 8 in 100. A damaged hull can leave more hard kernels behind.[^1]
+The damage also affected how many kernels popped at all. The study reported about 38 unpopped kernels per 100 with a cut through the hull, compared with about 2–8 per 100 in its intact control groups. A damaged hull can leave more hard kernels behind.[^1]
 
 Moisture matters too, but 'more water' is not a rule for better popcorn. Expansion rose to a best moisture level and then fell. The optimum varied between the tested size groups, without consistently rising or falling as kernels got bigger.[^3]
 
 ## The pressure outside
 
-There is a further twist: the air outside matters too. In experiments described in a 2004 preprint, researchers lowered the surrounding pressure and obtained a larger average popped volume than in their ordinary-pressure trials. Their best expansion volumes and average flake sizes were still below earlier reports for air poppers and microwaves, so this did not establish a superior way to cook popcorn.[^4]
+There is a further twist: the air outside matters too. In experiments by Quinn and colleagues, researchers lowered the surrounding pressure and obtained a larger average popped volume than in their ordinary-pressure trials. Their best expansion volumes and average flake sizes were still below earlier reports for air poppers and microwaves, so this did not establish a superior way to cook popcorn.[^4]
 
 The revealing result is the comparison: the same starting food could fill more space when it expanded against less pressure outside. Even after the hull has broken, the surroundings can help decide the size of your snack.[^4]
