@@ -41,7 +41,7 @@ sources:
       Biosensor
     url: https://www.frontiersin.org/journals/physics/articles/10.3389/fphy.2021.806904/full
     publisher: Frontiers in Physics — Dong et al. (published 5 January 2022; volume 9, 2021)
-    accessedAt: 2026-10-23
+    accessedAt: 2026-10-24
     note: Model and simulations examine changes in the surrounding medium. Supports a qualitative
       longer-wavelength shift for relevant viewing conditions; also shows that direction/size of a shift is
       not universal across measurement angles. Its methanol/ethanol comparison is not treated as an
@@ -49,6 +49,10 @@ sources:
       numerical prediction are asserted. The research ending uses its RCWA model of surrounding media and
       measurement geometry; the conclusion explicitly leaves experiments to verify the proposed measurement
       improvements to future work. No functioning product or established sensing performance is claimed.
+      Simulations and Discussions, the text around Figures 9 and 10B, explicitly balances spectral-peak
+      separation against a longer continuous angle range to accommodate uncertainty in instrument angles.
+      This supports the existing phrase about tolerating small angle errors. The Conclusion describes
+      robustness as theoretical and leaves experimental verification to future work.
   - title: Interference in Thin Films — University Physics Volume 3, section 3.4
     url: https://openstax.org/books/university-physics-volume-3/pages/3-4-interference-in-thin-films
     publisher: OpenStax / Rice University
