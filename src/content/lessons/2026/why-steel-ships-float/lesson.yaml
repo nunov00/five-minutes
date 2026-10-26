@@ -1,0 +1,72 @@
+schemaVersion: 2
+id: 7eaad3c8-f9b1-447a-aae0-779ad350b433
+slug: why-steel-ships-float
+aliases: []
+publishedAt: '2026-10-26T06:00:32+00:00'
+topic: science
+subtopic: physics
+concepts:
+- buoyancy
+- pressure
+- density
+- displacement
+related:
+  manual: []
+  exclude: []
+sources:
+- title: Hodanbosi and Fairman (1996) — Fluid Pressure and Depth
+  publisher: NASA Glenn Research Center
+  url: https://www.grc.nasa.gov/www/k-12/WindTunnel/Activities/fluid_pressure.html
+  accessedAt: '2026-10-26'
+  note: Pressure increases with depth; the exercises use 1,000 kg per cubic metre
+    for fresh water. Read the explanatory text and equations; this is educational
+    material, not a ship experiment.
+- title: 'Hodanbosi and Fairman (1996) — Buoyancy: Archimedes Principle'
+  publisher: NASA Glenn Research Center
+  url: https://www.grc.nasa.gov/www/k-12/WindTunnel/Activities/buoy_Archimedes.html
+  accessedAt: '2026-10-26'
+  note: The submerged-cube argument explains the pressure imbalance and why buoyancy
+    equals displaced-fluid weight. The lesson uses the general principle, not its
+    aluminium example.
+- title: Ling, Sanny and Moebs (2016) — University Physics Volume 1, section 14.4
+  publisher: OpenStax, Rice University
+  url: https://openstax.org/books/university-physics-volume-1/pages/14-4-archimedes-principle-and-buoyancy
+  accessedAt: '2026-10-26'
+  note: Density and Archimedes’ Principle explains steel hulls, shape and the deeper
+    position of a loaded ship. Our numerical box-hull example is hypothetical and
+    calculated, not copied data.
+- title: NOAA — Build a boat
+  publisher: National Oceanic and Atmospheric Administration
+  url: https://www.noaa.gov/office-education/outreach-communication/hands-on-science-activities/build-a-boat
+  accessedAt: '2026-10-26'
+  note: The activity transcript describes loading foil boats, water entering low edges
+    and the separate problem of stability. No publication year is given here.
+imageRights:
+- src: /lesson-media/why-steel-ships-float-vlead1.webp
+  origin: generated
+  creator: OpenAI built-in image_gen
+  licence: Use under applicable OpenAI terms; no exclusivity or copyright guarantee.
+  evidence: Original text-only dispatch weekly-trial-ship-lead-01; prompt and result
+    recorded on issue 200. Conceptual artwork, not engineering or scale evidence.
+- src: /lesson-media/why-steel-ships-float-vpressure1.webp
+  origin: original-code
+  creator: Five Minutes publication illustrator
+  licence: Original deterministic artwork created for Five Minutes.
+  evidence: Original Pillow drawing from the cited physics sources; no source figure
+    copied. The drawing script and source/output hashes are recorded in the PR. Qualitative
+    schematic, not a measured ship design.
+- src: /lesson-media/why-steel-ships-float-vload1.webp
+  origin: original-code
+  creator: Five Minutes publication illustrator
+  licence: Original deterministic artwork created for Five Minutes.
+  evidence: Original Pillow drawing from the cited physics sources; no source figure
+    copied. The drawing script and source/output hashes are recorded in the PR. Qualitative
+    schematic, not a measured ship design.
+provenance:
+  createdAt: '2026-10-26T06:00:32+00:00'
+  createdBy:
+    type: ai
+    provider: openai
+    model: Codex
+    promptVersion: weekly-trial-owner-recovery-v1
+  reviews: []
