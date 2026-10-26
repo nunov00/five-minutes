@@ -76,3 +76,43 @@ test('three visual slots remain readable without JavaScript and with enlarged te
  await page.locator('.figure-description summary').first().click();await expect(page.locator('.figure-description p').first()).toBeVisible();
  await page.evaluate(()=>document.documentElement.style.fontSize='200%');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await context.close();
 });
+
+test('lesson thumbnails sit beside titles in Library and Topics without JavaScript',async({browser},info)=>{
+ const context=await browser.newContext({javaScriptEnabled:false,viewport:{width:320,height:800}});
+ const page=await context.newPage();
+ for(const path of ['/library','/topics/science']){
+  await page.goto(`http://127.0.0.1:4321${path}`);
+  const card=page.locator('.lesson-card').filter({has:page.locator('a[href="/adult/why-popcorn-pops"]')});
+  const image=card.locator('.lesson-thumbnail');
+  await image.scrollIntoViewIfNeeded();
+  await expect.poll(()=>image.evaluate((el:HTMLImageElement)=>el.complete&&el.naturalWidth>0)).toBe(true);
+  const art=await image.boundingBox(),copy=await card.locator('.lesson-row-copy').boundingBox();
+  expect(art!.x+art!.width).toBeLessThan(copy!.x);
+  await expect(card.getByRole('link')).toHaveAccessibleName('How a hard kernel becomes fluffy popcorn');
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+  if(path==='/library')await page.screenshot({path:info.outputPath('visual-library-thumbnails.png'),fullPage:true});
+ }
+ await context.close();
+});
+
+test('Search, Saved and Recent reuse the small lesson thumbnail',async({page},info)=>{
+ await page.goto('/search?q=popcorn');
+ const result=page.locator('.search-result').filter({has:page.locator('a[href="/adult/why-popcorn-pops"]')});
+ await expect(result.locator('.lesson-thumbnail')).toHaveCount(1);
+ await result.getByRole('link').click();
+ await page.getByRole('button',{name:'Save lesson',exact:true}).click();
+ await page.goto('/saved');
+ for(const selector of ['[data-saved-list]','[data-recent-list]']){
+  const row=page.locator(`${selector} li`).filter({has:page.locator('a[href="/adult/why-popcorn-pops"]')});
+  const image=row.locator('.lesson-thumbnail');
+  await expect(image).toHaveCount(1);await image.scrollIntoViewIfNeeded();
+  await expect(image).toHaveAttribute('src',/\/visuals\/lesson-why-popcorn-pops-.*\/thumbnail.webp$/);
+  await expect(image).toHaveAttribute('alt','');
+  await expect.poll(()=>image.evaluate((el:HTMLImageElement)=>el.complete&&el.naturalWidth>0)).toBe(true);
+ }
+ if(info.project.name==='mobile-iphone')await page.screenshot({path:info.outputPath('visual-saved-thumbnails.png'),fullPage:true});
+ await page.goto('/search?q=seasons');
+ const textOnly=page.locator('.search-result').filter({has:page.locator('a[href="/adult/why-earth-has-seasons"]')});
+ await expect(textOnly).toBeVisible();await expect(textOnly.locator('.lesson-thumbnail')).toHaveCount(0);
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+});
