@@ -1,0 +1,14 @@
+---
+import { lessonArtwork } from '../lib/figures/artwork.mjs';
+import type { LessonBundle } from '../lib/content/schema';
+interface Props { lessons: readonly LessonBundle[]; }
+const thumbnails = await Promise.all(Astro.props.lessons.map(async lesson => ({
+  id: lesson.metadata.id,
+  src: (await lessonArtwork(lesson)).thumbnail,
+})));
+---
+{thumbnails.filter(thumbnail => thumbnail.src).map(({id, src}) => (
+  <template data-lesson-thumbnail={id}>
+    <img class="lesson-thumbnail" src={src} width="480" height="320" alt="" loading="lazy" decoding="async" />
+  </template>
+))}

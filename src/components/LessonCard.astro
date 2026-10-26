@@ -18,13 +18,15 @@ const topic = taxonomyTopic(lesson.metadata.topic);
 const subtopic = taxonomySubtopic(lesson.metadata.topic, lesson.metadata.subtopic);
 if (!topic || !subtopic) throw new Error(`Cannot render unknown taxonomy for ${lesson.metadata.id}.`);
 ---
-<article class="card lesson-card" data-lesson-id={lesson.metadata.id}>
-  {!art.isFallback && lead && <img class="lesson-card-art" src={art.thumbnail} width="480" height="320" loading="lazy" decoding="async" alt=""/> }
+<article class:list={["card", "lesson-card", { "lesson-row": !art.isFallback && lead }]} data-lesson-id={lesson.metadata.id}>
+  {!art.isFallback && lead && <img class="lesson-card-art lesson-thumbnail" src={art.thumbnail} width="480" height="320" loading="lazy" decoding="async" alt=""/> }
+  <div class="lesson-row-copy">
   <p class="eyebrow">{topic.label} · {subtopic.label}</p>
   <h2><a href={lessonPath(edition, lesson.metadata.slug)}>{presentation.title}</a></h2>
   <p>{presentation.description}</p>
   <div class="card-actions">
     <span><LessonDates publishedAt={lesson.metadata.publishedAt} originalDate={legacyPublicationDate(lesson.metadata)} revisedAt={lesson.metadata.revisedAt} /></span>
     <span class="reader-markers" data-reader-markers hidden></span>
+  </div>
   </div>
 </article>
