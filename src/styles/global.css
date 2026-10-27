@@ -671,3 +671,11 @@ html[data-appearance=dark] .diagram-ray{stroke:#ecc86b}html[data-appearance=dark
 @media(min-width:640px){.lesson-row,.personal-list li.lesson-row{grid-template-columns:112px minmax(0,1fr);gap:24px}.lesson-thumbnail{width:112px;height:80px}}
 @media(max-width:359px){.lesson-row,.personal-list li.lesson-row{grid-template-columns:64px minmax(0,1fr);gap:12px}.lesson-thumbnail{width:64px;height:52px}}
 .reading-with-figure>.lesson-body:empty{display:none}
+
+/* List artwork shares a row with the title; supporting text keeps the full width. */
+.lesson-card-heading{margin-block:8px 12px}
+.lesson-card-heading h2{font-size:1.25rem;line-height:1.35;margin:0}
+.lesson-card-heading .lesson-thumbnail{margin-top:0}
+.lesson-card-heading h2 a,.personal-list a,.earlier-links a{text-decoration:none}
+.lesson-card-heading h2 a:hover,.personal-list a:hover,.earlier-links a:hover{text-decoration:underline}
+.lesson-card-description{margin-block:12px 16px}

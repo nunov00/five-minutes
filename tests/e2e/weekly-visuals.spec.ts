@@ -80,6 +80,7 @@ test('three visual slots remain readable without JavaScript and with enlarged te
 test('lesson thumbnails sit beside titles in Library and Topics without JavaScript',async({browser},info)=>{
  const context=await browser.newContext({javaScriptEnabled:false,viewport:{width:320,height:800}});
  const page=await context.newPage();
+ await page.emulateMedia({colorScheme:'dark'});
  for(const path of ['/library','/topics/science']){
   await page.goto(`http://127.0.0.1:4321${path}`);
   const card=page.locator('.lesson-card').filter({has:page.locator('a[href="/adult/why-popcorn-pops"]')});
@@ -90,6 +91,10 @@ test('lesson thumbnails sit beside titles in Library and Topics without JavaScri
   expect(art!.x+art!.width).toBeLessThan(copy!.x);
   await expect(card.getByRole('link')).toHaveAccessibleName('How a hard kernel becomes fluffy popcorn');
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+  const description=await card.locator('.lesson-card-description').boundingBox();
+  expect(description!.x).toBeLessThan(copy!.x);
+  expect(description!.y).toBeGreaterThanOrEqual(Math.max(art!.y+art!.height,copy!.y+copy!.height));
+  expect(description!.width).toBeGreaterThan(copy!.width);
   if(path==='/library')await page.screenshot({path:info.outputPath('visual-library-thumbnails.png'),fullPage:true});
  }
  await context.close();

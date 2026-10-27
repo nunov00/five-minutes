@@ -102,11 +102,12 @@ const artifacts = buildDiscoveryArtifacts(lessons);
     const description = window.document.createElement('p');
     description.textContent = result.description;
     const marker = window.document.createElement('span'); marker.className = 'reader-markers'; marker.dataset.readerMarkers = ''; marker.hidden = true;
-    const copy = window.document.createElement('div');
-    copy.className = 'lesson-row-copy';
-    copy.append(meta, heading, description, marker);
-    li.append(copy);
-    prependLessonThumbnail(li, result.id);
+    const header = window.document.createElement('div');
+    header.className = 'lesson-card-heading';
+    heading.className = 'lesson-row-copy';
+    header.append(heading);
+    prependLessonThumbnail(header, result.id);
+    li.append(meta, header, description, marker);
     list.append(li);
     document.dispatchEvent(new Event('reader-state-change'));
   }
