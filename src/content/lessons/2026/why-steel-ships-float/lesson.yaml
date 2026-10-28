@@ -41,6 +41,21 @@ sources:
   accessedAt: '2026-10-26'
   note: The activity transcript describes loading foil boats, water entering low edges
     and the separate problem of stability. No publication year is given here.
+- title: International Maritime Organization — International Convention on Load Lines
+  url: https://www.imo.org/en/about/conventions/pages/international-convention-on-load-lines.aspx
+  publisher: International Maritime Organization
+  accessedAt: '2026-10-28'
+  note: 'Official overview: load limits protect the margin above water, with assigned
+    marks amidships on both sides; zones and seasons matter. This lesson is a physics
+    explanation, not loading guidance.'
+- title: Maritime and Coastguard Agency (2023) — Instructions for the Guidance of
+    Surveyors on International Load Line, MSIS41 Rev 05.23
+  url: https://assets.publishing.service.gov.uk/media/644633e96dda69000d11e2e6/MSIS41_International_Load_Line_R05.23.pdf
+  publisher: UK Maritime and Coastguard Agency
+  accessedAt: '2026-10-28'
+  note: Printed p.20, Article 12, fresh-water allowance; pp.47–48, regulations 5–6 and
+    figure 6.1, ring and S/F marks; p.87 uses salt-water specific gravity 1.025 versus
+    fresh water 1.000. Only these sections checked, not all 157 pages.
 imageRights:
 - src: /lesson-media/why-steel-ships-float-vlead1.webp
   origin: generated
@@ -48,20 +63,20 @@ imageRights:
   licence: Use under applicable OpenAI terms; no exclusivity or copyright guarantee.
   evidence: Original text-only dispatch weekly-trial-ship-lead-01; prompt and result
     recorded on issue 200. Conceptual artwork, not engineering or scale evidence.
-- src: /lesson-media/why-steel-ships-float-vpressure1.webp
+- src: /lesson-media/why-steel-ships-float-vpressure2.webp
   origin: original-code
   creator: Five Minutes publication illustrator
   licence: Original deterministic artwork created for Five Minutes.
-  evidence: Original Pillow drawing from the cited physics sources; no source figure
-    copied. The drawing script and source/output hashes are recorded in the PR. Qualitative
-    schematic, not a measured ship design.
-- src: /lesson-media/why-steel-ships-float-vload1.webp
+  evidence: Original deterministic Pillow redraw in reserved editorial round weekly-trial-ship-revision-01
+    from the cited physics sources; no copied source art. New versioned file; first
+    source remains in Git history. Qualitative schematic, not a ship design.
+- src: /lesson-media/why-steel-ships-float-vload2.webp
   origin: original-code
   creator: Five Minutes publication illustrator
   licence: Original deterministic artwork created for Five Minutes.
-  evidence: Original Pillow drawing from the cited physics sources; no source figure
-    copied. The drawing script and source/output hashes are recorded in the PR. Qualitative
-    schematic, not a measured ship design.
+  evidence: Original deterministic Pillow redraw in reserved editorial round weekly-trial-ship-revision-01
+    from the cited physics sources; no copied source art. New versioned file; first
+    source remains in Git history. Qualitative schematic, not a ship design.
 provenance:
   createdAt: '2026-10-26T06:00:32+00:00'
   createdBy:

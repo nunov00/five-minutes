@@ -34,9 +34,9 @@ figures:
   role: explanation
   figure:
     type: image
-    src: /lesson-media/why-steel-ships-float-vpressure1.webp
+    src: /lesson-media/why-steel-ships-float-vpressure2.webp
     width: 960
-    height: 1080
+    height: 760
     afterParagraph: 3
     alt: A submerged block has equal opposite sideways pushes and a larger upward
       water push than downward water push.
@@ -50,20 +50,20 @@ figures:
   role: explanation
   figure:
     type: image
-    src: /lesson-media/why-steel-ships-float-vload1.webp
+    src: /lesson-media/why-steel-ships-float-vload2.webp
     width: 960
-    height: 1450
+    height: 760
     afterParagraph: 9
     alt: The same box hull sits lower after cargo is added, excluding three cubic
       metres of water instead of two.
-    caption: 'Hypothetical box hull in fresh water: adding 1,000 kg requires about
-      1 m³ more displacement. Shading marks space kept clear of water, not water inside.
-      Schematic, not to scale.[^1][^3]'
-    description: The lighter hull and contents total 2,000 kg and displace about 2
-      m³ of fresh water. With 1,000 kg of added cargo the total is 3,000 kg and the
-      hull displaces about 3 m³. The same hull settles lower. The hatched interior
-      below the water surface is space from which water is excluded, including the
-      cargo; it is not flooded. Cargo position is illustrative, not stability guidance.
+    caption: Same box hull in calm fresh water. Adding 1,000 kg requires about 1 m³
+      more displacement. Tint shows the water-excluding hull space below the waterline.
+      Calculated example; schematic, not to scale.[^1][^3]
+    description: The same hull is shown side by side. Total mass rises from 2,000 to 3,000 kg.
+      Displaced fresh water rises from about 2 to 3 cubic metres, so submerged depth
+      increases. Cyan tint marks the interior below the waterline that stays dry,
+      including the orange cargo. Hull-wall volume is simplified. These are hypothetical
+      values, not a real ship or safe-load specification.
 ---
 Drop a steel bolt into water and it sinks. A steel ship can carry thousands of bolts and stay afloat. The difference is the space its hull keeps clear of water: a hollow shape can push aside much more water than a compact piece of steel.[^3]
 
@@ -85,10 +85,16 @@ A hull changes the comparison. Its thin walls keep water out of a much larger sp
 
 Before reading on, predict what happens when more cargo is added to the same floating hull: does the water need to push harder, or is its upward force fixed by the hull’s shape?
 
-The load increases the ship’s weight, so it initially moves down. More hull then lies below the water surface, displacing more water. If there is enough room before water enters, the ship can settle at a new, lower position where the forces balance.[^3][^4]
+The water must push harder. The load increases the ship’s weight, so it initially moves down. More hull then lies below the water surface, displacing more water. If there is enough room before water enters, the ship can settle at a new, lower position where the forces balance.[^3][^4]
 
 For a simple example, take a box-shaped hull and its contents with a total mass of 2,000 kg. In fresh water, roughly 1,000 kg of water occupies 1 cubic metre. The hull must therefore displace about 2 cubic metres to float at rest. Add 1,000 kg of cargo and it needs about 3 cubic metres: one extra cubic metre of water pushed aside. These are calculated example values, not measurements of a real ship.[^1][^3]
 
 That adjustment has limits. As the edge gets closer to the water, less margin remains before water can spill inside. Staying upright is a separate problem too: uneven loading can tip a boat even when it has enough space to displace the required water.[^4]
 
-The next time you see a vessel being loaded, look at its waterline. The ship’s steel has stayed the same, but more of the hull must now take the place of water. That lower position is the visible result of supporting the extra load.[^3]
+## The marks painted on a ship
+
+Look near the middle of a large cargo ship’s side and you may see a circle crossed by a horizontal line, beside several short lines and letters. These are load-line marks. They show loading limits that help preserve a margin of hull above the water. The limits also depend on the season and where the ship travels.[^5][^6]
+
+The letters connect directly to our puzzle. S marks the summer salt-water line; F marks the summer fresh-water line. Fresh water is less dense than seawater, so the same volume weighs less. Keeping the ship’s total weight unchanged, it must displace more water in a river than at sea and therefore sits lower. The F mark is higher on the hull because the water surface reaches further up its side.[^1][^3][^6]
+
+A ship can therefore rise as it leaves a fresh-water river for the sea without unloading any cargo. Next time you spot those small painted lines, they are more than a warning about weight: they also record that the water doing the supporting can change.[^3][^6]
