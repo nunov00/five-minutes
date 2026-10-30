@@ -1,20 +1,22 @@
 ---
-title: Why a steel ship floats while a steel bolt sinks
-description: The hull keeps water out of a large space. Follow the upward push of
-  water to see why adding cargo lowers the ship.
-takeaway: A steel hull floats by keeping water out of enough space for the displaced
-  water to weigh as much as the whole ship and its load.
-question: A steel bolt is already completely underwater. Why does sinking deeper not
-  give it enough extra buoyancy to float?
-answer: In water of nearly constant density, its displaced volume stays the same once
-  it is fully submerged. Pressure rises on both its top and bottom, leaving the same
-  overall upward force, which is still less than its weight.
+title: Why a ship rises when it reaches the sea
+description: A steel ship can rise as it leaves a river for the sea, without unloading cargo. The reason
+  also explains why its hollow hull floats while a steel bolt sinks.
+takeaway: A steel hull floats by keeping water out of enough space for the displaced water to weigh as
+  much as the whole ship and its load.
+question: A steel bolt is already completely underwater. Why does sinking deeper not give it enough extra
+  buoyancy to float?
+answer: In water of nearly constant density, its displaced volume stays the same once it is fully submerged.
+  Pressure rises on both its top and bottom, leaving the same overall upward force, which is still less
+  than its weight.
 searchTerms:
 - why steel ships float
 - Archimedes principle
 - boat displacement
 - buoyancy and cargo
 - why bolts sink
+- ship river to sea
+- ship load line marks
 figures:
 - id: lead
   role: lead
@@ -24,12 +26,11 @@ figures:
     width: 1730
     height: 909
     afterParagraph: 1
-    alt: A steel cargo ship floats on calm water beside a separate, enlarged steel
-      bolt.
+    alt: A steel cargo ship floats on calm water beside a separate, enlarged steel bolt.
     caption: 'Conceptual artwork: ship and bolt are not shown at the same scale.'
-    description: An expressive illustration introduces the ship-and-bolt puzzle. The
-      bolt sits separately on the ivory background; it is not shown floating. This
-      is not an engineering drawing or measured comparison.
+    description: An expressive illustration introduces the ship-and-bolt puzzle. The bolt sits separately
+      on the ivory background; it is not shown floating. This is not an engineering drawing or measured
+      comparison.
 - id: pressure
   role: explanation
   figure:
@@ -38,35 +39,51 @@ figures:
     width: 960
     height: 760
     afterParagraph: 3
-    alt: A submerged block has equal opposite sideways pushes and a larger upward
-      water push than downward water push.
-    caption: Water pressure grows with depth. This leaves an overall upward force
-      on the block. Qualitative schematic.[^1][^2]
-    description: Water acts on every face of a fully submerged block. The sideways
-      forces balance. The bottom is deeper than the top, so the upward water force
-      is larger than the downward water force. The arrows compare forces qualitatively;
-      they are not measured values and omit the block’s weight.
+    alt: A submerged block has equal opposite sideways pushes and a larger upward water push than downward
+      water push.
+    caption: Water pressure grows with depth. This leaves an overall upward force on the block. Qualitative
+      schematic.[^1][^2]
+    description: Water acts on every face of a fully submerged block. The sideways forces balance. The
+      bottom is deeper than the top, so the upward water force is larger than the downward water force.
+      The arrows compare forces qualitatively; they are not measured values and omit the block’s weight.
 - id: load
   role: explanation
   figure:
     type: image
-    src: /lesson-media/why-steel-ships-float-vload3.webp
+    src: /lesson-media/why-steel-ships-float-vload4.webp
     width: 960
     height: 760
     afterParagraph: 9
-    alt: 'Two views of the same dry box hull: adding cargo lowers it and increases
-      displaced water from two to three cubic metres.'
-    caption: Same box hull in calm fresh water. The white interior is dry; the blue
-      outside is water. Adding 1,000 kg requires about 1 m³ more displacement. Calculated
-      example; schematic, not to scale.[^1][^3]
-    description: The same hull appears twice, before and after cargo is added. Its
-      interior stays dry and white while the surrounding water is blue. Total mass
-      rises from 2,000 to 3,000 kg. Displaced fresh water rises from about 2 to 3
-      cubic metres, so submerged depth increases. The orange rectangle is cargo inside
-      the dry hull. Hull-wall volume is simplified. These are hypothetical values,
-      not a real ship or safe-load specification.
+    alt: 'Two views of the same dry box hull: adding cargo lowers it and increases displaced water from
+      two to three cubic metres.'
+    caption: Same box hull in calm fresh water. The white interior is dry; the blue outside is water.
+      Adding 1,000 kg requires about 1 m³ more displacement. Calculated example; schematic, not to scale.[^1][^3]
+    description: The same hull appears twice, before and after cargo is added. Its interior stays dry
+      and white while the surrounding water is blue. Total mass rises from 2,000 to 3,000 kg. Displaced
+      fresh water rises from about 2 to 3 cubic metres, so submerged depth increases. The orange rectangle
+      is cargo inside the dry hull. Hull-wall volume is simplified. These are hypothetical values, not
+      a real ship or safe-load specification.
+- id: load-lines
+  role: explanation
+  figure:
+    type: image
+    src: /lesson-media/why-steel-ships-float-vmarks1.webp
+    width: 800
+    height: 620
+    afterParagraph: 12
+    alt: 'A circle crossed by the summer load line sits beside two marks: F for fresh water is higher
+      on the hull than S for summer seawater.'
+    caption: F sits above S because less-dense fresh water must reach further up the same loaded hull.
+      Selected marks only; spacing is schematic, not a loading guide.[^1][^3][^6]
+    description: The ship’s bow is to the right in this simplified side view. A horizontal bar crosses
+      a ring. Its upper edge is level with the upper edge of the S bar on the right of a vertical line.
+      The F bar extends left from that vertical line, higher on the hull. F identifies the summer fresh-water
+      limit; S identifies the summer seawater limit. The water surface reaches higher on the same hull
+      in fresh water because more volume must be displaced to support the same weight. Other seasonal
+      marks, the deck line and assigning-authority initials are omitted. The separation is exaggerated
+      for clarity and is not a measured allowance.
 ---
-Drop a steel bolt into water and it sinks. A steel ship can carry thousands of bolts and stay afloat. The difference is the space its hull keeps clear of water: a hollow shape can push aside much more water than a compact piece of steel.[^3]
+A loaded ship leaves a fresh-water river and reaches the sea. Without unloading any cargo, it can rise a little in the water. Why should changing the water change how high the ship floats? The answer starts with a simpler puzzle: why does a steel ship float when a steel bolt sinks?[^3][^6]
 
 ## Where the upward push comes from
 
@@ -96,6 +113,6 @@ That adjustment has limits. As the edge gets closer to the water, less margin re
 
 Look near the middle of a large cargo ship’s side and you may see a circle crossed by a horizontal line, beside several short lines and letters. These are load-line marks. They show loading limits that help preserve a margin of hull above the water. The limits also depend on the season and where the ship travels.[^5][^6]
 
-The letters connect directly to our puzzle. S marks the summer salt-water line; F marks the summer fresh-water line. Fresh water is less dense than seawater, so the same volume weighs less. Keeping the ship’s total weight unchanged, it must displace more water in a river than at sea and therefore sits lower. The F mark is higher on the hull because the water surface reaches further up its side.[^1][^3][^6]
+The letters connect directly to our puzzle. S marks the summer salt-water line; F marks the summer fresh-water line. Fresh water is less dense than seawater, so the same volume weighs less. The ship still needs to push aside water equal to its own weight. In fresh water that requires a larger volume, so more of the hull goes underwater. The F mark is higher on the hull because the water surface reaches further up its side.[^1][^3][^6]
 
 A ship can therefore rise as it leaves a fresh-water river for the sea without unloading any cargo. Next time you spot those small painted lines, they are more than a warning about weight: they also record that the water doing the supporting can change.[^3][^6]
