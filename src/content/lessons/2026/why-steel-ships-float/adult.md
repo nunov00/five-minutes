@@ -50,20 +50,21 @@ figures:
   role: explanation
   figure:
     type: image
-    src: /lesson-media/why-steel-ships-float-vload2.webp
+    src: /lesson-media/why-steel-ships-float-vload3.webp
     width: 960
     height: 760
     afterParagraph: 9
-    alt: The same box hull sits lower after cargo is added, excluding three cubic
-      metres of water instead of two.
-    caption: Same box hull in calm fresh water. Adding 1,000 kg requires about 1 m³
-      more displacement. Tint shows the water-excluding hull space below the waterline.
-      Calculated example; schematic, not to scale.[^1][^3]
-    description: The same hull is shown side by side. Total mass rises from 2,000 to 3,000 kg.
-      Displaced fresh water rises from about 2 to 3 cubic metres, so submerged depth
-      increases. Cyan tint marks the interior below the waterline that stays dry,
-      including the orange cargo. Hull-wall volume is simplified. These are hypothetical
-      values, not a real ship or safe-load specification.
+    alt: 'Two views of the same dry box hull: adding cargo lowers it and increases
+      displaced water from two to three cubic metres.'
+    caption: Same box hull in calm fresh water. The white interior is dry; the blue
+      outside is water. Adding 1,000 kg requires about 1 m³ more displacement. Calculated
+      example; schematic, not to scale.[^1][^3]
+    description: The same hull appears twice, before and after cargo is added. Its
+      interior stays dry and white while the surrounding water is blue. Total mass
+      rises from 2,000 to 3,000 kg. Displaced fresh water rises from about 2 to 3
+      cubic metres, so submerged depth increases. The orange rectangle is cargo inside
+      the dry hull. Hull-wall volume is simplified. These are hypothetical values,
+      not a real ship or safe-load specification.
 ---
 Drop a steel bolt into water and it sinks. A steel ship can carry thousands of bolts and stay afloat. The difference is the space its hull keeps clear of water: a hollow shape can push aside much more water than a compact piece of steel.[^3]
 
