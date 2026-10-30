@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { weeklyCycle, weeklyLessonBranch } from '../../scripts/weekly-cycle.mjs';
 import { evaluateLessonPullRequest } from '../../scripts/lesson-guard-core.mjs';
-import { assessWeeklyPublication } from '../../scripts/weekly-publication.mjs';
+import { assessWeeklyPublication, parseWeeklySnapshot } from '../../scripts/weekly-publication.mjs';
 import { weeklyCandidate } from '../fixtures/weekly-candidate';
 
 function publication() {
@@ -83,5 +83,23 @@ describe('Friday publication decision',()=>{
   it('rejects skipped or spoofed checks and reviews predating check completion',()=>{
     for(const mutate of [(v:any)=>v.checks[0].conclusion='skipped',(v:any)=>v.workflowRuns[0].event='push',
       (v:any)=>v.reviewer.createdAt='2026-10-08T08:00:00Z']) {const v=publication();mutate(v);expect(()=>assessWeeklyPublication(v)).toThrow();}
+  });
+});
+
+
+describe('weekly snapshot image transport',()=>{
+  it('restores exactly the API-fetched binary bytes across JSON transport',()=>{
+    const input:any=publication();input.guardInput.blobs['public/lesson-media/shadows.png']={size:4,bytes:Buffer.from([0,127,128,255])};
+    const loaded=parseWeeklySnapshot(JSON.stringify(input));
+    expect(Buffer.isBuffer(loaded.guardInput.blobs['public/lesson-media/shadows.png'].bytes)).toBe(true);
+    expect(loaded.guardInput.blobs['public/lesson-media/shadows.png'].bytes).toEqual(Buffer.from([0,127,128,255]));
+    // This parser grants no exception to the structural guard for extra files.
+    expect(assessWeeklyPublication(parseWeeklySnapshot(JSON.stringify(publication())))).toMatchObject({eligible:true});
+  });
+  it.each([{size:1,bytes:{type:'Buffer',data:[256]}},{size:2,bytes:{type:'Buffer',data:[1]}},
+    {size:1,bytes:{type:'Buffer',data:[-1]}},{size:1,bytes:{type:'Buffer',data:[null]}},
+    {size:2_000_000,bytes:{type:'Buffer',data:[]}}])('rejects corrupt or oversized bytes: %j',blob=>{
+    const input:any=publication();input.guardInput.blobs.image=blob;
+    expect(()=>parseWeeklySnapshot(JSON.stringify(input))).toThrow(/snapshot image bytes/);
   });
 });

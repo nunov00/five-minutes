@@ -1,11 +1,32 @@
 import { readFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
+import { GUARD_LIMITS } from './lesson-guard-core.mjs';
+import { RASTER_LIMITS } from '../src/lib/figures/raster.mjs';
 import { weeklyCycle } from './weekly-cycle.mjs';
 import { evaluateLessonPullRequest } from './lesson-guard-core.mjs';
 import { assessPublicationChecks, PUBLICATION_CHECKS } from './lesson-submission.mjs';
 
 const SHA = /^[0-9a-f]{40}$/;
 const fail = message => { throw new Error(message); };
+
+// JSON.stringify(Buffer) emits {type:"Buffer",data:[...]}; restore only bounded
+// image-byte fields, not arbitrary receipt/candidate objects via a global reviver.
+export function parseWeeklySnapshot(text) {
+  const input = JSON.parse(text);
+  let total = 0;
+  for (const blob of Object.values(input.guardInput?.blobs ?? {})) {
+    if (blob.bytes === undefined) continue;
+    const bytes = blob.bytes;
+    if (!bytes || bytes.type !== 'Buffer' || Object.keys(bytes).some(k => !['type','data'].includes(k))
+      || !Array.isArray(bytes.data) || !Number.isSafeInteger(blob.size) || blob.size < 1
+      || blob.size > RASTER_LIMITS.maxBytes || bytes.data.length !== blob.size
+      || bytes.data.some(n => !Number.isInteger(n) || n < 0 || n > 255)) fail('Malformed or oversized snapshot image bytes.');
+    total += blob.size;
+    if (total > GUARD_LIMITS.imageTotalBytes) fail('Snapshot images exceed the aggregate byte limit.');
+    blob.bytes = Buffer.from(bytes.data);
+  }
+  return input;
+}
 
 // This validates a live API snapshot collected by the Manager, not arbitrary
 // candidate assertions. It is a decision aid, never a merge credential or CI override.
@@ -47,7 +68,7 @@ export function assessWeeklyPublication(input) {
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   try {
     if (process.argv.length !== 3) fail('Usage: weekly-publication.mjs <fresh-manager-snapshot.json>');
-    console.log(JSON.stringify(assessWeeklyPublication(JSON.parse(readFileSync(process.argv[2], 'utf8'))), null, 2));
+    console.log(JSON.stringify(assessWeeklyPublication(parseWeeklySnapshot(readFileSync(process.argv[2], 'utf8'))), null, 2));
   } catch (error) {
     console.error(`weekly-publication: FAIL: ${error.message}`);
     process.exitCode = 1;
