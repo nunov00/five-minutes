@@ -1,5 +1,7 @@
 # Ranked lesson pipeline
 
+After ADR-0015 activation, weekly candidates use the reviewed Sunday pipeline and freeze its assessment/briefs; the lesson PR completes only its selected entry and removes that ranked brief, with the deterministic shortfall note if necessary. The weekly contract supersedes the current-run-day assessment/daily refresh requirement for this path only. Schema and all other identity/history limits remain. See [weekly contract](automation/weekly-publication.md), #210.
+
 22 October 2026: [ADR-0013](adr/0013-single-lesson-version.md) replaces audience editions with one published lesson. Ranking and review assess that single version; historical edition comparisons are not selection requirements.
 
 Owner-approved direction: 18 October 2026. Activation requires the implementation PR's qualifying different-provider review and exact-head checks. This extends ADR-0012; it replaces backlog-first selection, not its identity, date, review or publication safeguards.

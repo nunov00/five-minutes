@@ -4,6 +4,7 @@ import { mkdtempSync, mkdirSync, writeFileSync, rmSync, existsSync, chmodSync, r
 import { tmpdir } from 'node:os';
 import { join, dirname } from 'node:path';
 import { prepareLessonSubmission, assessPublicationChecks, PUBLICATION_CHECKS } from '../../scripts/lesson-submission.mjs';
+import { weeklyCandidate } from '../fixtures/weekly-candidate';
 import { lessonBranchName } from '../../scripts/lesson-guard-core.mjs';
 
 const repos: string[] = [];
@@ -11,7 +12,7 @@ afterEach(() => repos.splice(0).forEach(path => rmSync(path, { recursive: true, 
 const slug = 'why-shadows-change';
 const id = '12345678-1234-4234-9234-123456789abc';
 const now = '2026-10-05T06:00:00+02:00';
-function candidate(branch = `lesson/${slug}`) {
+function candidate(branch = `lesson/${slug}`, weekly = false) {
   const cwd = mkdtempSync(join(tmpdir(), 'lesson-preflight-'));
   repos.push(cwd);
   const git = (...args: string[]) => execFileSync('git', args, { cwd, stdio: ['ignore', 'pipe', 'pipe'] }).toString().trim();
@@ -23,7 +24,7 @@ function candidate(branch = `lesson/${slug}`) {
   git('config', 'user.name', 'Test');
   git('config', 'user.email', 'test@users.noreply.github.com');
   put('src/content/route-ownership.json', '{}\n');
-  put('editorial/backlog.json', '{"version":1,"entries":[]}\n');
+  put('editorial/backlog.json', weekly ? weeklyCandidate().baseBacklogText : '{"version":1,"entries":[]}\n');
   git('add', '.'); git('commit', '-m', 'base');
   const base = git('rev-parse', 'HEAD');
   git('switch', '-c', branch);
@@ -31,12 +32,25 @@ function candidate(branch = `lesson/${slug}`) {
   const root = `src/content/lessons/2026/${slug}`;
   put(`${root}/lesson.yaml`, `schemaVersion: 2\nid: ${id}\nslug: ${slug}\naliases: []\npublishedAt: 2026-10-05T05:00:00+02:00\ntopic: science\nsubtopic: astronomy\nconcepts: [shadows]\nrelated: {manual: [], exclude: []}\nsources: []\nprovenance:\n  createdAt: 2026-10-05T04:30:00+02:00\n  createdBy: {type: ai, provider: openai, model: test, promptVersion: test}\n  reviews: []\n`);
   for (const edition of ['adult']) put(`${root}/${edition}.md`, '---\ntitle: Shadows\ndescription: A description.\ntakeaway: A takeaway.\nquestion: Why?\nanswer: Light.\nsearchTerms: [shadows]\n---\nBody.\n');
+  if (weekly) {
+    const fixture = weeklyCandidate();
+    for (const [path, blob] of Object.entries(fixture.blobs)) put(path, blob.text);
+    put('src/content/route-ownership.json', fixture.headRegistryBlob.text);
+  }
   const commit = () => { git('add', '.'); git('commit', '-m', 'candidate'); };
   commit();
   return { cwd, base, git, put, commit };
 }
 
 describe('initial lesson submission preflight', () => {
+  it('prepares a weekly candidate using the real Git boundary, without changing daily defaults', () => {
+    const fixture = weeklyCandidate();
+    const repo = candidate(fixture.pr.headRef, true);
+    expect(prepareLessonSubmission({ ...repo, now, weekly: '2026-10-04' })).toMatchObject({ status: 'PREPARED', branch: fixture.pr.headRef });
+    expect(() => prepareLessonSubmission({ ...repo, now, weekly: '2026-09-27' })).toThrow(/current Sunday/);
+    expect(() => prepareLessonSubmission({ ...repo, now, weekly: '2026-10-04', retry: true })).toThrow(/daily retry/);
+    expect(() => prepareLessonSubmission({ ...repo, now })).toThrow(/Local lesson branch/);
+  });
   it('derives the exact branch, validates real Git blobs and leaves all refs unchanged', () => {
     const repo = candidate('draft');
     const refs = repo.git('show-ref');

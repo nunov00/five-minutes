@@ -1,5 +1,8 @@
 # Five Minutes editorial standard
 
+30 October 2026 weekly-production amendment: [ADR-0015](adr/0015-weekly-production.md) and [the weekly contract](automation/weekly-publication.md) define the Owner-approved Sunday selection, Monday–Thursday author/Claude reviews and Friday publication path using one ChatGPT task. Only after mandatory implementation review, checks, merge and saved-task readback on #210, this path supersedes the daily cadence/same-day/Coordinator-child/same-reviewer-run rules for `weekly-lesson/<Sunday>/<slug>` candidates alone. Both final-head lesson-quality ratings ≥9 are required in addition to every Ready/source/render/CI gate; topic appeal remains advisory. Four content-review rounds maximum; failed Friday work stays in backlog with history and counters. Legacy tasks remain disabled. The old #200 trial is historical, not extended or retroactively successful.
+
+
 Status: accepted editorial standard. Owner calibration review was completed under issue #49 on 3 October 2026.
 
 ## Purpose
@@ -154,6 +157,8 @@ Form and record the initial self-assessment before consulting external scores wh
 The Manager must verify that a complete assessment names the current material lesson head before reporting author work complete or handing it off as fully assessed. The Reviewer records a missing, stale or explicitly incomplete assessment as a **MINOR process finding** requiring the author to supply current-head evidence. This finding alone does not change the lesson's editorial Ready/Revise/Block outcome; the Manager must still resolve the missing author evidence before reporting author work complete. Any underlying factual, accessibility or editorial defect receives its own normal severity and outcome. Supplying assessment evidence alone does not authorise or consume an extra content-revision round.
 
 **Reviewer order:** record initial topic and lesson ratings and reasons from the lesson, sources and rendered page before deliberately opening the author's self-assessment body. First check its heading/SHA using an index or filtered tool output that omits the body; a link in the handoff must not quote author scores. Then read and challenge the self-assessment and append any resulting change in judgement with reasons, preserving the initial ratings. This applies to independent, same-provider separate-pass and Coordinator child reviews. Required feedback/history checks still happen in their prescribed order: do not skip or postpone them to claim blindness. If necessary history, bulk retrieval or an inherited context already exposed author/earlier scores, disclose that exposure and do not claim a blind assessment. Score separation reduces anchoring; it cannot guarantee independence of numerical judgement.
+
+For activated ADR-0015 weekly candidates only, both separate final-head lesson-quality ratings ≥9 are an additional publication requirement; topic appeal remains advisory and no number waives a Ready criterion. The advisory-only wording below continues to govern other paths.
 
 Technical test results do not establish editorial quality. The 9+ ambition is not a new numerical publication threshold, an excuse to inflate scores or authority for extra revisions, generations, tasks or budget. Existing factual/accessibility Ready gates, independent-review requirements and production limits remain unchanged. This is a procedural evidence requirement; CI does not validate subjective scores.
 

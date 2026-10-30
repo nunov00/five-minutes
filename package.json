@@ -18,7 +18,7 @@
     "verify:static": "node scripts/verify-static-integrity.mjs",
     "backlog": "node scripts/editorial-backlog.mjs",
     "lesson:submission": "node scripts/lesson-submission.mjs",
-    "test:lesson-guard": "vitest run tests/unit/lesson-guard.test.ts tests/unit/lesson-submission.test.ts"
+    "test:lesson-guard": "vitest run tests/unit/lesson-guard.test.ts tests/unit/lesson-submission.test.ts tests/unit/weekly-production.test.ts"
   },
   "dependencies": {
     "astro": "7.3.5",
