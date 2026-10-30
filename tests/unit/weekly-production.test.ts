@@ -11,8 +11,8 @@ function publication() {
     details_url:`https://github.com/nunov00/five-minutes/actions/runs/${i+1}/job/100`, started_at:'2026-10-08T08:00:00Z',completed_at:'2026-10-08T08:30:00Z'}));
   const workflowRuns = names.map((name,i)=>({id:i+1,repository:{full_name:'nunov00/five-minutes'},head_repository:{full_name:'nunov00/five-minutes'},head_sha:head,
     path:`.github/workflows/${name==='lesson-guard'?'lesson-guard':name==='privacy'?'privacy':'ci'}.yml`,event:name==='lesson-guard'?'pull_request_target':'pull_request'}));
-  const record = (id:number,provider:string,kind:string)=>({id,authorLogin:'nunov00',createdAt:'2026-10-08T09:00:00Z',receipt:{kind,provider,head,lessonQuality:9,topicAppeal:7,outcome:'Ready',unresolvedBlockerImportant:0,sources:'pass',phoneAndWideRender:'pass'}});
-  return {guardInput,checks,workflowRuns,author:record(10,'openai','author-quality'),reviewer:record(11,'anthropic','editorial-review'),rounds:[{round:1,head}],published:false,paused:false,enabled:true,now:guardInput.now};
+  const record = (id:number,provider:string,kind:string)=>({id,authorLogin:'nunov00',issueNumber:211,createdAt:id===10?'2026-10-08T09:00:00Z':'2026-10-08T10:00:00Z',updatedAt:id===10?'2026-10-08T09:00:00Z':'2026-10-08T10:00:00Z',receipt:{kind,provider,head,lessonQuality:9,topicAppeal:7,outcome:'Ready',unresolvedBlockerImportant:0,sources:'pass',phoneAndWideRender:'pass'}});
+  return {prNumber:211,guardInput,checks,workflowRuns,author:record(10,'openai','author-quality'),reviewer:record(11,'anthropic','editorial-review'),rounds:[{round:1,head}],published:false,paused:false,enabled:true,now:guardInput.now};
 }
 
 describe('Swiss weekly calendar',()=>{
@@ -79,6 +79,33 @@ describe('Friday publication decision',()=>{
   it('rejects five review rounds and an earlier head masquerading as the latest',()=>{
     const input=publication();input.rounds=Array.from({length:5},(_,i)=>({round:i+1,head:String(i).repeat(40)}));expect(()=>assessWeeklyPublication(input)).toThrow(/ledger/);
     input.rounds=[{round:1,head:'c'.repeat(40)},{round:2,head:'d'.repeat(40)}];expect(()=>assessWeeklyPublication(input)).toThrow(/ledger/);
+  });
+  it.each(['missing review','uncertain dispatch','declined finding'])('allows another consumed round on identical content after %s',()=>{
+    const input=publication();input.rounds.push({round:2,head:input.guardInput.pr.headSha});
+    expect(assessWeeklyPublication(input)).toMatchObject({eligible:true});
+  });
+  it('accepts a later successful guard rerun while still requiring the newest run to succeed',()=>{
+    const input=publication();const earlier=input.checks.find(c=>c.name==='lesson-guard')!;
+    const rerun={...earlier,id:20,completed_at:'2026-10-09T07:00:00Z'};input.checks.push(rerun);
+    expect(assessWeeklyPublication(input)).toMatchObject({eligible:true});
+    rerun.conclusion='failure';expect(()=>assessWeeklyPublication(input)).toThrow(/current-head checks/);
+    rerun.conclusion='success';rerun.status='queued';expect(()=>assessWeeklyPublication(input)).toThrow(/current-head checks/);
+  });
+  it('does not count an earlier spoofed success as review prerequisites',()=>{
+    const input=publication();const check=input.checks[2];
+    input.checks.push({...check,id:20,completed_at:'2026-10-09T07:00:00Z'});
+    check.app={slug:'spoof'};
+    expect(()=>assessWeeklyPublication(input)).toThrow(/after verified successful/);
+  });
+  it.each(['author','reviewer'] as const)('rejects edited or foreign-PR %s receipts',key=>{
+    const input=publication();input[key].issueNumber=210;expect(()=>assessWeeklyPublication(input)).toThrow(/exact-head/);
+    input[key].issueNumber=211;input[key].updatedAt='2026-10-09T07:00:00Z';expect(()=>assessWeeklyPublication(input)).toThrow(/exact-head/);
+  });
+  it('rejects author assessments posted after Claude or before the checks',()=>{
+    const input=publication();input.author.createdAt=input.author.updatedAt='2026-10-08T11:00:00Z';
+    expect(()=>assessWeeklyPublication(input)).toThrow(/precede/);
+    input.author.createdAt=input.author.updatedAt='2026-10-08T08:00:00Z';
+    expect(()=>assessWeeklyPublication(input)).toThrow(/after verified successful/);
   });
   it('rejects skipped or spoofed checks and reviews predating check completion',()=>{
     for(const mutate of [(v:any)=>v.checks[0].conclusion='skipped',(v:any)=>v.workflowRuns[0].event='push',

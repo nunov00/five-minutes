@@ -31,7 +31,8 @@ export function parseWeeklySnapshot(text) {
 // This validates a live API snapshot collected by the Manager, not arbitrary
 // candidate assertions. It is a decision aid, never a merge credential or CI override.
 export function assessWeeklyPublication(input) {
-  const { guardInput, checks, workflowRuns, author, reviewer, rounds, published, paused, enabled, now } = input;
+  const { guardInput, checks, workflowRuns, author, reviewer, rounds, published, paused, enabled, now, prNumber } = input;
+  if (!Number.isSafeInteger(prNumber) || prNumber < 1) fail('Require the authenticated candidate PR number.');
   const cycle = weeklyCycle(now);
   if (cycle.stage !== 'publication') fail('Weekly publication is Friday only in Europe/Zurich.');
   if (paused !== false || enabled !== true || published !== false) fail('Pause, task or publication-slot state is unsafe or uncertain.');
@@ -47,10 +48,11 @@ export function assessWeeklyPublication(input) {
   if (latest.some(c => !Number.isFinite(Date.parse(c.completed_at)) || Date.parse(c.completed_at) > Date.parse(now))) fail('Check completion timestamps are incomplete or future.');
   if (!Array.isArray(rounds) || rounds.length < 1 || rounds.length > 4
     || rounds.some((r,i) => r.round !== i+1 || !SHA.test(r.head ?? ''))
-    || new Set(rounds.map(r => r.head)).size !== rounds.length || rounds.at(-1)?.head !== head) fail('Require the reconciled one-to-four-round review ledger, without resets or duplicate heads.');
+    || rounds.at(-1)?.head !== head) fail('Require the reconciled one-to-four-round review ledger, without resets; its last head must be final.');
   for (const [record, provider, kind] of [[author,'openai','author-quality'],[reviewer,'anthropic','editorial-review']]) {
     const receipt = record?.receipt;
     if (!Number.isSafeInteger(record?.id) || record.id < 1 || record.authorLogin !== 'nunov00'
+      || record.issueNumber !== prNumber || record.updatedAt !== record.createdAt
       || !Number.isFinite(Date.parse(record.createdAt)) || Date.parse(record.createdAt) > Date.parse(now)
       || weeklyCycle(record.createdAt).sunday !== cycle.sunday
       || receipt?.kind !== kind || receipt.provider !== provider || receipt.head !== head
@@ -60,7 +62,16 @@ export function assessWeeklyPublication(input) {
       || receipt.sources !== 'pass' || receipt.phoneAndWideRender !== 'pass') fail('Require separate exact-head Codex and Claude Ready evidence, both lesson quality at least 9, with sources and renders checked.');
   }
   if (author.id === reviewer.id) fail('Author and reviewer evidence must be separate comments.');
-  if (latest.some(c => Date.parse(c.completed_at) > Date.parse(reviewer.createdAt))) fail('Claude must review after all four exact-head checks complete.');
+  if (Date.parse(author.createdAt) >= Date.parse(reviewer.createdAt)) fail('Author assessment must precede Claude’s review.');
+  // A ready-for-review or label event creates another guard run at the same
+  // head. Latest runs must still pass, but do not erase earlier valid evidence.
+  for (const name of PUBLICATION_CHECKS) {
+    const precedingSuccess = checks.some(check => check.name === name && check.head_sha === head
+      && Number.isFinite(Date.parse(check.completed_at))
+      && Date.parse(check.completed_at) <= Date.parse(author.createdAt)
+      && assessPublicationChecks(head, [check], workflowRuns).checks.find(c => c.name === name)?.state === 'success');
+    if (!precedingSuccess) fail('Author and Claude must assess after verified successful completion of all four exact-head checks.');
+  }
   return { eligible: true, cycle: cycle.sunday, head, slug: guarded.slug,
     expectedHeadSha: head, caveat: 'Recheck live main/head, pause, slot, unresolved feedback and provenance immediately before guarded merge; verify deployment afterwards.' };
 }
