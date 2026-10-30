@@ -1,0 +1,107 @@
+schemaVersion: 2
+id: a303d4bc-85eb-4bd8-b9af-03037b3f27ea
+slug: why-a-butterfly-can-be-blue-without-blue-pigment
+aliases: []
+publishedAt: 2026-10-30T22:08:00+00:00
+topic: science
+subtopic: physics
+concepts:
+  - structural-colour
+  - light-interference
+  - diffraction
+  - butterfly-wing-scales
+related:
+  manual:
+    - id: 965b4d69-cdd0-48ac-a5cc-5a50e1dfe60a
+      reason: "Both lessons explain how waves combine: headphones reduce sound, while wing structures reinforce
+        reflected light."
+  exclude: []
+sources:
+  - title: Photophysics of Structural Color in the Morpho Butterflies
+    url: https://forma.katachi-jp.com/pdf/1702/17020103.pdf
+    publisher: Forma — Kinoshita, Yoshioka, Fujii and Okamoto (2002)
+    accessedAt: 2026-10-23
+    note: "Full paper read: section 3.1 and figures 3–4 support the cuticle-and-air ridge anatomy and unequal
+      heights; sections 4.1 and 5 support interference with diffraction and model limits; section 4.3 supports
+      pigment enhancing blue contrast. Diagrams are original qualitative drawings, not copied figures."
+  - title: Morphing Butterfly
+    url: https://www.nisenet.org/sites/default/files/catalog/uploads/9881/diy_nano_print_butterfly_03_21.pdf
+    publisher: NISE Network / Sciencenter (2012)
+    accessedAt: 2026-10-23
+    note: Page 3 supports the reported isopropyl-alcohol blue–green–blue sequence and clear liquid filling gaps.
+      The lesson gives no home procedure and copies no photographs. The guide does not identify a particular
+      Morpho species.
+  - title: Scientific Image — Blue Morpho Butterfly Wing (non-reflected light)
+    url: https://www.nisenet.org/catalog/scientific-image-blue-morpho-butterfly-wing-non-reflected-light
+    publisher: NISE Network / F. Nijhout, Duke University
+    accessedAt: 2026-10-23
+    note: Supports brown pigment becoming visible in transmitted light. Its photograph is not reproduced; brown
+      appearance alone is not used to prove the blue mechanism.
+  - title: Effects of Measurement Configurations on the Sensitivity of Morpho Butterfly Scales Based Chemical
+      Biosensor
+    url: https://www.frontiersin.org/journals/physics/articles/10.3389/fphy.2021.806904/full
+    publisher: Frontiers in Physics — Dong et al. (published 5 January 2022; volume 9, 2021)
+    accessedAt: 2026-10-24
+    note: Model and simulations examine changes in the surrounding medium. Supports a qualitative
+      longer-wavelength shift for relevant viewing conditions; also shows that direction/size of a shift is
+      not universal across measurement angles. Its methanol/ethanol comparison is not treated as an
+      isopropyl-alcohol measurement. NISE remains the source for that demonstration. No peak wavelengths or
+      numerical prediction are asserted. The research ending uses its RCWA model of surrounding media and
+      measurement geometry; the conclusion explicitly leaves experiments to verify the proposed measurement
+      improvements to future work. No functioning product or established sensing performance is claimed.
+      Simulations and Discussions, the text around Figures 9 and 10B, explicitly balances spectral-peak
+      separation against a longer continuous angle range to accommodate uncertainty in instrument angles.
+      This supports the existing phrase about tolerating small angle errors. The Conclusion describes
+      robustness as theoretical and leaves experimental verification to future work.
+  - title: Interference in Thin Films — University Physics Volume 3, section 3.4
+    url: https://openstax.org/books/university-physics-volume-3/pages/3-4-interference-in-thin-films
+    publisher: OpenStax / Rice University
+    accessedAt: 2026-10-23
+    note: Supports the optical principle that relative phase depends on travel paths, refractive indices and
+      wavelength, including phase changes on reflection. Used for the separate qualitative dry/wet timing
+      sketch, not as a model of Morpho anatomy. Both colours are already present in white light; each keeps
+      its wavelength on returning to the same observing medium. No source figure is copied. The sketch's
+      illustrative phases and spacings are not measured wing parameters or a calculated reflection spectrum.
+imageRights:
+  - src: /lesson-media/why-a-butterfly-can-be-blue-without-blue-pigment-vlead2.webp
+    origin: generated
+    creator: OpenAI image generation for Five Minutes
+    licence: Generated output under applicable OpenAI Europe terms; no exclusivity or copyright guarantee.
+    evidence: "Original built-in image_gen text-only request calibration-01/lead-01, 23 October 2026. Full
+      prompt/reservation: PR #192 comment 6374034936; dispatch result: 6374052577. Metadata-stripped sRGB
+      WebP, SHA-256 0cd6dfb6919010a9ccac1481b6f41cbb7a21eb74b287e378f0691a3b041409b6. Conceptual wing-scale
+      interpretation, not a specimen or measured boundary. No third-party image input. Calibration 1/12, lead
+      1/6; no retry or edit."
+    sourceUrl: https://openai.com/policies/eu-terms-of-use/
+  - src: /lesson-media/why-a-butterfly-can-be-blue-without-blue-pigment-vstructure4.webp
+    origin: original-code
+    creator: Five Minutes — OpenAI-assisted original diagram
+    licence: Original project artwork; no third-party figure copied.
+    evidence: "Owner-directed layout follow-up, PR #192 comment 6375000532. Deterministic Pillow crop of the
+      previously reviewed anatomy. Metadata-free RGB WebP. SHA-256
+      f2654fac541d750b3e5a2f38e0bd61f895ece76b62b231fad1d7483d42411e5b. No image generation or copied source
+      artwork. Prior asset bytes remain in Git history."
+  - src: /lesson-media/why-a-butterfly-can-be-blue-without-blue-pigment-vwaves4.webp
+    origin: original-code
+    creator: Five Minutes — OpenAI-assisted original diagram
+    licence: Original project artwork; no third-party figure copied.
+    evidence: "Owner-directed layout follow-up, PR #192 comment 6375000532. Deterministic Pillow wave comparison
+      with halved cycle count and crest guides; phases illustrative, no wavelength conversion. Metadata-free
+      RGB WebP. SHA-256 4e73d1d074c6f8c59dd9c4a48cf17924efeef5276ae35920b2b0edcbab8d7cc5. No image generation
+      or copied source artwork. Prior asset bytes remain in Git history."
+  - src: /lesson-media/why-a-butterfly-can-be-blue-without-blue-pigment-vcycle4.webp
+    origin: original-code
+    creator: Five Minutes — OpenAI-assisted original diagram
+    licence: Original project artwork; no third-party figure copied.
+    evidence: "Owner-directed layout follow-up, PR #192 comment 6375000532. Deterministic Pillow two-state return
+      loop interpreting NISE/Sciencenter guide page 3. Metadata-free RGB WebP. SHA-256
+      db8b8991b1ab03ac944380b20a07b86acdc1eecdabd7f94c8f8e173fb78ef6f6. No image generation or copied source
+      artwork. Prior asset bytes remain in Git history."
+provenance:
+  createdAt: 2026-10-23T10:02:31+00:00
+  createdBy:
+    type: ai
+    provider: openai
+    model: gpt-6.1-sol
+    promptVersion: owner-commissioned-weekly-calibration-v1
+  reviews: []
