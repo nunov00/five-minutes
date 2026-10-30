@@ -1,6 +1,6 @@
 # Weekly publication: one ChatGPT task
 
-Status: implementation pending mandatory Claude review, checks, merge and activation readback on [#210](https://github.com/nunov00/five-minutes/issues/210). Until then this is prepared configuration, not a live Publisher. Authority: [ADR-0015](../adr/0015-weekly-production.md), Owner direction 30 October 2026. This contract supersedes only the weekly-specific rules explicitly listed there. Do not load proposal drafts as authority.
+Implementation #211 is merged and the single ChatGPT task is configured; activation/readback evidence is on [#210](https://github.com/nunov00/five-minutes/issues/210). Claude-side scheduling remains unverified until its own setup/readback is recorded. See [weekly task setup](weekly-task-setup.md) for both schedules and provider setup instructions; use that procedure from current main once its own qualifying review, checks and merge are verified. Authority: [ADR-0015](../adr/0015-weekly-production.md), Owner direction 30 October 2026. This contract supersedes only the weekly-specific rules explicitly listed there. Do not load proposal drafts as authority.
 
 ## Activation and off switch
 
