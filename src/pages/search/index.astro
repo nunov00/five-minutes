@@ -1,4 +1,5 @@
 ---
+import LessonThumbnails from '../../components/LessonThumbnails.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getBuildMetadata } from '../../lib/content/build-content';
 import { buildDiscoveryArtifacts } from '../../lib/discovery/artifacts';
@@ -25,9 +26,11 @@ const artifacts = buildDiscoveryArtifacts(lessons);
       <noscript><p>Search needs JavaScript. You can still browse every lesson in the <a href="/library">Library</a>.</p></noscript>
     </div>
   </section>
+  <LessonThumbnails lessons={lessons} />
 </BaseLayout>
 
 <script>
+  import { prependLessonThumbnail } from '../../lib/discovery/thumbnails';
   import { searchDocuments } from '../../lib/discovery/search';
   import type { LessonEdition } from '../../lib/urls';
   import type { SearchDocument } from '../../lib/discovery/types';
@@ -99,7 +102,12 @@ const artifacts = buildDiscoveryArtifacts(lessons);
     const description = window.document.createElement('p');
     description.textContent = result.description;
     const marker = window.document.createElement('span'); marker.className = 'reader-markers'; marker.dataset.readerMarkers = ''; marker.hidden = true;
-    li.append(meta, heading, description, marker);
+    const header = window.document.createElement('div');
+    header.className = 'lesson-card-heading';
+    heading.className = 'lesson-row-copy';
+    header.append(heading);
+    prependLessonThumbnail(header, result.id);
+    li.append(meta, header, description, marker);
     list.append(li);
     document.dispatchEvent(new Event('reader-state-change'));
   }

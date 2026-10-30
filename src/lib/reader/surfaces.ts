@@ -1,3 +1,4 @@
+import { prependLessonThumbnail } from '../discovery/thumbnails';
 import type { BrowserCatalogueEntry } from '../discovery/types';
 import type { LessonEdition } from '../urls';
 import { isAppearance, isEdition, MAX_READER_IMPORT_BYTES, parseReaderState, readerStorage, type ReaderAppearance, type ReaderStateV2 } from './state';
@@ -59,14 +60,18 @@ function renderPersonalLists(state: ReaderStateV2, catalogue: readonly BrowserCa
   state.saved.filter((entry,index,items)=>items.findIndex(other=>other.id===entry.id)===index).forEach(saved => {
     const entry = byId.get(saved.id); if (!entry) { missingSaved++; return; }
     const item = document.createElement('li'); item.dataset.lessonId = saved.id; item.dataset.edition = saved.edition;
-    item.append(link(entry.adult.title, entry.adult.path)); savedList?.append(item);
+    const copy = document.createElement('div'); copy.className = 'lesson-row-copy';
+    copy.append(link(entry.adult.title, entry.adult.path)); item.append(copy);
+    prependLessonThumbnail(item, entry.id); savedList?.append(item);
   });
   state.recent.filter((entry,index,items)=>items.findIndex(other=>other.id===entry.id)===index).forEach(recent => {
     const entry = byId.get(recent.id); if (!entry) { missingRecent++; return; }
     const item = document.createElement('li'); item.dataset.lessonId = recent.id;
-    item.append(link(entry.adult.title, entry.adult.path));
+    const copy = document.createElement('div'); copy.className = 'lesson-row-copy';
+    copy.append(link(entry.adult.title, entry.adult.path)); item.append(copy);
+    prependLessonThumbnail(item, entry.id);
     const meta = document.createElement('span'); meta.className = 'personal-links'; meta.textContent = new Intl.DateTimeFormat('en-GB',{dateStyle:'medium'}).format(new Date(recent.visitedAt));
-    item.append(meta); recentList?.append(item);
+    copy.append(meta); recentList?.append(item);
   });
   if (savedEmpty) { savedEmpty.hidden = state.saved.length > 0; savedEmpty.textContent = 'No saved lessons yet.'; }
   if (recentEmpty) { recentEmpty.hidden = state.recent.length > 0; recentEmpty.textContent = 'No recently read lessons yet.'; }

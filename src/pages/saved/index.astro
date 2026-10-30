@@ -1,4 +1,5 @@
 ---
+import LessonThumbnails from '../../components/LessonThumbnails.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getBuildMetadata } from '../../lib/content/build-content';
 import { buildDiscoveryArtifacts } from '../../lib/discovery/artifacts';
@@ -44,4 +45,5 @@ const catalogue = buildDiscoveryArtifacts(lessons).catalogue.path;
     </details>
     <p class="card reader-js-fallback">Saved lessons, recent reading, appearance and data export need JavaScript. You can still read and browse every lesson.</p>
   </section>
+  <LessonThumbnails lessons={lessons} />
 </BaseLayout>
