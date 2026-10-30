@@ -253,6 +253,12 @@ describe('lesson-guard GitHub adapter', () => {
     expect(requests).toBe(0);
   });
 
+  it('does not skip a weekly branch when the review label is removed', async () => {
+    const weeklyEnv = { ...env, TRIGGER_HEAD_REF: 'weekly-lesson/2026-10-04/shadows', TRIGGER_HAS_REVIEW_LABEL: 'false' };
+    const fetchImpl = async () => { throw new Error('offline'); };
+    await expect(collectGuardInput({ env: weeklyEnv, fetchImpl: fetchImpl as any })).rejects.toThrow(/request failed/);
+  });
+
   it('fails closed on incomplete Pull Request data', async () => {
     const fetchImpl = async () => ({ ok: true, json: async () => ({}) }) as any;
     await expect(collectGuardInput({ env, fetchImpl })).rejects.toThrow(/Pull Request response is incomplete/);

@@ -1,5 +1,7 @@
 # Publication entry check
 
+For the separately activated weekly path, use [weekly-publication.md](weekly-publication.md) and ADR-0015 instead of these daily schedules/role rules. This document remains the disabled daily/rollback reference; it cannot grant weekly publication authority. Activation evidence is on #210.
+
 Single-version publication: read `docs/adr/0013-single-lesson-version.md`. Every lesson authoring, review, render and live-route check below now concerns the sole `adult.md` presentation at `/adult/<slug>`. Do not author or revise `teen.md`. This supersedes historical audience distinctions without changing any other safeguard.
 
 This is the trusted current-main entry point for the existing Five Minutes Publisher. It grants only read-only checks, an off-switch stop and a quiet completion exit. It cannot author, review, repair, close, label, merge or publish anything.
