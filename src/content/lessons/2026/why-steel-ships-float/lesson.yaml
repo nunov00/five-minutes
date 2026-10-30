@@ -75,13 +75,14 @@ imageRights:
   evidence: Original deterministic Pillow drawing in Owner-authorised manual extension 03, enlarging labels
     and simplifying the dry-space legend. Full drawing script and hashes recorded on PR206. Prior assets
     remain in Git history; no third-party artwork.
-- src: /lesson-media/why-steel-ships-float-vmarks2.webp
+- src: /lesson-media/why-steel-ships-float-vmarks3.webp
   origin: original-code
   creator: Five Minutes publication illustrator
   licence: Original deterministic artwork created for Five Minutes.
-  evidence: Original deterministic Pillow drawing in Owner-authorised extension04, derived from MCA MSIS41
-    regs5–6 and fresh-water allowance. Two dashed alternative surfaces meet F/S upper edges; same summer-loaded
-    hull. Full script and hashes on PR206; no copied artwork; prior versions in Git history.
+  evidence: 'Original deterministic Pillow drawing, Owner-authorised final polish05: title refers to water
+    against one hull; F/S letters sit above their own bars. Two alternative summer-load surfaces and all
+    mark geometry retained. Complete script/hashes on PR206; no copied artwork. Earlier versions remain
+    in Git history.'
 provenance:
   createdAt: '2026-10-26T06:00:32+00:00'
   createdBy:

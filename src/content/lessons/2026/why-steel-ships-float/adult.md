@@ -6,9 +6,9 @@ takeaway: A floating ship displaces water equal to its own weight; denser seawat
   with less hull underwater than fresh water.
 question: A ship enters denser seawater with the same load aboard. Once it settles, has the weight of
   the displaced water changed, or only its volume? Explain why the ship rises.
-answer: The displaced water still weighs as much as the ship and everything aboard. Denser seawater provides
-  that weight in a smaller volume, so less hull needs to be underwater. The ship rises until the upward
-  force balances its weight again.
+answer: The displaced water still weighs as much as the whole ship and its load. A smaller volume of seawater
+  weighs as much as the water the ship displaced in the river. Less hull therefore needs to stay underwater,
+  so the ship rises until the upward force balances its weight again.
 searchTerms:
 - why steel ships float
 - Archimedes principle
@@ -69,7 +69,7 @@ figures:
   role: explanation
   figure:
     type: image
-    src: /lesson-media/why-steel-ships-float-vmarks2.webp
+    src: /lesson-media/why-steel-ships-float-vmarks3.webp
     width: 960
     height: 760
     afterParagraph: 12
@@ -87,7 +87,7 @@ figures:
       same weight. Other seasonal marks, the deck line and authority initials are omitted. The spacing
       is exaggerated, not an assigned allowance or loading guide.
 ---
-A cargo ship can rise a little as it leaves a fresh-water river for the sea, even with the same load aboard. Seawater is denser: the same volume weighs more. The ship can therefore support its weight by pushing aside less water. But how does water support a steel ship in the first place?[^3][^6]
+A cargo ship can rise a little as it leaves a fresh-water river for the sea, even with the same load aboard. Seawater is denser: the same volume weighs more. The ship can therefore support its weight by pushing aside less water. But how can water support a whole steel ship when a small steel bolt sinks?[^3][^6]
 
 ## Where the upward push comes from
 
