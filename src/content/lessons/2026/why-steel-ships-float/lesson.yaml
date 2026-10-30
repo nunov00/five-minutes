@@ -1,0 +1,93 @@
+schemaVersion: 2
+id: 7eaad3c8-f9b1-447a-aae0-779ad350b433
+slug: why-steel-ships-float
+aliases: []
+publishedAt: '2026-10-26T06:00:32+00:00'
+topic: science
+subtopic: physics
+concepts:
+- buoyancy
+- pressure
+- density
+- displacement
+related:
+  manual: []
+  exclude: []
+sources:
+- title: Hodanbosi and Fairman (1996) — Fluid Pressure and Depth
+  publisher: NASA Glenn Research Center
+  url: https://www.grc.nasa.gov/www/k-12/WindTunnel/Activities/fluid_pressure.html
+  accessedAt: '2026-10-26'
+  note: Pressure increases with depth; the exercises use 1,000 kg per cubic metre for fresh water. Read
+    the explanatory text and equations; this is educational material, not a ship experiment.
+- title: 'Hodanbosi and Fairman (1996) — Buoyancy: Archimedes Principle'
+  publisher: NASA Glenn Research Center
+  url: https://www.grc.nasa.gov/www/k-12/WindTunnel/Activities/buoy_Archimedes.html
+  accessedAt: '2026-10-26'
+  note: The submerged-cube argument explains the pressure imbalance and why buoyancy equals displaced-fluid
+    weight. The lesson uses the general principle, not its aluminium example.
+- title: Ling, Sanny and Moebs (2016) — University Physics Volume 1, section 14.4
+  publisher: OpenStax, Rice University
+  url: https://openstax.org/books/university-physics-volume-1/pages/14-4-archimedes-principle-and-buoyancy
+  accessedAt: '2026-10-30'
+  note: Density and Archimedes’ Principle explains steel hulls, shape and the deeper position of a loaded
+    ship. Our numerical box-hull example is hypothetical and calculated, not copied data.
+- title: NOAA — Build a boat
+  publisher: National Oceanic and Atmospheric Administration
+  url: https://www.noaa.gov/office-education/outreach-communication/hands-on-science-activities/build-a-boat
+  accessedAt: '2026-10-26'
+  note: The activity transcript describes loading foil boats, water entering low edges and the separate
+    problem of stability. No publication year is given here.
+- title: International Maritime Organization — International Convention on Load Lines
+  url: https://www.imo.org/en/about/conventions/pages/international-convention-on-load-lines.aspx
+  publisher: International Maritime Organization
+  accessedAt: '2026-10-28'
+  note: 'Official overview: load limits protect the margin above water, with assigned marks amidships
+    on both sides; zones and seasons matter. This lesson is a physics explanation, not loading guidance.'
+- title: Maritime and Coastguard Agency (2023) — Instructions for the Guidance of Surveyors on International
+    Load Line, MSIS41 Rev 05.23
+  url: https://assets.publishing.service.gov.uk/media/644633e96dda69000d11e2e6/MSIS41_International_Load_Line_R05.23.pdf
+  publisher: UK Maritime and Coastguard Agency
+  accessedAt: '2026-10-30'
+  note: Printed p.20, Article 12, fresh-water allowance; pp.47–48, regulations 5–6 and figure 6.1, ring
+    and S/F relationships, rechecked 30 October for the original schematic; p.87 salt-water specific gravity
+    1.025 versus fresh water 1.000. Selected sections only, not all 157 pages. Diagram spacing is illustrative,
+    not an assigned allowance.
+imageRights:
+- src: /lesson-media/why-steel-ships-float-vlead2.webp
+  origin: generated
+  creator: OpenAI built-in image_gen
+  licence: Use under applicable OpenAI terms; no exclusivity or copyright guarantee.
+  evidence: Original text-only built-in image_gen dispatch weekly-trial-ship-lead-02 in Owner-authorised
+    extension04; full prompt and result on issue200/PR206. Whole frame converted to WebP, no creative
+    edit. Conceptual estuary scene, not evidence of a measured rise.
+- src: /lesson-media/why-steel-ships-float-vpressure2.webp
+  origin: original-code
+  creator: Five Minutes publication illustrator
+  licence: Original deterministic artwork created for Five Minutes.
+  evidence: Original deterministic Pillow redraw in reserved editorial round weekly-trial-ship-revision-01
+    from the cited physics sources; no copied source art. New versioned file; first source remains in
+    Git history. Qualitative schematic, not a ship design.
+- src: /lesson-media/why-steel-ships-float-vload4.webp
+  origin: original-code
+  creator: Five Minutes publication illustrator
+  licence: Original deterministic artwork created for Five Minutes.
+  evidence: Original deterministic Pillow drawing in Owner-authorised manual extension 03, enlarging labels
+    and simplifying the dry-space legend. Full drawing script and hashes recorded on PR206. Prior assets
+    remain in Git history; no third-party artwork.
+- src: /lesson-media/why-steel-ships-float-vmarks3.webp
+  origin: original-code
+  creator: Five Minutes publication illustrator
+  licence: Original deterministic artwork created for Five Minutes.
+  evidence: 'Original deterministic Pillow drawing, Owner-authorised final polish05: title refers to water
+    against one hull; F/S letters sit above their own bars. Two alternative summer-load surfaces and all
+    mark geometry retained. Complete script/hashes on PR206; no copied artwork. Earlier versions remain
+    in Git history.'
+provenance:
+  createdAt: '2026-10-26T06:00:32+00:00'
+  createdBy:
+    type: ai
+    provider: openai
+    model: Codex
+    promptVersion: weekly-trial-owner-recovery-v1
+  reviews: []

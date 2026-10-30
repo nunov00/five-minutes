@@ -1,8 +1,10 @@
 import { lessonVisuals, validateVisualCollection, VISUAL_LIMITS } from '../src/lib/figures/collection.mjs';
 import { validateOpening } from '../src/lib/content/opening-contract.mjs';
+import { validateCitations, validatePresentationCitations } from '../src/lib/content/citations.mjs';
 import { isValidTimestamp } from './publication-time.mjs';
 import { BACKLOG_PATH, parseBacklog, verifyBacklogCompletion } from './editorial-backlog.mjs';
 import { parseDocument } from 'yaml';
+import { weeklyCycle, weeklyLessonBranch, weeklyRemainingPipeline } from './weekly-cycle.mjs';
 import { TOOLKIT_TYPES, validateToolkitData } from '../src/lib/figures/toolkit-contract.mjs';
 import { LOCAL_RASTER_PATH, RASTER_LIMITS, validateRasterBytes } from '../src/lib/figures/raster.mjs';
 import { validateImageRights } from '../src/lib/figures/image-rights.mjs';
@@ -219,11 +221,19 @@ export function evaluateLessonPullRequest(input) {
   if (typeof pr.headRef !== 'string' || typeof pr.headSha !== 'string' || !Array.isArray(pr.labels)) fail('Pull Request metadata is incomplete.');
   if (pr.labels.some((label) => typeof label !== 'string')) fail('Pull Request labels are malformed.');
 
-  const branchSignal = pr.headRef.startsWith('lesson/');
+  const weeklySignal = pr.headRef.startsWith('weekly-lesson/');
+  const branchSignal = pr.headRef.startsWith('lesson/') || weeklySignal;
   const labelSignal = pr.labels.includes('editorial-review-requested');
   if (!branchSignal && !labelSignal) return { applicable: false, message: 'Not an automated lesson candidate.' };
 
-  const branch = /^lesson\/([a-z0-9]+(?:-[a-z0-9]+)*)$/.exec(pr.headRef);
+  const branch = weeklySignal
+    ? /^weekly-lesson\/(\d{4}-\d{2}-\d{2})\/([a-z0-9]+(?:-[a-z0-9]+)*)$/.exec(pr.headRef)
+    : /^lesson\/([a-z0-9]+(?:-[a-z0-9]+)*)$/.exec(pr.headRef);
+  let cycle;
+  if (weeklySignal) {
+    try { cycle = weeklyCycle(now); } catch { fail('Invalid weekly run time.'); }
+    if (!branch || branch[1] !== cycle.sunday || !['writing','publication'].includes(cycle.stage)) fail('Weekly candidate must belong to this Sunday–Friday cycle and run Monday–Friday.');
+  }
   if (!branch) fail('Automated lesson branch must be exactly lesson/<slug>.');
   for (const label of REQUIRED_LABELS) {
     if (!pr.labels.includes(label)) fail(`Automated lesson candidate is missing label ${label}.`);
@@ -267,7 +277,10 @@ export function evaluateLessonPullRequest(input) {
   }
   const year = [...years][0];
   const slug = [...slugs][0];
-  if (pr.headRef !== lessonBranchName(slug) && (!renewal || pr.headRef !== lessonBranchName(slug, zurichDate(new Date(now))))) fail('Branch, directory and lesson slug must match (or use the current-day backlog retry suffix).');
+  const matchesBranch = weeklySignal
+    ? pr.headRef === weeklyLessonBranch(cycle.sunday, slug)
+    : pr.headRef === lessonBranchName(slug) || (renewal && pr.headRef === lessonBranchName(slug, zurichDate(new Date(now))));
+  if (!matchesBranch) fail('Branch, directory and lesson slug must match (or use the current-day backlog retry suffix).');
 
   const root = `src/content/lessons/${year}/${slug}`;
   const yamlPath = `${root}/lesson.yaml`;
@@ -297,7 +310,15 @@ export function evaluateLessonPullRequest(input) {
     try { selected = verifyBacklogCompletion(input.baseBacklogText, headBacklogText, metadata, metadata.revisedAt ?? metadata.publishedAt, {reservedRoutes:Object.keys(baseRegistry), now}); }
     catch(error) { fail(error.message); }
     const pipeline=parseBacklog(headBacklogText).pipeline;
-    if(pipeline && (zurichDate(new Date(pipeline.assessedAt))!==zurichDate(new Date(now)) || Date.parse(pipeline.assessedAt)>Date.parse(now))) fail('Pipeline assessment must be from this run day, not the future.');
+    if (weeklySignal) {
+      const base = parseBacklog(input.baseBacklogText), head = parseBacklog(headBacklogText);
+      if (!base.pipeline || weeklyCycle(base.pipeline.assessedAt).day !== cycle.sunday || Date.parse(base.pipeline.assessedAt) > Date.parse(now)) fail('Weekly candidate requires this Sunday’s trusted-main selection.');
+      const expected = structuredClone(base);
+      Object.assign(expected.entries.find(e => e.key === selected.key), { state: 'complete', completedAt: metadata.revisedAt ?? metadata.publishedAt, destinationId: metadata.id, destinationSlug: metadata.slug });
+      expected.pipeline = weeklyRemainingPipeline(base.pipeline);
+      if (JSON.stringify(expected) !== JSON.stringify(head)) fail('Weekly candidate may only complete Sunday’s selection and remove its ranked brief.');
+    }
+    if(!weeklySignal && pipeline && (zurichDate(new Date(pipeline.assessedAt))!==zurichDate(new Date(now)) || Date.parse(pipeline.assessedAt)>Date.parse(now))) fail('Pipeline assessment must be from this run day, not the future.');
     if (selected.kind !== 'new' && !isValidTimestamp(metadata.revisedAt)) fail('Renewed lessons require revisedAt.');
     if ((selected.kind === 'revision') !== revision) fail('Backlog kind and lesson diff disagree.');
     if (revision) {
@@ -315,10 +336,20 @@ export function evaluateLessonPullRequest(input) {
   const nowDate = new Date(now);
   if (!Number.isFinite(publishedAt.valueOf()) || !Number.isFinite(nowDate.valueOf())) fail('Publication time is invalid.');
   const publicationDate = zurichDate(publishedAt);
-  if (publicationDate !== zurichDate(nowDate)) fail('Publication date must be the current Europe/Zurich date.');
+  if (weeklySignal && !renewal) fail('Weekly candidate must complete the trusted Sunday selection.');
+  if (weeklySignal ? publicationDate !== cycle.friday : publicationDate !== zurichDate(nowDate)) fail(weeklySignal ? 'Weekly release date must be this cycle’s Friday.' : 'Publication date must be the current Europe/Zurich date.');
   if (!(revision ? zurichDate(new Date(metadata.publishedAt)) : publicationDate).startsWith(`${year}-`)) fail('Lesson directory year must match publishedAt in Europe/Zurich.');
 
   const presentations=[parseFrontmatter(adultText,'adult.md',ADULT_KEYS)];
+  try {
+    const count = Array.isArray(metadata.sources) ? metadata.sources.length : 0;
+    for (const presentation of presentations) validatePresentationCitations(presentation, count);
+    validateCitations(adultText.slice(adultText.indexOf('\n---\n', 4) + 5), count, true);
+    for (const presentation of presentations) for (const {figure} of lessonVisuals(presentation)) {
+      validateCitations(figure.caption, count);
+      validateCitations(figure.description, count);
+    }
+  } catch (error) { fail(`Invalid source citation: ${error.message}`); }
   const images=presentations.flatMap(p=>lessonVisuals(p).map(v=>v.figure)).filter(f=>f?.type==='image');
   for(const message of validateImageRights(metadata.imageRights,images.map(f=>f.src)))fail(message);
   const referenced=new Set(images.map(f=>`public${f.src}`));
@@ -354,5 +385,5 @@ export function evaluateLessonPullRequest(input) {
     fail('Candidate must preserve route ownership, appending exactly its slug and ID only for a new identity.');
   }
 
-  return { applicable: true, slug, lessonId: metadata.id, message: `Automated lesson contract passed for ${slug}.` };
+  return { applicable: true, slug, lessonId: metadata.id, releaseAt: metadata.revisedAt ?? metadata.publishedAt, message: `${weeklySignal ? 'Weekly' : 'Automated'} lesson contract passed for ${slug}.` };
 }

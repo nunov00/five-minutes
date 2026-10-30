@@ -23,6 +23,7 @@ const lead=lessonVisuals(lesson.adult).find(v=>v.role==='lead')?.figure;
 const artifacts = buildDiscoveryArtifacts(lessons);
 const fallback = artifacts.catalogue.payload.find((entry) => entry.id !== today.id);
 if (!fallback) throw new Error('Today requires another lesson for Surprise Me.');
+const thumbnails = new Map(await Promise.all(lessons.map(async lesson => [lesson.metadata.id, (await lessonArtwork(lesson)).thumbnail] as const)));
 const earlier = selectEarlierLessons(manifest.catalogue, today.id).map((entry) => {
   const topic = taxonomyTopic(entry.topic);
   if (!topic) throw new Error(`Earlier lesson ${entry.id} has an unknown topic.`);
@@ -47,8 +48,9 @@ const earlier = selectEarlierLessons(manifest.catalogue, today.id).map((entry) =
         {earlier.map((entry) => (
           <li data-earlier-id={entry.id}>
             <p class="earlier-meta"><LessonDates {...entry} /> · {entry.topicLabel}</p>
-            <div class="earlier-links">
-              <a data-earlier-edition="adult" href={entry.adult.path}>{entry.adult.title}</a>
+            <div class:list={["earlier-links", "lesson-card-heading", { "lesson-row": thumbnails.get(entry.id) }]}>
+              {thumbnails.get(entry.id) && <img class="lesson-thumbnail" src={thumbnails.get(entry.id)} width="480" height="320" alt="" loading="lazy" decoding="async" />}
+              <a class="lesson-row-copy" data-earlier-edition="adult" href={entry.adult.path}>{entry.adult.title}</a>
             </div>
           </li>
         ))}

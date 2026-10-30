@@ -1,5 +1,7 @@
 # AGENTS.md
 
+30 October 2026 weekly-production amendment: [ADR-0015](docs/adr/0015-weekly-production.md) and [the weekly contract](docs/automation/weekly-publication.md) define the Owner-approved Sunday selection, Monday–Thursday author/Claude reviews and Friday publication path using one ChatGPT task. Only after mandatory implementation review, checks, merge and saved-task readback on #210, this path supersedes the daily cadence/same-day/Coordinator-child/same-reviewer-run rules for `weekly-lesson/<Sunday>/<slug>` candidates alone. Both final-head lesson-quality ratings ≥9 are required in addition to every Ready/source/render/CI gate; topic appeal remains advisory. Four content-review rounds maximum; failed Friday work stays in backlog with history and counters. Legacy tasks remain disabled. The old #200 trial is historical, not extended or retroactively successful.
+
 22 October 2026 single-version direction: [ADR-0013](docs/adr/0013-single-lesson-version.md) supersedes all earlier Adult/Teen requirements. Publish and review one lesson from `lesson.yaml` and `adult.md`; retired `teen.md` sources are inert archive material. All non-edition safeguards remain.
 
 
@@ -20,6 +22,7 @@ Five Minutes is a Git-backed, static learning publication. Read these before sub
 
 ## Working rules
 
+- Before handing off a new lesson PR or a material lesson revision, record the exact-head Author quality assessment required by docs/EDITORIAL.md in its own `Author quality assessment @ <full candidate SHA>` comment, keeping numerical self-ratings out of the PR body/handoff: separate topic/lesson ratings, concrete reader/render evidence, remaining gap to the Owner's 9+ ambition and regression check. Missing or stale assessment means author work is incomplete; tests and external review do not substitute for it. Reviewers record initial ratings before deliberately opening the author's score comment, disclose unavoidable exposure and then compare judgements. Preserve initial scores and explain later disagreements with external review. Apply EDITORIAL.md's transition rule; the controlled weekly trial waits for merged-contract and saved-prompt activation on #200. This is author evidence, not independent approval, a numeric publication threshold or extra revision/budget authority.
 - GitHub is authoritative; `main` must remain production-ready.
 - Significant work uses an issue/task, branch, PR, checks and review.
 - Maximise autonomous progress within approved scope: carry implementation, tests, documentation, CI/deployment monitoring, in-scope fixes and review remediation through to authorised merge without repeated Owner approval. Wait for jobs and act on their results. Return for material decisions, missing access/review or another genuine blocker, with a concrete result and a self-contained hand-off where needed. Quality gates and Owner authority remain intact. See GOVERNANCE section 4.

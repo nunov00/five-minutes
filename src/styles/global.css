@@ -571,6 +571,13 @@ input[type='search'] {
   font-size: var(--text-lg);
 }
 
+.source-citation { display:inline-block; min-inline-size:2rem; min-block-size:1.5rem; padding-inline:.1em .3em; font-size:.85em; text-align:start; white-space:nowrap; }
+.lesson-sources ol { padding-inline-start:1.6em; }
+.lesson-sources li { margin-block:1.25rem; overflow-wrap:anywhere; scroll-margin-top:6rem; }
+.lesson-sources li:target { outline:2px solid currentColor; outline-offset:.35rem; border-radius:.15rem; }
+.lesson-sources li p { margin-block:.3rem; }
+.source-publication,.source-note { font-size:var(--text-sm); color:var(--color-muted); }
+
 details {
   margin-top: var(--space-3);
 }
@@ -653,6 +660,22 @@ html[data-appearance=dark] .diagram-ray{stroke:#ecc86b}html[data-appearance=dark
 .reader-settings > summary{display:flex;justify-content:space-between;gap:16px;width:100%;padding:12px 0;border-block:1px solid var(--color-border);font-size:var(--text-lg);list-style:none}.reader-settings > summary::-webkit-details-marker{display:none}.settings-chevron{display:inline-block;font-size:1.5em;line-height:1;transform:rotate(0deg)}.reader-settings[open] > summary .settings-chevron{transform:rotate(90deg)}
 
 /* Artwork keeps its authored colours in both themes; no inversion or colour filters. */
-.lesson-card-art,.featured-art{display:block;width:100%;height:auto;border-radius:0.6rem;margin:0 0 1rem;background:#fbf6ea;object-fit:contain}
-.lesson-card-art{aspect-ratio:3/2}
+.featured-art{display:block;width:100%;height:auto;border-radius:0.6rem;margin:0 0 1rem;background:#fbf6ea;object-fit:contain}
+/* Reuse the complete lead artwork; fixed slots prevent image loading from shifting titles. */
+.lesson-row,
+.personal-list li.lesson-row{display:grid;grid-template-columns:80px minmax(0,1fr);gap:16px;align-items:start}
+.lesson-thumbnail{display:block;width:80px;height:64px;object-fit:contain;background:#fbf6ea;border-radius:8px;margin:4px 0 0}
+.lesson-row-copy{min-width:0;overflow-wrap:anywhere}
+.lesson-row-copy > :first-child{margin-top:0}
+.lesson-row-copy > :last-child{margin-bottom:0}
+@media(min-width:640px){.lesson-row,.personal-list li.lesson-row{grid-template-columns:112px minmax(0,1fr);gap:24px}.lesson-thumbnail{width:112px;height:80px}}
+@media(max-width:359px){.lesson-row,.personal-list li.lesson-row{grid-template-columns:64px minmax(0,1fr);gap:12px}.lesson-thumbnail{width:64px;height:52px}}
 .reading-with-figure>.lesson-body:empty{display:none}
+
+/* List artwork shares a row with the title; supporting text keeps the full width. */
+.lesson-card-heading{margin-block:8px 12px}
+.lesson-card-heading h2{font-size:1.25rem;line-height:1.35;margin:0}
+.lesson-card-heading .lesson-thumbnail{margin-top:0}
+.lesson-card-heading h2 a,.personal-list a,.earlier-links a{text-decoration:none}
+.lesson-card-heading h2 a:hover,.personal-list a:hover,.earlier-links a:hover{text-decoration:underline}
+.lesson-card-description{margin-block:12px 16px}

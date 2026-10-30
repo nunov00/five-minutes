@@ -1,5 +1,8 @@
 # Operations and Delivery
 
+30 October 2026 weekly-production amendment: [ADR-0015](adr/0015-weekly-production.md) and [the weekly contract](automation/weekly-publication.md) define the Owner-approved Sunday selection, Monday–Thursday author/Claude reviews and Friday publication path using one ChatGPT task. Only after mandatory implementation review, checks, merge and saved-task readback on #210, this path supersedes the daily cadence/same-day/Coordinator-child/same-reviewer-run rules for `weekly-lesson/<Sunday>/<slug>` candidates alone. Both final-head lesson-quality ratings ≥9 are required in addition to every Ready/source/render/CI gate; topic appeal remains advisory. Four content-review rounds maximum; failed Friday work stays in backlog with history and counters. Legacy tasks remain disabled. The old #200 trial is historical, not extended or retroactively successful.
+
+
 Visual foundation: [ADR-0014](adr/0014-positioned-lesson-visuals.md) defines positioned collections, bounded sources and trusted static card/share derivatives. It does not activate weekly scheduling or re-enable the Publisher.
 
 22 October 2026 single-version direction: [ADR-0013](adr/0013-single-lesson-version.md) supersedes all earlier Adult/Teen requirements. Publish and review one lesson from `lesson.yaml` and `adult.md`; retired `teen.md` sources are inert archive material. All non-edition safeguards remain.

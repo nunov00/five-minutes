@@ -234,6 +234,9 @@ export function validateLessonMetadata(value: unknown, path = 'metadata'): Valid
     if (!isObject(source) || !nonEmpty(source.title) || !nonEmpty(source.url) || !nonEmpty(source.publisher) || !nonEmpty(source.accessedAt) || !DATE.test(source.accessedAt)) {
       issue(issues, `${path}.sources[${i}]`, 'source', 'Expected title, URL, publisher and YYYY-MM-DD accessedAt.');
     }
+    if (isObject(source) && source.note !== undefined && !nonEmpty(source.note)) {
+      issue(issues, `${path}.sources[${i}].note`, 'source-note', 'Source note must be non-empty plain text.');
+    }
   });
 
   if (!isObject(value.provenance) || !isValidTimestamp(value.provenance.createdAt) || !isObject(value.provenance.createdBy) || !['ai', 'human'].includes(String(value.provenance.createdBy.type)) || !Array.isArray(value.provenance.reviews)) {

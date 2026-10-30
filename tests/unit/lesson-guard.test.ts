@@ -100,6 +100,24 @@ function rejected(change: (value: ReturnType<typeof fixture>) => void, pattern?:
 }
 
 describe('lesson-only publication guard', () => {
+  it.each(['title: Why Shadows Change','description: A description.','takeaway: A takeaway.','question: A question?','answer: An answer.'])('rejects citation tokens in plain presentation fields: %s',field=>{
+    rejected(v=>{const b=v.blobs[`${root}/adult.md`];b.text=b.text.replace(field,field+'[^1]');b.size=Buffer.byteLength(b.text);},/Citation tokens/);
+  });
+  it('rejects source tokens in diagram labels and alt text in the trusted guard',()=>{
+    for(const figure of [processFigure.replace('alt: Light','alt: Light[^1]'),processFigure.replace('label: Light source','label: "Light source[^1]"')]){
+      rejected(v=>{const b=v.blobs[`${root}/adult.md`];b.text=b.text.replace('searchTerms:',figure+'searchTerms:');b.size=Buffer.byteLength(b.text);},/Citation tokens/);
+    }
+  });
+  it('checks citation targets in body and figure copy using source metadata',()=>{
+    const v=fixture(),y=v.blobs[`${root}/lesson.yaml`],b=v.blobs[`${root}/adult.md`];
+    y.text=y.text.replace('sources: []','sources: [{title: Test, url: https://example.com, publisher: Example, accessedAt: 2026-10-05}]');y.size=Buffer.byteLength(y.text);
+    b.text=b.text.replace('Body.','Body.[^1]').replace('searchTerms:',processFigure.replace('caption: A simple path.','caption: A simple path.[^1]')+'searchTerms:');b.size=Buffer.byteLength(b.text);
+    expect(evaluateLessonPullRequest(v)).toMatchObject({applicable:true});
+    b.text=b.text.replace('caption: A simple path.[^1]','caption: A simple path.[^2]');b.size=Buffer.byteLength(b.text);
+    expect(()=>evaluateLessonPullRequest(v)).toThrow(/Citation 2/);
+    b.text=b.text.replace('caption: A simple path.[^2]','caption: A simple path.[^1]').replace('Body.[^1]','Body.[^2]');b.size=Buffer.byteLength(b.text);
+    expect(()=>evaluateLessonPullRequest(v)).toThrow(/Citation 2/);
+  });
   it('rejects archive imports from the automated daily publication path', () => {
     rejected((value) => {
       const blob = value.blobs[`${root}/lesson.yaml`];
@@ -233,6 +251,12 @@ describe('lesson-guard GitHub adapter', () => {
     const fetchImpl=async () => { requests += 1; throw new Error('offline'); };
     await expect(collectGuardInput({ env:ordinaryEnv, fetchImpl:fetchImpl as any })).resolves.toEqual({ applicable:false });
     expect(requests).toBe(0);
+  });
+
+  it('does not skip a weekly branch when the review label is removed', async () => {
+    const weeklyEnv = { ...env, TRIGGER_HEAD_REF: 'weekly-lesson/2026-10-04/shadows', TRIGGER_HAS_REVIEW_LABEL: 'false' };
+    const fetchImpl = async () => { throw new Error('offline'); };
+    await expect(collectGuardInput({ env: weeklyEnv, fetchImpl: fetchImpl as any })).rejects.toThrow(/request failed/);
   });
 
   it('fails closed on incomplete Pull Request data', async () => {

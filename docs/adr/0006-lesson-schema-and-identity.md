@@ -146,6 +146,14 @@ The front-matter `title` of each presentation is the reading page's only level-1
 
 ### Markdown and structured-data safety
 
+#### Numbered source references (Owner direction, 24 October 2026)
+
+Reuse the schemaVersion 2 `sources` array as the one bibliography. The reading page displays its entries in array order in a Sources section after recall, without inventing metadata for older records. Optional `note`, when present, must be non-empty text and is escaped on output. Authors/organisation and publication year can be recorded in the existing title; access date remains distinct. No source-ID, author/year field, source duplication or corpus migration is introduced.
+
+The sole new inline syntax is `[^N]`, with N a canonical integer from 1 to 999 referencing an existing array entry. It produces an application-owned link to `#source-N`; repetitions have no duplicate element IDs. Body code remains literal. Reserved `[^` tokens are rejected in headings, link labels and presentation fields other than figure captions/descriptions, rather than displaying unresolved syntax to readers. Malformed or dangling citations fail. Figure captions and descriptions accept the same token while all other copy remains escaped plain text; alt and structured drawing labels remain plain. The canonical loader and trusted-base guard check the same citation contract. Existing lessons without inline references remain valid. Source notes use secondary typography but stay visible, including material access limits; existing research wording is retained until a reviewed content revision.
+
+Only these generated numeric fragments pass sanitization; this does not allow arbitrary lesson HTML, fragment links, footnote definitions, remote images or executable content. Reference labels and target IDs come from validated integers, never arbitrary content. Sources remain static and readable with keyboard navigation and JavaScript disabled. Publication/source and figure-rights review remain required under EDITORIAL.md; the citation token establishes a link, not factual support.
+
 Lesson bodies use Markdown, not MDX. AI-authored lesson content must not execute code during the site build.
 
 Raw HTML in lesson Markdown is disabled. Rendered lesson HTML is sanitized as defence in depth. Markdown remote images are forbidden initially; lesson imagery, when introduced, must use validated local/approved assets rather than arbitrary third-party URLs. Links are validated for safe schemes, and external links receive appropriate `rel` attributes. Lesson fields inserted into JSON-LD or other structured output are serialized/escaped rather than concatenated as executable markup.

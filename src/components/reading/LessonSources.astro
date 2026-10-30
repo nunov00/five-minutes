@@ -1,0 +1,15 @@
+---
+import type { LessonSource } from '../../lib/content/schema';
+interface Props { sources: LessonSource[]; }
+const { sources } = Astro.props;
+---
+{sources.length > 0 && <section class="lesson-section lesson-sources" aria-labelledby="sources-heading">
+  <h2 id="sources-heading">Sources</h2>
+  <ol>
+    {sources.map((source, index) => <li id={`source-${index + 1}`} tabindex="-1">
+      <a href={source.url} rel="noopener noreferrer">{source.title}</a>
+      <p class="source-publication">{source.publisher} · Accessed {source.accessedAt}</p>
+      {source.note && <p class="source-note">{source.note}</p>}
+    </li>)}
+  </ol>
+</section>}

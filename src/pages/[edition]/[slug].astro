@@ -1,6 +1,7 @@
 ---
 import LessonBody from '../../components/reading/LessonBody.astro';
 import Recall from '../../components/reading/Recall.astro';
+import LessonSources from '../../components/reading/LessonSources.astro';
 import { lessonArtwork } from '../../lib/figures/artwork.mjs';
 import { lessonVisuals } from '../../lib/figures/collection.mjs';
 import TeenActivity from '../../components/reading/TeenActivity.astro';
@@ -59,8 +60,9 @@ const social={image:art.share,imageType:art.shareType,imageAlt:lead?.alt??'Five 
       <p class="lede">{presentation.description}</p>
     </header>
     {presentation.activity && <TeenActivity activity={presentation.activity} id={`activity-${lesson.metadata.id}`}/>}
-    <LessonBody html={html} visuals={visuals} legacy={!!presentation.figure} id={`figure-${edition}-${lesson.metadata.id}`} openingTakeaway={presentation.opening === 'answer-first' ? presentation.takeaway : undefined}/>
+    <LessonBody html={html} visuals={visuals} sourceCount={lesson.metadata.sources.length} legacy={!!presentation.figure} id={`figure-${edition}-${lesson.metadata.id}`} openingTakeaway={presentation.opening === 'answer-first' ? presentation.takeaway : undefined}/>
     <Recall question={presentation.question} answer={presentation.answer} takeaway={presentation.takeaway} opening={presentation.opening}/>
+    <LessonSources sources={lesson.metadata.sources}/>
     <section class="lesson-section reader-actions" aria-label="Your reading">
       <button class="button button-secondary" type="button" data-save-lesson hidden>Save lesson</button>
       <button class="button button-secondary" type="button" data-read-lesson hidden>Mark unread</button>

@@ -1,3 +1,4 @@
+import { weeklyCycle, weeklyLessonBranch } from './weekly-cycle.mjs';
 import { lessonVisuals } from '../src/lib/figures/collection.mjs';
 import { execFileSync } from 'node:child_process';
 import { readFileSync, lstatSync } from 'node:fs';
@@ -34,7 +35,8 @@ function expectedProducer(check, head, workflowRuns) {
 function fail(message) { throw new LessonGuardError(message); }
 
 // Read committed Git objects and compare raw worktree bytes; never run candidate conversions.
-export function prepareLessonSubmission({ cwd = process.cwd(), base, now = new Date().toISOString(), retry = false } = {}) {
+/** @param {{cwd?: string, base?: string, now?: string, retry?: boolean, weekly?: string}} [options] */
+export function prepareLessonSubmission({ cwd = process.cwd(), base, now = new Date().toISOString(), retry = false, weekly } = {}) {
   if (!SHA.test(base ?? '')) fail('Supply the freshly verified main commit SHA.');
   const git = (...args) => execFileSync('git', ['--no-pager', '--no-lazy-fetch', '--no-optional-locks', '-c', 'log.showSignature=false', '-c', 'core.fsmonitor=false', '-c', 'core.hooksPath=/dev/null', ...args], { cwd, env: { ...process.env, GIT_NO_REPLACE_OBJECTS: '1', GIT_NO_LAZY_FETCH: '1' }, maxBuffer: 16 * 1024 * 1024 });
   const text = (...args) => git(...args).toString('utf8').trim();
@@ -114,17 +116,18 @@ export function prepareLessonSubmission({ cwd = process.cwd(), base, now = new D
   const metadataDoc = parseDocument(blob(metadataPath).text, { schema: 'core', uniqueKeys: true });
   if (metadataDoc.errors.length || metadataDoc.warnings.length) fail('Invalid lesson metadata.');
   const metadata = metadataDoc.toJS({ maxAliasCount: 0 });
-  const ordinaryBranch = lessonBranchName(metadata?.slug);
+  if (weekly !== undefined && (retry || weekly !== weeklyCycle(now).sunday)) fail('Weekly preparation requires the current Sunday cycle and cannot use daily retry.');
+  const ordinaryBranch = weekly === undefined ? lessonBranchName(metadata?.slug) : weeklyLessonBranch(weekly, metadata?.slug);
   const refs = text('for-each-ref', '--format=%(refname) %(objectname)', 'refs/heads', 'refs/remotes/origin').split('\n');
   const owners = refs.filter(row => row.startsWith(`refs/heads/${ordinaryBranch} `) || row.startsWith(`refs/remotes/origin/${ordinaryBranch} `));
   if (retry && (!owners.some(row => !row.endsWith(` ${head}`)) || !files.some(f => f.filename === BACKLOG))) fail('Retry needs an existing unsuffixed branch and a backlog candidate; verify prior-day failure history separately.');
   if (!retry && owners.some(row => !row.endsWith(` ${head}`))) fail('Lesson branch already belongs to another commit; reconcile history before retrying.');
   const day = new Intl.DateTimeFormat('sv-SE', { timeZone: 'Europe/Zurich' }).format(new Date(now));
-  const branch = lessonBranchName(metadata.slug, retry ? day : undefined);
+  const branch = weekly === undefined ? lessonBranchName(metadata.slug, retry ? day : undefined) : ordinaryBranch;
   const chosenOwners = refs.filter(row => row.startsWith(`refs/heads/${branch} `) || row.startsWith(`refs/remotes/origin/${branch} `));
   if (chosenOwners.some(row => !row.endsWith(` ${head}`))) fail('Chosen branch already belongs to another candidate.');
   const currentBranch = text('branch', '--show-current');
-  if (currentBranch.startsWith('lesson/') && currentBranch !== branch) fail('Local lesson branch differs from the generated branch.');
+  if ((currentBranch.startsWith('lesson/') || currentBranch.startsWith('weekly-lesson/')) && currentBranch !== branch) fail('Local lesson branch differs from the generated branch.');
   const blobs = Object.fromEntries(paths.map(path => [path, blob(path)]));
   if (files.some(f => f.filename === BACKLOG)) blobs[BACKLOG] = blob(BACKLOG);
   const revision = paths.some(path => files.find(f => f.filename === path).status === 'modified');
@@ -181,14 +184,16 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
     if (command === 'prepare') {
       let cwd;
       let retry = false;
+      let weekly;
       for (let i = 0; i < options.length; i++) {
         if (options[i] === '--retry' && !retry) retry = true;
+        else if (options[i] === '--weekly' && weekly === undefined && options[i + 1]) weekly = options[++i];
         else if (options[i] === '--repo' && !cwd && options[i + 1]) cwd = options[++i];
         else fail('Unknown or duplicate prepare option.');
       }
-      result = prepareLessonSubmission({ base: value, cwd, retry });
+      result = prepareLessonSubmission({ base: value, cwd, retry, weekly });
     } else if (command === 'checks' && options.length === 2) result = assessPublicationChecks(value, JSON.parse(readFileSync(options[0], 'utf8')), JSON.parse(readFileSync(options[1], 'utf8')));
-    else fail('Usage: lesson-submission.mjs prepare <main-SHA> [--repo <candidate-checkout>] [--retry] | checks <head-SHA> <complete-check-runs.json> <workflow-runs.json>');
+    else fail('Usage: lesson-submission.mjs prepare <main-SHA> [--repo <candidate-checkout>] [--retry | --weekly <Sunday-date>] | checks <head-SHA> <complete-check-runs.json> <workflow-runs.json>');
     console.log(JSON.stringify(result, null, 2));
     if (result.readyForReview === false) process.exitCode = 1;
   } catch (error) {

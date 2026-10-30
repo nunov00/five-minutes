@@ -82,7 +82,7 @@ async function content(api, owner, repo, path, ref) {
 
 export async function collectGuardInput({ env = process.env, fetchImpl = fetch, now = new Date().toISOString() } = {}) {
   const { owner, repo, token, prNumber, triggerHeadSha, triggerHeadRef, triggerHasReviewLabel } = configuration(env);
-  if (!triggerHeadRef.startsWith('lesson/') && !triggerHasReviewLabel) return { applicable: false };
+  if (!triggerHeadRef.startsWith('lesson/') && !triggerHeadRef.startsWith('weekly-lesson/') && !triggerHasReviewLabel) return { applicable: false };
   const api = (path) => requestJson(path, fetchImpl, token);
   const pr = await api(`/repos/${owner}/${repo}/pulls/${prNumber}`);
   if (!pr?.head?.sha || !pr?.head?.ref || !pr?.base?.sha || !pr?.base?.ref || !Array.isArray(pr.labels)) {
