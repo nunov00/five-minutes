@@ -44,7 +44,7 @@ const earlier = selectEarlierLessons(manifest.catalogue, today.id).map((entry) =
       </article>
     ))}
     <section class="earlier-section" aria-labelledby="earlier-heading">
-      <h2 id="earlier-heading">Earlier</h2>
+      <h2 id="earlier-heading" class="section-label">Earlier</h2>
       <ol class="earlier-list">
         {earlier.map((entry) => (
           <li data-earlier-id={entry.id}>

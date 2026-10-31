@@ -465,9 +465,16 @@ button.button:disabled {
   border-top: 1px solid var(--color-border);
 }
 
-.earlier-section > h2 {
-  margin-top: 0;
-  font-size: var(--text-lg);
+/* Small-caps section label matching the date eyebrow, so it never competes with the lesson title. */
+.earlier-section .section-label {
+  margin: 0 0 var(--space-1);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  line-height: var(--leading-body);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-muted);
 }
 
 .earlier-list {
