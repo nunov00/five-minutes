@@ -8,7 +8,7 @@ Visual foundation: [ADR-0014](adr/0014-positioned-lesson-visuals.md) defines pos
 22 October 2026 single-version direction: [ADR-0013](adr/0013-single-lesson-version.md) supersedes all earlier Adult/Teen requirements. Publish and review one lesson from `lesson.yaml` and `adult.md`; retired `teen.md` sources are inert archive material. All non-edition safeguards remain.
 
 
-Reader-facing naming (19 October 2026): `/` is labelled **Home** in navigation and permanently headed **Something worth knowing**, even when publication is delayed. Lesson fallback links say **Back to home**; the 404 link says **Go to the home page**. References to Today below describe the existing internal homepage surface or historical decisions; selection, routes, dates and automation are unchanged.
+Reader-facing naming (updated 31 October 2026): `/` is labelled **Home** in navigation. The featured lesson title is the page heading; there is no separate tagline above the card. Lesson fallback links say **Back to home**; the 404 link says **Go to the home page**. References to Today below describe the existing internal homepage surface or historical decisions; selection, routes, dates and automation are unchanged.
 
 19 October 2026 single-task amendment: once activated, the Coordinator task in `docs/automation/publication-task-contracts.md` supersedes the separate scheduled-task/session requirements and alternating role timing below. One scheduled parent performs Writer work and delegates the complete Reviewer role to a fresh real child with `fork_turns="none"`; only that child may review and merge the exact head in the same child invocation. Each changed head requires a new child. All source/render/feedback checks, revision/history budgets, off switch, same-day and expected-head safeguards remain. Legacy role sections and schedules remain rollback references. Activation requires mandatory different-provider review, green checks, merge and verified task readback; direction alone does not activate it.
 
@@ -23,7 +23,7 @@ Five Minutes is a content-oriented learning publication. The architecture should
 
 Core journey:
 
-Open -> Something worth knowing -> Read -> Understand -> Test yourself -> Explore another idea
+Open -> Featured lesson -> Read -> Understand -> Test yourself -> Explore another idea
 
 ## Architectural principles
 

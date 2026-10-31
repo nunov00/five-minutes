@@ -69,7 +69,7 @@ test.describe('installable PWA shell', () => {
 
     await page.goto(startUrl);
     const origins = new Set([new URL(page.url()).origin]);
-    await expect(page.getByRole('heading', { level: 1, name: "Something worth knowing" })).toBeVisible();
+    await expect(page.locator('[data-today-edition="adult"]').getByRole('heading', { level: 1 })).toBeVisible();
 
     // No browser chrome in standalone display: every step uses links on the page.
     await page.getByRole('link', { name: /^Read:/ }).click();
@@ -78,11 +78,11 @@ test.describe('installable PWA shell', () => {
     await expect(page.locator('article[data-lesson-id]')).toHaveAttribute('data-edition', 'adult');
     inScope();
     await page.getByRole('link', { name: 'Back to home' }).click();
-    await expect(page.getByRole('heading', { level: 1, name: "Something worth knowing" })).toBeVisible();
+    await expect(page.locator('[data-today-edition="adult"]').getByRole('heading', { level: 1 })).toBeVisible();
     inScope();
     await page.getByRole('link', { name: /^Read:/ }).click();
     await page.getByRole('banner').getByRole('link', { name: 'Five Minutes' }).click();
-    await expect(page.getByRole('heading', { level: 1, name: "Something worth knowing" })).toBeVisible();
+    await expect(page.locator('[data-today-edition="adult"]').getByRole('heading', { level: 1 })).toBeVisible();
     inScope();
     origins.add(new URL(page.url()).origin);
     expect([...origins]).toHaveLength(1);
@@ -92,6 +92,6 @@ test.describe('installable PWA shell', () => {
     const response = await page.goto('/does-not-exist');
     expect(response?.status()).toBe(404);
     await page.getByRole('link', { name: "Go to the home page" }).click();
-    await expect(page.getByRole('heading', { level: 1, name: "Something worth knowing" })).toBeVisible();
+    await expect(page.locator('[data-today-edition="adult"]').getByRole('heading', { level: 1 })).toBeVisible();
   });
 });

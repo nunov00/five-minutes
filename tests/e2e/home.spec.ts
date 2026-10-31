@@ -5,11 +5,11 @@ test.describe('home / app shell', () => {
     const response = await page.goto('/');
     expect(response?.ok(), 'home page HTTP status').toBe(true);
 
-    await expect(page).toHaveTitle('Something worth knowing | Five Minutes');
+    await expect(page).toHaveTitle('Home | Five Minutes');
     await expect(page.getByRole('navigation', { name: 'Main navigation' }).getByRole('link', { name: 'Home', exact: true })).toHaveAttribute('aria-current', 'page');
     await expect(page.getByRole('banner').getByRole('link', { name: 'Five Minutes' })).toHaveAttribute('href', '/');
     await expect(page.getByRole('main')).toBeVisible();
-    await expect(page.getByRole('heading', { level: 1, name: "Something worth knowing" })).toBeVisible();
+    await expect(page.locator('[data-today-edition="adult"]').getByRole('heading', { level: 1 })).toBeVisible();
   });
 
   test('offers a keyboard skip link to the main content', async ({ page }) => {

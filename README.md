@@ -60,7 +60,7 @@ The application produces standard static output in `dist/`. Hosting-provider con
 
 ## Reading experience and visual foundation
 
-- `/` is **Home**, headed **Something worth knowing**: the newest eligible release by `revisedAt` when present, otherwise `publishedAt` (ties broken by lesson ID), presented as one lesson (ADR-0013). Dates display in the Europe/Zurich editorial timezone. Selection and formatting live in `src/lib/today.ts`.
+- `/` is **Home**, with the featured lesson title as its page heading: the newest eligible release by `revisedAt` when present, otherwise `publishedAt` (ties broken by lesson ID), presented as one lesson (ADR-0013). Dates display in the Europe/Zurich editorial timezone. Selection and formatting live in `src/lib/today.ts`.
 - `/adult/<slug>` remains the single static lesson URL. Former Teen links redirect to it; the site has no edition selector (ADR-0013). Takeaway and Test Yourself follow the lesson body; the answer uses `<details>`, so it works without JavaScript.
 - The reading page owns the only `<h1>` (the presentation title from front matter). Lesson bodies therefore start headings at `##`; the content pipeline rejects `#` in a presentation body, and the sanitized body HTML is rendered unchanged.
 - `src/styles/global.css` holds the shared, mobile-first design tokens (colour, type, spacing, shape) and a few components (`container`, `card`, `button`, `eyebrow`, `lede`, `edition-switch`). Light/dark follows the operating-system setting. Reuse these tokens rather than adding new values.

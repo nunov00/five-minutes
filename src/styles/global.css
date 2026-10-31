@@ -314,6 +314,11 @@ blockquote {
   border-radius: var(--radius);
 }
 
+.card h1 {
+  font-size: var(--text-xl);
+}
+
+.card h1,
 .card h2 {
   margin-top: 0;
 }
