@@ -22,6 +22,10 @@ Only after recorded activation, for `weekly-lesson/<Sunday-date>/<slug>` candida
 
 Legacy daily tooling/rules remain unchanged, and all legacy publication schedules stay disabled. The old draft-only trial is not extended, reclassified or restarted. Other product proposals, topic-led-opening permission and schemas are unchanged.
 
+## Artwork generation amendment — 31 October 2026
+
+Owner approved a normal allowance of six image-generation requests per weekly candidate, without a separate cap for the lead. Up to two additional requests may address a specific defect identified in a posted author/reviewer assessment, with the affected asset, defect, planned fix and cumulative request reservation recorded before each dispatch. Eight is the absolute cumulative ceiling, including edits, failed and uncertain dispatches; counters survive days, revisions and cycles. The weekly contract defines evidence, reconciliation and saved-prompt rollout. This supersedes only the weekly path's previous six-total/four-lead limit after qualifying review and merge. It grants no extra review round, Friday generation, budget reset or authority to publish weak artwork. Historical trial/setup allowances are unchanged.
+
 ## Consequences
 
 A current-main structural guard supports multi-day candidates without weakening the daily path. A separate Friday decision helper validates a Manager-collected live snapshot and dual exact-head receipts. Neither helper grants authority by itself. Branches, labels and candidate-supplied comments cannot activate this policy. Main/PR/review provenance, unresolved feedback, ledger history and deployed output still need actual verification.
