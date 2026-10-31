@@ -374,6 +374,10 @@ button.button {
   cursor: pointer;
 }
 
+button.button-secondary {
+  border: 1.5px solid var(--color-accent);
+}
+
 button.button:disabled {
   cursor: not-allowed;
   opacity: 0.55;
