@@ -72,7 +72,7 @@ test.describe('installable PWA shell', () => {
     await expect(page.locator('[data-today-edition="adult"]').getByRole('heading', { level: 1 })).toBeVisible();
 
     // No browser chrome in standalone display: every step uses links on the page.
-    await page.getByRole('link', { name: /^Read:/ }).click();
+    await page.locator('[data-today-edition] .featured-card').click();
     await expect(page.locator('article[data-lesson-id]')).toHaveAttribute('data-edition', 'adult');
     inScope();
     await expect(page.locator('article[data-lesson-id]')).toHaveAttribute('data-edition', 'adult');
@@ -80,7 +80,7 @@ test.describe('installable PWA shell', () => {
     await page.getByRole('link', { name: 'Back to home' }).click();
     await expect(page.locator('[data-today-edition="adult"]').getByRole('heading', { level: 1 })).toBeVisible();
     inScope();
-    await page.getByRole('link', { name: /^Read:/ }).click();
+    await page.locator('[data-today-edition] .featured-card').click();
     await page.getByRole('banner').getByRole('link', { name: 'Five Minutes' }).click();
     await expect(page.locator('[data-today-edition="adult"]').getByRole('heading', { level: 1 })).toBeVisible();
     inScope();

@@ -9,7 +9,12 @@ test.describe('home / app shell', () => {
     await expect(page.getByRole('navigation', { name: 'Main navigation' }).getByRole('link', { name: 'Home', exact: true })).toHaveAttribute('aria-current', 'page');
     await expect(page.getByRole('banner').getByRole('link', { name: 'Five Minutes' })).toHaveAttribute('href', '/');
     await expect(page.getByRole('main')).toBeVisible();
-    await expect(page.locator('[data-today-edition="adult"]').getByRole('heading', { level: 1 })).toBeVisible();
+    const card = page.locator('[data-today-edition="adult"] .featured-card');
+    await expect(card.getByRole('heading', { level: 1 })).toBeVisible();
+    await expect(card).toHaveAccessibleName(await card.locator('h1').innerText());
+    const path = await card.getAttribute('href');
+    await card.locator('img').click();
+    await expect(page).toHaveURL(path!);
   });
 
   test('offers a keyboard skip link to the main content', async ({ page }) => {
@@ -18,6 +23,13 @@ test.describe('home / app shell', () => {
     const skip = page.getByRole('link', { name: 'Skip to content' });
     await expect(skip).toBeFocused();
     await expect(skip).toBeInViewport();
+    await skip.press('Enter');
+    const card = page.locator('[data-today-edition] .featured-card');
+    await page.keyboard.press('Tab');
+    await expect(card).toBeFocused();
+    const path = await card.getAttribute('href');
+    await page.keyboard.press('Enter');
+    await expect(page).toHaveURL(path!);
   });
 
   test('fits the viewport without horizontal scrolling', async ({ page }) => {
@@ -27,5 +39,9 @@ test.describe('home / app shell', () => {
       () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
     );
     expect(overflow, 'horizontal overflow in CSS pixels').toBeLessThanOrEqual(0);
+    const card = page.locator('[data-today-edition] .featured-card');
+    const path = await card.getAttribute('href');
+    await card.click({ position: { x: 8, y: 8 } });
+    await expect(page).toHaveURL(path!);
   });
 });
