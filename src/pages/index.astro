@@ -6,7 +6,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import SurpriseLinks from '../components/SurpriseLinks.astro';
 import { getBuildMetadata } from '../lib/content/build-content';
 import { buildDiscoveryArtifacts } from '../lib/discovery/artifacts';
-import { taxonomyTopic } from '../lib/taxonomy';
+import { taxonomySubtopic, taxonomyTopic } from '../lib/taxonomy';
 import { selectEarlierLessons, selectTodayLesson } from '../lib/today';
 
 const { lessons, manifest } = await getBuildMetadata();
@@ -19,6 +19,9 @@ const editions = [
   { edition: 'adult' as const, path: today.adult.path, presentation: lesson.adult },
 ];
 const art=await lessonArtwork(lesson);
+const todayTopic=taxonomyTopic(lesson.metadata.topic);
+const todaySubtopic=taxonomySubtopic(lesson.metadata.topic,lesson.metadata.subtopic);
+const todayTopicLine=[todayTopic?.label,todaySubtopic?.label].filter(Boolean).join(' · ');
 const lead=lessonVisuals(lesson.adult).find(v=>v.role==='lead')?.figure;
 const artifacts = buildDiscoveryArtifacts(lessons);
 const fallback = artifacts.catalogue.payload.find((entry) => entry.id !== today.id);
@@ -32,14 +35,14 @@ const earlier = selectEarlierLessons(manifest.catalogue, today.id).map((entry) =
 ---
 <BaseLayout title="Home | Five Minutes" editionPaths={{adult:today.adult.path,teen:today.teen.path}} todaySurface>
   <section aria-labelledby="today-heading" data-lesson-id={today.id}>
-    <p class="eyebrow"><LessonDates {...today} /></p>
+    <p class="eyebrow today-eyebrow"><LessonDates {...today} /></p>
     {editions.map(({ edition, path, presentation }) => (
       <article data-today-edition={edition}>
         <a class="card featured-card" href={path} aria-labelledby="today-heading">
           {!art.isFallback && lead?.type==='image' && <img class="featured-art" src={lead.src} width={lead.width} height={lead.height} alt={lead.alt} decoding="async"/>}
+          {todayTopicLine && <p class="featured-topic">{todayTopicLine}</p>}
           <h1 id="today-heading">{presentation.title}</h1>
-          <p>{presentation.description}</p>
-          <span class="featured-card-cue" aria-hidden="true">Read →</span>
+          <p class="featured-hook">{presentation.description} <span class="featured-card-cue" aria-hidden="true">Read →</span></p>
         </a>
       </article>
     ))}
