@@ -10,7 +10,7 @@ test.describe('Home and the single lesson',()=>{
   const today=page.locator('[data-lesson-id]').first(),id=await today.getAttribute('data-lesson-id');
   const current=routes.filter(route=>route.lessonId===id);expect(current).toHaveLength(1);
   await expect(page.locator('[data-today-edition]')).toHaveCount(1);
-  await expect(page.getByRole('link',{name:/^Read:/})).toHaveAttribute('href',current[0].path);
+  await expect(page.locator('[data-today-edition] .featured-card')).toHaveAttribute('href',current[0].path);
   await expect(page.getByRole('navigation',{name:'Edition'})).toHaveCount(0);
   await expect(page.locator('[data-earlier-id]')).toHaveCount(3);
   await expect(page.locator('[data-earlier-id] .earlier-links a')).toHaveCount(3);
@@ -22,7 +22,7 @@ test.describe('Home and the single lesson',()=>{
   await page.addInitScript(()=>localStorage.setItem('five-minutes.reader-state',JSON.stringify({version:1,edition:'teen',saved:[],read:{},recent:[],appearance:'dark'})));
   await page.goto('/');await expect(page.locator('[data-today-edition]')).toHaveCount(1);await expect(page.locator('[data-today-edition]')).toBeVisible();
   await expect(page.locator('html')).toHaveAttribute('data-appearance','dark');
-  await page.getByRole('link',{name:/^Read:/}).click();await expect(page).toHaveURL(/\/adult\//);
+  await page.locator('[data-today-edition] .featured-card').click();await expect(page).toHaveURL(/\/adult\//);
   await expect(page).not.toHaveTitle(/edition/i);
   await checkReading(page,await sourceOpening(page));
   await page.getByRole('link',{name:'Back to home'}).click();await expect(page).toHaveURL('/');

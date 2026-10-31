@@ -314,6 +314,21 @@ blockquote {
   border-radius: var(--radius);
 }
 
+.featured-card {
+  color: inherit;
+  text-decoration: none;
+}
+
+@media (hover: hover) {
+  .featured-card:hover {
+    border-color: var(--color-accent);
+  }
+}
+
+.featured-card:focus-visible {
+  border-color: var(--color-accent);
+}
+
 .card h1 {
   font-size: var(--text-xl);
 }

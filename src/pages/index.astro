@@ -34,11 +34,12 @@ const earlier = selectEarlierLessons(manifest.catalogue, today.id).map((entry) =
   <section aria-labelledby="today-heading" data-lesson-id={today.id}>
     <p class="eyebrow"><LessonDates {...today} /></p>
     {editions.map(({ edition, path, presentation }) => (
-      <article class="card" data-today-edition={edition}>
-        {!art.isFallback && lead?.type==='image' && <img class="featured-art" src={lead.src} width={lead.width} height={lead.height} alt={lead.alt} decoding="async"/>}
-        <h1 id="today-heading">{presentation.title}</h1>
-        <p>{presentation.description}</p>
-        <a class="button" href={path} aria-label={`Read: ${presentation.title}`}>Read</a>
+      <article data-today-edition={edition}>
+        <a class="card featured-card" href={path} aria-labelledby="today-heading">
+          {!art.isFallback && lead?.type==='image' && <img class="featured-art" src={lead.src} width={lead.width} height={lead.height} alt={lead.alt} decoding="async"/>}
+          <h1 id="today-heading">{presentation.title}</h1>
+          <p>{presentation.description}</p>
+        </a>
       </article>
     ))}
     <section class="earlier-section" aria-labelledby="earlier-heading">
