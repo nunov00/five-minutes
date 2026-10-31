@@ -39,6 +39,7 @@ const earlier = selectEarlierLessons(manifest.catalogue, today.id).map((entry) =
           {!art.isFallback && lead?.type==='image' && <img class="featured-art" src={lead.src} width={lead.width} height={lead.height} alt={lead.alt} decoding="async"/>}
           <h1 id="today-heading">{presentation.title}</h1>
           <p>{presentation.description}</p>
+          <span class="featured-card-cue" aria-hidden="true">Read article →</span>
         </a>
       </article>
     ))}

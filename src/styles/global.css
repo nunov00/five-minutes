@@ -329,6 +329,12 @@ blockquote {
   border-color: var(--color-accent);
 }
 
+.featured-card-cue {
+  display: block;
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+}
+
 .card h1 {
   font-size: var(--text-xl);
 }
@@ -454,8 +460,14 @@ button.button:disabled {
 }
 
 .earlier-section {
+  margin-top: var(--space-5);
   padding-top: var(--space-4);
   border-top: 1px solid var(--color-border);
+}
+
+.earlier-section > h2 {
+  margin-top: 0;
+  font-size: var(--text-lg);
 }
 
 .earlier-list {
