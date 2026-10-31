@@ -12,7 +12,7 @@ test.describe('home / app shell', () => {
     const card = page.locator('[data-today-edition="adult"] .featured-card');
     await expect(card.getByRole('heading', { level: 1 })).toBeVisible();
     await expect(card).toHaveAccessibleName(await card.locator('h1').innerText());
-    await expect(card.locator('.featured-card-cue')).toHaveText('Read article →');
+    await expect(card.locator('.featured-card-cue')).toHaveText('Read →');
     await expect(page.getByRole('heading', { level: 2, name: 'Earlier' })).toBeVisible();
     const path = await card.getAttribute('href');
     await card.locator('img').click();
