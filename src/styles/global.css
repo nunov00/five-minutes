@@ -718,3 +718,33 @@ html[data-appearance=dark] .diagram-ray{stroke:#ecc86b}html[data-appearance=dark
 .lesson-card-heading h2 a,.personal-list a,.earlier-links a{text-decoration:none}
 .lesson-card-heading h2 a:hover,.personal-list a:hover,.earlier-links a:hover{text-decoration:underline}
 .lesson-card-description{margin-block:12px 16px}
+
+/* Wordmark: the serif used for lesson titles gives the site its identity on every page. */
+.brand{font-family:var(--font-serif);letter-spacing:-0.01em}
+
+/*
+ * Home editorial layout. Template-level only: every lesson's lead art, topic,
+ * title and summary flow into it with no per-lesson fields.
+ */
+html[data-today='true']{--color-bg:#f4efe3}
+html[data-today='true'] .site-header{border-bottom:0}
+html[data-today='true'] .site-header .container{flex-direction:column;align-items:stretch;padding-top:var(--space-3)}
+html[data-today='true'] .brand{justify-content:center;font-size:2.1rem;line-height:1.1}
+.brand-tagline{margin:0;padding:0 0 var(--space-3);border-bottom:1px solid var(--color-text);text-align:center;font:600 0.72rem/1.2 var(--font-sans);letter-spacing:0.18em;text-transform:uppercase;color:var(--color-muted)}
+@media(min-width:640px){html[data-today='true'] .site-header .container{flex-wrap:wrap}html[data-today='true'] .site-nav{margin:var(--space-2) auto 0}}
+html[data-today='true'] .site-main{padding-top:var(--space-5)}
+.today-eyebrow{text-align:center;color:var(--color-text);letter-spacing:0.16em}
+.today-label,.featured-topic{color:var(--color-accent)}
+html[data-today='true'] .featured-card{padding:0;border:0;border-radius:0;background:transparent;text-align:center}
+html[data-today='true'] .featured-art{border-radius:0;margin:0 0 var(--space-5)}
+@media(max-width:639px){html[data-today='true'] .featured-art{width:100vw;max-width:none;margin-inline:calc(50% - 50vw)}}
+@media(min-width:640px){html[data-today='true'] .featured-art{border-radius:var(--radius)}}
+.featured-topic{margin:0 0 var(--space-3);font:700 0.74rem/1.2 var(--font-sans);letter-spacing:0.16em;text-transform:uppercase}
+html[data-today='true'] .featured-card h1{margin:0 0 var(--space-3);font-size:2.5rem;line-height:1.08;letter-spacing:-0.015em}
+@media(min-width:640px){html[data-today='true'] .featured-card h1{font-size:3.1rem}}
+.featured-hook{max-width:32rem;margin:0 auto;font-family:var(--font-serif);font-style:italic;font-size:1.3rem;line-height:1.45;color:var(--color-muted)}
+/* The cue rides at the end of the summary instead of taking its own row. */
+html[data-today='true'] .featured-card-cue{display:inline;white-space:nowrap;font:normal 600 1rem var(--font-sans);color:var(--color-text);text-decoration:underline;text-decoration-color:var(--color-accent);text-decoration-thickness:2px;text-underline-offset:0.3em}
+html[data-today='true'] .earlier-section{margin-top:var(--space-6);border-top-color:var(--color-text)}
+@media(hover:hover){html[data-today='true'] .featured-card:hover .featured-card-cue{color:var(--color-accent)}}
+@media(max-width:359px){.brand-tagline{letter-spacing:0.1em;font-size:0.68rem}}

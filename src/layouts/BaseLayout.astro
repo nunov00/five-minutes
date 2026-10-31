@@ -51,7 +51,7 @@ const canonical = !neutralDiscovery && !noindex && Astro.site ? new URL(pathname
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
     <header class="site-header"><div class="container">
-      <a class="brand" href="/">Five Minutes</a>
+      <a class="brand" href="/">Five Minutes</a>{todaySurface && <p class="brand-tagline">One worthwhile idea, in five minutes</p>}
       <nav class="site-nav" aria-label="Main navigation">{navigation.map(item=><a href={item.href} aria-current={item.current?'page':undefined}>{item.label}</a>)}</nav>
     </div></header>
     <p id="preference-note" class="container quiet-note" hidden>Your choice will not be remembered on this device.</p>
