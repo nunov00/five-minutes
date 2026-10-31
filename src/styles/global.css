@@ -734,7 +734,7 @@ html[data-today='true'] .brand{justify-content:center;font-size:2.1rem;line-heig
 @media(min-width:640px){html[data-today='true'] .site-header .container{flex-wrap:wrap}html[data-today='true'] .site-nav{margin:var(--space-2) auto 0}}
 html[data-today='true'] .site-main{padding-top:var(--space-5)}
 .today-eyebrow{text-align:center;color:var(--color-text);letter-spacing:0.16em}
-.today-label,.featured-topic{color:var(--color-accent)}
+.featured-topic{color:var(--color-accent)}
 html[data-today='true'] .featured-card{padding:0;border:0;border-radius:0;background:transparent;text-align:center}
 html[data-today='true'] .featured-art{border-radius:0;margin:0 0 var(--space-5)}
 /* Tall or portrait art stays whole but never takes over the first screen. */
