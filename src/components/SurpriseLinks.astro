@@ -16,7 +16,7 @@ const links: Array<{ edition: LessonEdition; fallback: string; label: string }> 
 ---
 <div class="surprise-actions" data-surprise data-catalogue={catalogue.path} data-exclude-id={excludeId}>
   {links.filter(link => !selectedEdition || link.edition === selectedEdition).map(({ edition, fallback, label }) => (
-    <a class="button button-secondary" href={fallback} data-surprise-edition={edition}>{label}</a>
+    <a class="button" href={fallback} data-surprise-edition={edition}>{label}</a>
   ))}
 </div>
 

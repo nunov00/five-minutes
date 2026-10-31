@@ -35,7 +35,7 @@
   --gutter: var(--space-4);
   --tap-target: 2.75rem;
 
-  --color-bg: #fbfaf7;
+  --color-bg: #f4efe3;
   --color-surface: #ffffff;
   --color-text: #1d1f23;
   --color-muted: #5a5f68;
@@ -363,8 +363,8 @@ details > :last-child {
 }
 
 .button-secondary {
-  border: 1px solid var(--color-border);
-  background: var(--color-surface);
+  border: 1.5px solid var(--color-accent);
+  background: transparent;
   color: var(--color-accent);
 }
 
@@ -726,7 +726,6 @@ html[data-appearance=dark] .diagram-ray{stroke:#ecc86b}html[data-appearance=dark
  * Home editorial layout. Template-level only: every lesson's lead art, topic,
  * title and summary flow into it with no per-lesson fields.
  */
-html[data-today='true']{--color-bg:#f4efe3}
 html[data-today='true'] .site-header{border-bottom:0}
 html[data-today='true'] .site-header .container{flex-direction:column;align-items:stretch;padding-top:var(--space-3)}
 html[data-today='true'] .brand{justify-content:center;font-size:2.1rem;line-height:1.1}
