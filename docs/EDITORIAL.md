@@ -68,9 +68,34 @@ Assess the image and title together: can a reader tell what they will learn and 
 
 For the bounded pilot, paragraph 1 poses the colour-change puzzle and stops before explaining its cause. Avoid repeating the same partial answer across the title, description, opening paragraph and takeaway. `opening: answer-first` then presents the existing one-sentence takeaway after paragraph 1 and its lead, before detailed explanation. The later recall question must test the next causal step, rather than reward repetition of that sentence. The ending should add a supported implication or connection. Put explanatory pictures after the first paragraph of their sections where that improves this lesson; this is not a universal outline or image quota. Existing lessons retain their current order unless explicitly revised and reviewed. See [ADR-0006](adr/0006-lesson-schema-and-identity.md) and the [accepted pilot direction](proposals/topic-led-opening-pilot.md).
 
+## Visual appeal and artwork quality
+
+Owner direction, 31 October 2026: exceptional images are a core part of attracting readers. Technical validity and an overall lesson-quality score cannot compensate for mediocre artwork. These requirements apply to new lessons and substantial editorial revisions after this amendment merges; they do not require a bulk replacement of existing images or delay an otherwise necessary narrow factual correction.
+
+### Art direction before generation
+
+Every new lesson must have a compelling lead image. During a substantial revision, assess the existing lead against this standard and improve or replace it when it falls short. An omission needs an explicit, topic-specific explanation agreed by author and reviewer of why an image would not serve the reader; unavailable generation, an exhausted allowance or a weak result is not an acceptable omission reason.
+
+Before dispatching generation, record a concise art brief in the existing PR/planning evidence: the lesson's question, the subject or scene, the visual idea that creates curiosity, composition and focal point, mood/medium/colour direction, factual constraints and intended article/thumbnail/share uses. For later attempts, identify the specific defect and intended improvement rather than repeating the same prompt blindly. Use the [visual style guide](visuals/style-kit.md) as practical direction, adapting it to the topic rather than applying a fixed formula. Preserve the actual generation prompt and origin evidence under the existing rights and budget process.
+
+### Acceptance standard
+
+- **Lead appeal:** the image is striking, recognisable and specific to the lesson. A clear focal point, deliberate composition, convincing detail and controlled colour/light invite a closer look. With the title, it creates an honest reason to open the lesson; generic stock-like scenes, arbitrary icons, visual clichés and unrelated spectacle do not qualify.
+- **Craftsmanship:** inspect the actual pixels for malformed anatomy or objects, impossible geometry, unintended lettering, muddled detail, distracting backgrounds and obvious generation artefacts. Stylisation is deliberate and consistent with the subject; conceptual artwork must not imply documentary evidence.
+- **Explanatory figures:** each reveals a distinct relationship accurately and elegantly, with clear hierarchy and readable labels. Precision and clarity determine the treatment; an expressive lead does not excuse a confusing diagram. Do not force every subject into the same illustrative medium.
+- **Finished presentation:** judge the actual optimised files on the exact-head article at phone and wide widths, the home/library card thumbnail and the generated sharing image. Inspect derivatives alone and with their actual title/description where available. Meaningful features must survive resizing and padding/cropping, with no damaging compression, clipping or unreadable detail. Record the actual routes/assets and viewports inspected; a source image or preview URL alone is insufficient.
+
+### Separate visual judgement within the existing review
+
+Both the author assessment and the review must explicitly record **ARTWORK: PASS / REWORK / INCOMPLETE**, separately from their overall lesson rating, alongside the existing FIGURE decision. Give concrete reasons for the lead's appeal, topic fit and craftsmanship, and the explanatory figures' quality; identify the actual article, thumbnail and share outputs inspected and any limitations. For a justified omission, record **ARTWORK: OMIT** and the agreed reason. These are prose review records, not new lesson fields, numerical scores, JSON receipt fields or extra review rounds.
+
+Generic, bland, cluttered, misleading or visibly flawed artwork is **REWORK** and an IMPORTANT finding when it fails this standard. Missing inspection is **INCOMPLETE** and cannot be claimed as a pass. Author and reviewer must both accept the visuals on the final material head before publication; a disagreement remains visible and unresolved until addressed. The overall 9+ lesson rating cannot average away a visual failure.
+
+Revise within the existing generation and content-review allowances, reusing useful assets. Reaching an allowance never lowers the quality standard or authorises more attempts, a replacement candidate, a budget reset or a Friday rescue. If acceptable artwork and its review cannot be completed, retain the work and defer publication through the existing backlog process. Neither a deadline nor a successful technical check is a reason to publish a weak image.
+
 ## Figures and prediction activities
 
-Every new lesson, migrated lesson and substantial editorial pass must explicitly assess whether each presentation would become clearer with a figure. Add one when a spatial, sequential, comparative, quantitative or causal relationship is materially easier to understand visually. Omit it when prose is already clearer, the image would be decorative, or no vetted app-owned visual style explains the idea faithfully; record that decision and its reason in the Pull Request. Figures remain conditional rather than a quota, but they must not be skipped by default. Never approximate an illustration with generic stacked text boxes merely to satisfy the assessment: no figure is better than a weak figure.
+The lead artwork requirement above serves attraction and topic recognition. The conditional figure decisions below concern additional explanatory figures; they do not waive that lead requirement. Every new lesson, migrated lesson and substantial editorial pass must explicitly assess whether each presentation would become clearer with an explanatory figure. Add one when a spatial, sequential, comparative, quantitative or causal relationship is materially easier to understand visually. Omit it when prose is already clearer, the image would be decorative, or no vetted app-owned visual style explains the idea faithfully; record that decision and its reason in the Pull Request. Figures remain conditional rather than a quota, but they must not be skipped by default. Never approximate an illustration with generic stacked text boxes merely to satisfy the assessment: no figure is better than a weak figure.
 
 A figure is part of an individual presentation and is reviewed with the same factual standard as its prose. Reviewers verify every label, scale, relationship and caption against the lesson's sources, and confirm that required alt text communicates the explanatory purpose rather than merely naming the picture. Use the figure and caption that best explain the single lesson. Review the full-text description as an equivalent explanation, and mark schematic drawings as not to scale where appropriate. The concrete field shapes and limits are in [M6.2 reading enhancements](implementation/m6.2-reading-enhancements.md).
 
@@ -139,7 +164,8 @@ For factual and editorial review, record:
     - **Memory:** what specific image, example, connection or reasoning might each reader remember tomorrow, and does the ending deliver its payoff? This is editorial judgement, not a claim of measured retention.
     - **Depth:** what useful reasoning, implication or boundary does the explanation develop?
 
-11. one language-accessibility judgement for the lesson under **Clear English for non-native readers**, with passage-specific evidence and actionable rewrites where needed.
+11. the separate ARTWORK judgement required by **Visual appeal and artwork quality**, including actual article, thumbnail and share-image evidence;
+12. one language-accessibility judgement for the lesson under **Clear English for non-native readers**, with passage-specific evidence and actionable rewrites where needed.
 
 These answers can be incorporated into the existing lesson assessment and attention notes; do not duplicate the review. Missing reader outcomes require actionable findings under the severity definitions above. Check the author's claims against the actual text rather than accepting their self-assessment.
 
@@ -228,6 +254,7 @@ Before requesting review:
 - verify that the takeaway and retrieval answer express the same durable insight;
 - compare the proposed lesson with the existing catalogue for overlap;
 - assess a useful figure for the lesson and a prediction activity; include supported additions when they improve understanding, otherwise record why they were omitted;
+- prepare the topic-specific art brief and record the separate ARTWORK judgement, including optimised article, thumbnail and share outputs;
 - inspect every included figure on the rendered page at phone and wide widths, checking meaning before expansion, collisions, clipping, hierarchy and connection between labels/stages and artwork;
 - run the canonical content, build and static validation gates.
 

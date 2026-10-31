@@ -1,6 +1,6 @@
-# Proposed visual direction — Five Minutes
+# Visual direction — Five Minutes
 
-Draft for visual and independent technical review; not a completed lesson or a final house style. Basis: #188, #190 and [ADR-0014](../adr/0014-positioned-lesson-visuals.md).
+Practical art direction supporting the mandatory [editorial artwork standard](../EDITORIAL.md#visual-appeal-and-artwork-quality), approved in direction by the Owner on 31 October 2026 and effective when this amendment merges. The examples are references, not a completed lesson or a fixed house style. Historical setup evidence below does not grant generation or publication authority. Basis: #188, #190 and [ADR-0014](../adr/0014-positioned-lesson-visuals.md).
 
 ## Direction
 
@@ -29,12 +29,14 @@ Generation records the provider method and use subject to applicable [OpenAI Eur
 
 - Default to a 3:2 lead composition with breathing room around the subject. Preview it at 320 pixels, as a Library thumbnail and as a share image. Use contain/padding when a crop would cut a meaningful feature.
 - Default to no generated lettering, logos, scales, graphs or explanatory arrows. Put exact labels in the diagram source and provide an equivalent plain-text description.
-- Plan the lead and one or two purposeful explanatory visuals together. Three is a ceiling, not a quota. Draw the specific relationship rather than forcing it into a generic toolkit template. Code-drawn originals may be exported to PNG/WebP.
+- Plan the lead and any purposeful explanatory visuals together. Up to five published visuals are permitted under ADR-0014; five is a ceiling, not a quota. Draw the specific relationship rather than forcing it into a generic toolkit template. Code-drawn originals may be exported to PNG/WebP.
 - Keep useful visual distinctions in greyscale and at enlarged text sizes. Provide alt, caption and a complete text explanation. Mark conceptual/not-to-scale content explicitly.
 
 The complete generation prompt is in the ledger. Reuse its composition/medium constraints as guidance, replacing the subject and its factual constraints; do not paste it as a fixed template for every topic.
 
-## Capability and resource record
+Before generation, write the topic-specific art brief required by EDITORIAL. Aim for an image a reader would choose to inspect: a distinctive visual idea, one strong focal point, deliberate light/colour and precise, convincing detail. Reject generic stock-like scenes, arbitrary icons, visual clichés and obvious generation artefacts. Inspect the actual optimised article, thumbnail and share outputs; author and reviewer record separate ARTWORK judgements within their existing assessments. An attractive reference or successful technical setup is not proof that a lesson's artwork meets the standard.
+
+## Historical capability and resource record
 
 Setup ceiling: **four dispatched generation requests**, shared across interactive and scheduled work, including failures and edits. Two requests have been dispatched: the interactive butterfly and the single scheduled aircraft trial. Two remain under the shared ceiling; no further generation was needed for this foundation. No calibration-lesson request has been spent. Do not interpret a new branch, run or date as a reset.
 
