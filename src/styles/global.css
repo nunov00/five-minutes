@@ -309,7 +309,7 @@ blockquote {
   display: block;
   padding: var(--space-5);
   margin: 0 0 var(--space-4);
-  background: var(--color-surface);
+  background: transparent;
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
 }
@@ -753,3 +753,9 @@ html[data-today='true'] .featured-card-cue{display:inline;white-space:nowrap;fon
 html[data-today='true'] .earlier-section{margin-top:var(--space-6);border-top-color:var(--color-text)}
 @media(hover:hover){html[data-today='true'] .featured-card:hover .featured-card-cue{color:var(--color-accent)}}
 @media(max-width:359px){.brand-tagline{letter-spacing:0.1em;font-size:0.68rem}}
+
+/* Cards sit on the paper: thin border, no fill. Titles read as headings, not web links. */
+.topic-card h2 a,.related-card h3 a,.search-result h2 a{text-decoration:none}
+.topic-card h2 a:hover,.related-card h3 a:hover,.search-result h2 a:hover{text-decoration:underline;text-decoration-color:var(--color-accent);text-decoration-thickness:2px;text-underline-offset:0.2em}
+@media(hover:hover){.topic-card:has(h2 a:hover),.related-card:has(h3 a:hover),.search-result:has(h2 a:hover){border-color:var(--color-accent)}}
+.topic-card:has(h2 a:focus-visible),.related-card:has(h3 a:focus-visible),.search-result:has(h2 a:focus-visible){border-color:var(--color-accent)}
