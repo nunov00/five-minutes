@@ -1301,46 +1301,117 @@
         "Re-fetch cited sources and verify the complete causal explanation; research notes are not publication approval.",
         "Produce and review the single lesson and useful visuals within the agreed capability, rights, accessibility and production limits."
       ]
+    },
+    {
+      "key": "idea-how-chatbots-build-an-answer",
+      "kind": "new",
+      "slug": "how-chatbots-build-an-answer",
+      "title": "How can predicting the next word produce a conversation?",
+      "state": "queued",
+      "priority": 200,
+      "queuedAt": "2026-11-01T08:00:18Z",
+      "reason": "Follow context-dependent token prediction through a short answer; distinguish generation from training, retrieval and factual verification.",
+      "criteria": [
+        "Verify primary sources and current catalogue, aliases, full pool and open-work overlap before assigning an identity.",
+        "Produce one complete lesson with a precise causal explanation, useful limit, sourced references, compelling lead and exact explanatory visuals; complete current source/render/review gates."
+      ]
+    },
+    {
+      "key": "idea-what-changes-when-ai-can-act",
+      "kind": "new",
+      "slug": "what-changes-when-ai-can-act",
+      "title": "What changes when an AI can take actions?",
+      "state": "queued",
+      "priority": 200,
+      "queuedAt": "2026-11-01T08:00:18Z",
+      "reason": "Follow one bounded goal through tool choice, observed results, checks and stopping; distinguish a fixed workflow from model-directed action.",
+      "criteria": [
+        "Verify primary sources and current catalogue, aliases, full pool and open-work overlap before assigning an identity.",
+        "Produce one complete lesson with a precise causal explanation, useful limit, sourced references, compelling lead and exact explanatory visuals; complete current source/render/review gates."
+      ]
+    },
+    {
+      "key": "idea-what-makes-quantum-computers-different",
+      "kind": "new",
+      "slug": "what-makes-quantum-computers-different",
+      "title": "What makes a quantum computer different from a faster computer?",
+      "state": "queued",
+      "priority": 200,
+      "queuedAt": "2026-11-01T08:00:18Z",
+      "reason": "Explain interference and measurement through one small algorithmic example; do not imply all answers can be read at once or claim practical logistics advantage.",
+      "criteria": [
+        "Verify primary sources and current catalogue, aliases, full pool and open-work overlap before assigning an identity.",
+        "Produce one complete lesson with a precise causal explanation, useful limit, sourced references, compelling lead and exact explanatory visuals; complete current source/render/review gates."
+      ]
     }
   ],
   "pipeline": {
-    "assessedAt": "2026-10-21T22:07:08Z",
-    "summary": "The noise-cancelling-headphones idea was selected as today's strongest reviewed candidate after source and catalogue checks. The remaining order is unchanged: it retains ten viable candidates across engineering, physics, technology, geography and mathematics, so no new ideas were added. Rankings are editorial judgements, not measured demand or a fresh source audit.",
+    "assessedAt": "2026-11-01T08:00:18Z",
+    "summary": "Sunday 1 November 2026 weekly comparison of the full pool, current catalogue and open work. Proposed first: context-dependent chatbot generation; alternatives: aircraft-window stress and one neural-network learning update. Three Owner-suggested computing ideas added without priority privilege; neural learning reuses its existing import. Twelve eligible briefs retained across computing, engineering, physics, mathematics and behaviour. Already published butterfly, ship and popcorn pitches excluded without changing their historical pool records. Ice and queue revisions remain available but leave this shortlist for variety after recent related coverage. Source access verified for the top three; lower reserves retain explicit authoring limits. Rankings are editorial hypotheses, not measured demand or a full pool source audit. No lesson selected until independent Sunday queue review and merge.",
     "ranking": [
+      {
+        "key": "idea-how-chatbots-build-an-answer",
+        "headline": "How can predicting the next word produce a conversation?",
+        "description": "Follow a chatbot as it builds a reply from small text pieces, using the question and the reply so far.",
+        "hook": "A full answer can grow from a repeated next-piece prediction.",
+        "rankReason": "Reader choice: a familiar conversation hides a puzzling mechanism. The reward is understanding why context changes a reply and why fluent text still needs checking. First over aircraft and neural learning: broader immediate recognition, a compact worked example and a fresh computing subject after the recent physical-science pilots. This is an editorial hypothesis, not measured demand.",
+        "relevance": "Evergreen generation mechanism, not a claim about a current product. Owner interest informed intake, not automatic priority.",
+        "evidenceUrls": [
+          "https://developers.google.com/machine-learning/crash-course/llm",
+          "https://developers.google.com/machine-learning/crash-course/llm/transformers",
+          "https://arxiv.org/html/1706.03762v7",
+          "https://arxiv.org/abs/2005.14165"
+        ]
+      },
       {
         "key": "legacy-aircraft-pressurisation",
         "headline": "Why aircraft windows have rounded corners",
-        "description": "Connect cabin pressure, repeated loading and stress concentrations to the shape of a window opening.",
+        "description": "Connect a familiar window shape to stress around an opening and repeated cabin-pressure loading.",
         "hook": "A small change in shape can change where stress builds up.",
-        "rankReason": "Moves ahead of the recent heat-pump revision for topic freshness. It has clear engineering stakes and diagram potential; avoid reducing historical aircraft failures to one cause.",
-        "relevance": "Evergreen; do not tie to an accident without verified evidence and a separate scope decision.",
+        "rankReason": "Reader choice: recognisable shape, hidden engineering reason and strong visual payoff. Second: simpler physical puzzle than neural learning, but recent ships, popcorn and butterfly releases favour a different subject first. Explain fatigue without reducing Comet failures to square passenger windows or claiming rounded corners guarantee safety.",
+        "relevance": "Evergreen engineering; no accident news hook or safety advice.",
+        "evidenceUrls": [
+          "https://www.faa.gov/lessons_learned/transport_airplane/accidents/G-ALYV"
+        ]
+      },
+      {
+        "key": "legacy-neural-networks",
+        "headline": "How does a neural network learn from a mistake?",
+        "description": "Follow one prediction, its error and a small change to connection strengths; separate training from using a trained model.",
+        "hook": "A wrong answer can help change the next prediction.",
+        "rankReason": "Reader choice: turns the vague word learning into one visible update. Reuses the existing import identity; no duplicate AI-training idea. Third: the narrowed treatment resolves the earlier overbroad pitch in principle, but needs more explanation of credit assignment than the leading generation example. Keep an honest limit: a smaller training error does not guarantee success on new examples.",
+        "relevance": "Evergreen learning mechanism. Distinct from generating text and using tools; no brain-equivalence claim.",
+        "evidenceUrls": [
+          "https://developers.google.com/machine-learning/crash-course/neural-networks/backpropagation"
+        ]
+      },
+      {
+        "key": "idea-why-mirrors-seem-to-reverse-left-and-right",
+        "headline": "Why does a mirror reverse left and right but not up and down?",
+        "description": "Use reflection geometry and the difference between reflection and physically turning around to show that a mirror reverses front-to-back, not one chosen horizontal direction.",
+        "hook": "A mirror seems to swap your left and right while leaving your head above your feet.",
+        "rankReason": "Strong everyday puzzle with a precise orientation comparison; fourth gives a different visual and conceptual subject after the leading computing and engineering treatments. Exact labelled geometry and a fresh source check remain necessary.",
+        "relevance": "Evergreen optics and spatial reasoning; no time-sensitive premise.",
         "evidenceUrls": []
       },
       {
-        "key": "lesson-6bd86c0f-7cde-467c-abd1-ef6c8a2b51b1",
-        "headline": "How can cold outdoor air heat your home?",
-        "description": "Follow a refrigerant around the cycle to explain how electricity moves heat and why colder weather changes the work required.",
-        "hook": "A machine can deliver more heat than the electrical energy it consumes.",
-        "rankReason": "Retain the useful Adult-depth revision, but its 13 October release and the recent window-condensation lesson make another thermal topic less urgent. Third place preserves seasonal value behind two different mechanisms.",
-        "relevance": "Seasonal relevance to northern-hemisphere heating; evergreen physics. No claim of a verified news trend.",
-        "evidenceUrls": []
+        "key": "legacy-roman-concrete",
+        "headline": "How can some concrete seal its own cracks?",
+        "description": "Follow water entering a crack and reacting with lime-rich material in the studied mixtures.",
+        "hook": "The crack can provide the route for its own repair.",
+        "rankReason": "Strong material cross-section and surprising payoff; retain the existing import. Claims must remain limited to the reported specimens and tested mixtures, with no claim that every Roman structure repairs itself.",
+        "relevance": "Evergreen research explanation; original 2023 work is not fresh news.",
+        "evidenceUrls": [
+          "https://dspace.mit.edu/entities/publication/d114c164-bdc9-4faf-8cd2-bb5075acfc0e"
+        ]
       },
       {
-        "key": "lesson-15944494-03f6-40a5-b7ab-2fd7192b6836",
-        "headline": "Why freezing water expands instead of shrinking",
-        "description": "Build the explanation from the open structure of ice to its lower density, retaining the existing identity and strengthening its Adult depth.",
-        "hook": "The solid takes up more room than the liquid it came from.",
-        "rankReason": "Worthwhile existing revision with a clear visual mechanism; lower than the leading heating puzzle to avoid consecutive cold-water topics.",
-        "relevance": "Evergreen seasonal puzzle; avoid repeating the separate lake-freezing lesson.",
-        "evidenceUrls": []
-      },
-      {
-        "key": "idea-why-usb-c-cables-charge-differently",
-        "headline": "Why two USB-C cables can charge the same phone differently",
-        "description": "Separate the connector shape from negotiated power and cable capabilities, without recommending products or promising model-specific charging speeds.",
-        "hook": "Identical-looking plugs do not promise identical capabilities.",
-        "rankReason": "Useful everyday misunderstanding with a negotiation-flow figure; requires current official standards evidence before writing.",
-        "relevance": "Evergreen mechanism, but standards details need a fresh check; no current product claims verified at ideation.",
+        "key": "legacy-shannon-information",
+        "headline": "Why an unlikely message carries more information",
+        "description": "Use surprise to explain Shannon information, separating the technical measure from everyday importance or meaning.",
+        "hook": "A forecast of rain tells you more when rain was very unlikely.",
+        "rankReason": "A strong quantitative idea with a compact worked example; it follows the more immediate everyday puzzles and must clearly separate technical information from meaning.",
+        "relevance": "Evergreen mathematics and computing; no claim about current communications technology.",
         "evidenceUrls": []
       },
       {
@@ -1353,6 +1424,46 @@
         "evidenceUrls": []
       },
       {
+        "key": "idea-why-usb-c-cables-charge-differently",
+        "headline": "Why two USB-C cables can charge the same phone differently",
+        "description": "Separate the connector shape from negotiated power and cable capabilities, without recommending products or promising model-specific charging speeds.",
+        "hook": "Identical-looking plugs do not promise identical capabilities.",
+        "rankReason": "Useful everyday misunderstanding with a negotiation-flow figure; requires current official standards evidence before writing.",
+        "relevance": "Evergreen mechanism, but standards details need a fresh check; no current product claims verified at ideation.",
+        "evidenceUrls": []
+      },
+      {
+        "key": "idea-what-changes-when-ai-can-act",
+        "headline": "What changes when an AI can take actions?",
+        "description": "Trace a simple goal through choosing a tool, reading its result and deciding what to do next.",
+        "hook": "A useful reply and an action that changes something require different checks.",
+        "rankReason": "Useful Owner-suggested reserve, with a feedback-loop figure and bounded example. Below generation and training to avoid an AI-only leading shortlist; explain checks and stopping without product promises or a robot-brain visual cliche.",
+        "relevance": "Evergreen architecture. Vendor source is evidence of a pattern, not independent proof of performance.",
+        "evidenceUrls": [
+          "https://www.anthropic.com/research/building-effective-agents"
+        ]
+      },
+      {
+        "key": "lesson-6bd86c0f-7cde-467c-abd1-ef6c8a2b51b1",
+        "headline": "How can cold outdoor air heat your home?",
+        "description": "Follow a refrigerant around the cycle to explain how electricity moves heat and why colder weather changes the work required.",
+        "hook": "A machine can deliver more heat than the electrical energy it consumes.",
+        "rankReason": "Retain the existing revision and every outstanding criterion. Heating-season interest is an editorial judgement; the already published 13 October lesson and recent thermal coverage make fresh subjects more useful this cycle.",
+        "relevance": "Seasonal relevance to northern-hemisphere heating; evergreen physics. No claim of a verified news trend.",
+        "evidenceUrls": []
+      },
+      {
+        "key": "idea-what-makes-quantum-computers-different",
+        "headline": "What makes a quantum computer different from a faster computer?",
+        "description": "Use one small example to explain how quantum interference changes outcome probabilities and why measurement matters.",
+        "hook": "Many possible states do not mean many readable answers.",
+        "rankReason": "Reserve with a useful misconception to resolve. Below the more concrete candidates because a truthful non-specialist worked example and exact diagram remain to be developed. Quantum logistics is an alternative application angle, not a second overlapping idea; no verified practical route-optimisation advantage is claimed.",
+        "relevance": "Evergreen algorithmic principles. No current hardware or commercial-advantage claims.",
+        "evidenceUrls": [
+          "https://quantum.cloud.ibm.com/learning/en/courses/fundamentals-of-quantum-algorithms/quantum-query-algorithms/introduction"
+        ]
+      },
+      {
         "key": "lesson-7cd5dca8-857f-49e5-8fd5-16a03658b0b7",
         "headline": "What goes wrong when a useful measure becomes the target?",
         "description": "Follow one concrete example from a useful indicator to changed behaviour that makes the indicator less useful.",
@@ -1360,45 +1471,6 @@
         "rankReason": "Broad relevance and a strong behavioural mechanism; needs a carefully bounded example and more depth than a slogan.",
         "relevance": "Evergreen; no unsupported link to a current policy or public controversy.",
         "evidenceUrls": []
-      },
-      {
-        "key": "legacy-shannon-information",
-        "headline": "Why an unlikely message carries more information",
-        "description": "Use surprise to explain Shannon information, separating the technical measure from everyday importance or meaning.",
-        "hook": "A forecast of rain tells you more when rain was very unlikely.",
-        "rankReason": "A strong quantitative idea with a compact worked example; it follows the more immediate everyday puzzles and must clearly separate technical information from meaning.",
-        "relevance": "Evergreen mathematics and computing; no claim about current communications technology.",
-        "evidenceUrls": []
-      },
-      {
-        "key": "legacy-wifi-propagation",
-        "headline": "Why Wi-Fi signals behave differently across your home",
-        "description": "Compare radio frequencies, obstacles and signal loss to explain why coverage and a connection's advertised capability are different questions.",
-        "hook": "The same router can give a different connection on the other side of a wall.",
-        "rankReason": "An eligible existing technology candidate replaces dark adaptation under review I4. Radio propagation offers an everyday mechanism distinct from acoustic cancellation, mechanical resonance and Shannon information; fresh authoritative sourcing is needed before authoring.",
-        "relevance": "Evergreen radio physics; verify frequency and obstacle comparisons from primary sources when selected, without current product or performance promises.",
-        "evidenceUrls": []
-      },
-      {
-        "key": "idea-why-mirrors-seem-to-reverse-left-and-right",
-        "headline": "Why does a mirror reverse left and right but not up and down?",
-        "description": "Use reflection geometry and the difference between reflection and physically turning around to show that a mirror reverses front-to-back, not one chosen horizontal direction.",
-        "hook": "A mirror seems to swap your left and right while leaving your head above your feet.",
-        "rankReason": "A strong everyday puzzle with clear prediction and figure potential; tenth place allows a fresh source and catalogue check before selection.",
-        "relevance": "Evergreen optics and spatial reasoning; no time-sensitive premise.",
-        "evidenceUrls": []
-      },
-      {
-        "key": "legacy-queueing-theory",
-        "headline": "Why queues grow quickly when there is little spare capacity",
-        "description": "Clarify the published Adult model's assumptions and correct the Teen title while preserving the lesson's accurate calculations and central mechanism.",
-        "hook": "A checkout with almost no spare time struggles to catch up after a small rush.",
-        "rankReason": "Retain the IMPORTANT comprehension finding and MINOR title finding as actionable work. Place below the existing ten candidates because this lesson was released today; different topics offer more immediate variety. Reassess the value of this revision during each normal pool refresh.",
-        "relevance": "Evergreen; no factual calculation error identified in the retrospective. The published lesson remains accessible pending a fully reviewed revision.",
-        "evidenceUrls": [
-          "https://business.columbia.edu/sites/default/files-efs/pubfiles/5474/queueing%20theory%20and%20modeling.pdf",
-          "https://ocw.mit.edu/courses/15-760b-introduction-to-operations-management-spring-2004/16dde953a29f89a4d2018361900ce886_lec3_capacity.pdf"
-        ]
       }
     ]
   }
