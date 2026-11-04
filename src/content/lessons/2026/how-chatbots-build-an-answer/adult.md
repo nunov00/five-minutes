@@ -4,10 +4,11 @@ description: A chatbot builds a reply piece by piece. The question, the reply so
   what can come next.
 takeaway: A chat model generates each next text piece from the available context; assistant training and message
   roles turn that continuation process towards answering you.
-question: Why can the same partial reply lead to different next words after two different questions?
-answer: The model uses more than the last few words. The question and other available context affect its next-token
-  probabilities, so the same partial reply can continue differently. The chosen continuation then becomes context
-  for the following step.
+question: The user asks “Make that simpler.” What in the model’s input tells it what “that” means and whose
+  turn comes next?
+answer: 'The earlier question and reply give “that” its subject: why ice floats. Role markers separate the
+  messages and mark the start of a new assistant reply. Without the earlier exchange, the request still asks
+  for a simpler answer, but no longer says what to simplify.'
 searchTerms:
 - how chatbots work
 - next token prediction
@@ -32,17 +33,17 @@ figures:
   role: explanation
   figure:
     type: image
-    src: /lesson-media/how-chatbots-build-an-answer-vcontext1.webp
-    width: 900
-    height: 840
-    afterParagraph: 4
-    alt: The same reply start, The bank, continues towards a river description or a savings-bank description
-      depending on the question.
-    caption: The earlier question changes the useful continuation. Invented whole-word examples, not measured
-      predictions or actual token boundaries.[^1][^2]
-    description: With Describe a river bank, The bank can continue slopes towards the water. With Describe
-      a savings bank, The bank can continue holds money for customers. These are illustrative continuations,
-      not outputs or probabilities from a tested model. Real tokens may be smaller than words.
+    src: /lesson-media/how-chatbots-build-an-answer-vcontext2.webp
+    width: 960
+    height: 454
+    afterParagraph: 6
+    alt: A role-labelled chat history ends with an assistant turn. As Ice becomes Ice takes, the longer text
+      is used for the next prediction.
+    caption: The next reply extends the same role-marked sequence. Each added piece joins the text used for
+      the following prediction. Simplified labels and invented text, not exact token boundaries.[^2][^4]
+    description: The user asks why ice floats, the assistant says ice is less dense, and the user asks to make
+      that simpler. The final assistant marker opens a reply. Its start grows from Ice to Ice takes. The return
+      arrow shows that the longer sequence is used for the next prediction.
 ---
 Ask a chatbot to explain why ice floats. Then write, “Make that simpler.” It can often stay on the same subject without you naming ice again. How does a machine built to predict small pieces of text produce something that feels like a conversation?[^4]
 
@@ -50,11 +51,11 @@ The key is what it predicts *from*. A **language model** estimates which text pi
 
 ## More than the last few words
 
-A model does not have to choose from the last word alone. In a Transformer, a common language-model design, **attention** combines information from different positions in the context. The contribution of an earlier piece depends on the other pieces. This helps the prediction reflect a question asked several lines earlier, rather than only the unfinished sentence.[^2]
+A model does not have to choose from the last word alone. In a Transformer, **attention** combines information from different positions in the text. In “Make that simpler”, information from the earlier words about ice can influence what follows, even though the new request does not mention ice.[^2]
 
 Consider two invented requests: “Describe a river bank” and “Describe a savings bank.” Both replies could begin “The bank”. Yet “slopes towards the water” suits one, while “holds money for customers” suits the other. The identical reply start does not erase the question. These whole-word examples illustrate the relationship; they are not measured model outputs or probabilities.[^1][^2]
 
-The model produces probabilities for possible next tokens, and the generation system selects one. It need not always choose the most probable one. The selected token joins the reply, becoming part of the context for the following prediction. Repeat that process and a sentence grows. Crucially, each new piece changes what can sensibly follow: generating “river” makes a different continuation useful from generating “savings”.[^1][^2]
+The model produces probabilities for possible next tokens, and the generation system selects one. The selected token joins the reply, becoming part of the context for the following prediction. Repeat that process and a sentence grows. Once the reply says “slopes”, “towards the water” becomes a natural continuation.[^1][^2]
 
 ## Why it answers instead of just continuing
 
@@ -66,6 +67,6 @@ That gives the opening exchange two ingredients. The available chat history conn
 
 ## Fluent is not the same as checked
 
-None of this makes a polished sentence proof of a fact. The 2022 researchers still found invented facts and failures to follow instructions after their extra training. A plausible continuation and a verified answer are different achievements. Search tools or other checking systems can add evidence, but generating text by itself is not that check.[^3]
+None of this makes a polished sentence proof of a fact. The 2022 researchers still found invented facts and failures to follow instructions after their extra training. A plausible continuation and a verified answer are different achievements.[^3]
 
 With no earlier messages supplied, “Make that simpler” has no ice explanation to refer to. One word can work like a pointer, but only when its target is in the context.[^4]
