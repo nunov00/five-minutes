@@ -51,13 +51,13 @@ imageRights:
     issue #210 comment 6572074688; result: 6572161808. No source image. Metadata-stripped RGB WebP; conceptual
     conversation tiles, not architecture or measured data. SHA-256 dc0da7e38d499bd32f7ea604f5a7b10300110ca127a61111a536a42007e5e227'
   sourceUrl: https://openai.com/policies/eu-terms-of-use/
-- src: /lesson-media/how-chatbots-build-an-answer-vcontext2.webp
+- src: /lesson-media/how-chatbots-build-an-answer-vcontext3.webp
   origin: original-code
   creator: Five Minutes, OpenAI-assisted original diagram
   licence: Original project artwork; no third-party figure copied.
-  evidence: Deterministic Pillow illustration, 4 November 2026, based on sources 2 and 4.
+  evidence: Deterministic Pillow illustration, 5 November 2026, based on sources 2 and 4.
     Invented transcript and schematic generation steps; not exact control tokens or measured output.
-    Metadata-free RGB WebP. SHA-256 b8e7457d689e2f455a783155a7695731fcb62ddba5fde4c9feb396a564457810
+    Metadata-free RGB WebP. SHA-256 dbc072ee400072d11d6e1eb56e3717b7b8db871ca5214d0380a738377ade0838
 provenance:
   createdAt: '2026-11-02T08:07:02Z'
   createdBy:

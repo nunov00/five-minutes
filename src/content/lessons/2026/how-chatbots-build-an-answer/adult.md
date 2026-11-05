@@ -33,17 +33,18 @@ figures:
   role: explanation
   figure:
     type: image
-    src: /lesson-media/how-chatbots-build-an-answer-vcontext2.webp
-    width: 960
-    height: 454
+    src: /lesson-media/how-chatbots-build-an-answer-vcontext3.webp
+    width: 1120
+    height: 430
     afterParagraph: 6
     alt: A role-labelled chat history ends with an assistant turn. As Ice becomes Ice takes, the longer text
       is used for the next prediction.
     caption: The next reply extends the same role-marked sequence. Each added piece joins the text used for
       the following prediction. Simplified labels and invented text, not exact token boundaries.[^2][^4]
     description: The user asks why ice floats, the assistant says ice is less dense, and the user asks to make
-      that simpler. The final assistant marker opens a reply. Its start grows from Ice to Ice takes. The return
-      arrow shows that the longer sequence is used for the next prediction.
+      that simpler. The final assistant marker opens a reply. The word takes has just been added after Ice,
+      and an empty slot marks the next prediction. The arrow returns to the start of the whole conversation,
+      which now includes Ice takes.
 ---
 Ask a chatbot to explain why ice floats. Then write, “Make that simpler.” It can often stay on the same subject without you naming ice again. How does a machine built to predict small pieces of text produce something that feels like a conversation?[^4]
 
@@ -53,7 +54,7 @@ The key is what it predicts *from*. A **language model** estimates which text pi
 
 A model does not have to choose from the last word alone. In a Transformer, **attention** combines information from different positions in the text. In “Make that simpler”, information from the earlier words about ice can influence what follows, even though the new request does not mention ice.[^2]
 
-Consider two invented requests: “Describe a river bank” and “Describe a savings bank.” Both replies could begin “The bank”. Yet “slopes towards the water” suits one, while “holds money for customers” suits the other. The identical reply start does not erase the question. These whole-word examples illustrate the relationship; they are not measured model outputs or probabilities.[^1][^2]
+Consider two invented requests: “Describe a river bank” and “Describe a savings bank.” Both replies could begin “The bank”. Yet “slopes towards the water” suits one, while “holds money for customers” suits the other. The identical reply start does not erase the question. In the same way, “Make that simpler” draws its meaning from the earlier exchange about ice. These whole-word examples illustrate the relationship; they are not measured model outputs or probabilities.[^1][^2]
 
 The model produces probabilities for possible next tokens, and the generation system selects one. The selected token joins the reply, becoming part of the context for the following prediction. Repeat that process and a sentence grows. Once the reply says “slopes”, “towards the water” becomes a natural continuation.[^1][^2]
 
