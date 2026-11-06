@@ -1307,14 +1307,17 @@
       "kind": "new",
       "slug": "how-chatbots-build-an-answer",
       "title": "How can predicting the next word produce a conversation?",
-      "state": "queued",
+      "state": "complete",
       "priority": 200,
       "queuedAt": "2026-11-01T08:00:18Z",
       "reason": "Follow context-dependent token prediction through a short answer; distinguish generation from training, retrieval and factual verification.",
       "criteria": [
         "Verify primary sources and current catalogue, aliases, full pool and open-work overlap before assigning an identity.",
         "Produce one complete lesson with a precise causal explanation, useful limit, sourced references, compelling lead and exact explanatory visuals; complete current source/render/review gates."
-      ]
+      ],
+      "completedAt": "2026-11-06T05:00:00+01:00",
+      "destinationId": "1eb07ba4-3b5c-40c0-b2a1-d138682b9069",
+      "destinationSlug": "how-chatbots-build-an-answer"
     },
     {
       "key": "idea-what-changes-when-ai-can-act",
@@ -1349,20 +1352,6 @@
     "assessedAt": "2026-11-01T08:00:18Z",
     "summary": "Sunday 1 November 2026 weekly comparison of the full pool, current catalogue and open work. Proposed first: context-dependent chatbot generation; alternatives: aircraft-window stress and one neural-network learning update. Three Owner-suggested computing ideas added without priority privilege; neural learning reuses its existing import. Twelve eligible briefs retained across computing, engineering, physics, mathematics and behaviour. Already published butterfly, ship and popcorn pitches excluded without changing their historical pool records. Ice and queue revisions remain available but leave this shortlist for variety after recent related coverage. Source access verified for the top three; lower reserves retain explicit authoring limits. Rankings are editorial hypotheses, not measured demand or a full pool source audit. No lesson selected until independent Sunday queue review and merge.",
     "ranking": [
-      {
-        "key": "idea-how-chatbots-build-an-answer",
-        "headline": "How can predicting the next word produce a conversation?",
-        "description": "Follow a chatbot as it builds a reply from small text pieces, using the question and the reply so far.",
-        "hook": "A full answer can grow from a repeated next-piece prediction.",
-        "rankReason": "Reader choice: a familiar conversation hides a puzzling mechanism. The reward is understanding why context changes a reply and why fluent text still needs checking. First over aircraft and neural learning: broader immediate recognition, a compact worked example and a fresh computing subject after the recent physical-science pilots. This is an editorial hypothesis, not measured demand.",
-        "relevance": "Evergreen generation mechanism, not a claim about a current product. Owner interest informed intake, not automatic priority.",
-        "evidenceUrls": [
-          "https://developers.google.com/machine-learning/crash-course/llm",
-          "https://developers.google.com/machine-learning/crash-course/llm/transformers",
-          "https://arxiv.org/html/1706.03762v7",
-          "https://arxiv.org/abs/2005.14165"
-        ]
-      },
       {
         "key": "legacy-aircraft-pressurisation",
         "headline": "Why aircraft windows have rounded corners",
