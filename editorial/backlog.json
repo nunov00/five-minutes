@@ -1346,32 +1346,115 @@
         "Verify primary sources and current catalogue, aliases, full pool and open-work overlap before assigning an identity.",
         "Produce one complete lesson with a precise causal explanation, useful limit, sourced references, compelling lead and exact explanatory visuals; complete current source/render/review gates."
       ]
+    },
+    {
+      "key": "idea-what-keeps-a-moving-bicycle-upright",
+      "kind": "new",
+      "slug": "what-keeps-a-moving-bicycle-upright",
+      "title": "What keeps a moving bicycle upright?",
+      "state": "queued",
+      "priority": 200,
+      "queuedAt": "2026-11-08T07:13:17.116Z",
+      "reason": "Owner topic intake on #210, 1 November 2026. Use an experimental riderless bicycle to examine self-stability.",
+      "criteria": [
+        "Check the 2011 paper and its supplementary material; explain the riderless model, the tested speed range and the experiment that removed the usual gyroscopic and positive-trail mechanisms.",
+        "Use a precise lean-and-steer diagram and separate the experiment from rider control; make no claim that gyroscopic effects or trail never matter."
+      ]
+    },
+    {
+      "key": "idea-how-a-falling-cat-turns-over",
+      "kind": "new",
+      "slug": "how-a-falling-cat-turns-over",
+      "title": "How can a falling cat turn over in mid-air?",
+      "state": "queued",
+      "priority": 200,
+      "queuedAt": "2026-11-08T07:13:17.116Z",
+      "reason": "Owner topic intake on #210, 1 November 2026. Explore changes in body shape and angular momentum.",
+      "criteria": [
+        "Verify the original mechanical model and its limits. Explain how reorientation can occur with negligible external torque.",
+        "Use clearly ordered silhouettes or diagrams. Do not involve or suggest dropping an animal."
+      ]
+    },
+    {
+      "key": "idea-why-a-wet-towel-looks-darker",
+      "kind": "new",
+      "slug": "why-a-wet-towel-looks-darker",
+      "title": "Why does a wet towel look darker?",
+      "state": "queued",
+      "priority": 200,
+      "queuedAt": "2026-11-08T07:13:17.116Z",
+      "reason": "Owner topic intake on #210, 1 November 2026. Explain a familiar change in how light returns from a wet material.",
+      "criteria": [
+        "Verify the mechanism for fabrics specifically, distinguishing absorption, scattering, surface films and refractive-index changes.",
+        "Keep any extension to other surfaces conditional and distinguish changes in colour appearance from changes to pigment."
+      ]
+    },
+    {
+      "key": "idea-why-the-sky-is-not-violet",
+      "kind": "new",
+      "slug": "why-the-sky-is-not-violet",
+      "title": "If violet scatters more, why is the sky blue?",
+      "state": "queued",
+      "priority": 200,
+      "queuedAt": "2026-11-08T07:13:17.116Z",
+      "reason": "Owner topic intake on #210, 1 November 2026. Connect the spectrum of scattered daylight to perceived colour.",
+      "criteria": [
+        "Use reliable atmospheric optics and colour-vision sources; keep the roles of the incident spectrum, wavelength-dependent scattering and vision separate.",
+        "Use a clear spectrum or other explanatory graphic without claiming the sky is monochromatic."
+      ]
+    },
+    {
+      "key": "idea-how-eratosthenes-measured-earth",
+      "kind": "new",
+      "slug": "how-eratosthenes-measured-earth",
+      "title": "How did Eratosthenes measure Earth with shadows?",
+      "state": "queued",
+      "priority": 200,
+      "queuedAt": "2026-11-08T07:13:17.116Z",
+      "reason": "Owner topic intake on #210, 1 November 2026. Reconstruct the core angle-and-distance reasoning and its limits.",
+      "criteria": [
+        "Identify the later ancient account and distinguish documented details from modern reconstruction. Check the place, distance and solar-angle assumptions.",
+        "Show how an angle fraction and a distance give a circumference. Avoid an exact modern-unit conversion or accuracy claim without resolving the stade uncertainty."
+      ]
     }
   ],
   "pipeline": {
-    "assessedAt": "2026-11-01T08:00:18Z",
-    "summary": "Sunday 1 November 2026 weekly comparison of the full pool, current catalogue and open work. Proposed first: context-dependent chatbot generation; alternatives: aircraft-window stress and one neural-network learning update. Three Owner-suggested computing ideas added without priority privilege; neural learning reuses its existing import. Twelve eligible briefs retained across computing, engineering, physics, mathematics and behaviour. Already published butterfly, ship and popcorn pitches excluded without changing their historical pool records. Ice and queue revisions remain available but leave this shortlist for variety after recent related coverage. Source access verified for the top three; lower reserves retain explicit authoring limits. Rankings are editorial hypotheses, not measured demand or a full pool source audit. No lesson selected until independent Sunday queue review and merge.",
+    "assessedAt": "2026-11-08T07:13:17.116Z",
+    "summary": "Sunday 8 November 2026 assessment of the current pool, catalogue, recent releases and open work. Propose bicycle self-stability first, followed by cat righting and aircraft-window stress. The experimental bicycle gives a familiar object a testable surprise and follows the recent chatbot lesson with physical reasoning. Append five Owner-suggested ideas at ordinary priority; the onion idea remains in #210 for a later bounded intake and evidence for the chilling claim. Keep 12 eligible briefs, with full pool and feedback history preserved. Rankings are editorial hypotheses, not reader measurements. Final selection requires the independently reviewed queue merge.",
     "ranking": [
+      {
+        "key": "idea-what-keeps-a-moving-bicycle-upright",
+        "headline": "What keeps a moving bicycle upright?",
+        "description": "Follow what a small lean does to steering, then see what a purpose-built bicycle revealed about balancing.",
+        "hook": "A bicycle without the usual stabilising effects could still recover from a nudge.",
+        "rankReason": "First: a familiar puzzle with a controlled counterexample and a diagram readers can predict from. The paper and author project page support an experimentally self-stable riderless design, not one explanation for every bicycle. Keep speed, steering, mass distribution and rider control distinct.",
+        "relevance": "Evergreen; no current news or measured reader demand claim.",
+        "evidenceUrls": [
+          "https://pubmed.ncbi.nlm.nih.gov/21493856/",
+          "https://arendschwab.com/research/stablebicycle/"
+        ]
+      },
+      {
+        "key": "idea-how-a-falling-cat-turns-over",
+        "headline": "How can a falling cat turn over in mid-air?",
+        "description": "Follow two parts of a changing body to see how the cat can turn without pushing against anything.",
+        "hook": "How does a cat rotate when there is nothing to push on?",
+        "rankReason": "Second: vivid visual puzzle and a transferable insight about rotation. The model takes more careful explanation than the bicycle experiment; avoid an oversimplified front/back twist or any implied guarantee of safe landings.",
+        "relevance": "Evergreen; no current news or measured reader demand claim.",
+        "evidenceUrls": [
+          "https://ntrs.nasa.gov/citations/19690058843",
+          "https://www.sciencedirect.com/science/article/abs/pii/0020768369900869"
+        ]
+      },
       {
         "key": "legacy-aircraft-pressurisation",
         "headline": "Why aircraft windows have rounded corners",
         "description": "Connect a familiar window shape to stress around an opening and repeated cabin-pressure loading.",
         "hook": "A small change in shape can change where stress builds up.",
-        "rankReason": "Reader choice: recognisable shape, hidden engineering reason and strong visual payoff. Second: simpler physical puzzle than neural learning, but recent ships, popcorn and butterfly releases favour a different subject first. Explain fatigue without reducing Comet failures to square passenger windows or claiming rounded corners guarantee safety.",
+        "rankReason": "Third: a shape travellers recognise and a clear comparison of stress around openings. The FAA case supports repeated pressurisation and fatigue at a cutout. Avoid attributing Comet failures to square passenger windows alone. The bicycle offers a cleaner experiment for this week’s opening puzzle.",
         "relevance": "Evergreen engineering; no accident news hook or safety advice.",
         "evidenceUrls": [
           "https://www.faa.gov/lessons_learned/transport_airplane/accidents/G-ALYV"
-        ]
-      },
-      {
-        "key": "legacy-neural-networks",
-        "headline": "How does a neural network learn from a mistake?",
-        "description": "Follow one prediction, its error and a small change to connection strengths; separate training from using a trained model.",
-        "hook": "A wrong answer can help change the next prediction.",
-        "rankReason": "Reader choice: turns the vague word learning into one visible update. Reuses the existing import identity; no duplicate AI-training idea. Third: the narrowed treatment resolves the earlier overbroad pitch in principle, but needs more explanation of credit assignment than the leading generation example. Keep an honest limit: a smaller training error does not guarantee success on new examples.",
-        "relevance": "Evergreen learning mechanism. Distinct from generating text and using tools; no brain-equivalence claim.",
-        "evidenceUrls": [
-          "https://developers.google.com/machine-learning/crash-course/neural-networks/backpropagation"
         ]
       },
       {
@@ -1382,6 +1465,40 @@
         "rankReason": "Strong everyday puzzle with a precise orientation comparison; fourth gives a different visual and conceptual subject after the leading computing and engineering treatments. Exact labelled geometry and a fresh source check remain necessary.",
         "relevance": "Evergreen optics and spatial reasoning; no time-sensitive premise.",
         "evidenceUrls": []
+      },
+      {
+        "key": "idea-why-a-wet-towel-looks-darker",
+        "headline": "Why does a wet towel look darker?",
+        "description": "Use a familiar observation to ask how wet fibres change the light reaching your eyes.",
+        "hook": "The same towel can look like two different colours.",
+        "rankReason": "An immediate observation with an appealing before-and-after visual. The original optics paper supports conditional darkening mechanisms, but fibre-specific evidence remains necessary before choosing an explanation.",
+        "relevance": "Evergreen; no current news or measured reader demand claim.",
+        "evidenceUrls": [
+          "https://www.wgtn.ac.nz/scps/about/staff/pdf/darkerwhenwet.pdf"
+        ]
+      },
+      {
+        "key": "idea-how-eratosthenes-measured-earth",
+        "headline": "How did Eratosthenes measure Earth with shadows?",
+        "description": "Use two locations, one shadow angle and a distance to reconstruct an estimate of Earth’s size.",
+        "hook": "A small fraction of a circle can give the size of the whole planet.",
+        "rankReason": "One memorable diagram and a calculation worth retelling. The later account supports the geometry, but the historical assumptions and units require separate care.",
+        "relevance": "Evergreen; no current news or measured reader demand claim.",
+        "evidenceUrls": [
+          "https://mathshistory.st-andrews.ac.uk/DSB/Eratosthenes.pdf"
+        ]
+      },
+      {
+        "key": "idea-why-the-sky-is-not-violet",
+        "headline": "If violet scatters more, why is the sky blue?",
+        "description": "Follow the light in a patch of sky from scattering in the air to colour perception.",
+        "hook": "The light that scatters most is only part of the colour you see.",
+        "rankReason": "A good reversal of a familiar explanation, but needs multiple causes kept separate and is near recent optics coverage. NASA supports the scattering and visual-sensitivity premises.",
+        "relevance": "Evergreen; no current news or measured reader demand claim.",
+        "evidenceUrls": [
+          "https://science.nasa.gov/ems/03_behaviors/",
+          "https://science.nasa.gov/ems/09_visiblelight/"
+        ]
       },
       {
         "key": "legacy-roman-concrete",
@@ -1413,52 +1530,21 @@
         "evidenceUrls": []
       },
       {
-        "key": "idea-why-usb-c-cables-charge-differently",
-        "headline": "Why two USB-C cables can charge the same phone differently",
-        "description": "Separate the connector shape from negotiated power and cable capabilities, without recommending products or promising model-specific charging speeds.",
-        "hook": "Identical-looking plugs do not promise identical capabilities.",
-        "rankReason": "Useful everyday misunderstanding with a negotiation-flow figure; requires current official standards evidence before writing.",
-        "relevance": "Evergreen mechanism, but standards details need a fresh check; no current product claims verified at ideation.",
-        "evidenceUrls": []
-      },
-      {
-        "key": "idea-what-changes-when-ai-can-act",
-        "headline": "What changes when an AI can take actions?",
-        "description": "Trace a simple goal through choosing a tool, reading its result and deciding what to do next.",
-        "hook": "A useful reply and an action that changes something require different checks.",
-        "rankReason": "Useful Owner-suggested reserve, with a feedback-loop figure and bounded example. Below generation and training to avoid an AI-only leading shortlist; explain checks and stopping without product promises or a robot-brain visual cliche.",
-        "relevance": "Evergreen architecture. Vendor source is evidence of a pattern, not independent proof of performance.",
-        "evidenceUrls": [
-          "https://www.anthropic.com/research/building-effective-agents"
-        ]
-      },
-      {
-        "key": "lesson-6bd86c0f-7cde-467c-abd1-ef6c8a2b51b1",
-        "headline": "How can cold outdoor air heat your home?",
-        "description": "Follow a refrigerant around the cycle to explain how electricity moves heat and why colder weather changes the work required.",
-        "hook": "A machine can deliver more heat than the electrical energy it consumes.",
-        "rankReason": "Retain the existing revision and every outstanding criterion. Heating-season interest is an editorial judgement; the already published 13 October lesson and recent thermal coverage make fresh subjects more useful this cycle.",
-        "relevance": "Seasonal relevance to northern-hemisphere heating; evergreen physics. No claim of a verified news trend.",
-        "evidenceUrls": []
-      },
-      {
-        "key": "idea-what-makes-quantum-computers-different",
-        "headline": "What makes a quantum computer different from a faster computer?",
-        "description": "Use one small example to explain how quantum interference changes outcome probabilities and why measurement matters.",
-        "hook": "Many possible states do not mean many readable answers.",
-        "rankReason": "Reserve with a useful misconception to resolve. Below the more concrete candidates because a truthful non-specialist worked example and exact diagram remain to be developed. Quantum logistics is an alternative application angle, not a second overlapping idea; no verified practical route-optimisation advantage is claimed.",
-        "relevance": "Evergreen algorithmic principles. No current hardware or commercial-advantage claims.",
-        "evidenceUrls": [
-          "https://quantum.cloud.ibm.com/learning/en/courses/fundamentals-of-quantum-algorithms/quantum-query-algorithms/introduction"
-        ]
-      },
-      {
         "key": "lesson-7cd5dca8-857f-49e5-8fd5-16a03658b0b7",
         "headline": "What goes wrong when a useful measure becomes the target?",
         "description": "Follow one concrete example from a useful indicator to changed behaviour that makes the indicator less useful.",
         "hook": "Improving the score can make the underlying result worse.",
         "rankReason": "Broad relevance and a strong behavioural mechanism; needs a carefully bounded example and more depth than a slogan.",
         "relevance": "Evergreen; no unsupported link to a current policy or public controversy.",
+        "evidenceUrls": []
+      },
+      {
+        "key": "idea-why-usb-c-cables-charge-differently",
+        "headline": "Why two USB-C cables can charge the same phone differently",
+        "description": "Separate the connector shape from negotiated power and cable capabilities, without recommending products or promising model-specific charging speeds.",
+        "hook": "Identical-looking plugs do not promise identical capabilities.",
+        "rankReason": "Useful everyday misunderstanding with a negotiation-flow figure; requires current official standards evidence before writing.",
+        "relevance": "Evergreen mechanism, but standards details need a fresh check; no current product claims verified at ideation.",
         "evidenceUrls": []
       }
     ]
