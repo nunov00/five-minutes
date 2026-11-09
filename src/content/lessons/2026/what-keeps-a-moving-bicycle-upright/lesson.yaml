@@ -1,0 +1,46 @@
+schemaVersion: 2
+id: 3cfb8225-0955-4ed4-a1a6-d4eb99072b84
+slug: what-keeps-a-moving-bicycle-upright
+aliases: []
+publishedAt: '2026-11-13T05:00:00+01:00'
+topic: science
+subtopic: physics
+concepts:
+- balance
+- bicycle-steering
+- gyroscopic-effect
+- centre-of-mass
+related:
+  manual: []
+  exclude: []
+sources:
+- title: Kooijman et al. (2011), A bicycle can be self-stable without gyroscopic or caster effects
+  url: https://arendschwab.com/assets/pdf/StableBicyclev34Revised.pdf
+  publisher: Science, author-hosted preprint
+  accessedAt: '2026-11-09'
+  note: Figures 2 and 3 and the accompanying discussion support the construction, observed recovery, speed limits and front-assembly mass explanation.
+- title: Kooijman et al. (2011), Supporting online text for the bicycle self-stability experiment
+  url: https://arendschwab.com/assets/pdf/1201959SOMtext.pdf
+  publisher: Science, author-hosted supplementary material
+  accessedAt: '2026-11-09'
+  note: Chapters S2 and S10–S11 explain the support line, physical apparatus and coast-down and perturbation experiments.
+imageRights:
+- src: /lesson-media/what-keeps-a-moving-bicycle-upright-vlead1.webp
+  origin: generated
+  creator: OpenAI image generation for Five Minutes
+  licence: Generated output under applicable OpenAI Europe terms; no exclusivity or copyright guarantee.
+  evidence: 'Original built-in image generation, 9 November 2026, request 1. Full prompt and pre-dispatch reservation: issue #210 comment 6734824848. No source image. Conceptual bicycle, not the experimental rig. Metadata-stripped RGB WebP. SHA-256 dc0691137f6ed1e44e4e0e655da5424c7225142174800a968b63b3c8c4f04ce4'
+  sourceUrl: https://openai.com/policies/eu-terms-of-use/
+- src: /lesson-media/what-keeps-a-moving-bicycle-upright-vsteer1.webp
+  origin: original-code
+  creator: Five Minutes, OpenAI-assisted original diagram
+  licence: Original project artwork; no third-party figure copied.
+  evidence: 'Deterministic original Pillow diagram based on sources 1 and 2, 9 November 2026. Schematic, not measured motion. Metadata-free RGB WebP. SHA-256 e2d1cfefed9e393fccc27da85e3990756b525aa0a9efb618d82a1f9ab2d46798'
+provenance:
+  createdAt: '2026-11-09T07:41:51Z'
+  createdBy:
+    type: ai
+    provider: openai
+    model: gpt-6
+    promptVersion: weekly-author-adr0015-v1
+  reviews: []

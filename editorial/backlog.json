@@ -1352,14 +1352,17 @@
       "kind": "new",
       "slug": "what-keeps-a-moving-bicycle-upright",
       "title": "What keeps a moving bicycle upright?",
-      "state": "queued",
+      "state": "complete",
       "priority": 200,
       "queuedAt": "2026-11-08T07:13:17.116Z",
       "reason": "Owner topic intake on #210, 1 November 2026. Use an experimental riderless bicycle to examine self-stability.",
       "criteria": [
         "Check the 2011 paper and its supplementary material; explain the riderless model, the tested speed range and the experiment that removed the usual gyroscopic and positive-trail mechanisms.",
         "Use a precise lean-and-steer diagram and separate the experiment from rider control; make no claim that gyroscopic effects or trail never matter."
-      ]
+      ],
+      "completedAt": "2026-11-13T05:00:00+01:00",
+      "destinationId": "3cfb8225-0955-4ed4-a1a6-d4eb99072b84",
+      "destinationSlug": "what-keeps-a-moving-bicycle-upright"
     },
     {
       "key": "idea-how-a-falling-cat-turns-over",
@@ -1422,18 +1425,6 @@
     "assessedAt": "2026-11-08T07:13:17.116Z",
     "summary": "Sunday 8 November 2026 assessment of the current pool, catalogue, recent releases and open work. Propose bicycle self-stability first, followed by cat righting and aircraft-window stress. The experimental bicycle gives a familiar object a testable surprise and follows the recent chatbot lesson with physical reasoning. Append five Owner-suggested ideas at ordinary priority; the onion idea remains in #210 for a later bounded intake and evidence for the chilling claim. Keep 12 eligible briefs, with full pool and feedback history preserved. Rankings are editorial hypotheses, not reader measurements. Final selection requires the independently reviewed queue merge.",
     "ranking": [
-      {
-        "key": "idea-what-keeps-a-moving-bicycle-upright",
-        "headline": "What keeps a moving bicycle upright?",
-        "description": "Follow what a small lean does to steering, then see what a purpose-built bicycle revealed about balancing.",
-        "hook": "A bicycle without the usual stabilising effects could still recover from a nudge.",
-        "rankReason": "First: a familiar puzzle with a controlled counterexample and a diagram readers can predict from. The paper and author project page support an experimentally self-stable riderless design, not one explanation for every bicycle. Keep speed, steering, mass distribution and rider control distinct.",
-        "relevance": "Evergreen; no current news or measured reader demand claim.",
-        "evidenceUrls": [
-          "https://pubmed.ncbi.nlm.nih.gov/21493856/",
-          "https://arendschwab.com/research/stablebicycle/"
-        ]
-      },
       {
         "key": "idea-how-a-falling-cat-turns-over",
         "headline": "How can a falling cat turn over in mid-air?",
