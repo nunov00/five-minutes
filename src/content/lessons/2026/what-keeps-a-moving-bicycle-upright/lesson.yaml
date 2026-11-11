@@ -31,11 +31,11 @@ imageRights:
   licence: Generated output under applicable OpenAI Europe terms; no exclusivity or copyright guarantee.
   evidence: 'Original built-in image generation, 9 November 2026, request 1. Full prompt and pre-dispatch reservation: issue #210 comment 6734824848. No source image. Conceptual bicycle, not the experimental rig. Metadata-stripped RGB WebP. SHA-256 dc0691137f6ed1e44e4e0e655da5424c7225142174800a968b63b3c8c4f04ce4'
   sourceUrl: https://openai.com/policies/eu-terms-of-use/
-- src: /lesson-media/what-keeps-a-moving-bicycle-upright-vsteer1.webp
+- src: /lesson-media/what-keeps-a-moving-bicycle-upright-vsteer2.webp
   origin: original-code
   creator: Five Minutes, OpenAI-assisted original diagram
   licence: Original project artwork; no third-party figure copied.
-  evidence: 'Deterministic original Pillow diagram based on sources 1 and 2, 9 November 2026. Schematic, not measured motion. Metadata-free RGB WebP. SHA-256 e2d1cfefed9e393fccc27da85e3990756b525aa0a9efb618d82a1f9ab2d46798'
+  evidence: 'Deterministic original Pillow diagram based on sources 1 and 2, 11 November 2026. Rear-view schematic of support moving towards the mass. Metadata-free RGB WebP. SHA-256 c60b822eaddc0bbf603ab6865f371b12de032a75db5134451103642ad51ae6c9'
 provenance:
   createdAt: '2026-11-09T07:41:51Z'
   createdBy:
