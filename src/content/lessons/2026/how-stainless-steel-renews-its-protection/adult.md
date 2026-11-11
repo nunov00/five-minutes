@@ -15,8 +15,7 @@ figure:
   height: 900
   afterParagraph: 2
   alt: A scratch interrupts a protective surface film; a new film can cover the exposed steel when oxygen is available.
-  caption: The barrier can renew; the groove stays. Cross-sections are schematic and not to scale.
-  description: Three cross-sections show stainless steel with an intact thin passive film, a scratch that removes the film and some underlying metal, and a protective film reforming along the exposed groove when oxygen is available in suitable conditions. The metal removed by the scratch does not return. Film thickness is greatly exaggerated for visibility.
+  caption: The barrier can renew; the groove stays. The drawings exaggerate the film’s thickness.
 ---
 A scratched stainless-steel sink can keep resisting corrosion even though the scratch remains visible. Something has repaired itself, but it is not the shape of the sink.
 

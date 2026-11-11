@@ -31,7 +31,6 @@ figures:
     afterParagraph: 2
     alt: A schematic cut-open kernel shows a tough outer hull and a starchy interior containing moisture.
     caption: Main parts, not to scale. Dots symbolise moisture; other seed tissues are omitted.[^2]
-    description: A tough hull surrounds starch containing moisture. Blue dots are symbols, not liquid pockets or measured molecules. The embryo and other seed tissues are omitted.
 - id: puff
   role: explanation
   figure:
@@ -42,7 +41,6 @@ figures:
     afterParagraph: 4
     alt: Three schematic stages show heating while the hull holds, rupture with expansion, and a foam that sets.
     caption: 'Schematic, not to scale: pressure rises, the hull breaks, starch expands, and the structure sets.[^1]'
-    description: The hull holds while starch softens. Rupture permits expansion; the stretched structure firms up. Arrows and spaces are conceptual, not microscopic observations.
 ---
 Why do a few kernels stay hard at the bottom of a bowl of popcorn? Heat alone does not guarantee a fluffy flake. The hull has to hold pressure while the starch softens, then release it so the starch can expand. A leak can disrupt that sequence.[^1]
 
