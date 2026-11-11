@@ -9,7 +9,7 @@ const items=figure.type==='comparison-bars'?figure.data.items:[];
 const maximum=Math.max(...items.map(item=>item.value))||1;
 const cycleNodes=nodes.map((node,index)=>({node,index,x:150+100*Math.sin(2*Math.PI*index/nodes.length),y:150-100*Math.cos(2*Math.PI*index/nodes.length)}));
 ---
-{figure.type==='orbital-motion' ? <div class="toolkit-figure orbit-mechanism" role="img" aria-label={figure.alt} aria-describedby={`${id}-description`}>
+{figure.type==='orbital-motion' ? <div class="toolkit-figure orbit-mechanism" role="img" aria-label={figure.alt} aria-describedby={figure.description ? `${id}-description` : undefined}>
  <svg viewBox="0 0 360 270" aria-hidden="true" focusable="false" data-visual-canvas>
   <defs>
    <marker id={`${id}-orbit-arrow`} viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10Z" class="motion-arrowhead"/></marker>
@@ -34,7 +34,7 @@ const cycleNodes=nodes.map((node,index)=>({node,index,x:150+100*Math.sin(2*Math.
   <g><text x="55" y="150" text-anchor="middle" data-visual-label>Station</text><text x="142" y="150" text-anchor="middle" data-visual-label>Astronaut</text><text x="235" y="150" text-anchor="middle" data-visual-label>Pencil</text></g>
  </svg>
  <p class="toolkit-note" aria-hidden="true">Station, astronaut and pencil share the fall. Schematic, not to scale; arrows show gravity.</p>
- </div> : figure.type==='concept-flow' && pattern==='cycle' ? <div class="toolkit-figure concept-cycle" role="img" aria-label={figure.alt} aria-describedby={`${id}-description`}>
+ </div> : figure.type==='concept-flow' && pattern==='cycle' ? <div class="toolkit-figure concept-cycle" role="img" aria-label={figure.alt} aria-describedby={figure.description ? `${id}-description` : undefined}>
  <svg viewBox="0 0 300 300" aria-hidden="true" focusable="false" class="concept-cycle-ring" data-visual-canvas>
   <circle cx="150" cy="150" r="100" class="concept-ring-track"/>
   {cycleNodes.map(({node,index,x,y})=> <g>
@@ -49,7 +49,7 @@ const cycleNodes=nodes.map((node,index)=>({node,index,x:150+100*Math.sin(2*Math.
  </svg>
  <ol class="concept-cycle-legend" aria-hidden="true">{nodes.map((node,index)=><li data-visual-label><b>{index+1}</b><span data-visual-copy>{node.label}</span></li>)}</ol>
  <p class="toolkit-note" aria-hidden="true">The final stage feeds back into the first.</p>
- </div> : figure.type==='concept-flow' ? <div class={`toolkit-figure concept-${pattern}`} role="img" aria-label={figure.alt} aria-describedby={`${id}-description`}>
+ </div> : figure.type==='concept-flow' ? <div class={`toolkit-figure concept-${pattern}`} role="img" aria-label={figure.alt} aria-describedby={figure.description ? `${id}-description` : undefined}>
  <ol class="concept-nodes" aria-hidden="true">
   {nodes.map((node,index)=><li class="concept-node" data-visual-label>
    <span class="concept-symbol"><svg viewBox="0 0 64 64" aria-hidden="true" focusable="false"><path d={FIGURE_SYMBOLS[node.symbol]}/></svg></span>
@@ -57,7 +57,7 @@ const cycleNodes=nodes.map((node,index)=>({node,index,x:150+100*Math.sin(2*Math.
    {pattern==='sequence' && index<nodes.length-1 && <span class="concept-arrow" aria-hidden="true">↓</span>}
   </li>)}
  </ol>
- </div> : figure.type==='comparison-bars' && <div class="toolkit-figure proportional-bars" role="img" aria-label={figure.alt} aria-describedby={`${id}-description`}>
+ </div> : figure.type==='comparison-bars' && <div class="toolkit-figure proportional-bars" role="img" aria-label={figure.alt} aria-describedby={figure.description ? `${id}-description` : undefined}>
  <ol aria-hidden="true">{items.map(item=><li data-visual-label>
   <div class="bar-copy"><strong data-visual-copy>{item.label}</strong><span data-visual-copy>{item.display}</span></div>
   <div class="proportional-track"><span style={`width:${100*item.value/maximum}%`}></span></div>

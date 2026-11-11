@@ -35,6 +35,16 @@ describe('weekly visual input boundary',()=>{
   expect(validatePresentation(p).issues).toEqual([]);
   expect(evaluateLessonPullRequest(c)).toMatchObject({applicable:true});
  });
+ it('accepts a figure without a long description at both boundaries',()=>{
+  const c=candidate(),p=setFigures(c,p=>{delete p.figures[1].figure.description;});
+  expect(validatePresentation(p).issues).toEqual([]);
+  expect(evaluateLessonPullRequest(c)).toMatchObject({applicable:true});
+ });
+ it.each([null,'','<strong>Markup</strong>','a'.repeat(901)])('rejects an invalid supplied description at both boundaries %#',description=>{
+  const c=candidate(),p=setFigures(c,p=>p.figures[1].figure.description=description);
+  expect(validatePresentation(p).valid).toBe(false);
+  expect(()=>evaluateLessonPullRequest(c)).toThrow(/description/);
+ });
  it.each([
   (p:any)=>p.opening='default',
   (p:any)=>p.opening=true,
