@@ -21,7 +21,12 @@ test('five visual slots retain positions, labels and decoding across sizes and t
 test('five positioned figures and their descriptions work without JavaScript',async({browser})=>{
  const context=await browser.newContext({javaScriptEnabled:false,viewport:{width:320,height:800}}),page=await context.newPage();
  await page.goto('http://127.0.0.1:4321/figure-fixtures/weekly/five');await expect(page.locator('article .lesson-figure')).toHaveCount(5);
+ const lead=page.locator('article .lesson-figure').first();
+ await expect(lead.locator('figcaption')).toBeVisible();
+ await expect(lead.getByRole('img')).toHaveAccessibleName(/Conceptual blue butterfly/);
+ await expect(lead.locator('.figure-description')).toHaveCount(0);
  const descriptions=page.locator('article .figure-description');
+ await expect(descriptions).toHaveCount(4);
  for(const description of await descriptions.all()){await description.locator('summary').click();await expect(description.locator('p')).toBeVisible();}
  await page.evaluate(()=>document.documentElement.style.fontSize='200%');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await context.close();
 });
