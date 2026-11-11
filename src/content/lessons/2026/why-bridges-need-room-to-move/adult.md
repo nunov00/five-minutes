@@ -15,8 +15,7 @@ figure:
   height: 900
   afterParagraph: 2
   alt: Two bridge sections lengthen towards a central gap when warmed, leaving a smaller gap.
-  caption: Warming narrows this movement gap. Movement is exaggerated; this is one simplified arrangement.
-  description: The cool row shows two deck sections with a gap between them. In the warm row, their outer ends stay in the same positions while each section lengthens towards the gap, making it narrower. Arrows mark the movement of their inner ends. Real bridge restraints and joint arrangements vary; this schematic does not specify a safe joint size.
+  caption: With the outer ends fixed in this example, the warmed sections expand into the gap. The drawing exaggerates the movement.
 ---
 A deliberate gap in a bridge can be part of what keeps it sound. Steel changes length as its temperature changes. Preventing all movement does not remove that tendency; it can turn it into large internal forces.
 

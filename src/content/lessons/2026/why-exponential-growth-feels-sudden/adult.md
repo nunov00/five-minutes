@@ -9,7 +9,6 @@ figure:
   type: comparison-bars
   alt: Repeated doubling grows from 1 to 32 in five steps, then from 32 to 1,024 in the next five steps.
   caption: Half the doubling steps produce only about three per cent of the final amount.
-  description: Starting from one, five doublings produce 32 and ten doublings produce 1,024. The first half of the time therefore accounts for only 32 of the final 1,024 units because every later doubling acts on a larger base.
   afterParagraph: 1
   data:
     style: doubling-growth

@@ -15,8 +15,7 @@ figure:
   height: 900
   afterParagraph: 2
   alt: Heat leaves equally warm skin faster through room-temperature metal than through room-temperature wood.
-  caption: Same starting temperature, different heat flow. Arrows are qualitative, not measured rates.
-  description: Both blocks start at 20°C, cooler than the skin touching them. Energy flows from skin into each block. The larger arrow through metal indicates faster heat transfer under comparable contact conditions. The smaller arrow through wood indicates slower transfer. The illustration compares the initial contact, not a permanent temperature difference between the untouched blocks.
+  caption: Both blocks start at 20°C. At first contact, heat leaves the skin faster through metal. The arrows show relative rates.
 ---
 A metal chair leg feels colder than its wooden seat, even after both have spent the night in the same room. A thermometer can report the same temperature for each. Your hand is responding to a different question: how quickly is it losing heat?
 
