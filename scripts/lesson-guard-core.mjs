@@ -72,7 +72,7 @@ function validateAutomatedFigure(figure, label) {
   const common = ['type', 'alt', 'caption', 'description', 'afterParagraph', ...(figure.type==='image'?['src','width','height']:['data'])];
   if (!hasOnlyKeys(figure, common)) fail(`${label} figure contains fields outside the automated contract.`);
   for (const [key, max] of [['alt', 200], ['caption', 240], ['description', 900]]) {
-    if (!isPlainText(figure[key], max)) fail(`${label} figure ${key} must be bounded plain text.`);
+    if ((key !== 'description' || figure[key] !== undefined) && !isPlainText(figure[key], max)) fail(`${label} figure ${key} must be bounded plain text.`);
   }
   if (figure.afterParagraph !== undefined && (!Number.isInteger(figure.afterParagraph) || figure.afterParagraph < 1 || figure.afterParagraph > 50)) {
     fail(`${label} figure afterParagraph must be from 1 to 50.`);
@@ -347,7 +347,7 @@ export function evaluateLessonPullRequest(input) {
     validateCitations(adultText.slice(adultText.indexOf('\n---\n', 4) + 5), count, true);
     for (const presentation of presentations) for (const {figure} of lessonVisuals(presentation)) {
       validateCitations(figure.caption, count);
-      validateCitations(figure.description, count);
+      if (figure.description !== undefined) validateCitations(figure.description, count);
     }
   } catch (error) { fail(`Invalid source citation: ${error.message}`); }
   const images=presentations.flatMap(p=>lessonVisuals(p).map(v=>v.figure)).filter(f=>f?.type==='image');

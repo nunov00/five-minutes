@@ -39,12 +39,7 @@ figures:
     afterParagraph: 6
     alt: A role-labelled chat history ends with an assistant turn. As Ice becomes Ice takes, the longer text
       is used for the next prediction.
-    caption: The next reply extends the same role-marked sequence. Each added piece joins the text used for
-      the following prediction. Simplified labels and invented text, not exact token boundaries.[^2][^4]
-    description: The user asks why ice floats, the assistant says ice is less dense, and the user asks to make
-      that simpler. The final assistant marker opens a reply. The word takes has just been added after Ice,
-      and an empty slot marks the next prediction. The arrow returns to the start of the whole conversation,
-      which now includes Ice takes.
+    caption: The next prediction uses the whole conversation so far, including the piece just added. The example uses whole words for clarity.[^2][^4]
 ---
 Ask a chatbot to explain why ice floats. Then write, “Make that simpler.” It can often stay on the same subject without you naming ice again. How does a machine built to predict small pieces of text produce something that feels like a conversation?[^4]
 

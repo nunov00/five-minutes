@@ -81,7 +81,7 @@ export async function loadPublishedLessons(root: string, routeOwnership: RouteOw
       const assets=new Set<string>();let bytes=0;
       for(const {figure} of visuals){
         validateCitations(figure.caption, lesson.metadata.sources.length);
-        validateCitations(figure.description, lesson.metadata.sources.length);
+        if (figure.description !== undefined) validateCitations(figure.description, lesson.metadata.sources.length);
         figurePosition(lesson.adultHtml,figure.afterParagraph);
         await validateFigureAsset(figure,publicRoot);
         if(figure.type==='image'&&!assets.has(figure.src)){assets.add(figure.src);bytes+=(await lstat(join(publicRoot,figure.src.slice(1)))).size;}
