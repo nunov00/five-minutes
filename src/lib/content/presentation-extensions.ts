@@ -7,7 +7,7 @@ import { RASTER_LIMITS, LOCAL_RASTER_PATH } from '../figures/raster.mjs';
 export interface FigureText {
   alt: string;
   caption: string;
-  description: string;
+  description?: string;
   /** Insert after this top-level prose paragraph; omitted means the opening. */
   afterParagraph?: number;
 }
@@ -67,7 +67,7 @@ export function validatePresentationExtensions(value: Record<string,unknown>, pa
       const common = ['type','alt','caption','description','afterParagraph'];
       const structured=['seasons-orbit','process-flow','cycle-flow','comparison-bars',...TOOLKIT_TYPES].includes(String(f.type));
       keys(f,[...common,...(structured?['data']:f.type==='image'?['src','width','height']:[])],`${path}.figure`,issues);
-      for(const [key,max] of [['alt',200],['caption',240],['description',900]] as const) if(!plain(f[key],max)) fail(`figure.${key}`,`Expected non-empty plain text (maximum ${max} characters).`);
+      for(const [key,max] of [['alt',200],['caption',240],['description',900]] as const) if((key !== 'description' || f[key] !== undefined) && !plain(f[key],max)) fail(`figure.${key}`,`Expected non-empty plain text (maximum ${max} characters).`);
       if(f.afterParagraph!==undefined && (!Number.isInteger(f.afterParagraph) || Number(f.afterParagraph)<1 || Number(f.afterParagraph)>50)) fail('figure.afterParagraph','Expected a prose paragraph position from 1 to 50.');
       if(TOOLKIT_TYPES.includes(String(f.type)) || (f.type==='comparison-bars' && object(f.data) && f.data.style==='proportional')) {
         for(const message of validateToolkitData(String(f.type), f.data)) fail('figure.data',message);

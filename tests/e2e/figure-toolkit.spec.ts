@@ -48,6 +48,7 @@ for(const lesson of toolkitLessons)for(const edition of ['adult'] as const)for(c
    await page.setViewportSize({width,height:900});await page.goto(`/${edition}/${lesson.metadata.slug}`);
    const rendered=page.locator(`[aria-labelledby="figure-${edition}-${lesson.metadata.id}-${visual.id}-caption"]`);await rendered.scrollIntoViewIfNeeded();
    await expect(rendered.getByRole('img')).toHaveAccessibleName(figure.alt);
+   await expect(rendered.locator('.figure-description')).toHaveCount(figure.description && visual.role !== 'lead' ? 1 : 0);
    expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
    if(figure.type==='image'){
     const image=rendered.locator('img');

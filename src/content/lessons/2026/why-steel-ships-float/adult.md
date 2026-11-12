@@ -43,11 +43,7 @@ figures:
     afterParagraph: 3
     alt: A submerged block has equal opposite sideways pushes and a larger upward water push than downward
       water push.
-    caption: Water pressure grows with depth. This leaves an overall upward force on the block. Qualitative
-      schematic.[^1][^2]
-    description: Water acts on every face of a fully submerged block. The sideways forces balance. The
-      bottom is deeper than the top, so the upward water force is larger than the downward water force.
-      The arrows compare forces qualitatively; they are not measured values and omit the block’s weight.
+    caption: Water pushes harder on the deeper face of the block. The arrows compare water forces only. The block’s weight acts separately.[^1][^2]
 - id: load
   role: explanation
   figure:
@@ -60,11 +56,6 @@ figures:
       two to three cubic metres.'
     caption: Same box hull in calm fresh water. The white interior is dry; the blue outside is water.
       Adding 1,000 kg requires about 1 m³ more displacement. Calculated example; schematic, not to scale.[^1][^3]
-    description: The same hull appears twice, before and after cargo is added. Its interior stays dry
-      and white while the surrounding water is blue. Total mass rises from 2,000 to 3,000 kg. Displaced
-      fresh water rises from about 2 to 3 cubic metres, so submerged depth increases. The orange rectangle
-      is cargo inside the dry hull. Hull-wall volume is simplified. These are hypothetical values, not
-      a real ship or safe-load specification.
 - id: load-lines
   role: explanation
   figure:

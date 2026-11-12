@@ -13,7 +13,6 @@ figure:
   afterParagraph: 2
   alt: Side view of an observer on Earth with both the Sun and the sunlit Moon above the local horizon.
   caption: Daylight does not put the Moon below your horizon. Side view; sizes and distances are not to scale.
-  description: The observer is on the sunlit side of Earth. Lines towards the Sun and Moon both rise above the observer's local horizon, so both bodies can be in the sky at once. Sunlight illuminates the Moon's Sun-facing half. This schematic shows simultaneous visibility, not a particular phase or rise time.
 ---
 The Moon in a blue afternoon sky is not in the wrong place. The familiar Sun-for-day, Moon-for-night picture is simply too restrictive.
 

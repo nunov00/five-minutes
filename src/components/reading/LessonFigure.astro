@@ -2,8 +2,8 @@
 import type { LessonFigure } from '../../lib/content/presentation-extensions';
 import ToolkitFigure from './ToolkitFigure.astro';
 import { renderCitationText } from '../../lib/content/safe-content';
-interface Props { figure: LessonFigure; id: string; eager?:boolean; openingLead?:boolean; sourceCount?:number; }
-const {figure,id,eager=false,openingLead=false,sourceCount=0}=Astro.props;
+interface Props { figure: LessonFigure; id: string; eager?:boolean; openingLead?:boolean; showDescription?:boolean; sourceCount?:number; }
+const {figure,id,eager=false,openingLead=false,showDescription=true,sourceCount=0}=Astro.props;
 const tilt=figure.type==='seasons-orbit'?figure.data.tiltDegrees:0;
 const angle=tilt*Math.PI/180;
 const axes=(cx:number)=>({northX:cx+56*Math.sin(angle),southX:cx-56*Math.sin(angle),northY:92-56*Math.cos(angle),southY:92+56*Math.cos(angle)});
@@ -16,7 +16,7 @@ const cycleCentre=visualStyle==='heat-transfer'?'Heat moves':visualStyle==='feed
 ---
 <figure class="lesson-figure" data-figure-type={figure.type} data-figure-style={visualStyle||undefined} aria-labelledby={`${id}-caption`} data-opening-lead={openingLead || undefined}>
  {toolkit ? <ToolkitFigure figure={figure} id={id}/> : figure.type==='image' ? <img src={figure.src} width={figure.width} height={figure.height} alt={figure.alt} loading={eager?"eager":"lazy"} decoding="async"/> : figure.type==='seasons-orbit' ? <>
-  <div class="season-panels" role="img" aria-label={figure.alt} aria-describedby={`${id}-description`}>
+  <div class="season-panels" role="img" aria-label={figure.alt} aria-describedby={figure.description ? `${id}-description` : undefined}>
    {panels.map(panel=>{
     const axis=axes(panel.earth);
     return <svg viewBox="0 0 320 218" aria-hidden="true" focusable="false">
@@ -35,7 +35,7 @@ const cycleCentre=visualStyle==='heat-transfer'?'Heat moves':visualStyle==='feed
    })}
   </div>
   <p class="diagram-key">Axis tilt: about {tilt}°. N = north; S = south. Schematic, not to scale.</p>
- </> : figure.type==='process-flow' ? <div class:list={["structured-figure","process-flow",`visual-${visualStyle}`]} role="img" aria-label={figure.alt} aria-describedby={`${id}-description`}>
+ </> : figure.type==='process-flow' ? <div class:list={["structured-figure","process-flow",`visual-${visualStyle}`]} role="img" aria-label={figure.alt} aria-describedby={figure.description ? `${id}-description` : undefined}>
   <div class="filter-illustration" data-visual-canvas aria-hidden="true">
    <svg viewBox="0 0 360 250" focusable="false">
     <defs>
@@ -65,7 +65,7 @@ const cycleCentre=visualStyle==='heat-transfer'?'Heat moves':visualStyle==='feed
     <strong>{step.label}</strong>
    </li>)}
   </ol>
- </div> : figure.type==='cycle-flow' ? <div class:list={["structured-figure","cycle-flow",`visual-${visualStyle}`]} role="img" aria-label={figure.alt} aria-describedby={`${id}-description`}>
+ </div> : figure.type==='cycle-flow' ? <div class:list={["structured-figure","cycle-flow",`visual-${visualStyle}`]} role="img" aria-label={figure.alt} aria-describedby={figure.description ? `${id}-description` : undefined}>
   <div class="cycle-canvas" data-visual-canvas aria-hidden="true">
    <svg class="cycle-track" viewBox="0 0 300 300" focusable="false">
     <circle cx="150" cy="150" r="100" pathLength="100" />
@@ -78,7 +78,7 @@ const cycleCentre=visualStyle==='heat-transfer'?'Heat moves':visualStyle==='feed
     </li>)}
    </ol>
   </div>
- </div> : figure.type==='comparison-bars' && <div class:list={["structured-figure","comparison-bars",`visual-${visualStyle}`]} role="img" aria-label={figure.alt} aria-describedby={`${id}-description`}>
+ </div> : figure.type==='comparison-bars' && <div class:list={["structured-figure","comparison-bars",`visual-${visualStyle}`]} role="img" aria-label={figure.alt} aria-describedby={figure.description ? `${id}-description` : undefined}>
   <ol class="growth-map" data-visual-canvas aria-hidden="true">
    {bars.map((item,index)=><li data-visual-label style={`--growth-stage:${index}`}>
     <span class="growth-label" data-visual-copy>{item.label}</span><strong data-visual-copy>{item.display}</strong>
@@ -88,5 +88,10 @@ const cycleCentre=visualStyle==='heat-transfer'?'Heat moves':visualStyle==='feed
   {figure.data.unit&&<p class="growth-unit" aria-hidden="true">{figure.data.unit}</p>}
  </div>}
  <figcaption id={`${id}-caption`} set:html={renderCitationText(figure.caption,sourceCount)}/>
- <details class="figure-description"><summary>Explanation of this figure</summary><p id={`${id}-description`} set:html={renderCitationText(figure.description,sourceCount)}/></details>
+ {figure.description && (figure.type !== 'image' || showDescription) && (
+  <details class="figure-description">
+   <summary>Explanation of this figure</summary>
+   <p id={`${id}-description`} set:html={renderCitationText(figure.description,sourceCount)} />
+  </details>
+ )}
 </figure>

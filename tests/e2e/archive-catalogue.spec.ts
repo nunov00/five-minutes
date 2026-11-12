@@ -41,8 +41,12 @@ for (const lesson of lessons) for (const edition of ['adult'] as const) {
             animations: 'disabled',
           });
         }
-        await figure.getByText('Explanation of this figure', { exact: true }).click();
-        await expect(figure.locator('.figure-description p')).toBeVisible();
+        const disclosure = figure.locator('.figure-description');
+        await expect(disclosure).toHaveCount(presentation.figure.description ? 1 : 0);
+        if (presentation.figure.description) {
+          await disclosure.locator('summary').click();
+          await expect(disclosure.locator('p')).toBeVisible();
+        }
       } else {
         await expect(figure).toHaveCount(0);
       }

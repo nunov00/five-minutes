@@ -31,11 +31,11 @@ figure:
   description: The sensor measures the result. Comparison identifies a difference from the goal. Adjustment changes the system, and the sensor measures the new result.
 ```
 
-Proportional items retain the existing `{label, value, display}` fields, with labels up to 24, display text up to 16 and an optional unit up to 40 characters. Editorial review must verify that displayed values and units agree with the numeric values; schema checks cannot establish factual accuracy. All types retain alt/caption/description and validated paragraph placement.
+Proportional items retain the existing `{label, value, display}` fields, with labels up to 24, display text up to 16 and an optional unit up to 40 characters. Editorial review must verify that displayed values and units agree with the numeric values; schema checks cannot establish factual accuracy. All types retain required alt text and captions, optional descriptions and validated paragraph placement.
 
 ## Multiple positioned visuals (ADR-0014)
 
-Keep the singular `figure` for unchanged lessons. A presentation may instead supply `figures`, one to five `{id, role, figure}` records; never both fields. IDs are unique, at most 20 characters. Roles are `lead`, `explanation` or `evidence`; a single optional lead must be a raster. Each inner figure uses the same closed representation and requires `afterParagraph`. Placement follows actual top-level prose paragraphs; ties retain array order. Raster originals can hold purpose-drawn diagrams when app-owned types are unsuitable. Do not force the topic into generic icons.
+Keep the singular `figure` for unchanged lessons. A presentation may instead supply `figures`, one to five `{id, role, figure}` records; never both fields. IDs are unique, at most 20 characters. Roles are `lead`, `explanation` or `evidence`; a single optional lead must be a raster. Each inner figure uses the same closed representation and requires `afterParagraph`. Lead artwork displays its caption and alt text. A supplied description appears as a disclosure for explanation and evidence roles and for legacy singular figures. Placement follows actual top-level prose paragraphs; ties retain array order. Raster originals can hold purpose-drawn diagrams when app-owned types are unsuitable. Do not force the topic into generic icons.
 
 New sources may also use `<slug>[-rYYYYMMDD]-v<token>.png|webp` with a bounded token. Preserve existing bytes and use a fresh revision-safe name for a replacement. The five-source ceiling and aggregate count include retained sources. Rights records cover distinct sources exactly. Lead thumbnails and share images are created by the trusted build; see ADR-0014 for their separate output bounds.
 
