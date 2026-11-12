@@ -32,6 +32,16 @@ figures:
     alt: Two rear views show wheel support moving left, closer to the vertical line under the bicycle’s mass.
     caption: Steering left moves the wheel support closer to the line beneath the mass. Rear-view schematic, with positions exaggerated for clarity.[^1][^2]
     description: The orange dot marks the mass and the dashed line shows the ground directly beneath it. Before steering, the wheel support is well to the right. After steering, the blue arrow shows the support moving left towards that line.
+- id: hinge
+  role: explanation
+  figure:
+    type: image
+    src: /lesson-media/what-keeps-a-moving-bicycle-upright-vhinge1.webp
+    width: 1120
+    height: 420
+    afterParagraph: 6
+    alt: From the side, the front assembly’s mass sits low and ahead of the dashed steering axis.
+    caption: The orange dot marks the front mass. When the bike leans, this mass can swing around the tilted steering axis towards the low side. Schematic, not to scale.[^1][^2]
 ---
 A bicycle is easy to tip when it stands still. Yet a bicycle rolling fast enough can sometimes recover from a sideways shove with nobody on the saddle. In 2011, researchers built one that did this even after they cancelled an effect often credited with keeping bicycles upright.[^1]
 
@@ -49,6 +59,6 @@ The researchers built a bicycle that looked more like a small scooter. Extra whe
 
 ## Why this one steered
 
-The researchers put the weight of the steering assembly low down and ahead of the steering axis. Think of a short pencil and a tall broomstick balanced upright: if both start to tip, the short one tends to fall faster. On the test bicycle, the low front assembly tends to fall faster than the higher rear frame. The steering hinge joins the two. When the bicycle leans left, the steering axis tilts with it. The weight ahead of that axis can drop further by swinging around the hinge towards the low side. That swing turns the front wheel left, moving its path back towards the mass. The geometry helps explain the direction of steering. Recovery still depends on how far and how quickly the wheel turns.[^1][^2]
+The researchers put the weight of the steering assembly low down and ahead of the steering axis. Think of a short pencil and a tall broomstick balanced upright: if both start to tip, the short one tends to fall faster. On the test bicycle, the low front assembly tends to fall faster than the higher rear frame. The steering hinge joins the two. When the bicycle leans left, the steering axis tilts with it. The weight ahead of that axis can move lower by swinging around the hinge towards the low side. That swing turns the front wheel left, moving its path back towards the mass. The geometry helps explain the direction of steering. Recovery still depends on how far and how quickly the wheel turns.[^1][^2]
 
 The experiment gives a way to test the explanation. If a bicycle can recover with those two familiar effects taken away, neither is essential. Both can still matter on an ordinary bicycle. What the machine needs is a steering response that catches the lean before it grows.[^1]
