@@ -1422,19 +1422,30 @@
     }
   ],
   "pipeline": {
-    "assessedAt": "2026-11-08T07:13:17.116Z",
-    "summary": "Sunday 8 November 2026 assessment of the current pool, catalogue, recent releases and open work. Propose bicycle self-stability first, followed by cat righting and aircraft-window stress. The experimental bicycle gives a familiar object a testable surprise and follows the recent chatbot lesson with physical reasoning. Append five Owner-suggested ideas at ordinary priority; the onion idea remains in #210 for a later bounded intake and evidence for the chilling claim. Keep 12 eligible briefs, with full pool and feedback history preserved. Rankings are editorial hypotheses, not reader measurements. Final selection requires the independently reviewed queue merge.",
+    "assessedAt": "2026-11-15T07:10:56.245Z",
+    "summary": "Sunday 15 November 2026 assessment after the bicycle publication. Propose cat righting first, with mirrors and rounded aircraft windows next. The cat treatment offers a clear visual prediction and a new mechanism for this catalogue: turning by changing shape while total angular momentum stays zero. Mirrors offer an immediate home observation; aircraft stress requires more historical qualification. Retain the eleven existing shortlist members and all entries and feedback. No additions or measured demand claims. Final selection requires the independently reviewed queue merge.",
     "ranking": [
       {
         "key": "idea-how-a-falling-cat-turns-over",
         "headline": "How can a falling cat turn over in mid-air?",
-        "description": "Follow two parts of a changing body to see how the cat can turn without pushing against anything.",
-        "hook": "How does a cat rotate when there is nothing to push on?",
-        "rankReason": "Second: vivid visual puzzle and a transferable insight about rotation. The model takes more careful explanation than the bicycle experiment; avoid an oversimplified front/back twist or any implied guarantee of safe landings.",
+        "description": "Follow a bending body through a sequence of shapes to see how a cat can end up facing a different way without an external twist.",
+        "hook": "A falling cat can turn even if it starts with no spin.",
+        "rankReason": "First: a vivid puzzle with an explanation worth retelling. Kane and Scher give a zero-angular-momentum bending model that can be explained with a short sequence of visual poses. Treat the model as evidence for what is physically possible and avoid implying that every cat uses the same sequence or lands safely.",
         "relevance": "Evergreen; no current news or measured reader demand claim.",
         "evidenceUrls": [
           "https://ntrs.nasa.gov/citations/19690058843",
-          "https://www.sciencedirect.com/science/article/abs/pii/0020768369900869"
+          "https://pentagono.uniandes.edu.co/~jarteaga/geosem/taller7/minicursoJK-Uniandes/robotic%20examples/kane.pdf"
+        ]
+      },
+      {
+        "key": "idea-why-mirrors-seem-to-reverse-left-and-right",
+        "headline": "Why does a mirror reverse left and right but not up and down?",
+        "description": "Point towards a flat mirror, then compare what the glass reflects with what happens when you turn around.",
+        "hook": "Raise your right hand: the image moves on the same side of the room.",
+        "rankReason": "Second: readers can try the puzzle immediately. OpenStax plane-mirror geometry supports a top-view figure showing that depth is reversed while the axes parallel to the glass are preserved. The payoff is narrower than the falling-cat puzzle.",
+        "relevance": "Evergreen optics and spatial reasoning; no time-sensitive premise.",
+        "evidenceUrls": [
+          "https://openstax.org/books/university-physics-volume-3/pages/2-1-images-formed-by-plane-mirrors"
         ]
       },
       {
@@ -1442,20 +1453,12 @@
         "headline": "Why aircraft windows have rounded corners",
         "description": "Connect a familiar window shape to stress around an opening and repeated cabin-pressure loading.",
         "hook": "A small change in shape can change where stress builds up.",
-        "rankReason": "Third: a shape travellers recognise and a clear comparison of stress around openings. The FAA case supports repeated pressurisation and fatigue at a cutout. Avoid attributing Comet failures to square passenger windows alone. The bicycle offers a cleaner experiment for this week’s opening puzzle.",
+        "rankReason": "Third: a familiar window shape leads to a useful distinction between repeated pressure loading and where stress concentrates. The Comet inquiry supports fatigue near an aerial aperture at Elba and a separate test failure at a window corner. Avoid the claim that square passenger windows alone caused the crashes.",
         "relevance": "Evergreen engineering; no accident news hook or safety advice.",
         "evidenceUrls": [
+          "https://www.faa.gov/sites/faa.gov/files/2022-10/G-ALYP_Report_0.pdf",
           "https://www.faa.gov/lessons_learned/transport_airplane/accidents/G-ALYV"
         ]
-      },
-      {
-        "key": "idea-why-mirrors-seem-to-reverse-left-and-right",
-        "headline": "Why does a mirror reverse left and right but not up and down?",
-        "description": "Use reflection geometry and the difference between reflection and physically turning around to show that a mirror reverses front-to-back, not one chosen horizontal direction.",
-        "hook": "A mirror seems to swap your left and right while leaving your head above your feet.",
-        "rankReason": "Strong everyday puzzle with a precise orientation comparison; fourth gives a different visual and conceptual subject after the leading computing and engineering treatments. Exact labelled geometry and a fresh source check remain necessary.",
-        "relevance": "Evergreen optics and spatial reasoning; no time-sensitive premise.",
-        "evidenceUrls": []
       },
       {
         "key": "idea-why-a-wet-towel-looks-darker",
