@@ -89,6 +89,16 @@ test('lesson thumbnails sit beside titles in Library and Topics without JavaScri
  for(const path of ['/library','/topics/science']){
   await page.goto(`http://127.0.0.1:4321${path}`);
   const card=page.locator('.lesson-card').filter({has:page.locator('a[href="/adult/why-popcorn-pops"]')});
+  if(path==='/library'){
+   const next=page.getByRole('navigation',{name:'Library pages'}).getByRole('link',{name:'Next',exact:true});
+   const visited=new Set<string>();
+   while(await card.count()===0 && await next.count()>0){
+    expect(visited.has(page.url()),'Library pagination should advance').toBe(false);
+    visited.add(page.url());
+    await next.click();
+   }
+  }
+  await expect(card,'Popcorn must be reachable in this listing').toHaveCount(1);
   const image=card.locator('.lesson-thumbnail');
   await image.scrollIntoViewIfNeeded();
   await expect.poll(()=>image.evaluate((el:HTMLImageElement)=>el.complete&&el.naturalWidth>0)).toBe(true);
