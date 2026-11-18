@@ -13,11 +13,11 @@ related:
   manual: []
   exclude: []
 sources:
-  - title: Kane and Scher (1969), A dynamical explanation of the falling cat phenomenon
+  - title: Kane and Scher (1969), A dynamical explanation of the falling cat phenomenon (DOI 10.1016/0020-7683(69)90086-9)
     url: https://pentagono.uniandes.edu.co/~jarteaga/geosem/taller7/minicursoJK-Uniandes/robotic%20examples/kane.pdf
     publisher: International Journal of Solids and Structures, hosted by Universidad de los Andes
     accessedAt: 2026-11-16
-    note: Pages 663–670 describe the two-body model, the forward–side–back–side–forward bend and the zero angular momentum condition.
+    note: Pages 663–670 describe the two-body model, the forward–side–back–side–forward bend and the zero angular momentum condition. Stable DOI https://doi.org/10.1016/0020-7683(69)90086-9; the URL above is the accessible full-text copy.
   - title: Montgomery (1993), Gauge theory of the falling cat
     url: https://www-thphys.physics.ox.ac.uk/talks/CMTjournalclub/sources/Montgomery_1993.PDF
     publisher: Fields Institute Communications, hosted by the University of Oxford
@@ -30,11 +30,11 @@ imageRights:
     licence: Generated output under applicable OpenAI Europe terms; no exclusivity or copyright guarantee.
     evidence: "Built-in image generation, 16 November 2026, request 1. Full prompt and reservation #210 comment 6910234170. No input image. Conceptual illustration. Metadata-stripped RGB WebP. SHA-256 b44f564bd77d7009ed2068d9de405e529f20216a1be51066f212e71f8c62b4ba"
     sourceUrl: https://openai.com/policies/eu-terms-of-use/
-  - src: /lesson-media/how-a-falling-cat-turns-over-vloop1.webp
+  - src: /lesson-media/how-a-falling-cat-turns-over-vstages1.webp
     origin: original-code
     creator: Five Minutes, OpenAI-assisted original diagram
     licence: Original project artwork; no third-party figure copied.
-    evidence: Deterministic Pillow schematic based on the bend sequence in sources 1 and 2. Metadata-free RGB WebP. SHA-256 da29320ecb48a99cb89430587bde645dbbb9ca926d7232dea92284ebcfca898a
+    evidence: Original deterministic schematic, 18 November 2026, calculated from Kane–Scher equations (5)–(7), J/I=0.25, alpha=45.5 degrees and beta=70.52968854 degrees. Integrated over one bend cycle to a 180-degree turn; finite-difference angular-momentum residual below 0.000001 I per unit bend rate. Original project drawing, no source figure copied. SHA-256 b054e7a78dfb39bbc7d841a2a82b3cb8532e95d777853d2c28982c47bc8ccddd
 provenance:
   createdAt: 2026-11-16T07:30:26.840Z
   createdBy:
