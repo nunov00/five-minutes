@@ -24,13 +24,13 @@ figures:
     role: explanation
     figure:
       type: image
-      src: /lesson-media/how-a-falling-cat-turns-over-vstages1.webp
+      src: /lesson-media/how-a-falling-cat-turns-over-vstages2.webp
       width: 900
-      height: 1580
+      height: 900
       afterParagraph: 7
-      alt: Three views of an orange front half and teal rear half show the yellow feet above the body, sideways, then below it. The floor stays fixed.
-      caption: One calculated bend cycle. Yellow tips mark feet; curved arrows mark axial turns. The final bend matches the start, with feet now down. Schematic, with shapes exaggerated.[^1][^2]
-      description: Orange marks the front and teal the rear. Dashed lines extend their long axes. The arrows follow each half’s axial spin; the foot markers show the overall change of orientation against a fixed floor. The diagram shows a model calculation, with equal idealised halves and zero total angular momentum, rather than measured cat poses.
+      alt: Start and finish views sit side by side, with yellow feet pointing up and down. Below them, an oblique halfway view shows the feet pointing sideways and a small backward bend.
+      caption: Compare start and finish above the same floor. The larger halfway view shows the small back bend. Yellow tips mark feet; arrows mark axial turns. Calculated schematic, with shapes exaggerated.[^1][^2]
+      description: Orange marks the front and teal the rear. The camera and floor direction stay fixed. Start and finish share the top row so they can be compared together. The halfway view is enlarged, with the feet pointing horizontally in space. Its oblique view shows depth as well as height. Dashed lines extend the long axes. These are samples from one idealised zero-angular-momentum bend cycle, rather than measured cat poses.
 ---
 A cat that starts falling upside down can turn its feet towards the ground even if it starts with no spin. There is nothing solid to push against. The trick is that the cat can change its shape as it falls.[^1]
 
@@ -46,9 +46,9 @@ Engineers Thomas Kane and M. P. Scher represented the cat with two linked bodies
 
 The two halves each turn around their own long axis as the join bends. The front points one way along the body and the rear points the other way, so their turns can balance each other. Yet those long axes are angled. Turning around one is a different movement from turning around the other. As the bend moves, the axes change direction too.[^1]
 
-You can check why direction matters with a book. Hold it upright with its front cover facing you. Give it a quarter-turn around a vertical line through its centre, then a quarter-turn around a horizontal line running left to right across the room. Start again, and do those same turns in reverse order. Keep using the room’s vertical and horizontal directions. The cover ends facing different ways. Turns about different axes cannot simply be added and subtracted like steps along a straight line.[^2]
+Before you try the book exercise, predict whether changing the order of the turns will leave the cover facing the same way. Make your prediction, then follow these steps. Hold it upright with its front cover facing you. Give it a quarter-turn around a vertical line through its centre, then a quarter-turn around a horizontal line running left to right across the room. Start again, and do those same turns in reverse order. Keep using the room’s vertical and horizontal directions. The cover ends facing different ways. Turns about different axes cannot simply be added and subtracted like steps along a straight line.[^2]
 
-The cat model uses that same dependence on the directions of the turns. While the bend travels around the join, each half keeps adjusting to the other. Those adjustments always balance the total angular momentum, but they happen about changing axes. The picture below follows a calculated example: the yellow feet start above the two halves, move to the side, and finish below them. The halves have returned to their starting bend, while the whole model has turned over relative to the floor.[^1][^2]
+The cat model uses that same dependence on the directions of the turns. While the bend travels around the join, each half keeps adjusting to the other. Those adjustments always balance the total angular momentum, but they happen about changing axes. The picture below follows a calculated example: the yellow feet start above the two halves and finish below them. The enlarged halfway view shows the feet pointing sideways and the smaller backward bend. The halves have returned to their starting bend, while the whole model has turned over relative to the floor.[^1][^2]
 
 Imagine instead that the model bends to one side and retraces its movement exactly. Each adjustment runs in reverse, so that simple out-and-back motion undoes itself. Going around a loop of bends gives a different result. What matters is the sequence of shapes as well as the starting and ending shapes.[^2]
 
