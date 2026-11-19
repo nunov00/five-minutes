@@ -34,7 +34,7 @@ imageRights:
     origin: original-code
     creator: Five Minutes, OpenAI-assisted original diagram
     licence: Original project artwork; no third-party figure copied.
-    evidence: "Original deterministic schematic, 19 November 2026. Same source-derived model and parameters as vstages1: Kane–Scher equations (5)–(7), J/I=0.25, alpha=45.5 degrees, beta=70.52968854 degrees. Start and finish arranged together, with an enlarged oblique halfway view. Axial arrow signs checked against the calculated body rates. Turn 179.99999999 degrees; momentum residual below 0.000001 I per unit bend rate. No source figure copied. SHA-256 42ba39cae8a2e90f3fc1468f5ca38a113086328f1a2fec5dca08cc7bbdcc7da8"
+    evidence: "Original deterministic schematic, 19 November 2026. Same source-derived model and parameters as vstages1: Kane–Scher equations (5)–(7), J/I=0.25, alpha=45.5 degrees, beta=70.52968854 degrees. Start and finish arranged together, with an enlarged oblique halfway view. Axial arrow signs checked against the calculated body rates. Turn 179.99999999 degrees; momentum residual below 0.000001 I per unit bend rate. No source figure copied. SHA-256 7324519fb2044071b28a582c1f0147455906855aafd9d18af5d6ec44ad031565"
 provenance:
   createdAt: 2026-11-16T07:30:26.840Z
   createdBy:
