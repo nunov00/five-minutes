@@ -1369,14 +1369,17 @@
       "kind": "new",
       "slug": "how-a-falling-cat-turns-over",
       "title": "How can a falling cat turn over in mid-air?",
-      "state": "queued",
+      "state": "complete",
       "priority": 200,
       "queuedAt": "2026-11-08T07:13:17.116Z",
       "reason": "Owner topic intake on #210, 1 November 2026. Explore changes in body shape and angular momentum.",
       "criteria": [
         "Verify the original mechanical model and its limits. Explain how reorientation can occur with negligible external torque.",
         "Use clearly ordered silhouettes or diagrams. Do not involve or suggest dropping an animal."
-      ]
+      ],
+      "completedAt": "2026-11-20T05:00:00+01:00",
+      "destinationId": "c620279b-e709-4ace-88fc-4267c3a883e7",
+      "destinationSlug": "how-a-falling-cat-turns-over"
     },
     {
       "key": "idea-why-a-wet-towel-looks-darker",
@@ -1425,18 +1428,6 @@
     "assessedAt": "2026-11-15T07:10:56.245Z",
     "summary": "Sunday 15 November 2026 assessment after the bicycle publication. Propose cat righting first, with mirrors and rounded aircraft windows next. The cat treatment offers a clear visual prediction and a new mechanism for this catalogue: turning by changing shape while total angular momentum stays zero. Mirrors offer an immediate home observation; aircraft stress requires more historical qualification. Retain the eleven existing shortlist members and all entries and feedback. No additions or measured demand claims. Final selection requires the independently reviewed queue merge.",
     "ranking": [
-      {
-        "key": "idea-how-a-falling-cat-turns-over",
-        "headline": "How can a falling cat turn over in mid-air?",
-        "description": "Follow a bending body through a sequence of shapes to see how a cat can end up facing a different way without an external twist.",
-        "hook": "A falling cat can turn even if it starts with no spin.",
-        "rankReason": "First: a vivid puzzle with an explanation worth retelling. Kane and Scher give a zero-angular-momentum bending model that can be explained with a short sequence of visual poses. Treat the model as evidence for what is physically possible and avoid implying that every cat uses the same sequence or lands safely.",
-        "relevance": "Evergreen; no current news or measured reader demand claim.",
-        "evidenceUrls": [
-          "https://ntrs.nasa.gov/citations/19690058843",
-          "https://pentagono.uniandes.edu.co/~jarteaga/geosem/taller7/minicursoJK-Uniandes/robotic%20examples/kane.pdf"
-        ]
-      },
       {
         "key": "idea-why-mirrors-seem-to-reverse-left-and-right",
         "headline": "Why does a mirror reverse left and right but not up and down?",
