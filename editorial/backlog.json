@@ -1425,18 +1425,19 @@
     }
   ],
   "pipeline": {
-    "assessedAt": "2026-11-15T07:10:56.245Z",
-    "summary": "Sunday 15 November 2026 assessment after the bicycle publication. Propose cat righting first, with mirrors and rounded aircraft windows next. The cat treatment offers a clear visual prediction and a new mechanism for this catalogue: turning by changing shape while total angular momentum stays zero. Mirrors offer an immediate home observation; aircraft stress requires more historical qualification. Retain the eleven existing shortlist members and all entries and feedback. No additions or measured demand claims. Final selection requires the independently reviewed queue merge.",
+    "assessedAt": "2026-11-22T07:27:36Z",
+    "summary": "Sunday 22 November 2026 assessment after the published bicycle and falling-cat lessons. Propose the mirror reflection-versus-rotation puzzle first, rounded aircraft windows second and Eratosthenes third. The mirror offers an immediate observation and a precise spatial prediction; aircraft fatigue needs more historical qualification, while Eratosthenes needs a calculation and explicit reconstruction limits. Move wet towel below Eratosthenes until fabric-specific optical support is established. Reviewed the full pool and catalogue for overlap; retain all ten existing shortlist members and every pool record/feedback unchanged. No new ideas, source-audit or measured-demand claim. Final selection requires independent review and merge of this Sunday queue.",
     "ranking": [
       {
         "key": "idea-why-mirrors-seem-to-reverse-left-and-right",
-        "headline": "Why does a mirror reverse left and right but not up and down?",
-        "description": "Point towards a flat mirror, then compare what the glass reflects with what happens when you turn around.",
+        "headline": "Why does a mirror seem to swap left and right?",
+        "description": "Raise one hand, then compare a reflection with physically turning around. The difference explains the apparent swap.",
         "hook": "Raise your right hand: the image moves on the same side of the room.",
-        "rankReason": "Second: readers can try the puzzle immediately. OpenStax plane-mirror geometry supports a top-view figure showing that depth is reversed while the axes parallel to the glass are preserved. The payoff is narrower than the falling-cat puzzle.",
+        "rankReason": "First: the reader can test the puzzle immediately and leave able to predict which direction a flat mirror reverses. OpenStax ray geometry and UNSW demonstrations support a reflection-versus-rotation comparison. Prefer this direct, small observation to the aircraft history burden and the shadow calculation; the central insight is distinct from recent cat/bicycle mechanics and butterfly/rainbow optics.",
         "relevance": "Evergreen optics and spatial reasoning; no time-sensitive premise.",
         "evidenceUrls": [
-          "https://openstax.org/books/university-physics-volume-3/pages/2-1-images-formed-by-plane-mirrors"
+          "https://openstax.org/books/university-physics-volume-3/pages/2-1-images-formed-by-plane-mirrors",
+          "https://animations.physics.unsw.edu.au/jw/light/mirrors-and-images.htm"
         ]
       },
       {
@@ -1444,7 +1445,7 @@
         "headline": "Why aircraft windows have rounded corners",
         "description": "Connect a familiar window shape to stress around an opening and repeated cabin-pressure loading.",
         "hook": "A small change in shape can change where stress builds up.",
-        "rankReason": "Third: a familiar window shape leads to a useful distinction between repeated pressure loading and where stress concentrates. The Comet inquiry supports fatigue near an aerial aperture at Elba and a separate test failure at a window corner. Avoid the claim that square passenger windows alone caused the crashes.",
+        "rankReason": "Second: a familiar window invites a worthwhile engineering explanation of stress concentration and repeated loading. FAA directly supports the distinction between the tank-test escape-hatch failure and the Elba ADF aperture fracture. More qualification and technical visual work than the mirror comparison; avoid a square-passenger-windows-alone accident story.",
         "relevance": "Evergreen engineering; no accident news hook or safety advice.",
         "evidenceUrls": [
           "https://www.faa.gov/sites/faa.gov/files/2022-10/G-ALYP_Report_0.pdf",
@@ -1452,25 +1453,25 @@
         ]
       },
       {
-        "key": "idea-why-a-wet-towel-looks-darker",
-        "headline": "Why does a wet towel look darker?",
-        "description": "Use a familiar observation to ask how wet fibres change the light reaching your eyes.",
-        "hook": "The same towel can look like two different colours.",
-        "rankReason": "An immediate observation with an appealing before-and-after visual. The original optics paper supports conditional darkening mechanisms, but fibre-specific evidence remains necessary before choosing an explanation.",
-        "relevance": "Evergreen; no current news or measured reader demand claim.",
-        "evidenceUrls": [
-          "https://www.wgtn.ac.nz/scps/about/staff/pdf/darkerwhenwet.pdf"
-        ]
-      },
-      {
         "key": "idea-how-eratosthenes-measured-earth",
         "headline": "How did Eratosthenes measure Earth with shadows?",
         "description": "Use two locations, one shadow angle and a distance to reconstruct an estimate of Earth’s size.",
         "hook": "A small fraction of a circle can give the size of the whole planet.",
-        "rankReason": "One memorable diagram and a calculation worth retelling. The later account supports the geometry, but the historical assumptions and units require separate care.",
+        "rankReason": "Third: a small shadow angle leading to a planetary circumference is worth retelling. The accessible scholarly account identifies Cleomedes as the later ancient source and explains the angle fraction and distance. The geometry is feasible, but historical reconstruction, alignment assumptions and uncertain stade length require care; do not promise exact modern accuracy.",
         "relevance": "Evergreen; no current news or measured reader demand claim.",
         "evidenceUrls": [
           "https://mathshistory.st-andrews.ac.uk/DSB/Eratosthenes.pdf"
+        ]
+      },
+      {
+        "key": "idea-why-a-wet-towel-looks-darker",
+        "headline": "Why does a wet towel look darker?",
+        "description": "Use a familiar observation to ask how wet fibres change the light reaching your eyes.",
+        "hook": "The same towel can look like two different colours.",
+        "rankReason": "Fourth, behind Eratosthenes: highly immediate observation and before/after visual, but the conditional optical mechanisms still need fabric-specific corroboration before drafting. Keep the idea available rather than treating the earlier generic wet-surface paper as a complete towel explanation.",
+        "relevance": "Evergreen; no current news or measured reader demand claim.",
+        "evidenceUrls": [
+          "https://www.wgtn.ac.nz/scps/about/staff/pdf/darkerwhenwet.pdf"
         ]
       },
       {
