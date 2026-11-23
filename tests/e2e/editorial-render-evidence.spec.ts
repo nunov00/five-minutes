@@ -28,6 +28,7 @@ test('latest illustrated release has full no-script editorial renders and artwor
    const figures=page.locator('article .lesson-figure');
    await expect(figures).toHaveCount(lessonVisuals(presentation).length);
    for(const img of await figures.locator('img').all()){
+    await img.scrollIntoViewIfNeeded();
     await expect.poll(()=>img.evaluate((el:HTMLImageElement)=>el.complete&&el.naturalWidth>0)).toBe(true);
    }
    const references=page.locator('article a[href^="#source-"]');
@@ -61,6 +62,7 @@ test('latest illustrated release has full no-script editorial renders and artwor
     }
     await expect(card).toHaveCount(1);await expect(card.getByRole('link')).toHaveAccessibleName(presentation.title);
     const thumbnail=card.locator('img');
+    await thumbnail.scrollIntoViewIfNeeded();
     await expect.poll(()=>thumbnail.evaluate((el:HTMLImageElement)=>({loaded:el.complete,width:el.naturalWidth,height:el.naturalHeight}))).toEqual({loaded:true,width:480,height:320});
     if(capture)await card.screenshot({path:info.outputPath(`visual-editorial-card-${latest.metadata.slug}-393-${colorScheme}-noscript.png`)});
    }
