@@ -27,10 +27,10 @@ The Owner found the published falling-cat lesson long-winded and hard to follow,
 ## Changes in this PR
 
 1. **Teach quickly, then go deeper** (EDITORIAL): a hook in the first paragraph, the quick answer by the end of the second, a short core (guidance about 150–350 words), a one-line payoff, then an optional extra-depth section (guidance under about 200 words) that readers may skip, and a prompt stop. Lessons need not be exhaustive.
-2. **Plain-writing rules** (EDITORIAL, Clear English): show things moving, one idea per paragraph, activities as short numbered steps, name researchers only when they matter, no backward-pointing abstractions, write it as you would say it. At most one citation marker per paragraph, normally at its end.
-3. **Cold-reader test** (EDITORIAL): a fresh helper with no sources or PR context reads the lesson once, retells the core idea in three sentences and lists sentences it had to re-read and unknown words. A failure in the hook, quick answer or core is IMPORTANT.
+2. **Plain-writing rules** (EDITORIAL, Clear English): show things moving, one idea per paragraph, activities as short numbered steps, name researchers only when they matter, no backward-pointing abstractions, write it as you would say it. Prefer one citation marker per paragraph, at its end, when attribution is clear; otherwise each marker sits beside its claim.
+3. **Cold-reader test** (EDITORIAL): a fresh helper meets the lesson as a reader does (title, description and cover, then the opening and core with figures in place), without sources, PR context or scores. It reads once, explains the main idea and mechanism in three sentences and lists re-read sentences and unknown words. If it cannot explain the idea, the lesson needs revision; a reported re-read prompts the reviewer to identify the concrete comprehension gap before recording IMPORTANT. Without a fresh helper, the result is labelled a self-edit or repeat read.
 4. **Clarity cap, "What would I cut?" and a revision length check** (EDITORIAL, weekly contract): no 9 or 10 while the cold-reader test fails; every review names something to cut; every revision reports its word-count change and fixes weak text by replacing it rather than adding beside it.
-5. **Explanatory figure rules** (EDITORIAL, figure toolkit): a one-line figure brief, recognisable objects instead of labelled boxes, few labels and no decoding legend, short stage strips, a finish that matches the lead, and a thumbnail test. A correct but unattractive figure is REWORK.
+5. **Explanatory figure rules** (EDITORIAL, figure toolkit): a one-line figure brief, recognisable objects instead of labelled boxes, few labels and no legend needed to say what a drawing's parts are (a short key for chart series is fine), short stage strips and a finish that matches the lead. Each figure is judged in its role at phone width in the article; the thumbnail and share checks stay with the cover. A correct but unattractive figure is REWORK.
 
 ## Defaults the Owner is asked to confirm
 
@@ -39,7 +39,7 @@ The Owner found the published falling-cat lesson long-winded and hard to follow,
 | Adopt all five changes? | Yes | They address separate causes: shape, wording, review evidence, incentives and figures. |
 | Hard or soft numeric limits? | Soft guidance. Paragraph, step, label and word figures are prompts to cut, not pass marks. The cold-reader test is the hard check. | Matches EDITORIAL's existing refusal of numeric pass marks; a reader-based test targets the real failure. |
 | Cold-reader helper on every review? | Yes, where a fresh helper is available; otherwise the reviewer does the cold read and says so. | One short extra read per round; it is part of the existing review, not a new round. |
-| When does it start? | Cycle beginning Sunday 29 November 2026. The candidate in review when this merges finishes under its starting rules. | Avoids changing the rules mid-cycle. |
+| When does it start? | One candidate-level rule for authoring, review and Friday: candidates first drafted after the merge, which for weekly production means the first Sunday cycle after the merge (29 November 2026 if merged before then). A candidate drafted earlier finishes, including later heads, under its starting rules. Narrow corrections keep their exception. | Avoids changing the rules mid-candidate. |
 
 ## Out of scope
 
