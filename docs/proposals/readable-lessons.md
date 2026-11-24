@@ -1,6 +1,6 @@
 # Readable lessons: teach quickly, then go deeper
 
-Status: proposed with this PR. Owner direction, 24 November 2026: lessons are not research articles. They should teach something quickly, offer some extra depth for the most interested readers, and need not be exhaustive. This note records the evidence and the defaults the Owner is asked to confirm. The binding rules are in [EDITORIAL](../EDITORIAL.md), the [figure toolkit](../implementation/figure-toolkit.md) and the [weekly contract](../automation/weekly-publication.md).
+Status: proposed with PR #236; the Owner confirmed the defaults below on 24 November 2026. Owner direction, 24 November 2026: lessons are not research articles. They should teach something quickly, offer some extra depth for the most interested readers, and need not be exhaustive. This note records the evidence and the defaults the Owner confirmed. The binding rules are in [EDITORIAL](../EDITORIAL.md), the [figure toolkit](../implementation/figure-toolkit.md) and the [weekly contract](../automation/weekly-publication.md).
 
 ## Problem
 
@@ -32,7 +32,7 @@ The Owner found the published falling-cat lesson long-winded and hard to follow,
 4. **Clarity cap, "What would I cut?" and a revision length check** (EDITORIAL, weekly contract): no 9 or 10 while the cold-reader test fails; every review names something to cut; every revision reports its word-count change and fixes weak text by replacing it rather than adding beside it.
 5. **Explanatory figure rules** (EDITORIAL, figure toolkit): a figure brief covering what the reader should understand, what should catch the eye, the visual treatment and one or two specific finishing choices; a per-figure ARTWORK reason at phone width; recognisable objects instead of labelled boxes, few labels and no legend needed to say what a drawing's parts are (a short key for chart series is fine), short stage strips and a finish that matches the lead. Each figure is judged in its role at phone width in the article; the thumbnail and share checks stay with the cover. A correct but unattractive figure is REWORK.
 
-## Defaults the Owner is asked to confirm
+## Defaults (confirmed by the Owner, 24 November 2026)
 
 | Question | Default in this PR | Why |
 | --- | --- | --- |
