@@ -43,9 +43,9 @@ The same construction applies to every point. Positions parallel to the mirror s
 
 Now imagine walking around to stand where your image appears, then turning to face your original position. Keep your head up. That half-turn reverses the direction you face **and** which side of the room your right hand occupies. Reflection reverses the facing direction while keeping that hand on the same side of the room.[^2]
 
-A person turning to face us while staying upright is a natural comparison: our bodies are roughly alike on their left and right sides, unlike their top and bottom. Imagine instead a half-turn that brings your head down to where your feet were, leaving you upside down and facing back. Compared with that person, the reflection would seem to swap top and bottom instead of left and right; the mirror's actual reversal through the glass has not changed.[^2][^3]
-
 This is why the reflected figure seems to raise its left hand. You compare it with an upright person facing you. Such a person's right hand would be across from your left; your reflected right hand is across from your right. The apparent swap comes from comparing a reflection with a rotation.[^2]
+
+Our left and right sides look roughly alike, so an upright person turned to face us is a natural comparison.[^2] You could instead imagine standing where the image appears and turning halfway over, with your head pointing down and your face towards your original position. Compared with that upside-down person, the reflection would seem to swap top and bottom. The mirror itself still reverses only the direction through the glass.[^2][^3]
 
 The blue marker below makes the difference visible without relying on anyone's names for left and right. Follow its position relative to the room, not relative to the direction the arrow faces.
 
