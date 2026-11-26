@@ -23,12 +23,12 @@ figures:
     role: explanation
     figure:
       type: image
-      src: /lesson-media/why-mirrors-seem-to-reverse-left-and-right-vcompare1.webp
-      width: 900
-      height: 1200
+      src: /lesson-media/why-mirrors-seem-to-reverse-left-and-right-vcompare2.webp
+      width: 1200
+      height: 620
       afterParagraph: 7
       alt: In a top view, reflection reverses an arrow but leaves its blue side marker towards the top of the picture. An upright half-turn reverses the arrow and moves the marker towards the bottom.
-      caption: The view and room stay fixed. Reflection and an upright half-turn both reverse the facing direction, but move the side marker differently. Original schematic, not to scale.[^1][^2]
+      caption: 'Top view, same room. Left: reflection leaves the marker on the same side. Right: an upright half-turn moves it to the other side. Original schematic, not to scale.[^1][^2]'
       description: An arrow represents the direction the object faces. The blue dot marks one side of it. Across the mirror, the dot stays on the same side of the room. After turning the object halfway round about a vertical axis, the dot changes sides. The diagram looks down from above; height is not drawn.
 ---
 Raise your right hand in front of a mirror. Its image rises on the same side of the room: if your hand is nearer the window, its image is too. Yet the figure facing you seems to have raised its left hand. The puzzle begins when those two descriptions are treated as the same thing.[^3]
@@ -37,7 +37,7 @@ Raise your right hand in front of a mirror. Its image rises on the same side of 
 
 Imagine a small dot on your nose. Light from it reaches the mirror and reflects into your eyes. The reflected rays spread as though they came from a point behind the glass. That apparent point is as far behind the mirror as the real dot is in front. It is a **virtual image**: light does not actually travel from behind the mirror.[^1]
 
-The same construction applies to every point. Positions parallel to the mirror stay aligned; distances through its surface reverse. Point upwards and the image points upwards. Point straight towards the glass and the image points straight back towards you. The mirror singles out that through-the-glass direction, not a preferred left or right.[^1][^3]
+This happens to every point on the object. Up, down and side-to-side positions stay the same. Only the direction through the glass reverses: an arrow pointing towards the mirror appears to point back towards you.[^1][^3]
 
 ## A reflection is not a turn
 
@@ -53,7 +53,7 @@ The blue marker below makes the difference visible without relying on anyone's n
 
 There is a genuine change hiding behind the apparent swap: **handedness**, the difference between a shape and its mirror counterpart. Look at the two palms in the lead picture. Both have fingers pointing up, but their thumbs are on opposite sides. Turning a right-handed glove around cannot make it a left-handed glove while keeping its shape. Turning it inside out can; that changes the shape rather than merely rotating it.[^1][^3]
 
-A reflected right hand has the arrangement of a left hand. Preserving two directions while reversing the third changes that arrangement. A physical turn cannot reproduce the whole reflection, even though the two may look similar at first.[^3]
+However you turn a right hand, it cannot become the left hand seen in its reflection.[^3]
 
 Before reading on, predict what happens to an upward-pointing arrow above a mirror lying flat on a table. Does its image point up or down? Choose a direction and use the mirror's surface to explain your choice.
 

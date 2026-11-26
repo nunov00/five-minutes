@@ -42,13 +42,14 @@ imageRights:
     #210 comment 7095459130. Original PNG exec-f067a915-b8b0-4cde-aa92-f27f26856835.png, converted to RGB metadata-stripped
     WebP. Conceptual opposite-handed gloves, not a measured optical scene. SHA-256 3430716b870196acd31513c0288dadc4e683d6569b670d1490213167af990733'
   sourceUrl: https://openai.com/policies/eu-terms-of-use/
-- src: /lesson-media/why-mirrors-seem-to-reverse-left-and-right-vcompare1.webp
+- src: /lesson-media/why-mirrors-seem-to-reverse-left-and-right-vcompare2.webp
   origin: original-code
   creator: Five Minutes, OpenAI-assisted original diagram
   licence: Original project artwork; no third-party figure copied.
-  evidence: Original deterministic top-view schematic drawn 23 November 2026. Reflection maps (x,y) to (-x,y); upright
+  evidence: 'Original deterministic landscape top-view schematic drawn 26 November 2026; brief reserved on #210 comment 7185849450. Reflection maps (x,y) to (-x,y); upright
     half-turn maps (x,y) to (-x,-y). Arrow and offset marker distinguish those operations; no source figure copied.
-    SHA-256 ff217f88201cd34f65107dc8838ab420d3c42aeca06ea1b4677d6b6f8b114700
+    Superseded portrait artwork and its rights/evidence remain in commit 7366d0dbb6448b434ad8e11c33724023378477af.
+    SHA-256 5d7022377490056cd8726732bb8b3b02b085fa2b04bc8598a0017e41cfa39467'
 provenance:
   createdAt: '2026-11-23T08:29:46Z'
   createdBy:
