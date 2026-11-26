@@ -1247,7 +1247,7 @@
       "kind": "new",
       "slug": "why-mirrors-seem-to-reverse-left-and-right",
       "title": "Why mirrors seem to reverse left and right",
-      "state": "queued",
+      "state": "complete",
       "priority": 200,
       "queuedAt": "2026-10-21T02:07:49+02:00",
       "reason": "Use reflection geometry and a physical turn-around comparison to explain why a mirror reverses front-to-back rather than choosing a horizontal direction.",
@@ -1255,7 +1255,10 @@
         "Verify authoritative accessible sources and current catalogue overlap.",
         "Teach the mechanism in distinct Adult and Teen editions; assess a useful reflection figure and Teen prediction.",
         "2026-10-23 reassessment record (not a new publication gate; weekly ranking not activated): Weekly pool screen: keep. Strong everyday puzzle with sourced reflection geometry; requires exact labelled orientation diagrams. See docs/editorial/weekly-pool-reassessment-2026-10-23.md."
-      ]
+      ],
+      "completedAt": "2026-11-27T05:00:00+01:00",
+      "destinationId": "9a14c1bd-20de-483c-a8be-d6c29297fcc1",
+      "destinationSlug": "why-mirrors-seem-to-reverse-left-and-right"
     },
     {
       "key": "idea-why-morpho-wings-look-blue",
@@ -1429,18 +1432,6 @@
     "summary": "Sunday 22 November 2026 assessment after the published bicycle and falling-cat lessons. Propose the mirror reflection-versus-rotation puzzle first, rounded aircraft windows second and Eratosthenes third. The mirror offers an immediate observation and a precise spatial prediction; aircraft fatigue needs more historical qualification, while Eratosthenes needs a calculation and explicit reconstruction limits. Move wet towel below Eratosthenes until fabric-specific optical support is established. Reviewed the full pool and catalogue for overlap; retain all ten existing shortlist members and every pool record/feedback unchanged. No new ideas, source-audit or measured-demand claim. Final selection requires independent review and merge of this Sunday queue.",
     "ranking": [
       {
-        "key": "idea-why-mirrors-seem-to-reverse-left-and-right",
-        "headline": "Why does a mirror seem to swap left and right?",
-        "description": "Raise one hand, then compare a reflection with physically turning around. The difference explains the apparent swap.",
-        "hook": "Raise your right hand: the image moves on the same side of the room.",
-        "rankReason": "First: the reader can test the puzzle immediately and leave able to predict which direction a flat mirror reverses. OpenStax ray geometry and UNSW demonstrations support a reflection-versus-rotation comparison. Prefer this direct, small observation to the aircraft history burden and the shadow calculation; the central insight is distinct from recent cat/bicycle mechanics and butterfly/rainbow optics.",
-        "relevance": "Evergreen optics and spatial reasoning; no time-sensitive premise.",
-        "evidenceUrls": [
-          "https://openstax.org/books/university-physics-volume-3/pages/2-1-images-formed-by-plane-mirrors",
-          "https://animations.physics.unsw.edu.au/jw/light/mirrors-and-images.htm"
-        ]
-      },
-      {
         "key": "legacy-aircraft-pressurisation",
         "headline": "Why aircraft windows have rounded corners",
         "description": "Connect a familiar window shape to stress around an opening and repeated cabin-pressure loading.",
@@ -1533,6 +1524,7 @@
         "relevance": "Evergreen mechanism, but standards details need a fresh check; no current product claims verified at ideation.",
         "evidenceUrls": []
       }
-    ]
+    ],
+    "shortfall": "Weekly completion removed the selected idea; Sunday will reassess the shortlist."
   }
 }
